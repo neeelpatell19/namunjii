@@ -1,0 +1,10 @@
+.ProductForHome .ProductCardImageContainer {
+    min-height: 400px;
+    max-height: 400px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ProductForHome {
+    background-color: #a0867040;
+}

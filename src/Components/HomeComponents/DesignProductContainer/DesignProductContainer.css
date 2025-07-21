@@ -1,0 +1,96 @@
+.DesignProductContainer {
+    position: relative;
+    overflow: hidden;
+}
+
+.FLexContainerForImages {
+    display: flex;
+    gap: 40px;
+}
+
+.FLexContainerForImages .FlexContainerForImagesFirst {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.FLexContainerForImages>div img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+}
+
+.FLexContainerForImages .FlexContainerForImagesSecond {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+}
+
+.FLexContainerForImages .FlexContainerForImagesSecond .SecondImageContainer {
+    min-height: 300px;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.FLexContainerForImages .FlexContainerForImagesSecond .ForthContainer {
+    min-height: 300px;
+    max-height: 300px;
+    overflow: hidden;
+    max-width: 300px;
+}
+
+.FLexContainerForImages .FirstImageContainer {
+    max-height: 300px;
+    width: 100%;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.FirstImageContainer .swiper {
+    height: 300px;
+    width: 407px;
+}
+.ImageContainer{
+    height: 100%;
+}
+
+.OfferLableContainer {
+    color: #fff;
+    display: flex;
+}
+
+.OfferLableContainer>div {
+    background-color: var(--brandColor);
+    padding: 10px;
+    margin-top: -3px;
+}
+.AnimateImage{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+.OfferLableContainer>div p {
+    text-transform: uppercase;
+}
+
+.FashionFadeHeadingContainer h1 {
+    font-weight: 500;
+    position: absolute;
+    bottom: 0px;
+    text-align: center;
+    font-size: 30rem;
+    opacity: 0.1;
+    transition: transform 0.3s ease-out;
+    will-change: transform;
+}
+
+.FashionFadeHeadingContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    /* background-color: red; */
+    right: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+}
