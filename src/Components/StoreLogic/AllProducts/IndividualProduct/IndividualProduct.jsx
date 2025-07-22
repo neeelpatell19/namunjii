@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Link, useParams } from "react-router-dom";
 import DesignerDummyData from "../../../OthersComponents/Designers/DesignerDummyData";
+import CommonUnderworkingModal from "../../../CommonUserInteractions/CommonUnderworkingModal";
 const IndividualProduct = () => {
 
     const Images = [
@@ -73,6 +74,7 @@ const IndividualProduct = () => {
     };
 
     const [selectedSize, setSelectedSize] = useState("M"); // Default size
+    const [modalOpen, setModalOpen] = useState(false);
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -148,8 +150,8 @@ const IndividualProduct = () => {
                                             </div>
                                         </div>
                                         <div className="BuyingOptionsContainer marginTop20">
-                                            <button className="CommonBtn"><span>Add to Cart</span></button>
-                                            <button className="CommonBtn"><span>Buy Now</span></button>
+                                            <button className="CommonBtn" onClick={() => setModalOpen(true)}><span>Add to Cart</span></button>
+                                            <button className="CommonBtn" onClick={() => setModalOpen(true)}><span>Buy Now</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -198,6 +200,7 @@ const IndividualProduct = () => {
                     </div>
                 </div>
             </div>
+            <CommonUnderworkingModal open={modalOpen} onClose={() => setModalOpen(false)} />
         </div>
     )
 }

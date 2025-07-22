@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import { MdArrowOutward } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const TrendingDesigns = () => {
     return (
@@ -70,9 +71,11 @@ const TrendingDesigns = () => {
                                                     <img src={item.images[1]} alt="" />
 
                                                 </div>
-                                                <div className="PopUpcategoryBtn">
-                                                    <button>View Designs <MdArrowOutward /></button>
-                                                </div>
+                                                <Link to={`/designers`} className="PopUpcategoryBtn">
+                                                    <div className="PopUpcategoryBtn">
+                                                        <button>View Designs <MdArrowOutward /></button>
+                                                    </div>
+                                                </Link>
                                             </div>
                                             <div className="CommonFlexGap">
                                                 <div className="ProductTitle">

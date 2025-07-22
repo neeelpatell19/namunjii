@@ -8,6 +8,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { CgMenuGridO, CgCloseO } from "react-icons/cg";
 import SocialIconsData from "../CommonUserInteractions/SocialIconsData/SocialIconsData";
 import DummyData from "../DummyData/DummyData";
+import DesignerDummyData from "../OthersComponents/Designers/DesignerDummyData";
 const shopMegaMenuData = [
     {
         label: "Category 1",
@@ -141,14 +142,14 @@ const NavigationBar = () => {
                     >
                         <div className="MegaMenuGrid">
                             <div className="MegaMenuGridRow">
-                                {shopMegaMenuData.map((menu, idx) => (
+                                {DesignerDummyData.slice(0, 5).map((menu, idx) => (
                                     <div>
-                                        <Link to={menu.link} className="MegaMenuGridItem" key={idx}>
+                                        <Link to={`/designers/${menu.slug}`} className="MegaMenuGridItem" key={idx}>
                                             <div className="MegaMenuGridItemImage">
                                                 <img src={menu.image} alt={menu.label} />
                                             </div>
                                             <div className="MegaMenuLabelRow">
-                                                <span className="MegaMenuLabel">{menu.label}</span>
+                                                <span className="MegaMenuLabel">{menu.DesignerName}</span>
                                                 <RightOutlined className="MegaMenuArrow" />
                                             </div>
                                         </Link>

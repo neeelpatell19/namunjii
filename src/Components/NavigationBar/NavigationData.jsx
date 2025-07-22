@@ -6,8 +6,8 @@ const NavigationData = [
     },
     {
         id: 2,
-        name: "Shop",
-        path: "/",
+        name: "Store",
+        path: "/all-products",
     },
     {
         id: "designers",

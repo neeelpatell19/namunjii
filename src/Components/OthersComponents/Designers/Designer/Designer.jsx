@@ -138,7 +138,7 @@ const Designers = () => {
                                                     <img src={item.image} alt="" />
                                                 </div>
                                                 <div className="PopUpcategoryBtn">
-                                                    <button>Add to Cart +</button>
+                                                    <button>View Product</button>
                                                 </div>
                                             </div>
                                             <div className="CommonFlexGap">
