@@ -12,7 +12,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import { Link, useParams } from "react-router-dom";
 import DesignerDummyData from "../../../OthersComponents/Designers/DesignerDummyData";
 import CommonUnderworkingModal from "../../../CommonUserInteractions/CommonUnderworkingModal";
-const IndividualProduct = () => {
+const IndiviDualProduct = () => {
 
     const Images = [
         {
