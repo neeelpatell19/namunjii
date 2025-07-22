@@ -247,3 +247,9 @@ button {
 .breadCrumbContainer .ColorBlack {
   color: black;
 }
+
+@media (max-width: 768px) {
+ .Container{
+  padding: 0px 10px;
+ }
+}

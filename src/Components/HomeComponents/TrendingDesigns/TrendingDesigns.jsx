@@ -52,6 +52,17 @@ const TrendingDesigns = () => {
                                 disableOnInteraction: false,
                                 pauseOnMouseEnter: true,
                             }}
+                            breakpoints={{
+                                0: {
+                                    slidesPerView: 1,
+                                },
+                                768: {
+                                    slidesPerView: 2,
+                                },
+                                1024: {
+                                    slidesPerView: 3,
+                                },
+                            }}
                             freeMode={true}
                             loop={true}
                             // pagination={{

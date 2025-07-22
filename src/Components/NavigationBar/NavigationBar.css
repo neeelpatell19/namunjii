@@ -224,9 +224,9 @@
     cursor: pointer;
 }
 
-.FunctionlityButtonsContainer .MenuDrawerBtn svg {
+/* .FunctionlityButtonsContainer .MenuDrawerBtn svg {
     font-size: 30px;
-}
+} */
 
 .DrawerContentHeaderTitle {
     display: flex;
@@ -286,4 +286,39 @@
 
 .SocialIconsContainer ul li a svg {
     font-size: 20px;
+}
+
+.FunctionlityButtonsContainer svg {
+    font-size: 40px;
+}
+
+@media (max-width: 900px) {
+    .NavigationBarContainer .Container .ant-row .ant-col:nth-child(2) {
+        display: none !important;
+    }
+
+    .MobileNavDrawerBtn {
+        display: block !important;
+    }
+
+    .NavigationBarContainer .Container {
+        padding: 20px 10px;
+    }
+
+    .FunctionlityButtonsContainer {
+        gap: 10px !important;
+        align-items: center;
+    }
+
+    .FunctionlityButtonsContainer svg {
+        font-size: 30px;
+    }
+
+    .MobileNavDrawerBtn {
+        display: flex !important;
+        align-items: center;
+    }
+    .MenuDrawerBtn{
+        display: none !important;
+    }
 }

@@ -10,6 +10,7 @@ import SocialIconsData from "../CommonUserInteractions/SocialIconsData/SocialIco
 import DummyData from "../DummyData/DummyData";
 import DesignerDummyData from "../OthersComponents/Designers/DesignerDummyData";
 import { FiSearch } from "react-icons/fi";
+import { FiMenu } from "react-icons/fi";
 const shopMegaMenuData = [
     {
         label: "Category 1",
@@ -53,6 +54,7 @@ const NavigationBar = () => {
     const [showMegaMenu, setShowMegaMenu] = useState(false);
     const [navScrolled, setNavScrolled] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [mobileNavDrawerOpen, setMobileNavDrawerOpen] = useState(false);
     const location = useLocation();
     const isHome = location.pathname === "/";
     const useWhite = isHome && !navScrolled;
@@ -159,7 +161,7 @@ const NavigationBar = () => {
         <div className={`NavigationBarContainer ${navScrolled ? "nav-scrolled" : ""}`}>
             <div className={`Container ${navScrolled ? "nav-scrolled" : ""}`}>
                 <Row>
-                    <Col lg={8}>
+                    <Col lg={8} xs={12} sm={12}>
                         <div className="NavigationBarLogoContainer">
                             <div>
                                 <Link to="/">
@@ -168,7 +170,7 @@ const NavigationBar = () => {
                             </div>
                         </div>
                     </Col>
-                    <Col lg={8}>
+                    <Col lg={8} xs={12} sm={12}>
                         <div className="NavigationBarMenuContainer">
                             {NavigationData.map((item) => {
                                 return item.name === "Shop" ? (
@@ -191,10 +193,10 @@ const NavigationBar = () => {
                             )}
                         </div>
                     </Col>
-                    <Col lg={8}>
-                        <div className="FunctionlityButtonsContainer">
+                    <Col lg={8} xs={12} sm={12}>
+                        <div className="FunctionlityButtonsContainer" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                             {/* Search Icon for fullscreen modal */}
-                            <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 18 }}>
+                            <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 8 }}>
                                 <FiSearch />
                             </div>
                             {/* Fullscreen Search Modal */}
@@ -216,6 +218,30 @@ const NavigationBar = () => {
                                     }}
                                     onClick={closeSearchModal}
                                 >
+                                    {/* Close button top right */}
+                                    {/* <button
+                                        onClick={closeSearchModal}
+                                        style={{
+                                            position: "absolute",
+                                            top: 24,
+                                            right: 24,
+                                            background: "rgba(255,255,255,0.8)",
+                                            border: "none",
+                                            borderRadius: "50%",
+                                            width: 40,
+                                            height: 40,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: 26,
+                                            color: "#b79a80",
+                                            cursor: "pointer",
+                                            zIndex: 10,
+                                            boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+                                        }}
+                                    >
+                                        <CgCloseO />
+                                    </button> */}
                                     <div
                                         style={{
                                             marginTop: 80,
@@ -303,8 +329,12 @@ const NavigationBar = () => {
                                 </div>
                             )}
                             {/* ...existing menu drawer button... */}
-                            <div className="MenuDrawerBtn" onClick={() => setDrawerOpen(true)}>
+                            <div className="MenuDrawerBtn" style={{ fontSize: 22, color: "#b79a80" }} onClick={() => setDrawerOpen(true)}>
                                 <CgMenuGridO style={{ color: useWhite ? "white" : "black" }} />
+                            </div>
+                            {/* Mobile Hamburger Icon (only visible on mobile) */}
+                            <div className="MobileNavDrawerBtn" onClick={() => setMobileNavDrawerOpen(true)} style={{ display: 'none', fontSize: 26, color: "#b79a80", marginLeft: 8 }}>
+                                <FiMenu />
                             </div>
                         </div>
                     </Col>
@@ -385,6 +415,23 @@ const NavigationBar = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+            </Drawer>
+            {/* Mobile Navigation Drawer */}
+            <Drawer
+                title={null}
+                placement="right"
+                open={mobileNavDrawerOpen}
+                onClose={() => setMobileNavDrawerOpen(false)}
+                width={260}
+                bodyStyle={{ padding: 0 }}
+                className="MobileNavLinksDrawer"
+            >
+                <div style={{ padding: 24 }}>
+                    <a href="/" style={{ display: "block", marginBottom: 18, fontWeight: 600, color: "#222" }}>Home</a>
+                    <a href="/designers" style={{ display: "block", marginBottom: 18, fontWeight: 600, color: "#222" }}>Designers</a>
+                    <a href="/all-products" style={{ display: "block", marginBottom: 18, fontWeight: 600, color: "#222" }}>All Products</a>
+                    {/* Add more links as needed */}
                 </div>
             </Drawer>
         </div>
