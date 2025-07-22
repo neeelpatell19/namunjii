@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Row, Col } from "antd";
 import { Link } from "react-router-dom";
 import DesignerDummyData from "../../../OthersComponents/Designers/DesignerDummyData";
@@ -8,7 +8,9 @@ const AllProduct = () => {
         ...product,
         designerName: designer.DesignerName
     })));
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="MainContainer paddingBottom50 AllProductsPage">
             <div className="PaddingTop">
