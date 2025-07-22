@@ -12,7 +12,7 @@ const HomeRoutes = () => {
             <TrendingDesigns />
             <DesignProductContainer />
             <ProductForHome />
-            <FeaturesAndQuestion />
+            {/* <FeaturesAndQuestion /> */}
         </>
     );
 };

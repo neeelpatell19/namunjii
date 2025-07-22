@@ -8,6 +8,10 @@
     transition: opacity 0.5s ease;
 }
 
+/* .TrendingDesignsCard .ProductCardImageContainer {
+    border-radius: 10px;
+} */
+
 .TrendingDesignsCard .ProductCardImageContainer .PopUpcategoryBtn {
     position: absolute;
     bottom: 0px;
@@ -16,8 +20,10 @@
     z-index: 5;
     display: flex;
     justify-content: center;
+    align-items: center;
     transform: translateY(100px);
     transition: .5s;
+
 }
 
 .TrendingDesignsCard:hover .ProductCardImageContainer .PopUpcategoryBtn {
@@ -35,6 +41,12 @@
     color: white;
     background-color: var(--OrangeColor);
     font-size: 16px;
+}
+
+.TrendingDesignsCard .ProductCardImageContainer .PopUpcategoryBtn button:hover {
+    background-color: var(--brandColor);
+    border: 1px solid var(--brandColor);
+
 }
 
 .TrendingDesignsCard .ProductCardImageContainer {
@@ -67,6 +79,7 @@
 
 .TrendingDesignsCard .ProductTitle {
     display: flex;
+    width: 100%;
     /* align-items: center; */
     justify-content: space-between;
 }

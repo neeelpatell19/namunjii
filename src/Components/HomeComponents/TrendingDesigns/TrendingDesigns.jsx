@@ -7,6 +7,7 @@ import { FreeMode, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
+import { MdArrowOutward } from "react-icons/md";
 
 const TrendingDesigns = () => {
     return (
@@ -15,6 +16,7 @@ const TrendingDesigns = () => {
                 <div className="Container">
                     <div className="marginBottom50">
                         <h2>Trending Designs</h2>
+                        <p>Explore curated collections from our top designers.</p>
                     </div>
                     <div>
                         {/* <Row gutter={[16, 16]}>
@@ -45,8 +47,9 @@ const TrendingDesigns = () => {
                             spaceBetween={30}
                             speed={800}
                             autoplay={{
-                                delay: 2500,
+                                delay: 2000,
                                 disableOnInteraction: false,
+                                pauseOnMouseEnter: true,
                             }}
                             freeMode={true}
                             loop={true}
@@ -68,7 +71,7 @@ const TrendingDesigns = () => {
 
                                                 </div>
                                                 <div className="PopUpcategoryBtn">
-                                                    <button>View Designs</button>
+                                                    <button>View Designs <MdArrowOutward /></button>
                                                 </div>
                                             </div>
                                             <div className="CommonFlexGap">

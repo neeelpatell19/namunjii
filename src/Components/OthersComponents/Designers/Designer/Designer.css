@@ -1,0 +1,208 @@
+.HeighAdjustContainer {
+    min-height: 700px;
+    max-height: 700px;
+    overflow: hidden;
+    background-color: var(--brandColor);
+}
+
+.DesignerPageImageContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.HeighAdjustContainer .ant-row {
+    min-height: 700px;
+    max-height: 700px;
+}
+
+.HeighAdjustContainer .ant-row .ant-col {
+    min-height: 700px;
+    max-height: 700px;
+}
+
+.DesignerInfoContainer {
+    height: 100%;
+    /* width: 100%; */
+    display: flex;
+    align-items: center;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.DesignerProductsContainer .ProductCardImageContainer {
+    min-height: 320px;
+    max-height: 320px;
+    overflow: hidden;
+    position: relative;
+}
+
+.DesignerPage .PaddingTop {
+    padding-top: 80px !important;
+}
+
+.FiltersDesignerProductsContainer {
+    margin-bottom: 32px;
+}
+
+.FiltersContainer {
+    background: #f7f7f9;
+    border-radius: 12px;
+    padding: 18px 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.FiltersContainer .ant-row {
+    width: 100%;
+}
+
+.FiltersContainer .ant-col {
+    display: flex;
+    align-items: center;
+}
+
+.FiltersContainer .ant-select {
+    background: #fff;
+    border-radius: 8px;
+    transition: box-shadow 0.2s;
+}
+
+.FiltersContainer .ant-select:hover,
+.FiltersContainer .ant-select-focused {
+    box-shadow: 0 0 0 2px #b79a80;
+    border-color: #b79a80 !important;
+}
+
+.FiltersContainer .ant-slider {
+    margin: 0 12px 0 0;
+    min-width: 400px;
+    max-width: 400px;
+}
+
+.FiltersContainer .ant-slider .ant-slider-track {
+    background: #b79a80;
+}
+
+.FiltersContainer .ant-slider .ant-slider-handle {
+    border-color: #b79a80;
+}
+
+.FiltersContainer .ant-btn {
+    background: #fff;
+    color: #b79a80;
+    border: 1px solid #b79a80;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.FiltersContainer .ant-btn:hover,
+.FiltersContainer .ant-btn:focus {
+    background: #b79a80;
+    color: #fff;
+    border-color: #b79a80;
+    box-shadow: 0 2px 8px rgba(183, 154, 128, 0.08);
+}
+
+.FiltersContainer .ant-btn svg {
+    font-size: 18px;
+}
+
+.DesignerFilterBtnContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 0px;
+}
+
+.DesignerFilterBtnContainer button {
+    margin: 0px;
+    min-width: 100px;
+    max-width: 200px;
+    padding: 15px 10px;
+}
+
+.SelectContainerEdit {
+    display: flex;
+    align-items: center;
+}
+
+.minHeight60 {
+    min-height: 60px;
+}
+
+.SelectContainerEdit {
+    background-color: white;
+}
+
+.SelectContainerEdit .ant-select-selector {
+    border: none !important;
+    min-width: 200px;
+    /* background-color: white; */
+}
+
+.SelectContainerEdit .ant-select-selector:focus,
+.SelectContainerEdit .ant-select-selector:hover {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.FiltersContainer .ant-select-focused {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.FiltersContainer .ant-select {
+    box-shadow: none !important;
+    border: none !important;
+    min-width: 200px;
+}
+
+.SelectContainerEdit .ant-select-selector::after {
+    margin-left: 10px;
+
+}
+
+@media (max-width: 900px) {
+    .FiltersContainer {
+        padding: 12px 8px;
+    }
+
+    .FiltersContainer .ant-slider {
+        min-width: 80px;
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 600px) {
+    .FiltersContainer {
+        flex-direction: column;
+        gap: 12px;
+        padding: 8px 2px;
+    }
+
+    .FiltersContainer .ant-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .FiltersContainer .ant-col {
+        justify-content: flex-start !important;
+    }
+}
+
+.fade-grid {
+    transition: opacity 0.2s;
+    opacity: 1;
+}
+
+.fade-grid.fade {
+    opacity: 0.3;
+}

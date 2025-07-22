@@ -1,8 +1,18 @@
 .ProductForHome .ProductCardImageContainer {
-    min-height: 400px;
-    max-height: 400px;
+    min-height: 320px;
+    max-height: 320px;
     overflow: hidden;
     position: relative;
+    /* border-radius: 10px; */
+}
+
+.TrendingDesignsCard .ProductCardImage img {
+    transition: .5s;
+}
+
+.TrendingDesignsCard:hover .ProductCardImage img {
+    transform: scale(1.1);
+    transition: .5s;
 }
 
 .ProductForHome {

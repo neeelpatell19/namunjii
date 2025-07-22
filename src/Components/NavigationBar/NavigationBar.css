@@ -1,0 +1,283 @@
+.NavigationBarContainer {
+    position: fixed;
+    z-index: 1000;
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    /* padding: 30px 0px; */
+    background: transparent;
+    transition: background 0.3s, box-shadow 0.3s;
+    transition: .5s;
+
+}
+
+.NavigationBarContainer.nav-scrolled {
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    /* padding: 20px 0px; */
+    transition: .5s;
+}
+
+.NavigationBarLogoContainer {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    height: 100%;
+    max-height: 100%;
+}
+
+.NavigationBarLogoContainer>div {
+    display: flex;
+    align-items: center;
+}
+
+.NavigationBarMenuContainer {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-height: 100%;
+    transition: .5s;
+}
+
+.NavigationBarMenuContainer>div {
+    padding: 30px 10px;
+}
+
+.NavigationBarLogoContainer>div img {
+    width: 200px;
+    transition: .5s;
+}
+
+.NavigationBarMenuContainer>div a {
+    font-size: 16px;
+    color: white;
+    transition: color 0.3s;
+    transition: .5s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.NavigationBarMenuContainer>div a svg {
+    transition: .5s;
+}
+
+.NavigationBarMenuContainer>div:hover a svg {
+    rotate: 180deg !important;
+    transition: .5s;
+}
+
+.NavigationBarMenuContainer>div:hover a {
+    color: #b79e80 !important;
+}
+
+
+.NavigationBarContainer.nav-scrolled .NavigationBarMenuContainer>div a {
+    color: #222;
+    transition: .5s;
+}
+
+
+.NavigationBarContainer .Container {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.252);
+    /* padding: 30px 0px; */
+    transition: .5s;
+}
+
+.NavigationBarContainer.nav-scrolled .Container {
+    /* padding: 20px 0px; */
+    transition: .5s;
+}
+
+.MegaMenuGridContainer {
+    position: absolute;
+    top: 100%;
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+    border-radius: 0px;
+    z-index: 100;
+    min-width: 1300px;
+    max-width: 1300px;
+    width: 100%;
+    animation: fadeInMegaMenu 2s cubic-bezier(.4, 0, .2, 1);
+}
+
+.fade-in {
+    animation: fadeInMegaMenu 0.5s cubic-bezier(.4, 0, .2, 1);
+}
+
+@keyframes fadeInMegaMenu {
+    from {
+        opacity: 0;
+        transform: translateX(0%) translateY(20px);
+        /* transition: 1s; */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0%) translateY(0);
+        /* transition: 1s; */
+    }
+}
+
+
+.MegaMenuGrid {
+    padding: 30px 20px;
+}
+
+.MegaMenuGridItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: #222;
+    transition: box-shadow 0.18s, transform 0.18s;
+    border-radius: 12px;
+    padding: 0 0 8px 0;
+    background: transparent;
+}
+
+
+
+.MegaMenuGridItem img {
+    width: 100%;
+    /* max-width: 170px;
+    height: 220px; */
+    object-fit: cover;
+    border-radius: 0px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.MegaMenuLabelRow {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 8px;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.MegaMenuLabel {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.MegaMenuArrow {
+    color: #b79a80;
+    font-size: 1.2rem;
+    margin-left: 2px;
+}
+
+/* Fade-in utility */
+
+.MegaMenuGridRow {
+    display: flex;
+    gap: 50px;
+}
+
+.MegaMenuGridRow>div {
+    width: 100%;
+}
+
+.MegaMenuGridItemImage {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.MegaMenuGridItemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.MegaMenuGridRow>div img {
+    transition: .2s;
+}
+
+.MegaMenuGridRow>div:hover img {
+    transform: scale(1.1);
+    transition: .2s;
+}
+
+
+.FunctionlityButtonsContainer {
+    height: 100%;
+}
+
+.FunctionlityButtonsContainer .MenuDrawerBtn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 100%;
+}
+
+.FunctionlityButtonsContainer .MenuDrawerBtn svg {
+    font-size: 30px;
+}
+
+.DrawerContentHeaderTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 70%;
+}
+
+.DrawerContentHeaderCloseBtn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 100%;
+}
+
+.DrawerContentHeaderCloseBtn img {
+    width: 30px;
+    cursor: pointer;
+}
+
+.ProductImage {
+    height: 120px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ProductImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .2s;
+}
+
+.ProductImage img:hover {
+    transform: scale(1.1);
+    transition: .2s;
+}
+
+.SocialIconsContainer ul {
+    padding: 0px;
+    display: flex;
+    gap: 20px;
+}
+
+.SocialIconsContainer ul li {
+    list-style: none;
+    border-right: 1px solid #222;
+    border-left: 1px solid #222;
+    padding: 10px 10px;
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+}
+
+.SocialIconsContainer ul li a {
+    color: #222;
+}
+
+.SocialIconsContainer ul li a svg {
+    font-size: 20px;
+}

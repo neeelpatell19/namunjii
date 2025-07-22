@@ -1,0 +1,305 @@
+.popup-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    animation: slideInUp 0.5s ease-out;
+}
+
+.popup-container.closing {
+    animation: slideOutDown 0.3s ease-in forwards;
+}
+
+.popup-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    width: 320px;
+    max-width: 90vw;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    color: #333;
+    transform: scale(1.1);
+}
+
+/* Header Section */
+.popup-header {
+    padding: 20px 20px 15px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.popup-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--OrangeColor);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.popup-badge .anticon {
+    font-size: 10px;
+}
+
+.popup-title {
+    font-family: var(--godber-font);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--brandColor);
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.popup-subtitle {
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Swiper Container */
+.popup-swiper-container {
+    padding: 0 20px;
+    margin-bottom: 15px;
+}
+
+.popup-swiper {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.popup-product-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.popup-product-card:hover {
+    transform: translateY(-2px);
+}
+
+.product-image {
+    position: relative;
+    height: 120px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.popup-product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.popup-product-card:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-overlay .anticon {
+    color: white;
+    font-size: 20px;
+}
+
+.product-info {
+    padding: 12px 5px;
+    text-align: center;
+}
+
+.product-title {
+    font-family: var(--godber-font);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--brandColor);
+    display: block;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.product-price {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--OrangeColor);
+    display: block;
+}
+
+/* CTA Section */
+.popup-cta {
+    padding: 0px 20px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.cta-button {
+    background: var(--brandColor);
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.cta-button:hover {
+    background: var(--OrangeColor);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(183, 154, 128, 0.3);
+}
+
+.popup-offer {
+    font-family: "Poppins", sans-serif;
+    font-size: 11px;
+    color: #666;
+    display: block;
+    line-height: 1.4;
+}
+
+/* Swiper Pagination */
+.popup-swiper .swiper-pagination {
+    bottom: 8px;
+}
+
+.popup-swiper .swiper-pagination-bullet {
+    background: rgba(255, 255, 255, 0.6);
+    opacity: 1;
+    width: 6px;
+    height: 6px;
+}
+
+.popup-swiper .swiper-pagination-bullet-active {
+    background: var(--OrangeColor);
+    width: 18px;
+    border-radius: 3px;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(100px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(100px) scale(0.8);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .popup-container {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+    }
+    
+    .popup-content {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .popup-title {
+        font-size: 16px;
+    }
+    
+    .popup-subtitle {
+        font-size: 12px;
+    }
+    
+    .product-image {
+        height: 100px;
+    }
+    
+    .product-title {
+        font-size: 13px;
+    }
+    
+    .product-price {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .popup-container {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+    }
+    
+    .popup-content {
+        border-radius: 8px;
+    }
+    
+    .popup-header {
+        padding: 15px 15px 10px;
+    }
+    
+    .popup-swiper-container {
+        padding: 0 15px;
+    }
+    
+    .popup-cta {
+        padding: 10px 15px 15px;
+    }
+}

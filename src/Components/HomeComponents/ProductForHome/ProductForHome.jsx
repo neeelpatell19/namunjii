@@ -9,13 +9,13 @@ const ProductForHome = () => {
             <div className="PaddingTop">
                 <div className="Container">
                     <div className="CommonFlexGap maxWidth800">
-                        <h2>Product For Home</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, dicta. Voluptate maiores perspiciatis, minus non rerum id voluptates laborum quod?</p>
+                        <h2>Perfect Your Style</h2>
+                        <p>It's a journey marked by repeated visits, a tapestry woven with diverse encounters, discoveries, and the pleasure derived from navigating the ever-evolving retail realms.</p>
                     </div>
                     <div className="marginTop50">
                         <Row gutter={[30, 30]}>
-                            {FashionClothesData.products.slice(0, 9).map((item) => (
-                                <Col lg={8} md={12} sm={24} xs={24} key={item.id}>
+                            {FashionClothesData.products.slice(0, 8).map((item) => (
+                                <Col lg={6} md={8} sm={12} xs={24} key={item.id}>
                                     <div className="TrendingDesignsCard">
                                         <div className="ProductCardImageContainer">
                                             <div className="ProductCardImage">
@@ -29,7 +29,7 @@ const ProductForHome = () => {
                                         <div className="CommonFlexGap">
                                             <div className="ProductTitle">
                                                 <h3>{item.title}</h3>
-                                                <p>({item.category})</p>
+                                                {/* <p>({item.category})</p> */}
                                             </div>
                                             <div className="ProductPrize">
                                                 <p>₹&nbsp;{item.price}</p>
