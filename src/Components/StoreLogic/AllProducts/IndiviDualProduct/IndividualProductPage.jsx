@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Tabs } from "antd";
-import "./IndividualProduct.css";
+import "./IndividualProductPage.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
