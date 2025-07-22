@@ -205,4 +205,4 @@ const IndiviDualProduct = () => {
     )
 }
 
-export default IndividualProduct;
+export default IndiviDualProduct;
