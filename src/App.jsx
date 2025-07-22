@@ -11,6 +11,7 @@ import InstagramGrid from './Components/CommonUserInteractions/InstagramGrid/Ins
 import NavigationBar from './Components/NavigationBar/NavigationBar';
 import AllDesigners from "./Components/OthersComponents/Designers/AllDesigners/AllDesigners";
 import Designer from "./Components/OthersComponents/Designers/Designer/Designer";
+import IndividualProduct from './Components/StoreLogic/AllProducts/IndividualProduct/IndiviDualProduct';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -22,7 +23,7 @@ function App() {
           <Route path="/" element={<HomeRoutes />} />
           <Route path="/designers" element={<AllDesigners />} />
           <Route path="/designers/:designerSlug" element={<Designer />} />
-          
+          <Route path="/product/:productName" element={<IndividualProduct />} />
         </Routes>
         <FeaturesAndQuestion />
         {/* <CommonUserInteractionsPopup /> */}

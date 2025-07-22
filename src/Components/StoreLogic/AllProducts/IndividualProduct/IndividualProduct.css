@@ -1,0 +1,103 @@
+.IndividualProductPageImageContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.HeightContainer {
+    min-height: 700px;
+    max-height: 700px;
+    overflow: hidden;
+}
+
+.HeightContainer .swiper {
+    min-height: 700px;
+    max-height: 700px;
+    width: 100%;
+}
+
+.HeightContainer .swiper-pagination .swiper-pagination-bullet-active {
+    background-color: white !important;
+    height: 10px !important;
+    width: 10px !important;
+    box-shadow: rgba(255, 255, 255, 0.25) 0px 14px 28px, rgba(255, 255, 255, 0.22) 0px 10px 10px;
+}
+
+.HeightContainer .swiper-pagination .swiper-pagination-bullet {
+    height: 10px !important;
+    width: 10px !important;
+    background-color: transparent;
+    border: 1px solid white !important;
+}
+
+.IndividualProductInfoContainer .productPrice {
+    color: var(--OrangeColor);
+}
+
+.IndividualProductInfoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.SizeBoxesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: center; */
+    gap: 10px;
+    flex-direction: column;
+}
+
+.SizeBoxesContainer .SizeBoxesContainerEdit {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: center; */
+    gap: 20px;
+}
+
+.SizeBoxesContainer .SizeBoxesContainerEdit>div {
+    background-color: transparent;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--brandColor);
+    border-radius: 10px;
+}
+
+.SizeBoxesContainer .SizeBoxesContainerEdit>div.selected {
+    background-color: var(--brandColor);
+    /* color: white; */
+}
+
+.SizeBoxesContainer .SizeBoxesContainerEdit>div.selected p {
+    color: white;
+}
+
+.BuyingOptionsContainer {
+    display: flex;
+    gap: 10px;
+}
+
+.BuyingOptionsContainer button {
+    margin-bottom: 0px !important;
+}
+
+.IndividualProductInfoContainer .CommonFlexGap {
+    margin-top: 0px;
+}
+
+.ProductBriefDetailsContainer .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: black !important;
+}
+
+/* .ant-tabs-nav::before {
+    color: black;
+    border-bottom: 1px solid black !important;
+} */
+.ProductBriefDetailsContainer .ant-tabs-ink-bar {
+    background: #111 !important;
+}

@@ -7,7 +7,7 @@ import { RightOutlined } from "@ant-design/icons";
 import { IoIosArrowDown } from "react-icons/io";
 import { CgMenuGridO, CgCloseO } from "react-icons/cg";
 import SocialIconsData from "../CommonUserInteractions/SocialIconsData/SocialIconsData";
-
+import DummyData from "../DummyData/DummyData";
 const shopMegaMenuData = [
     {
         label: "Category 1",
@@ -165,6 +165,7 @@ const NavigationBar = () => {
                 headerStyle={{ display: "none" }}
                 open={drawerOpen}
                 width={600}
+                onClose={() => setDrawerOpen(false)}
             >
                 <div className="DrawerContentContainer">
                     <div className="DrawerContent">
@@ -183,10 +184,10 @@ const NavigationBar = () => {
                             </div>
                             <div className="ProductsImagesContainer">
                                 <Row gutter={[20, 20]}>
-                                    {drawerContentData.map((item, idx) => (
+                                    {DummyData.products.slice(0, 8).map((item, idx) => (
                                         <Col lg={6} key={idx}>
                                             <div className="ProductImage">
-                                                <img src={item.image} alt="" style={{ width: "100%" }} />
+                                                <img src={item.images[0]} alt="" style={{ width: "100%" }} />
                                             </div>
                                         </Col>
                                     ))}

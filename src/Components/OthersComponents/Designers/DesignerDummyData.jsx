@@ -1,5 +1,34 @@
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
+const commonDescription = (
+    <div>
+        <p>Sleek and timeless. Titanium glasses with an innovative bridge. A frame to suit every face, Morgan is a classic ‘panto’ shape. Named after James Morgan, the engineer who built the Regent's Canal, it features custom elements including fluid single piece bridge, adjustable nose pads and temple tips based on Constantin Brâncuși's Bird in Space.</p>
+        {/* <ul style={{ margin: 0, paddingLeft: 18 }}>
+            <li>99.7% pure titanium front</li>
+            <li>More than 4hv on the Vickers hardness test.</li>
+            <li>Ion plated to over 0.3µ</li>
+            <li>Weighs under 5.0g</li>
+            <li>Adjustable titanium nose pads for a comfortable fit</li>
+            <li>UV protection</li>
+        </ul> */}
+    </div>
+);
+
+const commonBrief = (
+  <div>
+    <p>Sleek and timeless. Titanium glasses with an innovative bridge. A frame to suit every face, Morgan is a classic ‘panto’ shape. Named after James Morgan, the engineer who built the Regent's Canal, it features custom elements including fluid single piece bridge, adjustable nose pads and temple tips based on Constantin Brâncuși's Bird in Space.</p>
+    <br />
+    <ul style={{ margin: 0, paddingLeft: 18 }}>
+      <li>99.7% pure titanium front</li>
+      <li>More than 4hv on the Vickers hardness test.</li>
+      <li>Ion plated to over 0.3µ</li>
+      <li>Weighs under 5.0g</li>
+      <li>Adjustable titanium nose pads for a comfortable fit</li>
+      <li>UV protection</li>
+    </ul>
+  </div>
+);
+
 const DesignerDummyData = [
     {
         slug: "isabella-laurent",
@@ -10,30 +39,34 @@ const DesignerDummyData = [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Silk Evening Gown",
-                ProductDescription: "Handcrafted silk gown with intricate embroidery, perfect for gala events.",
+                ProductDescription: commonDescription,
                 price: 18500,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Crystal-Embellished Cape",
-                ProductDescription: "A statement cape adorned with Swarovski crystals for a regal look.",
+                ProductDescription: commonDescription,
                 price: 23750,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Velvet Cocktail Dress",
-                ProductDescription: "Luxurious velvet dress with a classic silhouette and modern flair.",
+                ProductDescription: commonDescription,
                 price: 31200,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Pearl-Trimmed Blazer",
-                ProductDescription: "Tailored blazer featuring delicate pearl trims for a touch of elegance.",
+                ProductDescription: commonDescription,
                 price: 12900,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
         ],
         DesignerSocialMedia: [
@@ -56,30 +89,34 @@ const DesignerDummyData = [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Cashmere Overcoat",
-                ProductDescription: "Premium cashmere overcoat with hand-stitched details.",
+                ProductDescription: commonDescription,
                 price: 22100,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Wool-Blend Suit",
-                ProductDescription: "Modern fit suit crafted from the finest Italian wool blends.",
+                ProductDescription: commonDescription,
                 price: 39800,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Silk-Lined Tuxedo",
-                ProductDescription: "Elegant tuxedo with a luxurious silk lining for special occasions.",
+                ProductDescription: commonDescription,
                 price: 17600,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Leather Accent Blazer",
-                ProductDescription: "Blazer featuring subtle leather accents for a contemporary edge.",
+                ProductDescription: commonDescription,
                 price: 15400,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
         ],
         DesignerSocialMedia: [
@@ -102,30 +139,34 @@ const DesignerDummyData = [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Chiffon Ball Gown",
-                ProductDescription: "Ethereal chiffon gown with hand-sewn floral appliqués.",
+                ProductDescription: commonDescription,
                 price: 31200,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Embroidered Mini Dress",
-                ProductDescription: "Mini dress featuring intricate embroidery and a flattering fit.",
+                ProductDescription: commonDescription,
                 price: 14500,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Feathered Cape Dress",
-                ProductDescription: "Statement dress with a detachable feathered cape.",
+                ProductDescription: commonDescription,
                 price: 25600,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Sequin Sheath Dress",
-                ProductDescription: "Sheath dress adorned with shimmering sequins for evening glamour.",
+                ProductDescription: commonDescription,
                 price: 38400,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
         ],
         DesignerSocialMedia: [
@@ -148,30 +189,34 @@ const DesignerDummyData = [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Baroque Print Blazer",
-                ProductDescription: "Blazer with signature baroque print and gold accents.",
+                ProductDescription: commonDescription,
                 price: 27700,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Velvet Trousers",
-                ProductDescription: "Tailored velvet trousers for a luxurious feel.",
+                ProductDescription: commonDescription,
                 price: 19100,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Embroidered Kimono Jacket",
-                ProductDescription: "Kimono-style jacket with elaborate embroidery.",
+                ProductDescription: commonDescription,
                 price: 36200,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Silk Scarf",
-                ProductDescription: "Hand-painted silk scarf inspired by Spanish art.",
+                ProductDescription: commonDescription,
                 price: 11800,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
         ],
         DesignerSocialMedia: [
@@ -194,30 +239,34 @@ const DesignerDummyData = [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Organic Cotton Dress",
-                ProductDescription: "Elegant dress made from 100% organic cotton.",
+                ProductDescription: commonDescription,
                 price: 39900,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Recycled Wool Coat",
-                ProductDescription: "Chic coat crafted from recycled wool fibers.",
+                ProductDescription: commonDescription,
                 price: 21700,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Bamboo Silk Blouse",
-                ProductDescription: "Soft blouse made from sustainable bamboo silk.",
+                ProductDescription: commonDescription,
                 price: 12800,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Vegan Leather Skirt",
-                ProductDescription: "High-waisted skirt using premium vegan leather.",
+                ProductDescription: commonDescription,
                 price: 34100,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
         ],
         DesignerSocialMedia: [
@@ -240,30 +289,34 @@ const DesignerDummyData = [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Beaded Velvet Gown",
-                ProductDescription: "Floor-length velvet gown with hand-beaded embellishments.",
+                ProductDescription: commonDescription,
                 price: 25600,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Fur-Trimmed Cape",
-                ProductDescription: "Luxurious cape with faux fur trim for winter elegance.",
+                ProductDescription: commonDescription,
                 price: 38400,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Satin Brocade Dress",
-                ProductDescription: "Dress featuring rich satin brocade and gold thread.",
+                ProductDescription: commonDescription,
                 price: 11200,
                 availability: "yes",
+                ProductBrief: commonBrief,
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ProductName: "Embellished Headpiece",
-                ProductDescription: "Handcrafted headpiece with crystals and pearls.",
+                ProductDescription: commonDescription,
                 price: 17500,
                 availability: "no",
+                ProductBrief: commonBrief,
             },
         ],
         DesignerSocialMedia: [

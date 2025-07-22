@@ -28,9 +28,10 @@ body,
   scroll-behavior: smooth;
 }
 
-a{
+a {
   text-decoration: none;
 }
+
 h1 {
   font-family: var(--godber-font);
   color: var(--brandColor);
@@ -123,6 +124,14 @@ p {
 
 .marginTop50 {
   margin-top: 50px;
+}
+
+.marginTop20 {
+  margin-top: 20px;
+}
+
+.marginBottom20 {
+  margin-bottom: 20px;
 }
 
 .paddingTop50 {
@@ -222,4 +231,19 @@ button {
 
 .white {
   color: white;
+}
+
+.breadCrumbContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--Poppins-font);
+}
+
+.breadCrumbContainer a {
+  color: gray;
+}
+
+.breadCrumbContainer .ColorBlack {
+  color: black;
 }

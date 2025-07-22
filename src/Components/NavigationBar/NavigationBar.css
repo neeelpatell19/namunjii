@@ -216,6 +216,7 @@
     justify-content: end;
     align-items: center;
     height: 100%;
+    cursor: pointer;
 }
 
 .FunctionlityButtonsContainer .MenuDrawerBtn svg {

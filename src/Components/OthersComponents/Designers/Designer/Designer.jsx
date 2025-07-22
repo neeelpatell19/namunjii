@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import DesignerDummyData from "../DesignerDummyData";
 import "./Designer.css";
 import { Row, Col, Select, Button, Slider } from "antd";
@@ -51,6 +51,13 @@ const Designers = () => {
     return (
         <div className="MainContainer paddingBottom50 DesignerPage">
             <div className="PaddingTop">
+                <div className="breadCrumbContainer Container marginBottom20 marginTop20">
+                    <Link to="/">Home</Link>
+                    <span> | </span>
+                    <Link to="/designers">Designers</Link>
+                    <span> | </span>
+                    <span className="ColorBlack">{designer.DesignerName}</span>
+                </div>
                 <div className="HeighAdjustContainer">
                     <Row className="h-100 w-100">
                         <Col lg={12}>
@@ -74,6 +81,7 @@ const Designers = () => {
                 </div>
             </div>
             <div className="Container PaddingTop">
+
                 <div className="FiltersDesignerProductsContainer">
                     <div className="FiltersContainer">
                         <Row gutter={[16, 16]} align="middle">
@@ -123,24 +131,26 @@ const Designers = () => {
                         <Row gutter={[30, 30]}>
                             {filteredProducts.map((item) => (
                                 <Col lg={6} md={8} sm={12} xs={24} key={item.ProductName + item.price}>
-                                    <div className="TrendingDesignsCard">
-                                        <div className="ProductCardImageContainer">
-                                            <div className="ProductCardImage">
-                                                <img src={item.image} alt="" />
+                                    <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
+                                        <div className="TrendingDesignsCard">
+                                            <div className="ProductCardImageContainer">
+                                                <div className="ProductCardImage">
+                                                    <img src={item.image} alt="" />
+                                                </div>
+                                                <div className="PopUpcategoryBtn">
+                                                    <button>Add to Cart +</button>
+                                                </div>
                                             </div>
-                                            <div className="PopUpcategoryBtn">
-                                                <button>Add to Cart +</button>
+                                            <div className="CommonFlexGap">
+                                                <div className="ProductTitle">
+                                                    <h3>{item.ProductName}</h3>
+                                                </div>
+                                                <div className="ProductPrize">
+                                                    <p>₹&nbsp;{item.price}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="CommonFlexGap">
-                                            <div className="ProductTitle">
-                                                <h3>{item.ProductName}</h3>
-                                            </div>
-                                            <div className="ProductPrize">
-                                                <p>₹&nbsp;{item.price}</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </Link>
                                 </Col>
                             ))}
                         </Row>
