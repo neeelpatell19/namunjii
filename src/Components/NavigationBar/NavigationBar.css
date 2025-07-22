@@ -209,6 +209,11 @@
 
 .FunctionlityButtonsContainer {
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 100%;
+    gap: 20px;
 }
 
 .FunctionlityButtonsContainer .MenuDrawerBtn {

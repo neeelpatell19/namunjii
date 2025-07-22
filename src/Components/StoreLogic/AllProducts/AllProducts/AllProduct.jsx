@@ -25,7 +25,7 @@ const AllProduct = () => {
                         <p style={{ textAlign: "start" }}>Discover a curated collection of products from our diverse designers, each offering unique styles and quality craftsmanship.</p>
                     </div>
                 </div>
-                <div className="Container PaddingTop">
+                <div className="Container marginTop50">
                     <Row gutter={[30, 30]}>
                         {allProducts.map((item) => (
                             <Col lg={6} md={8} sm={12} xs={24} key={item.ProductName + item.price}>

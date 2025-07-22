@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Row, Col, Drawer } from "antd";
 import { NavigationData, LogoFile, LogoFileBlack } from "./NavigationData";
 import "./NavigationBar.css";
@@ -9,6 +9,7 @@ import { CgMenuGridO, CgCloseO } from "react-icons/cg";
 import SocialIconsData from "../CommonUserInteractions/SocialIconsData/SocialIconsData";
 import DummyData from "../DummyData/DummyData";
 import DesignerDummyData from "../OthersComponents/Designers/DesignerDummyData";
+import { FiSearch } from "react-icons/fi";
 const shopMegaMenuData = [
     {
         label: "Category 1",
@@ -90,6 +91,70 @@ const NavigationBar = () => {
 
     ];
 
+    const [searchModalOpen, setSearchModalOpen] = useState(false);
+    const [search, setSearch] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const inputRef = useRef(null);
+
+    const openSearchModal = () => {
+        setSearchModalOpen(true);
+        setTimeout(() => inputRef.current && inputRef.current.focus(), 200);
+    };
+    const closeSearchModal = () => {
+        setSearchModalOpen(false);
+        setSearch("");
+        setSearchResults([]);
+    };
+
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === "Escape") closeSearchModal();
+        };
+        if (searchModalOpen) {
+            window.addEventListener("keydown", handleEsc);
+        } else {
+            window.removeEventListener("keydown", handleEsc);
+        }
+        return () => window.removeEventListener("keydown", handleEsc);
+    }, [searchModalOpen]);
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearch(value);
+
+        if (!value.trim()) {
+            setSearchResults([]);
+            return;
+        }
+
+        const results = [];
+        DesignerDummyData.forEach(designer => {
+            // Match designer name
+            if (designer.DesignerName.toLowerCase().includes(value.toLowerCase())) {
+                results.push({
+                    type: "designer",
+                    name: designer.DesignerName,
+                    slug: designer.slug,
+                    image: designer.image
+                });
+            }
+            // Match products
+            designer.DesignerProducts.forEach(product => {
+                if (product.ProductName.toLowerCase().includes(value.toLowerCase())) {
+                    results.push({
+                        type: "product",
+                        name: product.ProductName,
+                        designer: designer.DesignerName,
+                        productSlug: product.ProductName,
+                        image: product.image,
+                        designerSlug: designer.slug
+                    });
+                }
+            });
+        });
+        setSearchResults(results);
+    };
+
     return (
         <div className={`NavigationBarContainer ${navScrolled ? "nav-scrolled" : ""}`}>
             <div className={`Container ${navScrolled ? "nav-scrolled" : ""}`}>
@@ -128,6 +193,116 @@ const NavigationBar = () => {
                     </Col>
                     <Col lg={8}>
                         <div className="FunctionlityButtonsContainer">
+                            {/* Search Icon for fullscreen modal */}
+                            <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 18 }}>
+                                <FiSearch />
+                            </div>
+                            {/* Fullscreen Search Modal */}
+                            {searchModalOpen && (
+                                <div
+                                    className="FullscreenSearchModal"
+                                    style={{
+                                        position: "fixed",
+                                        top: 0, left: 0, right: 0, bottom: 0,
+                                        zIndex: 2000,
+                                        background: "rgba(255,255,255,0.7)",
+                                        backdropFilter: "blur(12px)",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        justifyContent: "flex-start",
+                                        transition: "opacity 0.4s",
+                                        animation: "fadeIn 0.4s"
+                                    }}
+                                    onClick={closeSearchModal}
+                                >
+                                    <div
+                                        style={{
+                                            marginTop: 80,
+                                            background: "#fff",
+                                            borderRadius: 16,
+                                            boxShadow: "0 4px 32px rgba(0,0,0,0.10)",
+                                            padding: 32,
+                                            minWidth: 340,
+                                            maxWidth: 480,
+                                            width: "90%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            position: "relative"
+                                        }}
+                                        onClick={e => e.stopPropagation()}
+                                    >
+                                        <div style={{ display: "flex", alignItems: "center", width: "100%", borderRadius: 8, border: "1.5px solid #b79a80", background: "#faf9f7", padding: "8px 16px", marginBottom: 18 }}>
+                                            <FiSearch style={{ fontSize: 20, color: "#b79a80", marginRight: 8 }} />
+                                            <input
+                                                ref={inputRef}
+                                                type="text"
+                                                value={search}
+                                                onChange={handleSearch}
+                                                placeholder="Search products or designers..."
+                                                style={{
+                                                    width: "100%",
+                                                    border: "none",
+                                                    outline: "none",
+                                                    fontSize: 18,
+                                                    background: "transparent"
+                                                }}
+                                            />
+                                        </div>
+                                        <div style={{ width: "100%", maxHeight: 320, minHeight: 60, overflowY: "auto", borderRadius: 12, background: "#fff" }}>
+                                            {search && searchResults.length === 0 && (
+                                                <div style={{ color: "#aaa", textAlign: "center", padding: 24 }}>No results found.</div>
+                                            )}
+                                            {searchResults.map((result, idx) =>
+                                                result.type === "designer" ? (
+                                                    <a
+                                                        key={idx}
+                                                        href={`/designers/${result.slug}`}
+                                                        style={{ display: "flex", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #f0f0f0", textDecoration: "none" }}
+                                                        onClick={closeSearchModal}
+                                                    >
+                                                        <img src={result.image} alt={result.name} style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 8, marginRight: 16, border: "1.5px solid #eee" }} />
+                                                        <div>
+                                                            <div style={{ fontWeight: 600, color: "#b79a80", fontSize: 17 }}>Designer: {result.name}</div>
+                                                        </div>
+                                                    </a>
+                                                ) : (
+                                                    <a
+                                                        key={idx}
+                                                        href={`/product/${encodeURIComponent(result.productSlug)}`}
+                                                        style={{ display: "flex", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #f0f0f0", textDecoration: "none" }}
+                                                        onClick={closeSearchModal}
+                                                    >
+                                                        <img src={result.image} alt={result.name} style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 8, marginRight: 16, border: "1.5px solid #eee" }} />
+                                                        <div>
+                                                            <div style={{ fontWeight: 600, color: "#222", fontSize: 17 }}>{result.name}</div>
+                                                            <div style={{ color: "#b79a80", fontSize: 15 }}>{result.designer}</div>
+                                                        </div>
+                                                    </a>
+                                                )
+                                            )}
+                                        </div>
+                                        <button
+                                            onClick={closeSearchModal}
+                                            style={{
+                                                marginTop: 18,
+                                                background: "#b79a80",
+                                                color: "#fff",
+                                                border: "none",
+                                                borderRadius: 8,
+                                                padding: "8px 24px",
+                                                fontWeight: 500,
+                                                fontSize: 16,
+                                                cursor: "pointer"
+                                            }}
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            {/* ...existing menu drawer button... */}
                             <div className="MenuDrawerBtn" onClick={() => setDrawerOpen(true)}>
                                 <CgMenuGridO style={{ color: useWhite ? "white" : "black" }} />
                             </div>
