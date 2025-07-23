@@ -9,12 +9,12 @@ const AboutUs = () => {
     const AboutInfo = [
         {
             title: "Our Brand",
-            description: "We are a platform built for brands that are ready to grownot by following trends, but by staying true to who they are.",
+            description: "We are a platform built for brands that are ready to grow not by following trends, but by staying true to who they are.",
             image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUs.jpg"
         },
         {
             title: "Our Vision",
-            description: "To build a launchpad for up-and-coming design brands — a space where fresh ideas, rooted identities, and conscious aesthetics meet a discerning audience.",
+            description: "To build a launchpad for design brands — a space where fresh ideas, rooted identities, and conscious aesthetics meet a discerning audience.",
             image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUs.jpg"
         },
         {
