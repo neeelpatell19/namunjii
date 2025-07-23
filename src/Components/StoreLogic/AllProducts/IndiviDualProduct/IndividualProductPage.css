@@ -101,3 +101,33 @@
 .ProductBriefDetailsContainer .ant-tabs-ink-bar {
     background: #111 !important;
 }
+
+@media (max-width: 768px) {
+    .SingleProductContainer {
+        display: flex;
+        justify-content: center;
+    }
+
+    .SingleProductContainer .ant-row .ant-col {
+        padding: 0px !important;
+    }
+
+    .BuyingOptionsContainer {
+        display: flex;
+        gap: 0px;
+        flex-direction: column !important;
+    }
+
+    .HeightContainer {
+        min-height: 400px;
+        max-height: 400px;
+        overflow: hidden;
+    }
+
+    .HeightContainer .swiper {
+        min-height: 400px;
+        max-height: 400px;
+        width: 100%;
+    }
+
+}

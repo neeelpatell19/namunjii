@@ -91,7 +91,7 @@ const TrendingDesigns = () => {
                                             <div className="CommonFlexGap">
                                                 <div className="ProductTitle">
                                                     <h3>{item.title}</h3>
-                                                    <p>({item.category})</p>
+                                                    {/* <p>({item.category})</p> */}
                                                 </div>
                                                 <div className="ProductPrize">
                                                     <p>₹&nbsp;{item.price}</p>

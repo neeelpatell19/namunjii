@@ -253,6 +253,12 @@ button {
     padding: 0px 10px;
   }
 
+  .breadCrumbContainer {
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 0px !important;
+  }
+
   /* .ant-row .ant-col{
   padding: 0px 15px !important;
  } */
