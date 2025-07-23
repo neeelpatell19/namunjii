@@ -12,7 +12,7 @@ const AllProduct = () => {
         window.scrollTo(0, 0);
     }, []);
     return (
-        <div className="MainContainer paddingBottom50 AllProductsPage">
+        <div className="MainContainer paddingBottom50 AllProductsPage marginTop50">
             <div className="PaddingTop">
                 <div className="Container">
                     <div className="breadCrumbContainer  marginBottom20 marginTop20">
