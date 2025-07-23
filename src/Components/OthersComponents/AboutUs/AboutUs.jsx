@@ -58,7 +58,7 @@ const AboutUs = () => {
                     <div className="AboutUsImageSection">
                         <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUs.jpg" alt="About Namunjii" />
                     </div>
-                    <div className="AboutInfoCards">
+                    <div className="AboutInfoCards marginTop50">
                         {AboutInfo.map((item, index) => (
                             <div className="AboutInfoCard" key={index}>
                                 <h3>{item.title}</h3>
