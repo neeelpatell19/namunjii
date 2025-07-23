@@ -241,10 +241,16 @@ const VendorVerification = () => {
                         <div className="breadCrumbContainer  marginBottom20 marginTop20">
                             <Link to="/">Home</Link>
                             <span> | </span>
-                            <Link to="/vendor-verification" className="ColorBlack">Vendor Verification</Link>
+                            <Link to="/vendor-verification" className="ColorBlack">Join Us</Link>
                         </div>
                         <div className="marginBottom50">
-                            <h2>Vendor Verification</h2>
+                            <div className="CommonFlexGap ">
+                            <h2>Are You Desinger</h2>
+                            {/* <br /> */}
+                            <p><b><i>Want To Join us</i> </b></p>
+                            </div>
+                           
+                            <p></p>
                             <div className="VendorVerificationFormContainer marginTop50">
                                 {success && (
                                     <div className="success-message">Thank you for submitting your application! We will review and get back to you soon.</div>

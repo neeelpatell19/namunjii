@@ -19,6 +19,11 @@ const NavigationData = [
         name: "About",
         path: "/about-us",
     },
+    {
+        id: 4,
+        name: "Join Us",
+        path: "/vendor-verification",
+    },
 ]
 
 const LogoFile = "/LogoImages/WithNameWhiteLogo.svg"

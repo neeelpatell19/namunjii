@@ -387,7 +387,7 @@ const NavigationBar = () => {
                                         <div>
                                             <button className="CommonBtn" onClick={() => {
                                                 setDrawerOpen(false);
-                                            }}><span>Become a Vendor</span></button>
+                                            }}><span>Join Us</span></button>
                                         </div>
                                     </Link>
                                 </div>
