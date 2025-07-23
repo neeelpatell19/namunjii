@@ -11,9 +11,10 @@ const HomeRoutes = () => {
         <>
             <HeroHome />
             <TrendingDesigns />
+            <AvailableCities />
             <DesignProductContainer />
             {/* <ProductForHome /> */}
-            <AvailableCities />
+           
             {/* <FeaturesAndQuestion /> */}
         </>
     );

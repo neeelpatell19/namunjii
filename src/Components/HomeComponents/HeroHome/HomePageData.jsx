@@ -24,6 +24,10 @@ const HomePageDataCarousalImages = {
 const HomePageCrousaltext = {
     CarousalText: [
         {
+text:"A home for emerging brands"
+        },
+
+        {
             text: "Luxury Woven with Tradition"
         },
         {
