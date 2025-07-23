@@ -83,7 +83,7 @@
     animation: fadeIn 1s ease;
     /* display: none; */
     transition: .5s;
-    opacity: 0;
+    opacity: 1;
 }
 
 .RelativeContainer:hover .InstagramPromoCenter {

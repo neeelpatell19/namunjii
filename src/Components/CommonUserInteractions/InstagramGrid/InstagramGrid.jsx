@@ -17,7 +17,9 @@ const InstagramGrid = () => {
                                 <button className="CommonBtn">
                                     <span><FaInstagram style={{ fontSize: "20px" }} />@Namunjii</span>
                                     <span>design@namunjii.com</span>
-                                    <span>+91 98240 37321</span></button>
+                                    <span>+91 98240 37321</span>
+                                    <span>Shivalik Shilp II, Judges Bunglow Rd, Opposite ITC Narmada, <br /> Suryapooja Block B, Satellite, Ahmedabad, Gujarat 380015, India</span>
+                                </button>
 
                             </div>
                         </div>
