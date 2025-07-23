@@ -14,10 +14,10 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: var(--godber-font);
+  /* font-family: var(  --Poppins-font); */
   --brandColor: #36424e;
   --OrangeColor: #b79a80;
-  --godber-font: 'Godber', sans-serif;
+    --Poppins-font: 'Godber', sans-serif;
   --Poppins-font: 'Poppins', sans-serif;
   --BodyTextColor: #000000a8;
 }
@@ -33,7 +33,7 @@ a {
 }
 
 h1 {
-  font-family: var(--godber-font);
+  font-family: var(  --Poppins-font);
   color: var(--brandColor);
   font-size: 64px;
   font-weight: 500;
@@ -42,7 +42,7 @@ h1 {
 }
 
 h2 {
-  font-family: var(--godber-font);
+  font-family: var(  --Poppins-font);
   font-size: 50px;
   font-weight: 500;
   line-height: 1;
@@ -226,7 +226,7 @@ p {
 
 button {
   cursor: pointer;
-  font-family: var(--godber-font);
+  font-family: var(  --Poppins-font);
 }
 
 .white {
