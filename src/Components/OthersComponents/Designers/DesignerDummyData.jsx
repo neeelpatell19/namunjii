@@ -93,6 +93,71 @@ const DesignerDummyData = [
         ],
     },
     {
+        slug: "Greyhorn",
+        image: [
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
+        ],
+        DesignerName: "Greyhorn",
+        DesignerDescription: "Elena's collections are inspired by Russian royalty, featuring opulent fabrics and intricate beadwork.",
+        DesignerProducts: [
+            {
+                image: [
+                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ],
+                ProductName: "Beaded Velvet Bespoke Gown",
+                ProductDescription: commonDescription,
+                price: 25600,
+                availability: "yes",
+                ProductBrief: commonBrief,
+            },
+            {
+                image: [
+                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ],
+                ProductName: "Fur-Trimmed Bespoke Cape",
+                ProductDescription: commonDescription,
+                price: 38400,
+                availability: "no",
+                ProductBrief: commonBrief,
+            },
+            {
+                image: [
+                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ],
+                ProductName: "Satin Brocade Bespoke Dress",
+                ProductDescription: commonDescription,
+                price: 11200,
+                availability: "yes",
+                ProductBrief: commonBrief,
+            },
+            {
+                image: [
+                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ],
+                ProductName: "Embellished Bespoke Headpiece",
+                ProductDescription: commonDescription,
+                price: 17500,
+                availability: "no",
+                ProductBrief: commonBrief,
+            },
+        ],
+        DesignerSocialMedia: [
+            {
+                icon: <FaFacebookF />,
+                link: "https://www.facebook.com/elenapetrova",
+            },
+            {
+                icon: <FaInstagram />,
+                link: "https://www.instagram.com/elenapetrova",
+            },
+        ],
+    },
+    {
         slug: "luca-moretti",
         image: [
             "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2993.jpeg",
@@ -352,71 +417,7 @@ const DesignerDummyData = [
             },
         ],
     },
-    {
-        slug: "Greyhorn",
-        image: [
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
-        ],
-        DesignerName: "Greyhorn",
-        DesignerDescription: "Elena's collections are inspired by Russian royalty, featuring opulent fabrics and intricate beadwork.",
-        DesignerProducts: [
-            {
-                image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                ],
-                ProductName: "Beaded Velvet Bespoke Gown",
-                ProductDescription: commonDescription,
-                price: 25600,
-                availability: "yes",
-                ProductBrief: commonBrief,
-            },
-            {
-                image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                ],
-                ProductName: "Fur-Trimmed Bespoke Cape",
-                ProductDescription: commonDescription,
-                price: 38400,
-                availability: "no",
-                ProductBrief: commonBrief,
-            },
-            {
-                image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                ],
-                ProductName: "Satin Brocade Bespoke Dress",
-                ProductDescription: commonDescription,
-                price: 11200,
-                availability: "yes",
-                ProductBrief: commonBrief,
-            },
-            {
-                image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                ],
-                ProductName: "Embellished Bespoke Headpiece",
-                ProductDescription: commonDescription,
-                price: 17500,
-                availability: "no",
-                ProductBrief: commonBrief,
-            },
-        ],
-        DesignerSocialMedia: [
-            {
-                icon: <FaFacebookF />,
-                link: "https://www.facebook.com/elenapetrova",
-            },
-            {
-                icon: <FaInstagram />,
-                link: "https://www.instagram.com/elenapetrova",
-            },
-        ],
-    },
+    
 
 ];
 
