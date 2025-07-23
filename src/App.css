@@ -255,12 +255,13 @@ button {
   gap: 10px;
 }
 
-.OnlyMobileBtn >div{
+.OnlyMobileBtn>div {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
 }
+
 .prev-btn,
 .next-btn {
   background-color: transparent;
@@ -270,7 +271,14 @@ button {
   font-size: 18px;
   min-width: 80px;
   border-radius: 20px;
+  transition: .5s;
+}
 
+.prev-btn:hover,
+.next-btn:hover {
+  background-color: var(--OrangeColor);
+  color: white;
+  transition: .5s;
 }
 
 .prev-btn img,
