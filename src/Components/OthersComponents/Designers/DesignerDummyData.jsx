@@ -2,29 +2,29 @@ import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
 const commonDescription = (
     <div>
-        <p>Sleek and timeless. Titanium glasses with an innovative bridge. A frame to suit every face, Morgan is a classic ‘panto’ shape. Named after James Morgan, the engineer who built the Regent's Canal, it features custom elements including fluid single piece bridge, adjustable nose pads and temple tips based on Constantin Brâncuși's Bird in Space.</p>
-        {/* <ul style={{ margin: 0, paddingLeft: 18 }}>
-            <li>99.7% pure titanium front</li>
-            <li>More than 4hv on the Vickers hardness test.</li>
-            <li>Ion plated to over 0.3µ</li>
-            <li>Weighs under 5.0g</li>
-            <li>Adjustable titanium nose pads for a comfortable fit</li>
-            <li>UV protection</li>
-        </ul> */}
+        <p>Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury. The silhouette is designed to flatter every figure while maintaining the highest standards of bespoke tailoring.</p>
+        <ul style={{ margin: 0, paddingLeft: 18 }}>
+            <li>Hand-stitched with premium silk thread</li>
+            <li>Custom-fitted to your measurements</li>
+            <li>Luxury fabric with natural stretch</li>
+            <li>Reinforced seams for durability</li>
+            <li>Adjustable waistband for perfect fit</li>
+            <li>Includes complimentary alterations</li>
+        </ul>
     </div>
 );
 
 const commonBrief = (
   <div>
-    <p>Sleek and timeless. Titanium glasses with an innovative bridge. A frame to suit every face, Morgan is a classic ‘panto’ shape. Named after James Morgan, the engineer who built the Regent's Canal, it features custom elements including fluid single piece bridge, adjustable nose pads and temple tips based on Constantin Brâncuși's Bird in Space.</p>
+    <p>Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.</p>
     <br />
     <ul style={{ margin: 0, paddingLeft: 18 }}>
-      <li>99.7% pure titanium front</li>
-      <li>More than 4hv on the Vickers hardness test.</li>
-      <li>Ion plated to over 0.3µ</li>
-      <li>Weighs under 5.0g</li>
-      <li>Adjustable titanium nose pads for a comfortable fit</li>
-      <li>UV protection</li>
+      <li>Hand-stitched with premium silk thread</li>
+      <li>Custom-fitted to your measurements</li>
+      <li>Luxury fabric with natural stretch</li>
+      <li>Reinforced seams for durability</li>
+      <li>Adjustable waistband for perfect fit</li>
+      <li>Includes complimentary alterations</li>
     </ul>
   </div>
 );
@@ -38,7 +38,7 @@ const DesignerDummyData = [
         DesignerProducts: [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Silk Evening Gown",
+                ProductName: "Bespoke Silk Evening Gown",
                 ProductDescription: commonDescription,
                 price: 18500,
                 availability: "yes",
@@ -46,7 +46,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Crystal-Embellished Cape",
+                ProductName: "Crystal-Embellished Cape Dress",
                 ProductDescription: commonDescription,
                 price: 23750,
                 availability: "no",
@@ -88,7 +88,7 @@ const DesignerDummyData = [
         DesignerProducts: [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Cashmere Overcoat",
+                ProductName: "Bespoke Cashmere Overcoat",
                 ProductDescription: commonDescription,
                 price: 22100,
                 availability: "yes",
@@ -96,7 +96,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Wool-Blend Suit",
+                ProductName: "Wool-Blend Bespoke Suit",
                 ProductDescription: commonDescription,
                 price: 39800,
                 availability: "no",
@@ -138,7 +138,7 @@ const DesignerDummyData = [
         DesignerProducts: [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Chiffon Ball Gown",
+                ProductName: "Bespoke Chiffon Ball Gown",
                 ProductDescription: commonDescription,
                 price: 31200,
                 availability: "yes",
@@ -188,7 +188,7 @@ const DesignerDummyData = [
         DesignerProducts: [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Baroque Print Blazer",
+                ProductName: "Baroque Print Bespoke Blazer",
                 ProductDescription: commonDescription,
                 price: 27700,
                 availability: "yes",
@@ -196,7 +196,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Velvet Trousers",
+                ProductName: "Velvet Bespoke Trousers",
                 ProductDescription: commonDescription,
                 price: 19100,
                 availability: "no",
@@ -212,7 +212,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Silk Scarf",
+                ProductName: "Silk Bespoke Scarf",
                 ProductDescription: commonDescription,
                 price: 11800,
                 availability: "no",
@@ -238,7 +238,7 @@ const DesignerDummyData = [
         DesignerProducts: [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Organic Cotton Dress",
+                ProductName: "Organic Cotton Bespoke Dress",
                 ProductDescription: commonDescription,
                 price: 39900,
                 availability: "yes",
@@ -246,7 +246,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Recycled Wool Coat",
+                ProductName: "Recycled Wool Bespoke Coat",
                 ProductDescription: commonDescription,
                 price: 21700,
                 availability: "no",
@@ -254,7 +254,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Bamboo Silk Blouse",
+                ProductName: "Bamboo Silk Bespoke Blouse",
                 ProductDescription: commonDescription,
                 price: 12800,
                 availability: "yes",
@@ -262,7 +262,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Vegan Leather Skirt",
+                ProductName: "Vegan Leather Bespoke Skirt",
                 ProductDescription: commonDescription,
                 price: 34100,
                 availability: "no",
@@ -288,7 +288,7 @@ const DesignerDummyData = [
         DesignerProducts: [
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Beaded Velvet Gown",
+                ProductName: "Beaded Velvet Bespoke Gown",
                 ProductDescription: commonDescription,
                 price: 25600,
                 availability: "yes",
@@ -296,7 +296,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Fur-Trimmed Cape",
+                ProductName: "Fur-Trimmed Bespoke Cape",
                 ProductDescription: commonDescription,
                 price: 38400,
                 availability: "no",
@@ -304,7 +304,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Satin Brocade Dress",
+                ProductName: "Satin Brocade Bespoke Dress",
                 ProductDescription: commonDescription,
                 price: 11200,
                 availability: "yes",
@@ -312,7 +312,7 @@ const DesignerDummyData = [
             },
             {
                 image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ProductName: "Embellished Headpiece",
+                ProductName: "Embellished Bespoke Headpiece",
                 ProductDescription: commonDescription,
                 price: 17500,
                 availability: "no",

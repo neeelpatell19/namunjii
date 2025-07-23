@@ -94,3 +94,10 @@
     display: flex;
     justify-content: center;
 }
+
+@media (max-width: 768px) {
+    .FashionFadeHeadingContainer h1{
+        font-size: 10rem;
+        position: static;
+    }
+}

@@ -92,7 +92,7 @@ const FeaturesAndQuestion = () => {
         <div className="MainContainer FeaturesAndQuestion paddingBottom50">
             <div className="PaddingTop">
                 <div className="Container">
-                    <Row gutter={[60, 40]}>
+                    <Row>
                         {/* Features Column */}
                         <Col lg={12} md={24} sm={24} xs={24}>
                             <div className="FeaturesSection">
@@ -119,14 +119,13 @@ const FeaturesAndQuestion = () => {
                                             </Col>
                                         ))}
 
-
                                     </Row>
                                 </div>
                             </div>
                         </Col>
 
                         {/* Questions Column */}
-                        <Col lg={12} md={24} sm={24} xs={24}>
+                        <Col lg={12} md={24} sm={24} xs={24} >
                             <div className="QuestionsSection">
                                 <h2 className="godber-heading">Question</h2>
                                 <div className="QuestionsList">

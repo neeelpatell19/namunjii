@@ -207,7 +207,7 @@
     }
 
     .QuestionHeader {
-        flex-direction: column;
+        /* flex-direction: column; */
         gap: 10px;
     }
 
@@ -232,7 +232,7 @@
     }
 
     .QuestionHeader {
-        flex-direction: column;
+        /* flex-direction: column; */
         gap: 10px;
     }
 

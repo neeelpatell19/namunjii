@@ -106,4 +106,13 @@
         font-size: 1rem;
         gap: 8px;
     }
+    .InstagramGridImage {
+        min-height: 200px;
+        max-height: 200px;
+        overflow: hidden;
+    
+    }
+    .InstagramPromoCenter{
+        opacity: 1 !important;
+    }
 }

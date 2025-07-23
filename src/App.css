@@ -99,7 +99,7 @@ p {
 }
 
 .Container {
-  max-width: 1300px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -252,4 +252,7 @@ button {
  .Container{
   padding: 0px 10px;
  }
+ /* .ant-row .ant-col{
+  padding: 0px 15px !important;
+ } */
 }

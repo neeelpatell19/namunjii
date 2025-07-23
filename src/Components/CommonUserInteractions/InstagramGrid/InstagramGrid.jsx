@@ -19,7 +19,7 @@ const InstagramGrid = () => {
                         </div>
                         <Row gutter={[12, 12]}>
                             {InstagramGridData.map((item) => (
-                                <Col lg={6} md={8} sm={12} xs={24} key={item.id}>
+                                <Col lg={6} md={6} sm={6} xs={12} key={item.id}>
                                     <div className="InstagramGridImage">
                                         <img src={item.image} alt="" />
                                     </div>
