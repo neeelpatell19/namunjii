@@ -15,24 +15,24 @@ const commonDescription = (
 );
 
 const commonBrief = (
-  <div>
-    <p>Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.</p>
-    <br />
-    <ul style={{ margin: 0, paddingLeft: 18 }}>
-      <li>Hand-stitched with premium silk thread</li>
-      <li>Custom-fitted to your measurements</li>
-      <li>Luxury fabric with natural stretch</li>
-      <li>Reinforced seams for durability</li>
-      <li>Adjustable waistband for perfect fit</li>
-      <li>Includes complimentary alterations</li>
-    </ul>
-  </div>
+    <div>
+        <p>Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.</p>
+        <br />
+        <ul style={{ margin: 0, paddingLeft: 18 }}>
+            <li>Hand-stitched with premium silk thread</li>
+            <li>Custom-fitted to your measurements</li>
+            <li>Luxury fabric with natural stretch</li>
+            <li>Reinforced seams for durability</li>
+            <li>Adjustable waistband for perfect fit</li>
+            <li>Includes complimentary alterations</li>
+        </ul>
+    </div>
 );
 
 const DesignerDummyData = [
     {
         slug: "isabella-laurent",
-        image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: ["https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2803.jpeg", "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2803.jpeg",],
         DesignerName: "Isabella Laurent",
         DesignerDescription: "Isabella crafts timeless couture with a modern twist, specializing in silk evening gowns and bespoke luxury pieces.",
         DesignerProducts: [
@@ -94,7 +94,10 @@ const DesignerDummyData = [
     },
     {
         slug: "luca-moretti",
-        image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: [
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2993.jpeg",
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2993.jpeg",
+        ],
         DesignerName: "Luca Moretti",
         DesignerDescription: "Luca is renowned for his Italian craftsmanship, blending classic tailoring with avant-garde luxury fabrics.",
         DesignerProducts: [
@@ -156,7 +159,10 @@ const DesignerDummyData = [
     },
     {
         slug: "sophie-dubois",
-        image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: [
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2996.jpeg",
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2996.jpeg",
+        ],
         DesignerName: "Sophie Dubois",
         DesignerDescription: "Sophie is a Parisian designer celebrated for her haute couture dresses and luxury ready-to-wear collections.",
         DesignerProducts: [
@@ -218,7 +224,10 @@ const DesignerDummyData = [
     },
     {
         slug: "mateo-garcia",
-        image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: [
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Demo1.jpeg",
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Demo1.jpeg",
+        ],
         DesignerName: "Mateo García",
         DesignerDescription: "Mateo fuses Spanish tradition with modern luxury, known for his bold prints and opulent fabrics.",
         DesignerProducts: [
@@ -280,7 +289,10 @@ const DesignerDummyData = [
     },
     {
         slug: "ava-chen",
-        image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: [
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_3563.jpeg",
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_3563.jpeg",
+        ],
         DesignerName: "Ava Chen",
         DesignerDescription: "Ava is a pioneer in sustainable luxury, creating eco-friendly couture with a focus on organic materials.",
         DesignerProducts: [
@@ -342,7 +354,10 @@ const DesignerDummyData = [
     },
     {
         slug: "elena-petrova",
-        image: "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: [
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
+            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
+        ],
         DesignerName: "Elena Petrova",
         DesignerDescription: "Elena's collections are inspired by Russian royalty, featuring opulent fabrics and intricate beadwork.",
         DesignerProducts: [
