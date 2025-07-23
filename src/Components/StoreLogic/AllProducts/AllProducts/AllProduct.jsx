@@ -18,7 +18,7 @@ const AllProduct = () => {
                     <div className="breadCrumbContainer  marginBottom20 marginTop20">
                         <Link to="/">Home</Link>
                         <span> | </span>
-                        <Link to="/all-products" >All Products</Link>
+                        <Link to="/all-products" style={{color:"black"}}>All Products</Link>
                     </div>
                     <div className="CommonFlexGap maxWidth800" style={{ margin: "unset" }}>
                         <h2 style={{ textAlign: "start" }}>Explore All Products</h2>
