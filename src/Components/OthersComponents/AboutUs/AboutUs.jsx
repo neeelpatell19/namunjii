@@ -46,46 +46,25 @@ const AboutUs = () => {
                         <h2 style={{ textAlign: "start" }}>About Namunjii</h2>
                         <p style={{ textAlign: "start" }}><b><i>A home for emerging brands</i></b></p>
                     </div>
-                    <div className="marginTop50">
+                    <div className="AboutMainStoryBox marginTop50  ">
                         <p>In a world where visibility is everything, even the most promising brands can struggle to break through. Hundreds of independent brands are building beautiful products—carefully crafted collections and stories worth sharing.</p>
-                        <br />
                         <p><b>That’s where the idea of Namunjii was born.</b></p>
-                        <br />
                         <p>We are a platform created for brands ready to grow—driven by passionate minds and knowledgeable designers who stay true to their identity rather than following fleeting trends.</p>
-                        <br />
                         <p>Namunjii provides brands with the visibility, support, and platform they need—without diluting their uniqueness.</p>
-                        <br />
                         <p>With a strategic offline presence in key cities across <b>India and the Gulf</b>, we don’t just offer shelf space—we provide a stage. We bring together emerging labels and help them reach the audience they deserve, both through <b>offline, curated premium retail spaces</b> and <b>online via our e-commerce platform</b> across the Asia Pacific region.</p>
-                        <br />
                         <p>Namunjii isn’t just a marketplace. Our offline and online approach is thoughtfully crafted to meet the needs of talented designers, artisans, and photographers—those who deserve a promising presence and whose emerging brands deserve room to rise.</p>
-                        <br />
                         <p>We are here for brands that are ready to grow, for passionate creators and knowledgeable designers who want to make their mark by staying authentic.</p>
-                        <br />
                     </div>
-                    <div className="marginTop50 parallaxImage">
-                        <div>
-                            <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUs.jpg" alt="" />
-                        </div>
+                    <div className="AboutUsImageSection">
+                        <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUs.jpg" alt="About Namunjii" />
                     </div>
-                    <div className="marginTop50">
-                        <Row gutter={[30, 30]}>
-                            <Col lg={12} md={24} sm={24} xs={24}>
-                                <div className="LeftSidePaddingAdjustment">
-                                    <h2>Our vision is to connect with the world through innovation.</h2>
-                                </div>
-                            </Col>
-                            <Col lg={12} md={24} sm={24} xs={24}>
-                                <div className="RightSidePaddingAdjustment">
-                                    {AboutInfo.map((item, index) => (
-
-                                        <div key={index}>
-                                            <h3>{item.title}</h3>
-                                            <p>{item.description}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </Col>
-                        </Row>
+                    <div className="AboutInfoCards">
+                        {AboutInfo.map((item, index) => (
+                            <div className="AboutInfoCard" key={index}>
+                                <h3>{item.title}</h3>
+                                <p>{item.description}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

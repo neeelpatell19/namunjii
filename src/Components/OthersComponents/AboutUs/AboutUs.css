@@ -22,3 +22,121 @@
     flex-direction: column;
     gap: 30px;
 }
+
+/* --- About Namunjii Section --- */
+.AboutMainStoryBox {
+  background: linear-gradient(135deg, #fafbfc 0%, #fff 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(54, 66, 78, 0.07);
+  padding: 40px 32px;
+  margin-bottom: 48px;
+  border-left: 6px solid var(--brandColor);
+}
+
+.AboutMainStoryBox p {
+  font-size: 18px;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 18px;
+  line-height: 1.7;
+}
+
+.AboutMainStoryBox p b {
+  color: var(--brandColor);
+}
+
+.AboutMainStoryBox p:last-child {
+  margin-bottom: 0;
+}
+
+.AboutMainStoryBox .about-highlight {
+  color: var(--OrangeColor);
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.AboutUsImageSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  max-height: 500px;    
+  overflow: hidden;
+  /* margin: 40px 0 48px 0; */
+}
+
+.AboutUsImageSection img {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(54, 66, 78, 0.10);
+  /* max-width: 700px; */
+  width: 100%;
+  /* height: auto; */
+  /* object-fit: cover; */
+}
+
+.AboutInfoCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.AboutInfoCard {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(54, 66, 78, 0.08);
+  padding: 28px 24px;
+  flex: 1 1 280px;
+  min-width: 260px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-left: 4px solid var(--OrangeColor);
+}
+
+.AboutInfoCard h3 {
+  color: var(--brandColor);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.AboutInfoCard p, .AboutInfoCard ul {
+  color: #444;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+.AboutInfoCard ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .AboutInfoCards {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .AboutUsImageSection img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .AboutMainStoryBox {
+    padding: 20px 10px;
+    margin-bottom: 32px;
+  }
+  .AboutInfoCard {
+    padding: 18px 10px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .AboutUsImageSection {
+    margin: 24px 0 32px 0;
+  }
+}

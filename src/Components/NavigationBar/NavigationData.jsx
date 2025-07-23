@@ -17,7 +17,7 @@ const NavigationData = [
     {
         id: 3,
         name: "About",
-        path: "/about",
+        path: "/about-us",
     },
 ]
 
