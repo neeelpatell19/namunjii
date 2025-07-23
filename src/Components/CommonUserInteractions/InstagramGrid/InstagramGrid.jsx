@@ -14,7 +14,11 @@ const InstagramGrid = () => {
                         {/* Centered Instagram Promo Button */}
                         <div className="InstagramPromoCenter">
                             <div className="InstagramPromoBg">
-                                <button className="CommonBtn"><span><FaInstagram style={{ fontSize: "20px" }} />@Namunjii</span></button>
+                                <button className="CommonBtn">
+                                    <span><FaInstagram style={{ fontSize: "20px" }} />@Namunjii</span>
+                                    <span>design@namunjii.com</span>
+                                    <span>+91 98240 37321</span></button>
+
                             </div>
                         </div>
                         <Row gutter={[12, 12]}>

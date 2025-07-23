@@ -50,6 +50,16 @@
     width: 100%;
 }
 
+.InstagramPromoBg .CommonBtn {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.InstagramPromoBg .CommonBtn::before {
+    /* flex-direction: column; */
+    height: unset !important;
+}
+
 .InstagramPromoBg {
     /* background-color: white;
     border: none !important; */
@@ -106,13 +116,15 @@
         font-size: 1rem;
         gap: 8px;
     }
+
     .InstagramGridImage {
         min-height: 200px;
         max-height: 200px;
         overflow: hidden;
-    
+
     }
-    .InstagramPromoCenter{
+
+    .InstagramPromoCenter {
         opacity: 1 !important;
     }
 }
