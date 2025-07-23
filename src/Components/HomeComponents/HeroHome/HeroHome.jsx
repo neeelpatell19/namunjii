@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./HeroHome.css";
 import { HomePageDataCarousalImages, HomePageCrousaltext } from "./HomePageData";
 import { Row, Col } from "antd";
-
+import { Link } from "react-router-dom";
 const HeroHome = () => {
     const { carousalImages } = HomePageDataCarousalImages;
     const { CarousalText } = HomePageCrousaltext;
@@ -64,7 +64,7 @@ const HeroHome = () => {
                 </div>
                 <div className="ShopCollectionBtnContainerFullWidth">
                     <div className="ShopCollectionBtnContainer">
-                        <button className="ShopCollectionBtnFullWidth">Shop Collection</button>
+                        <Link to="/all-products" className="w-100"><button className="ShopCollectionBtnFullWidth">Shop Collection</button></Link>
                     </div>
                 </div>
                 <Row gutter={0}>

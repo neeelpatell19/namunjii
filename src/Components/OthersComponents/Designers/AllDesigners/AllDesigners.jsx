@@ -14,7 +14,7 @@ const AllDesigners = () => {
             <div className="PaddingTop">
                 <div className="Container">
                     <div className="CommonFlexGap maxWidth800">
-                        <h2>Designers Works</h2>
+                        <h2>Brands we support</h2>
                         <p>It's a journey marked by repeated visits, a tapestry woven with diverse encounters, discoveries, and the pleasure derived from navigating the ever-evolving retail realms.</p>
                     </div>
                     <div className="marginTop50 DesignerCardContainer">

@@ -27,8 +27,8 @@ const AvailableCities = () => {
             <div className="PaddingTop">
                 <div className="Container">
                     <div className="marginBottom50 text-center">
-                        <h2>Available Cities</h2>
-                        <p>Our luxury atelier services are available across major cities in India</p>
+                        <h2>Our Presence</h2>
+                        <p><b>across luxury retail spaces</b></p>
                     </div>
 
                     {/* Desktop Grid Layout */}
