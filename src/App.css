@@ -248,6 +248,48 @@ button {
   color: black;
 }
 
+.TrendingDesignsSlideNavigationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.OnlyMobileBtn >div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.prev-btn,
+.next-btn {
+  background-color: transparent;
+  color: var(--brandColor);
+  border: 1px solid rgba(0, 0, 0, 0.145);
+  padding: 10px 20px;
+  font-size: 18px;
+  min-width: 80px;
+  border-radius: 20px;
+
+}
+
+.prev-btn img,
+.next-btn img {
+  width: 30px;
+  height: 30px;
+}
+
+.prev-btn {
+  display: flex;
+  justify-content: unset;
+  align-items: unset;
+}
+
+.next-btn {
+  display: flex;
+  justify-content: end;
+}
+
 @media (max-width: 768px) {
   .Container {
     padding: 0px 10px;

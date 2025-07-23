@@ -83,3 +83,23 @@
     /* align-items: center; */
     justify-content: space-between;
 }
+
+.FlexContainerRepair{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.OnlyMobileBtn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .OnlyMobileBtn {
+        display: block;
+    }
+    .OnlyDesktopBtn{
+        display: none;
+    }
+    
+}
