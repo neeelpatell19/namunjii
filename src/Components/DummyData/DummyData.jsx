@@ -2,222 +2,222 @@ const FashionClothesData = {
     products: [
         {
             id: 1,
-            title: "Elegant Summer Dress",
-            description: "A beautiful floral summer dress perfect for outdoor events and casual gatherings. Made with breathable cotton blend for maximum comfort.",
-            price: 89.99,
+            title: "Bespoke Silk Evening Gown",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 18500,
             category: "Dresses",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 2,
-            title: "Classic Denim Jacket",
-            description: "Timeless denim jacket with a modern fit. Perfect for layering in any season. Features comfortable stretch denim and classic styling.",
-            price: 129.99,
+            title: "Bespoke Cashmere Overcoat",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 22100,
             category: "Shirts",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 3,
-            title: "Premium Cotton T-Shirt",
-            description: "Ultra-soft premium cotton t-shirt with a relaxed fit. Perfect for everyday wear with superior comfort and breathability.",
-            price: 34.99,
+            title: "Bespoke Chiffon Ball Gown",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 31200,
             category: "Tops",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 4,
-            title: "Formal Business Suit",
-            description: "Professional business suit crafted from premium wool blend. Features a modern slim fit with structured shoulders for a confident appearance.",
-            price: 299.99,
+            title: "Wool-Blend Bespoke Suit",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 39800,
             category: "Kurta Sets",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 5,
-            title: "Cozy Winter Sweater",
-            description: "Warm and comfortable winter sweater made from soft merino wool. Perfect for cold weather with a relaxed fit and ribbed cuffs.",
-            price: 79.99,
+            title: "Baroque Print Bespoke Blazer",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 27700,
             category: "Dresses",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 6,
-            title: "Stylish Leather Handbag",
-            description: "Premium leather handbag with spacious interior and multiple compartments. Features gold hardware and adjustable shoulder strap.",
-            price: 189.99,
+            title: "Crystal-Embellished Cape Dress",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 23750,
             category: "Shirts",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 7,
-            title: "Casual Cargo Pants",
-            description: "Comfortable cargo pants with multiple pockets and adjustable waist. Made from durable cotton twill for everyday wear.",
-            price: 64.99,
+            title: "Velvet Bespoke Trousers",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 19100,
             category: "Tops",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 8,
-            title: "Elegant Evening Gown",
-            description: "Stunning evening gown with intricate beading and flowing silhouette. Perfect for formal events and special occasions.",
-            price: 399.99,
+            title: "Beaded Velvet Bespoke Gown",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 25600,
             category: "Kurta Sets",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 9,
-            title: "Sporty Athletic Shoes",
-            description: "High-performance athletic shoes with superior cushioning and breathable mesh upper. Perfect for running and training.",
-            price: 119.99,
+            title: "Organic Cotton Bespoke Dress",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 39900,
             category: "Dresses",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 10,
-            title: "Trendy Bomber Jacket",
-            description: "Stylish bomber jacket with ribbed cuffs and hem. Features a comfortable fit and versatile design for any casual occasion.",
-            price: 149.99,
+            title: "Silk-Lined Tuxedo",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 17600,
             category: "Shirts",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 11,
-            title: "Classic White Blouse",
-            description: "Timeless white blouse with a flattering cut and premium cotton fabric. Perfect for professional settings and casual wear.",
-            price: 54.99,
+            title: "Bamboo Silk Bespoke Blouse",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 12800,
             category: "Tops",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 12,
-            title: "Comfortable Yoga Pants",
-            description: "High-waisted yoga pants with four-way stretch fabric. Perfect for workouts and casual wear with a flattering fit.",
-            price: 69.99,
+            title: "Satin Brocade Bespoke Dress",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 11200,
             category: "Kurta Sets",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 13,
-            title: "Luxury Silk Scarf",
-            description: "Premium silk scarf with beautiful patterns and soft texture. Perfect accessory for adding elegance to any outfit.",
-            price: 89.99,
+            title: "Fur-Trimmed Bespoke Cape",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 38400,
             category: "Dresses",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 14,
-            title: "Casual Graphic Tee",
-            description: "Comfortable graphic t-shirt with unique artwork and soft cotton fabric. Perfect for expressing your personal style.",
-            price: 29.99,
+            title: "Leather Accent Blazer",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 15400,
             category: "Shirts",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 15,
-            title: "Elegant Cocktail Dress",
-            description: "Sophisticated cocktail dress with a flattering silhouette and premium fabric. Perfect for semi-formal events and parties.",
-            price: 179.99,
+            title: "Vegan Leather Bespoke Skirt",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 34100,
             category: "Tops",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 16,
-            title: "Premium Leather Belt",
-            description: "High-quality leather belt with classic buckle design. Made from genuine leather for durability and timeless style.",
-            price: 49.99,
+            title: "Embellished Bespoke Headpiece",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 17500,
             category: "Kurta Sets",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 17,
-            title: "Comfortable Hoodie",
-            description: "Cozy hoodie with soft fleece lining and adjustable drawstring hood. Perfect for casual wear and layering in cooler weather.",
-            price: 74.99,
+            title: "Recycled Wool Bespoke Coat",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 21700,
             category: "Dresses",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 18,
-            title: "Stylish Sunglasses",
-            description: "Trendy sunglasses with UV protection and lightweight frame design. Perfect for protecting your eyes while adding style to any outfit.",
-            price: 129.99,
+            title: "Embroidered Kimono Jacket",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 36200,
             category: "Shirts",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 19,
-            title: "Formal Dress Shirt",
-            description: "Professional dress shirt with a crisp fit and wrinkle-resistant fabric. Perfect for business meetings and formal occasions.",
-            price: 89.99,
+            title: "Silk Bespoke Scarf",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 11800,
             category: "Tops",
             images: [
                 "/Images/DemoImage1.svg",
-                "/Images/DemoImage2.jpg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         },
         {
             id: 20,
-            title: "Casual Denim Shorts",
-            description: "Comfortable denim shorts with a relaxed fit and classic styling. Perfect for warm weather and casual outings.",
-            price: 44.99,
+            title: "Pearl-Trimmed Blazer",
+            description: "Handcrafted with precision in our exclusive atelier, this piece embodies timeless elegance and contemporary sophistication. Each detail is meticulously crafted using the finest materials, ensuring both comfort and luxury.",
+            price: 12900,
             category: "Kurta Sets",
             images: [
                 "/Images/DemoImage2.jpg",
-                "/Images/DemoImage1.svg",
+                "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             ]
         }
     ]
