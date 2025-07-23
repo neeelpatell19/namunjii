@@ -29,7 +29,7 @@ function App() {
           <Route path="/all-products" element={<AllProduct />} />
           <Route path="/vendor-verification" element={<VendorVerification />} />
         </Routes>
-        <FeaturesAndQuestion />
+        {/* <FeaturesAndQuestion /> */}
         {/* <CommonUserInteractionsPopup /> */}
         <InstagramGrid />
         {/* <Cookies /> */}
