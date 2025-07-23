@@ -353,12 +353,12 @@ const DesignerDummyData = [
         ],
     },
     {
-        slug: "elena-petrova",
+        slug: "Greyhorn",
         image: [
             "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
             "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
         ],
-        DesignerName: "Elena Petrova",
+        DesignerName: "Greyhorn",
         DesignerDescription: "Elena's collections are inspired by Russian royalty, featuring opulent fabrics and intricate beadwork.",
         DesignerProducts: [
             {
