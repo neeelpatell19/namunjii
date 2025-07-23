@@ -385,7 +385,7 @@ const NavigationBar = () => {
                                     <p>Fashion is a multifaceted realm that extends beyond clothing, embracing diverse styles, trends, and cultural influences.</p>
                                     <Link to="/vendor-verification">
                                         <div>
-                                            <button className="CommonBtn" onClick={()=>{
+                                            <button className="CommonBtn" onClick={() => {
                                                 setDrawerOpen(false);
                                             }}><span>Become a Vendor</span></button>
                                         </div>
@@ -431,11 +431,20 @@ const NavigationBar = () => {
                 bodyStyle={{ padding: 0 }}
                 className="MobileNavLinksDrawer"
             >
-                <div style={{ padding: 24 }}>
-                    <a href="/" style={{ display: "block", marginBottom: 18, fontWeight: 600, color: "#222" }}>Home</a>
-                    <a href="/designers" style={{ display: "block", marginBottom: 18, fontWeight: 600, color: "#222" }}>Designers</a>
-                    <a href="/all-products" style={{ display: "block", marginBottom: 18, fontWeight: 600, color: "#222" }}>All Products</a>
-                    {/* Add more links as needed */}
+                {/* <div className="mobile-nav-header">
+                    <button className="mobile-nav-close-btn" onClick={() => setMobileNavDrawerOpen(false)} aria-label="Close Menu">&times;</button>
+                </div> */}
+                <div className="mobile-nav-links-list">
+                    {NavigationData.map((item) => (
+                        <Link
+                            key={item.id}
+                            to={item.path}
+                            className="mobile-nav-link"
+                            onClick={() => setMobileNavDrawerOpen(false)}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
                 </div>
             </Drawer>
         </div>

@@ -12,10 +12,16 @@ const AllDesigners = () => {
     return (
         <div className="MainContainer marginTop50 paddingBottom50">
             <div className="PaddingTop">
+                <div className="breadCrumbContainer Container marginBottom20 marginTop20">
+                    <Link to="/">Home</Link>
+                    <span> | </span>
+                    <span className="ColorBlack">About Namunjii</span>
+                </div>
                 <div className="Container">
-                    <div className="CommonFlexGap maxWidth800">
-                        <h2>Brands We Support</h2>
-                        <p>It's a journey marked by repeated visits, a tapestry woven with diverse encounters, discoveries, and the pleasure derived from navigating the ever-evolving retail realms.</p>
+
+                    <div className="CommonFlexGap">
+                        <h2 style={{ textAlign: "start" }}>Brands We Support</h2>
+                        <p style={{ textAlign: "start" }}>It's a journey marked by repeated visits, a tapestry woven with diverse encounters, discoveries, and the pleasure derived from navigating the ever-evolving retail realms.</p>
                     </div>
                     <div className="marginTop50 DesignerCardContainer">
                         <Row gutter={[30, 30]}>

@@ -300,13 +300,13 @@ button {
 
 @media (max-width: 768px) {
   .Container {
-    padding: 0px 10px;
+    padding: 0px 10px !important;
   }
 
   .breadCrumbContainer {
     flex-wrap: wrap;
     gap: 7px;
-    padding: 0px !important;
+    padding: 0px ;
   }
 
   /* .ant-row .ant-col{
