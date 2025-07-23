@@ -4,6 +4,7 @@ import TrendingDesigns from "./TrendingDesigns/TrendingDesigns";
 import DesignProductContainer from "./DesignProductContainer/DesignProductContainer";
 import ProductForHome from "./ProductForHome/ProductForHome";
 import FeaturesAndQuestion from "./FeaturesAndQuestions/FeaturesAndQuestion";
+import AvailableCities from "../OthersComponents/AvailableCities/AvailableCities";
 
 const HomeRoutes = () => {
     return (
@@ -12,6 +13,7 @@ const HomeRoutes = () => {
             <TrendingDesigns />
             <DesignProductContainer />
             <ProductForHome />
+            <AvailableCities />
             {/* <FeaturesAndQuestion /> */}
         </>
     );

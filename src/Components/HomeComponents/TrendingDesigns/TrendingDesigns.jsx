@@ -87,12 +87,15 @@ const TrendingDesigns = () => {
                             breakpoints={{
                                 0: {
                                     slidesPerView: 1,
+                                    spaceBetween: 20,
                                 },
                                 768: {
                                     slidesPerView: 2,
+                                    spaceBetween: 25,
                                 },
                                 1024: {
                                     slidesPerView: 3,
+                                    spaceBetween: 30,
                                 },
                             }}
                             freeMode={true}
@@ -136,18 +139,18 @@ const TrendingDesigns = () => {
                         </Swiper>
                         <div className="TrendingDesignsSlideNavigationContainer marginTop50 OnlyMobileBtn">
                             <div>
-                            <button
-                                className="swiper-nav-btn prev-btn"
-                                onClick={handlePrevClick}
-                            >
-                                <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/ArrowLeft.png" alt="" />
-                            </button>
-                            <button
-                                className="swiper-nav-btn next-btn"
-                                onClick={handleNextClick}
-                            >
-                                <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/ArrowRight.png" alt="" />
-                            </button>
+                                <button
+                                    className="swiper-nav-btn prev-btn"
+                                    onClick={handlePrevClick}
+                                >
+                                    <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/ArrowLeft.png" alt="" />
+                                </button>
+                                <button
+                                    className="swiper-nav-btn next-btn"
+                                    onClick={handleNextClick}
+                                >
+                                    <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/ArrowRight.png" alt="" />
+                                </button>
                             </div>
                         </div>
                     </div>

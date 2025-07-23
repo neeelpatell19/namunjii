@@ -1,0 +1,302 @@
+/* Available Cities Section Styles */
+
+.text-center {
+    text-align: center;
+}
+
+.marginTop50 {
+    margin-top: 50px;
+}
+
+/* Responsive Display Classes */
+.DesktopOnly {
+    display: block;
+}
+
+.MobileOnly {
+    display: none;
+}
+
+.CitiesGridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.CityNameCard {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 16px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.CityNameCard:hover {
+    background: #fff;
+    border-color: #d4af37;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+    transform: translateY(-2px);
+}
+
+.CityName {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    display: block;
+}
+
+.CityNameCard:hover .CityName {
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.CitiesNote {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.ContactLink {
+    color: #d4af37;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 2px 0;
+}
+
+.ContactLink::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #d4af37;
+    transition: width 0.3s ease;
+}
+
+.ContactLink:hover {
+    color: #f4d03f;
+}
+
+.ContactLink:hover::after {
+    width: 100%;
+}
+
+/* Swiper Styles for Mobile */
+.citiesSwiper {
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.citiesSwiper .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contact Information Styles */
+.ContactInfoContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+}
+
+.ContactInfoCard {
+    background: #fff;
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.ContactInfoCard::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: #000;
+    border-radius: 50%;
+}
+
+.ContactInfoCard h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    font-style: italic;
+}
+
+.ContactDetails {
+    text-align: left;
+}
+
+.ContactDetails p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.ContactDetails strong {
+    color: #333;
+    font-weight: 600;
+}
+
+
+.AvailableCitiesPage {
+    position: relative;
+}
+
+.backgroundFadeCityImage {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.05;
+    overflow: hidden;
+}
+
+.backgroundFadeCityImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .DesktopOnly {
+        display: none;
+    }
+
+    .MobileOnly {
+        display: block;
+    }
+
+    .CitiesGridContainer {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .CityNameCard {
+        padding: 14px 16px;
+        width: 100%;
+    }
+
+    .CityName {
+        font-size: 15px;
+    }
+
+    .ContactInfoCard {
+        padding: 25px;
+        margin: 0 20px;
+    }
+
+    .ContactInfoCard h3 {
+        font-size: 18px;
+    }
+
+    .ContactDetails p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .CitiesGridContainer {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+
+    .CityNameCard {
+        padding: 12px 14px;
+    }
+
+    .CityName {
+        font-size: 14px;
+    }
+
+    .ContactInfoCard {
+        padding: 20px;
+        margin: 0 15px;
+    }
+
+    .ContactInfoCard h3 {
+        font-size: 16px;
+    }
+
+    .ContactDetails p {
+        font-size: 14px;
+    }
+}
+
+/* Animation for cards on load */
+.CityNameCard {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.CityNameCard:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.CityNameCard:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.CityNameCard:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.CityNameCard:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.CityNameCard:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.CityNameCard:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.CityNameCard:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.CityNameCard:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+.CityNameCard:nth-child(9) {
+    animation-delay: 0.9s;
+}
+
+.ContactInfoCard {
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 1.0s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

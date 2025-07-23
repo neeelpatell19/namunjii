@@ -13,6 +13,7 @@ import AllDesigners from "./Components/OthersComponents/Designers/AllDesigners/A
 import Designer from "./Components/OthersComponents/Designers/Designer/Designer";
 import IndividualProduct from './Components/StoreLogic/AllProducts/IndiviDualProduct/IndividualProductPage';
 import AllProduct from './Components/StoreLogic/AllProducts/AllProducts/AllProduct';
+import VendorVerification from './Components/OthersComponents/VendorVerification/VendorVerification';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/designers/:designerSlug" element={<Designer />} />
           <Route path="/product/:productName" element={<IndividualProduct />} />
           <Route path="/all-products" element={<AllProduct />} />
+          <Route path="/vendor-verification" element={<VendorVerification />} />
         </Routes>
         <FeaturesAndQuestion />
         {/* <CommonUserInteractionsPopup /> */}
