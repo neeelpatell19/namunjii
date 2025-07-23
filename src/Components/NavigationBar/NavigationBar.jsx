@@ -383,9 +383,13 @@ const NavigationBar = () => {
                                 <div>
                                     <h2>Namunjii</h2>
                                     <p>Fashion is a multifaceted realm that extends beyond clothing, embracing diverse styles, trends, and cultural influences.</p>
-                                    <div>
-                                        <button className="CommonBtn"><span>Shop Now</span></button>
-                                    </div>
+                                    <Link to="/vendor-verification">
+                                        <div>
+                                            <button className="CommonBtn" onClick={()=>{
+                                                setDrawerOpen(false);
+                                            }}><span>Become a Vendor</span></button>
+                                        </div>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="ProductsImagesContainer">
