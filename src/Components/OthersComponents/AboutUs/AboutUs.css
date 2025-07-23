@@ -1,0 +1,24 @@
+.parallaxImage {
+    min-height: 500px;
+    max-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.parallaxImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.LeftSidePaddingAdjustment {
+    padding-right: 40px;
+}
+
+.RightSidePaddingAdjustment {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}

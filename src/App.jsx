@@ -14,6 +14,7 @@ import Designer from "./Components/OthersComponents/Designers/Designer/Designer"
 import IndividualProduct from './Components/StoreLogic/AllProducts/IndiviDualProduct/IndividualProductPage';
 import AllProduct from './Components/StoreLogic/AllProducts/AllProducts/AllProduct';
 import VendorVerification from './Components/OthersComponents/VendorVerification/VendorVerification';
+import AboutUs from './Components/OthersComponents/AboutUs/AboutUs';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/product/:productName" element={<IndividualProduct />} />
           <Route path="/all-products" element={<AllProduct />} />
           <Route path="/vendor-verification" element={<VendorVerification />} />
+          <Route path="/about-us" element={<AboutUs />} />
         </Routes>
         {/* <FeaturesAndQuestion /> */}
         {/* <CommonUserInteractionsPopup /> */}
