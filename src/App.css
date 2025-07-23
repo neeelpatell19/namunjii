@@ -249,10 +249,11 @@ button {
 }
 
 @media (max-width: 768px) {
- .Container{
-  padding: 0px 10px;
- }
- /* .ant-row .ant-col{
+  .Container {
+    padding: 0px 10px;
+  }
+
+  /* .ant-row .ant-col{
   padding: 0px 15px !important;
  } */
 }

@@ -135,7 +135,8 @@ const Designers = () => {
                                         <div className="TrendingDesignsCard">
                                             <div className="ProductCardImageContainer">
                                                 <div className="ProductCardImage">
-                                                    <img src={item.image} alt="" />
+                                                    <img src={item.image[0]} alt="" />
+                                                    <img src={item.image[1]} alt="" />
                                                 </div>
                                                 <div className="PopUpcategoryBtn">
                                                     <button>View Product</button>
