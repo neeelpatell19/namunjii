@@ -31,9 +31,9 @@ const commonBrief = (
 
 const DesignerDummyData = [
     {
-        slug: "isabella-laurent",
+        slug: "Wabi-Sabi",
         image: ["https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2803.jpeg", "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2803.jpeg",],
-        DesignerName: "Isabella Laurent",
+        DesignerName: "Wabi-Sabi",
         DesignerDescription: "Isabella crafts timeless couture with a modern twist, specializing in silk evening gowns and bespoke luxury pieces.",
         DesignerProducts: [
             {

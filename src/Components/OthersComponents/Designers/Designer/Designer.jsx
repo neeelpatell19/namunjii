@@ -73,7 +73,8 @@ const Designers = () => {
                         <Col lg={12}>
                             <div className="h-100 w-100">
                                 <div className="DesignerPageImageContainer h-100 w-100">
-                                    <img src={designer.image} alt="" />
+                                    {/* <img src={designer.image[0]} alt="" /> */}
+                                    <img src="https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
                                 </div>
                             </div>
                         </Col>
