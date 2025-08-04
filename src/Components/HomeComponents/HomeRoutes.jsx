@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HeroHome from "./HeroHome/HeroHome";
 import TrendingDesigns from "./TrendingDesigns/TrendingDesigns";
 import DesignProductContainer from "./DesignProductContainer/DesignProductContainer";
@@ -7,6 +7,9 @@ import FeaturesAndQuestion from "./FeaturesAndQuestions/FeaturesAndQuestion";
 import AvailableCities from "../OthersComponents/AvailableCities/AvailableCities";
 
 const HomeRoutes = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <>
             <HeroHome />
@@ -14,7 +17,7 @@ const HomeRoutes = () => {
             <AvailableCities />
             <DesignProductContainer />
             {/* <ProductForHome /> */}
-           
+
             {/* <FeaturesAndQuestion /> */}
         </>
     );

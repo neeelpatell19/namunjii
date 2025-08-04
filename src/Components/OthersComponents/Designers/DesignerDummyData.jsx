@@ -417,8 +417,23 @@ const DesignerDummyData = [
             },
         ],
     },
-    
+
 
 ];
 
-export default DesignerDummyData;
+const CollectionData = [
+    {
+        CollectionTitle: "Collection 1",
+    },
+    {
+        CollectionTitle: "Collection 2",
+    },
+    {
+        CollectionTitle: "Collection 3",
+    },
+    {
+        CollectionTitle: "Collection 4",
+    },
+]
+
+export { DesignerDummyData, CollectionData };   

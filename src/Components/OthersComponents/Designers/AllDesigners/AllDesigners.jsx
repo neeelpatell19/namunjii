@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import "./AllDesigners.css";
 import { Link } from "react-router-dom";
-import DesignerDummyData from "../DesignerDummyData";
+import { DesignerDummyData } from "../DesignerDummyData";
 import { FiHeart } from "react-icons/fi";
 import { Row, Col } from "antd";
+import BlurImage from "../../../CommonUserInteractions/BlurImage/BlurImage";
 
 const AllDesigners = () => {
     useEffect(() => {
@@ -13,13 +14,15 @@ const AllDesigners = () => {
         <div className="MainContainer marginTop50 paddingBottom50">
             <div className="PaddingTop">
                 <div className="breadCrumbContainer Container marginBottom20 marginTop20">
-                    <Link to="/">Home</Link>
+                    {/* <Link to="/">Home</Link>
                     <span> | </span>
-                    <span className="ColorBlack">About Namunjii</span>
+                    <span className="ColorBlack">About Namunjii</span> */}
+                    <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/WebsiteIdentityIcon.png" alt="" />
+                    <span>Designers</span>
                 </div>
                 <div className="Container">
 
-                    <div className="CommonFlexGap">
+                    <div className="CommonFlexGap maxWidth800">
                         <h2 style={{ textAlign: "start" }}>Brands We Support</h2>
                         <p style={{ textAlign: "start" }}>It's a journey marked by repeated visits, a tapestry woven with diverse encounters, discoveries, and the pleasure derived from navigating the ever-evolving retail realms.</p>
                     </div>
@@ -31,8 +34,16 @@ const AllDesigners = () => {
                                         <div className="TrendingDesignsCard">
                                             <div className="ProductCardImageContainer">
                                                 <div className="ProductCardImage">
-                                                    <img src={item.image[0]} alt="" />
-                                                    <img src={item.image[1]} alt="" />
+                                                    <BlurImage 
+                                                        src={item.image[0]} 
+                                                        alt={item.DesignerName}
+                                                        className="designer-image"
+                                                    />
+                                                    <BlurImage 
+                                                        src={item.image[1]} 
+                                                        alt={item.DesignerName}
+                                                        className="designer-image"
+                                                    />
                                                 </div>
                                                 <div className="PopUpcategoryBtn">
                                                     <button>View Designs</button>
@@ -40,7 +51,7 @@ const AllDesigners = () => {
                                             </div>
                                             <div className="CommonFlexGap">
                                                 <div className="ProductTitle">
-                                                    <h3>{item.DesignerName}</h3>
+                                                    <h4>{item.DesignerName}</h4>
                                                     {/* <p>({item.category})</p> */}
                                                 </div>
                                                 {/* <div className="ProductPrize">

@@ -58,7 +58,7 @@ const AvailableCities = () => {
                             {cities.map((city, index) => (
                                 <SwiperSlide key={index}>
                                     <div className="CityNameCard">
-                                        <span className="CityName">{city}</span>
+                                        <h4>{city}</h4>
                                     </div>
                                 </SwiperSlide>
                             ))}

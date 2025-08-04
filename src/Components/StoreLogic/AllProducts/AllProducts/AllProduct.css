@@ -4,3 +4,213 @@
     overflow: hidden;
     position: relative;
 }
+
+/* BlurImage component styles for AllProduct */
+.AllProductsPage .ProductCardImage .blur-image-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.AllProductsPage .ProductCardImage .blur-image-container:nth-child(1) {
+    opacity: 1;
+    z-index: 1;
+}
+
+.AllProductsPage .ProductCardImage .blur-image-container:nth-child(2) {
+    opacity: 0;
+    z-index: 2;
+}
+
+/* Hover effects for BlurImage in AllProduct */
+.AllProductsPage .TrendingDesignsCard:hover .ProductCardImage .blur-image-container:nth-child(1) {
+    opacity: 0;
+}
+
+.AllProductsPage .TrendingDesignsCard:hover .ProductCardImage .blur-image-container:nth-child(2) {
+    opacity: 1;
+}
+
+/* Collection image styles */
+.CollectionCardContainer .blur-image-container {
+    width: 100%;
+    height: 100%;
+}
+
+.CollectionCardContainer .blur-image-container .actual-image {
+    transition: transform 0.3s ease;
+}
+
+.CollectionCardContainer:hover .blur-image-container .actual-image {
+    transform: scale(1.05);
+}
+
+.FilterSidebarContainer {
+    position: sticky;
+    top: 100px;
+    /* height: 100%; */
+    /* background-color: red; */
+    min-height: 300px;
+}
+
+.AnimatedSearchBarContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.AnimatedSearchBar {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #fafbfc 0%, #fff 100%);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(54, 66, 78, 0.08);
+    padding: 3px 18px;
+    transition: box-shadow 0.25s, border 0.25s;
+    border: 2px solid #36424e81;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+}
+
+.AnimatedSearchBar:focus-within {
+    box-shadow: 0 4px 24px rgba(183, 154, 128, 0.13);
+    border: 2px solid var(--brandColor);
+}
+
+.AnimatedSearchBarIcon {
+    font-size: 22px;
+    color: var(--brandColor);
+    margin-right: 10px;
+    transition: color 0.2s;
+}
+
+.AnimatedSearchBar:focus-within .AnimatedSearchBarIcon {
+    color: var(--OrangeColor);
+}
+
+.AnimatedSearchInput {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 17px;
+    font-family: 'Poppins', sans-serif;
+    color: #222;
+    width: 100%;
+    padding: 6px 0;
+    transition: color 0.2s;
+}
+
+.AnimatedSearchInput::placeholder {
+    color: #b79a80;
+    opacity: 0.8;
+    font-size: 16px;
+}
+
+@media (max-width: 600px) {
+    .AnimatedSearchBar {
+        max-width: 100%;
+        padding: 8px 10px;
+    }
+}
+
+.NoProductsFoundScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    padding: 40px 0 30px 0;
+    background: linear-gradient(135deg, #fafbfc 0%, #fff 100%);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(54, 66, 78, 0.06);
+    margin: 0 auto;
+}
+
+.NoProductsFoundIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.NoProductsFoundText h3 {
+    color: var(--brandColor);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.NoProductsFoundText p {
+    color: #888;
+    font-size: 16px;
+    text-align: center;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .NoProductsFoundScreen {
+        padding: 24px 0 18px 0;
+        min-height: 180px;
+    }
+
+    .NoProductsFoundText h3 {
+        font-size: 18px;
+    }
+
+    .NoProductsFoundText p {
+        font-size: 14px;
+    }
+}
+
+.NoProductsFoundIcon img {
+    width: 100px;
+}
+
+/* NoProductsFound with BlurImage */
+.NoProductsFoundIcon .blur-image-container {
+    width: 100px;
+    height: 100px;
+}
+
+.NoProductsFoundIcon .blur-image-container .actual-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.CollectionContainer {
+    min-height: 200px;
+    /* background-color: red; */
+}
+
+.CollectionCardContainer img {
+    width: 100%;
+    transition: .5s;
+    height: 100%;
+    object-fit: cover;
+}
+
+.CollectionCardContainer {
+    position: relative;
+    overflow: hidden;
+    height: 230px;
+    width: 100%;
+    transition: .5s;
+}
+
+.CollectionCardContainer:hover img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.CollectionCardContainer span {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: white;
+    padding: 5px 10px;
+}

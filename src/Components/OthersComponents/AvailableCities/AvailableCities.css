@@ -39,8 +39,8 @@
 
 .CityNameCard:hover {
     background: #fff;
-    border-color: #d4af37;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+    border-color: var(--OrangeColor);
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     transform: translateY(-2px);
 }
 
@@ -52,7 +52,7 @@
 }
 
 .CityNameCard:hover .CityName {
-    color: #d4af37;
+    color: var(--OrangeColor);
     font-weight: 600;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .ContactLink {
-    color: #d4af37;
+    color: var(--brandColor);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -78,12 +78,12 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: #d4af37;
+    background: var(--orangeColor);
     transition: width 0.3s ease;
 }
 
 .ContactLink:hover {
-    color: #f4d03f;
+    color: var(--OrangeColor);
 }
 
 .ContactLink:hover::after {

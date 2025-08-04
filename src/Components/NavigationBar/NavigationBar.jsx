@@ -8,7 +8,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { CgMenuGridO, CgCloseO } from "react-icons/cg";
 import SocialIconsData from "../CommonUserInteractions/SocialIconsData/SocialIconsData";
 import DummyData from "../DummyData/DummyData";
-import DesignerDummyData from "../OthersComponents/Designers/DesignerDummyData";
+import { DesignerDummyData } from "../OthersComponents/Designers/DesignerDummyData";
 import { FiSearch } from "react-icons/fi";
 import { FiMenu } from "react-icons/fi";
 const shopMegaMenuData = [
@@ -161,7 +161,7 @@ const NavigationBar = () => {
         <div className={`NavigationBarContainer ${navScrolled ? "nav-scrolled" : ""}`}>
             <div className={`Container ${navScrolled ? "nav-scrolled" : ""}`}>
                 <Row>
-                    <Col lg={8} xs={12} sm={12}>
+                    <Col lg={6} xs={12} sm={12}>
                         <div className="NavigationBarLogoContainer">
                             <div>
                                 <Link to="/">
@@ -170,7 +170,7 @@ const NavigationBar = () => {
                             </div>
                         </div>
                     </Col>
-                    <Col lg={8} xs={12} sm={12}>
+                    <Col lg={12} xs={12} sm={12}>
                         <div className="NavigationBarMenuContainer">
                             {NavigationData.map((item) => {
                                 return item.name === "Shop" ? (
@@ -193,7 +193,7 @@ const NavigationBar = () => {
                             )}
                         </div>
                     </Col>
-                    <Col lg={8} xs={12} sm={12}>
+                    <Col lg={6} xs={12} sm={12}>
                         <div className="FunctionlityButtonsContainer" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                             {/* Search Icon for fullscreen modal */}
                             <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 8 }}>

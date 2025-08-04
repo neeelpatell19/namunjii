@@ -10,7 +10,7 @@ import 'swiper/css/pagination';
 // import required modules
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Link, useParams } from "react-router-dom";
-import DesignerDummyData from "../../../OthersComponents/Designers/DesignerDummyData";
+import { DesignerDummyData } from "../../../OthersComponents/Designers/DesignerDummyData";
 import CommonUnderworkingModal from "../../../CommonUserInteractions/CommonUnderworkingModal";
 const IndividualProductPage = () => {
 
@@ -91,7 +91,7 @@ const IndividualProductPage = () => {
                         <span> | </span>
                         <span className="ColorBlack">{product?.ProductName}</span>
                     </div>
-                    <div className="SingleProductContainer">
+                    <div className="SingleProductContainer marginTop20">
                         <Row gutter={[30, 30]} className="w-100">
                             <Col lg={12} md={24} xs={24}>
                                 <div className="IndividualProductPageImageContainer">

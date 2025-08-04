@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import DesignerDummyData from "../DesignerDummyData";
+import { DesignerDummyData } from "../DesignerDummyData";
 import "./Designer.css";
 import { Row, Col, Select, Button, Slider } from "antd";
 import FashionClothesData from "../../../DummyData/DummyData";
@@ -49,7 +49,7 @@ const Designers = () => {
     // --- END FILTER LOGIC ---
 
     return (
-        <div className="MainContainer paddingBottom50 DesignerPage">
+        <div className="MainContainer paddingBottom50 DesignerPage marginTop50">
             <div className="PaddingTop">
                 <div className="breadCrumbContainer Container marginBottom20 marginTop20">
                     <Link to="/">Home</Link>
@@ -58,7 +58,7 @@ const Designers = () => {
                     <span> | </span>
                     <span className="ColorBlack">{designer.DesignerName}</span>
                 </div>
-                <div className="HeighAdjustContainer">
+                <div className="HeighAdjustContainer marginTop20">
                     <Row className="h-100 w-100">
                         <Col lg={12}>
                             <div className="h-100 w-100">
@@ -145,7 +145,7 @@ const Designers = () => {
                                             </div>
                                             <div className="CommonFlexGap">
                                                 <div className="ProductTitle">
-                                                    <h3>{item.ProductName}</h3>
+                                                    <h4>{item.ProductName}</h4>
                                                 </div>
                                                 <div className="ProductPrize">
                                                     <p>₹&nbsp;{item.price}</p>

@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./VendorVerification.css";
 import { Link } from "react-router-dom";
 
 const initialState = {
     fullName: "",
     email: "",
+    mobileNumber: "",
     brandName: "",
     brandDescription: "",
     portfolio: null,
@@ -86,6 +87,7 @@ const VendorVerification = () => {
         const payload = {
             fullName: form.fullName,
             emailAddress: form.email,
+            mobileNumber: form.mobileNumber,
             brandName: form.brandName,
             brandDescription: form.brandDescription,
             portfolioUpload: form.portfolioUrl,
@@ -120,6 +122,7 @@ const VendorVerification = () => {
         return (
             form.fullName.trim() !== "" &&
             form.email.trim() !== "" &&
+            form.mobileNumber.trim() !== "" &&
             form.brandName.trim() !== "" &&
             form.brandDescription.trim() !== "" &&
             form.portfolio !== null &&
@@ -141,6 +144,7 @@ const VendorVerification = () => {
         const errors = {};
         if (!form.fullName.trim()) errors.fullName = 'Full Name is required.';
         if (!form.email.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) errors.email = 'Valid Email Address is required.';
+        if (!form.mobileNumber.trim() || !/^\d{10}$/.test(form.mobileNumber.trim())) errors.mobileNumber = 'Valid 10-digit Mobile Number is required.';
         if (!form.brandName.trim()) errors.brandName = 'Brand Name is required.';
         if (!form.brandDescription.trim()) errors.brandDescription = 'Brand Description is required.';
         if (!form.portfolioUrl) errors.portfolioUpload = 'Portfolio upload is required.';
@@ -233,6 +237,10 @@ const VendorVerification = () => {
         fileInputRef.current.click();
     };
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div>
             <div className="MainContainer paddingBottom50 VendorVerificationPage marginTop50">
@@ -265,6 +273,11 @@ const VendorVerification = () => {
                                         <label>Email Address<span className="required">*</span></label>
                                         <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" />
                                         {errors.email && <p className="error-message">{errors.email}</p>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Mobile Number<span className="required">*</span></label>
+                                        <input type="text" name="mobileNumber" value={form.mobileNumber} onChange={handleChange} required placeholder="Enter your phone number" inputMode="numeric" pattern="[0-9]{10}" />
+                                        {errors.mobileNumber && <p className="error-message">{errors.mobileNumber}</p>}
                                     </div>
                                     <div className="form-group">
                                         <label>Brand Name<span className="required">*</span></label>

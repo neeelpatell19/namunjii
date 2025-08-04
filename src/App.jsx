@@ -2,7 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import HomeRoutes from './Components/HomeComponents/HomeRoutes'
 import FeaturesAndQuestion from './Components/HomeComponents/FeaturesAndQuestions/FeaturesAndQuestion'
 import CommonUserInteractionsPopup from './Components/CommonUserInteractions/CommonUserInteractionsPopup'
@@ -15,6 +16,100 @@ import IndividualProduct from './Components/StoreLogic/AllProducts/IndiviDualPro
 import AllProduct from './Components/StoreLogic/AllProducts/AllProducts/AllProduct';
 import VendorVerification from './Components/OthersComponents/VendorVerification/VendorVerification';
 import AboutUs from './Components/OthersComponents/AboutUs/AboutUs';
+import ContactUs from './Components/OthersComponents/ContactUs/ContactUs';
+
+// Page transition variants
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+    scale: 0.98
+  },
+  in: {
+    opacity: 1,
+    y: 0,
+    scale: 1
+  },
+  out: {
+    opacity: 0,
+    y: -20,
+    scale: 0.98
+  }
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.4
+};
+
+// Wrapper component for page transitions
+const PageTransition = ({ children }) => {
+  return (
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// Routes component with transitions
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={
+          <PageTransition>
+            <HomeRoutes />
+          </PageTransition>
+        } />
+        <Route path="/designers" element={
+          <PageTransition>
+            <AllDesigners />
+          </PageTransition>
+        } />
+        <Route path="/designers/:designerSlug" element={
+          <PageTransition>
+            <Designer />
+          </PageTransition>
+        } />
+        <Route path="/product/:productName" element={
+          <PageTransition>
+            <IndividualProduct />
+          </PageTransition>
+        } />
+        <Route path="/all-products" element={
+          <PageTransition>
+            <AllProduct />
+          </PageTransition>
+        } />
+        <Route path="/vendor-verification" element={
+          <PageTransition>
+            <VendorVerification />
+          </PageTransition>
+        } />
+        <Route path="/about-us" element={
+          <PageTransition>
+            <AboutUs />
+          </PageTransition>
+        } />
+        <Route path="/contact-us" element={
+          <PageTransition>
+            <ContactUs />
+          </PageTransition>
+        } />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -22,15 +117,7 @@ function App() {
     <>
       <BrowserRouter>
         <NavigationBar />
-        <Routes>
-          <Route path="/" element={<HomeRoutes />} />
-          <Route path="/designers" element={<AllDesigners />} />
-          <Route path="/designers/:designerSlug" element={<Designer />} />
-          <Route path="/product/:productName" element={<IndividualProduct />} />
-          <Route path="/all-products" element={<AllProduct />} />
-          <Route path="/vendor-verification" element={<VendorVerification />} />
-          <Route path="/about-us" element={<AboutUs />} />
-        </Routes>
+        <AnimatedRoutes />
         {/* <FeaturesAndQuestion /> */}
         {/* <CommonUserInteractionsPopup /> */}
         <InstagramGrid />

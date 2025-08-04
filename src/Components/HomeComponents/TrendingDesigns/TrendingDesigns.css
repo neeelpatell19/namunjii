@@ -8,6 +8,34 @@
     transition: opacity 0.5s ease;
 }
 
+/* BlurImage component styles */
+.TrendingDesignsCard .ProductCardImage .blur-image-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.TrendingDesignsCard .ProductCardImage .blur-image-container:nth-child(1) {
+    opacity: 1;
+    z-index: 1;
+}
+
+.TrendingDesignsCard .ProductCardImage .blur-image-container:nth-child(2) {
+    opacity: 0;
+    z-index: 2;
+}
+
+/* Hover effects for BlurImage */
+.TrendingDesignsCard:hover .ProductCardImage .blur-image-container:nth-child(1) {
+    opacity: 0;
+}
+
+.TrendingDesignsCard:hover .ProductCardImage .blur-image-container:nth-child(2) {
+    opacity: 1;
+}
+
 /* .TrendingDesignsCard .ProductCardImageContainer {
     border-radius: 10px;
 } */

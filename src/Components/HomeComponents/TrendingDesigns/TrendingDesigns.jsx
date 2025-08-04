@@ -31,7 +31,7 @@ const TrendingDesigns = () => {
             <div className="PaddingTop">
                 <div className="Container">
                     <div className="FlexContainerRepair">
-                        <div className="marginBottom50">
+                        <div className="CommonFlexGap marginBottom50">
                             <h2>Trending Designs</h2>
                             <p>Explore curated collections from our top designers.</p>
                         </div>
@@ -125,7 +125,7 @@ const TrendingDesigns = () => {
                                             </div>
                                             <div className="CommonFlexGap">
                                                 <div className="ProductTitle">
-                                                    <h3>{item.title}</h3>
+                                                    <h4>{item.title}</h4>
                                                     {/* <p>({item.category})</p> */}
                                                 </div>
                                                 <div className="ProductPrize">

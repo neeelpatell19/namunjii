@@ -6,7 +6,7 @@ import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-
+import { Link } from "react-router-dom";
 
 const DesignProductContainer = () => {
     const headingRef = useRef(null);
@@ -69,7 +69,7 @@ const DesignProductContainer = () => {
                                 <div className="CommonFlexGap">
                                     <h2>Graceful & Trendy Style</h2>
                                     <p>Join the exploration of a fashion narrative that transcends the ordinary, inviting you to embrace a style that is both elegant and on the pulse of the latest trends.</p>
-                                    <button className="CommonBtn"><span>Shop Now</span></button>
+                                    <Link to="/all-products"><button className="CommonBtn"><span>Shop Now</span></button></Link>
                                 </div>
                             </div>
                         </Col>
