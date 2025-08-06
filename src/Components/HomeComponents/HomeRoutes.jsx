@@ -5,6 +5,7 @@ import DesignProductContainer from "./DesignProductContainer/DesignProductContai
 import ProductForHome from "./ProductForHome/ProductForHome";
 import FeaturesAndQuestion from "./FeaturesAndQuestions/FeaturesAndQuestion";
 import AvailableCities from "../OthersComponents/AvailableCities/AvailableCities";
+import AboutUs from "../OthersComponents/AboutUs/AboutUs";
 
 const HomeRoutes = () => {
     useEffect(() => {
@@ -13,9 +14,10 @@ const HomeRoutes = () => {
     return (
         <>
             <HeroHome />
-            <TrendingDesigns />
+            <AboutUs/>
+            {/* <TrendingDesigns /> */}
             <AvailableCities />
-            <DesignProductContainer />
+            {/* <DesignProductContainer /> */}
             {/* <ProductForHome /> */}
 
             {/* <FeaturesAndQuestion /> */}

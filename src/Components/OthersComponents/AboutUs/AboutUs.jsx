@@ -90,7 +90,7 @@ const AboutUs = () => {
                                         <br />
                                         {/* <p>We are a platform created for brands ready to grow—driven by passionate minds and knowledgeable designers who stay true to their identity rather than following fleeting trends.</p> */}
                                         <br />
-                                        <Link to="/all-products"> <button className="CommonBtn"><span>Explore Collections</span></button></Link>
+                                        {/* <Link to="/all-products"> <button className="CommonBtn"><span>Explore Collections</span></button></Link> */}
                                     </div>
                                     <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NamunjiiAbout1.jpeg" alt="About Namunjii" />
                                 </div>
@@ -128,7 +128,7 @@ const AboutUs = () => {
                         ))}
                     </div> */}
                 </div>
-                <div className="marginTop50 GridEditContainer paddingBottom50 paddingTop50">
+                {/* <div className="marginTop50 GridEditContainer paddingBottom50 paddingTop50">
                     <div className="Container">
                         <Row gutter={[30, 30]}>
                             {GridData.map((item, index) => (
@@ -144,8 +144,8 @@ const AboutUs = () => {
                             ))}
                         </Row>
                     </div>
-                </div>
-                <Testimonials />
+                </div> */}
+                {/* <Testimonials /> */}
             </div>
         </div>
     )

@@ -23,7 +23,7 @@ const AvailableCities = () => {
     };
 
     return (
-        <div className="MainContainer paddingBottom50 AllProductsPage marginTop50">
+        <div className="MainContainer paddingBottom50 AllProductsPage ">
             <div className="PaddingTop">
                 <div className="Container">
                     <div className="marginBottom50 text-center">

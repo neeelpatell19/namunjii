@@ -1,19 +1,19 @@
 const NavigationData = [
-    {
-        id: 1,
-        name: "Home",
-        path: "/",
-    },
-    {
-        id: 2,
-        name: "Store",
-        path: "/all-products",
-    },
-    {
-        id: "designers",
-        name: "Designers",
-        path: "/designers",
-    },
+    // {
+    //     id: 1,
+    //     name: "Home",
+    //     path: "/",
+    // },
+    // {
+    //     id: 2,
+    //     name: "Store",
+    //     path: "/all-products",
+    // },
+    // {
+    //     id: "designers",
+    //     name: "Designers",
+    //     path: "/designers",
+    // },
     {
         id: 3,
         name: "About",
@@ -24,11 +24,11 @@ const NavigationData = [
         name: "Join Us",
         path: "/vendor-verification",
     },
-    {
-        id: 5,
-        name: "Contact Us",
-        path: "/contact-us",
-    },
+    // {
+    //     id: 5,
+    //     name: "Contact Us",
+    //     path: "/contact-us",
+    // },
 ]
 
 const LogoFile = "/LogoImages/WithNameWhiteLogo.svg"

@@ -126,5 +126,6 @@
 
     .InstagramPromoCenter {
         opacity: 1 !important;
+        right: 0px;
     }
 }
