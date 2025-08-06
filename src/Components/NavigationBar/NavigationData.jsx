@@ -1,9 +1,9 @@
 const NavigationData = [
-    // {
-    //     id: 1,
-    //     name: "Home",
-    //     path: "/",
-    // },
+    {
+        id: 1,
+        name: "Home",
+        path: "/",
+    },
     // {
     //     id: 2,
     //     name: "Store",
@@ -14,11 +14,11 @@ const NavigationData = [
     //     name: "Designers",
     //     path: "/designers",
     // },
-    {
-        id: 3,
-        name: "About",
-        path: "/about-us",
-    },
+    // {
+    //     id: 3,
+    //     name: "About",
+    //     path: "/about-us",
+    // },
     {
         id: 4,
         name: "Join Us",
