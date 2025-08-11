@@ -62,11 +62,11 @@ const HeroHome = () => {
                         </div>
                     </div>
                 </div>
-                <div className="ShopCollectionBtnContainerFullWidth">
+                {/* <div className="ShopCollectionBtnContainerFullWidth">
                     <div className="ShopCollectionBtnContainer">
                         <Link to="/all-products" className="w-100"><button className="ShopCollectionBtnFullWidth">Shop Collection</button></Link>
                     </div>
-                </div>
+                </div> */}
                 <Row gutter={0}>
                     <Col span={12} className="HeroHomeContainerLeftImages">
                         <div className="CarousalImages">
