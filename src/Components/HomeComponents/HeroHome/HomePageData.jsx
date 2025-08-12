@@ -40,21 +40,8 @@ const HomePageDataCarousalImages = {
 const HomePageCrousaltext = {
     CarousalText: [
         {
-text:"A home for emerging brands"
+            text: "A home for emerging brands"
         },
-
-        {
-            text: "Luxury Woven with Tradition"
-        },
-        {
-            text: "Where Craft Meets Couture"
-        },
-        {
-            text: "The Art of Tailoring"
-        },
-        {
-            text: "Elevated Style, Handmade Grace"
-        }
     ]
 }
 export { HomePageDataCarousalImages, HomePageCrousaltext };

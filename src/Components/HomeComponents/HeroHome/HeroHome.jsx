@@ -91,7 +91,7 @@ const HeroHome = () => {
                                         isTextTransitioning && index === previousTextIndex ? 'fade-out' : ''
                                     }`}
                                 >
-                                  <h2 style={{color:"white"}}>  {textItem.text}</h2>
+                                  <h2 style={{color:"white"}}>{textItem.text}</h2>
                                 </div>
                             ))}
                         </div>
