@@ -24,6 +24,14 @@ const HomePageDataCarousalImages = {
             image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/CarousalImage3.png",
             title: "Elevated Style, Handmade Grace"
         },
+        // {
+        //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/CarousalImage5.jpeg",
+        //     title: "Elevated Style, Handmade Grace"
+        // },
+        // {
+        //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/CarousalImage5.jpeg",
+        //     title: "Elevated Style, Handmade Grace"
+        // }
     ]
 }
 

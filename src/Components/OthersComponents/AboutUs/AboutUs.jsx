@@ -98,10 +98,10 @@ const AboutUs = () => {
                             <Col lg={24} md={12} sm={24} xs={24}>
                                 <div className="RightsideAboutContainer marginBottom50">
                                     <div>
-                                        <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NamunjiiAbout2.jpeg" alt="" />
+                                        <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUsNamunjji1.jpg" alt="" />
                                     </div>
                                     <div>
-                                        <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NamunjiiAbout1.jpeg" alt="About Namunjii" />
+                                        <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUsNamunjji2.jpeg" alt="About Namunjii" />
                                     </div>
                                 </div>
                             </Col>
