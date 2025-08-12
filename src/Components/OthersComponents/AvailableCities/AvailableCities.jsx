@@ -6,7 +6,7 @@ import 'swiper/css';
 
 const AvailableCities = () => {
     const cities = [
-        "Ahmedabad", "Mumbai", "Delhi", "Goa", "Bengaluru",
+        "Ahmedabad", "Mumbai", "Delhi","Dubai", "Goa", "Bengaluru",
         "Bekal", "Hyderabad", "Cochin", "Chennai"
     ];
 
