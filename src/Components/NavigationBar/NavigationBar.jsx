@@ -276,7 +276,7 @@ const NavigationBar = () => {
                                                 }}
                                             />
                                         </div>
-                                        <div style={{ width: "100%", maxHeight: 320, minHeight: 60, overflowY: "auto", borderRadius: 12, background: "#fff" }}>
+                                        {/* <div style={{ width: "100%", maxHeight: 320, minHeight: 60, overflowY: "auto", borderRadius: 12, background: "#fff" }}>
                                             {search && searchResults.length === 0 && (
                                                 <div style={{ color: "#aaa", textAlign: "center", padding: 24 }}>No results found.</div>
                                             )}
@@ -308,7 +308,7 @@ const NavigationBar = () => {
                                                     </a>
                                                 )
                                             )}
-                                        </div>
+                                        </div> */}
                                         <button
                                             onClick={closeSearchModal}
                                             style={{
