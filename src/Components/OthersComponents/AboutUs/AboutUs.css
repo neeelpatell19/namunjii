@@ -154,6 +154,14 @@
 }
 
 @media (max-width: 900px) {
+  .RightsideAboutContainer>div {
+    height: 100% !important;
+  }
+  .RightsideAboutContainer {
+    flex-direction: column;
+    height: unset !important;
+
+  }
 
   /* .AboutInfoCards {
     flex-direction: column;
