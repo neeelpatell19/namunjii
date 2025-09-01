@@ -69,12 +69,12 @@ const VendorVerification = () => {
     const apibaseUrl = import.meta.env.VITE_BASE_URL;
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
-        
+
         if (type === "checkbox" && name === "termsAccepted") {
             setForm({ ...form, [name]: checked });
         } else if (type === "checkbox" && name === "productCategories") {
             let updated = [...form.productCategories];
-            
+
             if (checked) {
                 if (value === "Other") {
                     setShowCustomCategoryInput(true);
@@ -92,17 +92,20 @@ const VendorVerification = () => {
                     updated = updated.filter((cat) => cat !== value);
                 }
             }
-            
+
             setForm({ ...form, productCategories: updated });
         } else if (type === "file") {
             setForm({ ...form, portfolio: files[0] });
         } else if (name !== "socialLinks") {
-            // For text inputs, allow spaces in the middle but prevent leading/trailing spaces
+            // Simple validation: prevent 2 or more consecutive blank spaces
             let processedValue = value;
             if (type === "text" || type === "email" || type === "textarea") {
-                // Allow spaces in the middle (like "Sachin Padyar") but remove leading/trailing spaces
-                // This regex removes only leading (^) and trailing ($) spaces, keeping middle spaces intact
-                processedValue = value.replace(/^\s+|\s+$/g, '');
+                // Remove 2 or more consecutive spaces, replace with single space
+                processedValue = value.replace(/\s{2,}/g, ' ');
+                // If the result is only spaces, clear it completely
+                if (processedValue.trim() === '') {
+                    processedValue = '';
+                }
             }
             setForm({ ...form, [name]: processedValue });
         }
@@ -131,7 +134,7 @@ const VendorVerification = () => {
     const handleCustomCategoryChange = (e) => {
         const value = e.target.value;
         setCustomCategory(value);
-        
+
         // Don't update form until user finishes typing (onBlur or when they stop typing)
         // This prevents saving every single character
     };
@@ -141,7 +144,7 @@ const VendorVerification = () => {
         if (customCategory && customCategory.trim().length >= 2) {
             let updated = [...form.productCategories];
             const otherIndex = updated.indexOf("Other");
-            
+
             if (otherIndex !== -1) {
                 // Replace "Other" with the actual custom category
                 updated[otherIndex] = customCategory.trim();
@@ -214,8 +217,8 @@ const VendorVerification = () => {
             form.portfolio !== null &&
             form.priceRange.trim() !== "" &&
             form.whyNamunjii.trim() !== "" &&
-            form.productCategories.length > 0 &&
-            form.termsAccepted
+            form.productCategories.length > 0
+            // form.termsAccepted - temporarily hidden
         );
     };
 
@@ -228,63 +231,67 @@ const VendorVerification = () => {
     // Validate form fields according to backend schema
     const validateForm = () => {
         const errors = {};
-        
-        // Full Name validation - allows spaces in middle (like "Sachin Padyar"), no leading/trailing spaces, minimum 2 characters
+
+        // Full Name validation - check for empty, spaces-only, and consecutive spaces
         if (!form.fullName.trim()) {
             errors.fullName = 'Full Name is required.';
         } else if (form.fullName.trim().length < 2) {
             errors.fullName = 'Full Name must be at least 2 characters long.';
-        } else if (/^\s|\s$/.test(form.fullName)) {
-            errors.fullName = 'Full Name cannot start or end with spaces (but spaces in middle are allowed).';
+        } else if (/\s{2,}/.test(form.fullName)) {
+            errors.fullName = '2 or more consecutive blank spaces are not allowed.';
+        } else if (/^\s+$/.test(form.fullName)) {
+            errors.fullName = 'Full Name cannot contain only spaces.';
         }
-        
+
         // Email validation
         if (!form.email.trim()) {
             errors.email = 'Email Address is required.';
         } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
             errors.email = 'Please enter a valid email address.';
         }
-        
+
         // Mobile Number validation
         if (!form.mobileNumber.trim()) {
             errors.mobileNumber = 'Mobile Number is required.';
         } else if (!/^\d{10}$/.test(form.mobileNumber.trim())) {
             errors.mobileNumber = 'Please enter a valid 10-digit mobile number.';
         }
-        
-        // Brand Name validation - allows spaces in middle, no leading/trailing spaces, minimum 2 characters
+
+        // Brand Name validation - check for empty, spaces-only, and consecutive spaces
         if (!form.brandName.trim()) {
             errors.brandName = 'Brand Name is required.';
         } else if (form.brandName.trim().length < 2) {
             errors.brandName = 'Brand Name must be at least 2 characters long.';
-        } else if (/^\s|\s$/.test(form.brandName)) {
-            errors.brandName = 'Brand Name cannot start or end with spaces (but spaces in middle are allowed).';
+        } else if (/\s{2,}/.test(form.brandName)) {
+            errors.brandName = '2 or more consecutive blank spaces are not allowed.';
+        } else if (/^\s+$/.test(form.brandName)) {
+            errors.brandName = 'Brand Name cannot contain only spaces.';
         }
-        
+
         // Brand Description validation
         if (!form.brandDescription.trim()) {
             errors.brandDescription = 'Brand Description is required.';
         } else if (form.brandDescription.trim().length < 20) {
             errors.brandDescription = 'Brand Description must be at least 20 characters long.';
         }
-        
+
         // Portfolio validation
         if (!form.portfolioUrl) {
             errors.portfolioUpload = 'Portfolio upload is required.';
         }
-        
+
         // Social Media Links validation
         if (!form.socialLinks || !Array.isArray(form.socialLinks) || form.socialLinks.length === 0) {
             errors.socialMediaLinks = 'At least one social media link is required.';
         }
-        
+
         // Product Categories validation
         if (!form.productCategories || !Array.isArray(form.productCategories) || form.productCategories.length === 0) {
             errors.productCategories = 'At least one product category is required.';
         } else if (form.productCategories.includes("Other") && (!customCategory || customCategory.trim().length < 2)) {
             errors.productCategories = 'Please specify a custom category (minimum 2 characters).';
         }
-        
+
         // Price Range validation
         if (!form.priceRange.trim()) {
             errors.priceRange = 'Price Range is required.';
@@ -296,19 +303,19 @@ const VendorVerification = () => {
                 errors.priceRange = 'Start price must be less than end price.';
             }
         }
-        
+
         // Why Namunjii validation
         if (!form.whyNamunjii.trim()) {
             errors.whyNamunjii = 'This field is required.';
         } else if (form.whyNamunjii.trim().length < 10) {
             errors.whyNamunjii = 'Please provide a more detailed response (minimum 10 characters).';
         }
-        
-        // Terms validation
-        if (!form.termsAccepted) {
-            errors.termsAccepted = 'You must agree to the terms and conditions.';
-        }
-        
+
+        // Terms validation - temporarily hidden
+        // if (!form.termsAccepted) {
+        //     errors.termsAccepted = 'You must agree to the terms and conditions.';
+        // }
+
         return errors;
     };
 
@@ -447,7 +454,7 @@ const VendorVerification = () => {
             const savedForm = localStorage.getItem(STORAGE_KEY);
             if (savedForm) {
                 const parsed = JSON.parse(savedForm);
-                
+
                 // Restore custom category state
                 if (parsed.customCategory) {
                     setCustomCategory(parsed.customCategory);
@@ -455,7 +462,7 @@ const VendorVerification = () => {
                 if (parsed.showCustomCategoryInput) {
                     setShowCustomCategoryInput(parsed.showCustomCategoryInput);
                 }
-                
+
                 // Check if the saved data has meaningful content to show notification
                 const hasContent = Object.keys(parsed).some(key => {
                     if (key === 'termsAccepted') return false; // Don't count checkbox for notification
@@ -463,7 +470,7 @@ const VendorVerification = () => {
                     if (typeof parsed[key] === 'string') return parsed[key].trim() !== '';
                     return false;
                 });
-                
+
                 if (hasContent) {
                     setTimeout(() => setDataRestored(true), 100); // Show notification after component mounts
                 }
@@ -480,7 +487,7 @@ const VendorVerification = () => {
                 // Update form with custom category after 500ms of no typing
                 let updated = [...form.productCategories];
                 const otherIndex = updated.indexOf("Other");
-                
+
                 if (otherIndex !== -1) {
                     // Replace "Other" with the actual custom category
                     updated[otherIndex] = customCategory.trim();
@@ -498,7 +505,7 @@ const VendorVerification = () => {
 
     return (
         <div>
-            <div className="MainContainer paddingBottom50 VendorVerificationPage marginTop50">
+            <div className="MainContainer paddingBottom50 VendorVerificationPage marginTop50 sectionPaddingTop">
                 <div className="PaddingTop">
                     <div className="Container">
                         {/* <div className="breadCrumbContainer  marginBottom20 marginTop20">
@@ -593,11 +600,11 @@ const VendorVerification = () => {
                                 <form className="vendor-form" onSubmit={handleSubmit}>
                                     <div className="form-group">
                                         <label>Full Name<span className="required">*</span></label>
-                                        <input 
-                                            type="text" 
-                                            name="fullName" 
-                                            value={form.fullName} 
-                                            onChange={handleChange} 
+                                        <input
+                                            type="text"
+                                            name="fullName"
+                                            value={form.fullName}
+                                            onChange={handleChange}
                                             onBlur={() => {
                                                 const fieldErrors = validateForm();
                                                 if (fieldErrors.fullName) {
@@ -606,8 +613,8 @@ const VendorVerification = () => {
                                                     setErrors(prev => ({ ...prev, fullName: undefined }));
                                                 }
                                             }}
-                                            required 
-                                            placeholder="Enter your full name (e.g. Sachin Padyar)" 
+                                            required
+                                            placeholder="Enter your full name (e.g. Sachin Padyar)"
                                         />
                                         {errors.fullName && <p className="error-message">{errors.fullName}</p>}
                                     </div>
@@ -623,11 +630,11 @@ const VendorVerification = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>Brand Name<span className="required">*</span></label>
-                                        <input 
-                                            type="text" 
-                                            name="brandName" 
-                                            value={form.brandName} 
-                                            onChange={handleChange} 
+                                        <input
+                                            type="text"
+                                            name="brandName"
+                                            value={form.brandName}
+                                            onChange={handleChange}
                                             onBlur={() => {
                                                 const fieldErrors = validateForm();
                                                 if (fieldErrors.brandName) {
@@ -636,8 +643,8 @@ const VendorVerification = () => {
                                                     setErrors(prev => ({ ...prev, brandName: undefined }));
                                                 }
                                             }}
-                                            required 
-                                            placeholder="Enter your brand name (e.g. My Brand Name)" 
+                                            required
+                                            placeholder="Enter your brand name (e.g. My Brand Name)"
                                         />
                                         {errors.brandName && <p className="error-message">{errors.brandName}</p>}
                                     </div>
@@ -739,7 +746,7 @@ const VendorVerification = () => {
                                                 </label>
                                             ))}
                                         </div>
-                                        
+
                                         {/* Custom Category Input */}
                                         {showCustomCategoryInput && (
                                             <div className="custom-category-input" style={{ marginTop: '10px' }}>
@@ -759,15 +766,15 @@ const VendorVerification = () => {
                                                 />
                                                 <small style={{ color: '#666', fontSize: '12px', marginTop: '5px', display: 'block' }}>
                                                     Please specify your custom product category (minimum 2 characters)
-                                                    {customCategory && customCategory.length >= 2 && (
+                                                    {/* {customCategory && customCategory.length >= 2 && (
                                                         <span style={{ color: '#28a745', marginLeft: '5px' }}>
                                                             ✓ Will be saved as: "{customCategory.trim()}"
                                                         </span>
-                                                    )}
+                                                    )} */}
                                                 </small>
                                             </div>
                                         )}
-                                        
+
                                         {errors.productCategories && <p className="error-message">{errors.productCategories}</p>}
                                     </div>
                                     <div className="form-group">
@@ -780,7 +787,7 @@ const VendorVerification = () => {
                                         <textarea name="whyNamunjii" value={form.whyNamunjii} onChange={handleChange} required rows={3} placeholder="Why do you want to join us?"></textarea>
                                         {errors.whyNamunjii && <p className="error-message">{errors.whyNamunjii}</p>}
                                     </div>
-                                    <div className="form-group terms">
+                                    {/* <div className="form-group terms">
                                         <label className="checkbox-label">
                                             <input
                                                 type="checkbox"
@@ -792,14 +799,14 @@ const VendorVerification = () => {
                                             I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">terms and conditions</a>.<span className="required">*</span>
                                         </label>
                                         {errors.termsAccepted && <p className="error-message">{errors.termsAccepted}</p>}
-                                    </div>
+                                    </div> */}
                                     <div style={{ marginTop: '20px', textAlign: 'center' }}>
                                         <small style={{ color: '#666', display: 'block', marginBottom: '10px' }}>
-                                            <span style={{ color: '#dc3545' }}>*</span> All fields are mandatory
+                                            <span style={{ color: '#dc3545' }}>*</span> All fields are mandatory &nbsp;<button onClick={clearForm} style={{ backgroundColor: '#6c757d', border: '1px solid #6c757d', opacity: 0.8,color:"white" }}>Reset Form</button>
                                         </small>
-                                        <button 
-                                            className="CommonBtn" 
-                                            type="submit" 
+                                        <button
+                                            className="CommonBtn"
+                                            type="submit"
                                             disabled={submitting || !isFormValid()}
                                             style={{
                                                 opacity: isFormValid() ? 1 : 0.6,

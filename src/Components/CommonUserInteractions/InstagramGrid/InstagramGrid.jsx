@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const InstagramGrid = () => {
     return (
-        <div className="MainContainer ProductForHome paddingBottom50">
+        <div className="MainContainer ProductForHome ">
             <div className="PaddingTop">
                 <Link to="https://www.instagram.com/namunjii/" target="_blank">
                     <div className="Container RelativeContainer">
@@ -37,6 +37,7 @@ const InstagramGrid = () => {
                     </div>
                 </Link>
             </div>
+            <br />
         </div>
     );
 };

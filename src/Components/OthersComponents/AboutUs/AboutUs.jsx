@@ -45,7 +45,7 @@ const AboutUs = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    
+
     const AboutInfo = [
         {
             title: "Our Brand",
@@ -95,7 +95,7 @@ const AboutUs = () => {
     return (
         <div className="MainContainer marginTop50 paddingBottom50">
             <div className="PaddingTop">
-                <motion.div 
+                {/* <motion.div
                     className="breadCrumbContainer Container marginBottom20 marginTop20"
                     initial="hidden"
                     whileInView="visible"
@@ -103,30 +103,30 @@ const AboutUs = () => {
                     variants={itemVariants}
                 >
                     <span>About Us</span>
-                </motion.div>
-                
-                <motion.div 
+                </motion.div> */}
+
+                <motion.div
                     className="Container"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                     variants={containerVariants}
                 >
-                    <motion.div 
+                    <motion.div
                         className="CommonFlexGap maxWidth800"
                         variants={itemVariants}
                     >
-                        <h2 style={{ textAlign: "start" }}>Namunjii</h2>
+                        <h2 style={{ textAlign: "start", textTransform: "uppercase" }}>Namunjii</h2>
                         <p style={{ textAlign: "start" }}><b><i>A home for emerging brands</i></b></p>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         className="marginTop50"
                         variants={itemVariants}
                     >
                         <Row>
                             <Col lg={24} md={12} sm={24} xs={24}>
-                                <motion.div 
+                                <motion.div
                                     className="LeftsideAboutContainer"
                                     variants={itemVariants}
                                 >
@@ -152,8 +152,8 @@ const AboutUs = () => {
                             </Col> */}
                         </Row>
                     </motion.div>
-                    
-                    <motion.div 
+
+                    <motion.div
                         variants={itemVariants}
                     >
                         <div>

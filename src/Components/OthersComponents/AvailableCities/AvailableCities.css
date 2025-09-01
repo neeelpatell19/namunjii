@@ -13,8 +13,10 @@
     display: block;
 }
 
-.MobileOnly {
-    display: none;
+
+
+.CitiesGridContainerMobile {
+    display: none  !important;
 }
 
 .CitiesGridContainer {
@@ -179,19 +181,63 @@
     object-fit: cover;
 }
 
+/* Mobile Grid Layout - 2 items per row */
+.CitiesGridContainerMobile {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.CityNameCardMobile {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 30px 5px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Last item takes full width when odd number of cities */
+.CityNameCardMobile:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+.CityNameCardMobile:hover {
+    background: #fff;
+    border-color: var(--OrangeColor);
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    transform: translateY(-2px);
+}
+
+.CityNameCardMobile .CityName {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    display: block;
+}
+
+.CityNameCardMobile:hover .CityName {
+    color: var(--OrangeColor);
+    font-weight: 600;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+    
     .DesktopOnly {
         display: none;
     }
 
-    .MobileOnly {
-        display: block;
+    .CitiesGridContainerMobile {
+        display: grid !important;
+        padding: 0px;
     }
 
     .CitiesGridContainer {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 15px;
+        display: none;
     }
 
     .CityNameCard {

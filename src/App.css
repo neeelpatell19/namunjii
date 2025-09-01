@@ -87,6 +87,10 @@ p {
 }
 
 .PaddingTop {
+  padding-top: 20px;
+}
+
+.sectionPaddingTop{
   padding-top: 50px;
 }
 
