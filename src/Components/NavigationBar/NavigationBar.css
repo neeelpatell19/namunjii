@@ -87,6 +87,12 @@
     transition: .5s;
 }
 
+.NavigationBarContainer  .CommonBtn{
+    margin: 20px 0px;
+    min-width: 150px;
+    padding: 6px 20px;
+}
+
 .NavigationBarContainer.nav-scrolled .Container {
     /* padding: 20px 0px; */
     transition: .5s;
@@ -371,16 +377,22 @@
 }
 
 @media (max-width: 900px) {
-    .NavigationBarContainer .Container .ant-row .ant-col:nth-child(2) {
-        display: none !important;
+    .NavigationBarContainer  .CommonBtn{
+        min-width: 130px;
     }
+    .NavigationBarLogoContainer>div img {
+        width: 150px;
+    }
+    /* .NavigationBarContainer .Container .ant-row .ant-col:nth-child(2) {
+        display: none !important;
+    } */
 
     .MobileNavDrawerBtn {
         display: block !important;
     }
 
     .NavigationBarContainer .Container {
-        padding: 20px 10px !important;
+        padding: 0px 10px !important;
     }
 
     .FunctionlityButtonsContainer {

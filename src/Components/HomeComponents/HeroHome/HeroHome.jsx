@@ -1,8 +1,46 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import "./HeroHome.css";
 import { HomePageDataCarousalImages, HomePageCrousaltext } from "./HomePageData";
 import { Row, Col } from "antd";
 import { Link } from "react-router-dom";
+
+// Animation variants for hero animations
+const textVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.8,
+            ease: "easeOut"
+        }
+    }
+};
+
+const imageVariants = {
+    hidden: { opacity: 0, scale: 1.1 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 1.2,
+            ease: "easeOut"
+        }
+    }
+};
+
+const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: 1,
+            delay: 0.5
+        }
+    }
+};
+
 const HeroHome = () => {
     const { carousalImages } = HomePageDataCarousalImages;
     const { CarousalText } = HomePageCrousaltext;
@@ -80,7 +118,12 @@ const HeroHome = () => {
     return (
         <div className="HeroHomeContainerWithoutPadding">
             <div className="HeroHomeContainer">
-                <div className="TextChangeContainer">
+                <motion.div 
+                    className="TextChangeContainer"
+                    initial="hidden"
+                    animate="visible"
+                    variants={textVariants}
+                >
                     <div className="TextChangeContent">
                         <div className="carousel-text">
                             {CarousalText.map((textItem, index) => (
@@ -96,15 +139,16 @@ const HeroHome = () => {
                             ))}
                         </div>
                     </div>
-                </div>
-                {/* <div className="ShopCollectionBtnContainerFullWidth">
-                    <div className="ShopCollectionBtnContainer">
-                        <Link to="/all-products" className="w-100"><button className="ShopCollectionBtnFullWidth">Shop Collection</button></Link>
-                    </div>
-                </div> */}
+                </motion.div>
+                
                 <Row gutter={0}>
                     <Col span={24} className="HeroHomeContainerLeftImages">
-                        <div className="CarousalImages">
+                        <motion.div 
+                            className="CarousalImages"
+                            initial="hidden"
+                            animate="visible"
+                            variants={imageVariants}
+                        >
                             {carousalImages.map((image, index) => (
                                 <img
                                     key={index}
@@ -114,19 +158,20 @@ const HeroHome = () => {
                                         }`}
                                 />
                             ))}
-                            <div className="carousel-overlay"></div>
-                            {/* <div className="carousel-content">
-                                <h1 className="carousel-title">
-                                    {carousalImages[leftIndex].title}
-                                </h1>
-                                <p className="carousel-subtitle">
-                                    Discover amazing landscapes and breathtaking views
-                                </p>
-                            </div> */}
-                        </div>
+                            <motion.div 
+                                className="carousel-overlay"
+                                variants={overlayVariants}
+                            ></motion.div>
+                        </motion.div>
                     </Col>
                     <Col span={12} className="HeroHomeContainerRightImages">
-                        <div className="CarousalImages">
+                        <motion.div 
+                            className="CarousalImages"
+                            initial="hidden"
+                            animate="visible"
+                            variants={imageVariants}
+                            transition={{ delay: 0.3 }}
+                        >
                             {carousalImages.map((image, index) => (
                                 <img
                                     key={index}
@@ -136,40 +181,13 @@ const HeroHome = () => {
                                         }`}
                                 />
                             ))}
-                            <div className="carousel-overlay"></div>
-                            {/* <div className="carousel-content">
-                                <h1 className="carousel-title">
-                                    {carousalImages[rightIndex].title}
-                                </h1>
-                                <p className="carousel-subtitle">
-                                    Experience the beauty of nature in every frame
-                                </p>
-                            </div> */}
-                        </div>
+                            <motion.div 
+                                className="carousel-overlay"
+                                variants={overlayVariants}
+                            ></motion.div>
+                        </motion.div>
                     </Col>
                 </Row>
-
-                {/* Navigation dots for left column (odd sequence) */}
-                {/* <div className="carousel-dots left-dots">
-                    {Array.from({ length: Math.ceil(carousalImages.length / 2) }, (_, i) => (
-                        <div
-                            key={i}
-                            className={`dot ${i * 2 === leftIndex ? 'active' : ''}`}
-                            onClick={() => handleLeftDotClick(i)}
-                        ></div>
-                    ))}
-                </div>
-
-                {/* Navigation dots for right column (even sequence) */}
-                {/* <div className="carousel-dots right-dots">
-                    {Array.from({ length: Math.floor(carousalImages.length / 2) }, (_, i) => (
-                        <div
-                            key={i}
-                            className={`dot ${i * 2 + 1 === rightIndex ? 'active' : ''}`}
-                            onClick={() => handleRightDotClick(i)}
-                        ></div>
-                    ))}
-                </div> */}
             </div>
         </div>
     );

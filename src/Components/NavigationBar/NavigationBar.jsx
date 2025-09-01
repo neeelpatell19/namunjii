@@ -161,7 +161,7 @@ const NavigationBar = () => {
         <div className={`NavigationBarContainer ${navScrolled ? "nav-scrolled" : ""}`}>
             <div className={`Container ${navScrolled ? "nav-scrolled" : ""}`}>
                 <Row>
-                    <Col lg={6} xs={12} sm={12}>
+                    <Col lg={12} xs={12} sm={12}>
                         <div className="NavigationBarLogoContainer">
                             <div>
                                 <Link to="/">
@@ -170,7 +170,7 @@ const NavigationBar = () => {
                             </div>
                         </div>
                     </Col>
-                    <Col lg={12} xs={12} sm={12}>
+                    {/* <Col lg={12} xs={12} sm={12}>
                         <div className="NavigationBarMenuContainer">
                             {NavigationData.map((item) => {
                                 return item.name === "Shop" ? (
@@ -192,15 +192,15 @@ const NavigationBar = () => {
                             }
                             )}
                         </div>
-                    </Col>
-                    <Col lg={6} xs={12} sm={12}>
+                    </Col> */}
+                    <Col lg={12} xs={12} sm={12}>
                         <div className="FunctionlityButtonsContainer" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-                            {/* Search Icon for fullscreen modal */}
-                            <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 8 }}>
+                         
+                            {/* <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 8 }}>
                                 <FiSearch />
-                            </div>
-                            {/* Fullscreen Search Modal */}
-                            {searchModalOpen && (
+                            </div> */}
+                           
+                            {/* {searchModalOpen && (
                                 <div
                                     className="FullscreenSearchModal"
                                     style={{
@@ -218,8 +218,8 @@ const NavigationBar = () => {
                                     }}
                                     onClick={closeSearchModal}
                                 >
-                                    {/* Close button top right */}
-                                    {/* <button
+                                    Close button top right
+                                    <button
                                         onClick={closeSearchModal}
                                         style={{
                                             position: "absolute",
@@ -241,7 +241,7 @@ const NavigationBar = () => {
                                         }}
                                     >
                                         <CgCloseO />
-                                    </button> */}
+                                    </button>
                                     <div
                                         style={{
                                             marginTop: 80,
@@ -276,7 +276,7 @@ const NavigationBar = () => {
                                                 }}
                                             />
                                         </div>
-                                        {/* <div style={{ width: "100%", maxHeight: 320, minHeight: 60, overflowY: "auto", borderRadius: 12, background: "#fff" }}>
+                                        <div style={{ width: "100%", maxHeight: 320, minHeight: 60, overflowY: "auto", borderRadius: 12, background: "#fff" }}>
                                             {search && searchResults.length === 0 && (
                                                 <div style={{ color: "#aaa", textAlign: "center", padding: 24 }}>No results found.</div>
                                             )}
@@ -308,7 +308,7 @@ const NavigationBar = () => {
                                                     </a>
                                                 )
                                             )}
-                                        </div> */}
+                                        </div>
                                         <button
                                             onClick={closeSearchModal}
                                             style={{
@@ -327,15 +327,16 @@ const NavigationBar = () => {
                                         </button>
                                     </div>
                                 </div>
-                            )}
+                            )} */}
                             {/* ...existing menu drawer button... */}
-                            <div className="MenuDrawerBtn" style={{ fontSize: 22, color: "#b79a80" }} onClick={() => setDrawerOpen(true)}>
+                            {/* <div className="MenuDrawerBtn" style={{ fontSize: 22, color: "#b79a80" }} onClick={() => setDrawerOpen(true)}>
                                 <CgMenuGridO style={{ color: useWhite ? "white" : "black" }} />
-                            </div>
+                            </div> */}
                             {/* Mobile Hamburger Icon (only visible on mobile) */}
-                            <div className="MobileNavDrawerBtn" onClick={() => setMobileNavDrawerOpen(true)} style={{ display: 'none', fontSize: 26, color: "#b79a80", marginLeft: 8 }}>
+                            {/* <div className="MobileNavDrawerBtn" onClick={() => setMobileNavDrawerOpen(true)} style={{ display: 'none', fontSize: 26, color: "#b79a80", marginLeft: 8 }}>
                                 <FiMenu />
-                            </div>
+                            </div> */}
+                           <Link to="/vendor-verification"> <button className="CommonBtn"><span>Join Us</span></button></Link>
                         </div>
                     </Col>
                 </Row>

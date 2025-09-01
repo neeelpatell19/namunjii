@@ -170,6 +170,7 @@
     z-index: -1;
     opacity: 0.05;
     overflow: hidden;
+    display: none;
 }
 
 .backgroundFadeCityImage {

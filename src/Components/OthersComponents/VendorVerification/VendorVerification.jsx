@@ -21,34 +21,90 @@ const categories = [
     "Accessories",
     "Footwear",
     "Jewelry",
+    "Other"
 ];
 
 const VendorVerification = () => {
-    const [form, setForm] = useState(initialState);
-    const [socialLinkInput, setSocialLinkInput] = useState("");
+    const STORAGE_KEY = 'vendorVerificationForm';
+
+    // Initialize form with data from localStorage if available
+    const [form, setForm] = useState(() => {
+        try {
+            const savedForm = localStorage.getItem(STORAGE_KEY);
+            if (savedForm) {
+                const parsed = JSON.parse(savedForm);
+                // Always restore saved data, even if minimal
+                // Merge saved data with initial state to ensure all fields exist
+                const restoredData = { ...initialState, ...parsed, portfolio: null }; // Don't restore file from localStorage
+                return restoredData;
+            }
+        } catch (error) {
+            console.warn('Failed to parse saved form data:', error);
+        }
+        return initialState;
+    });
+
+    // Initialize socialLinkInput with data from localStorage if available
+    const [socialLinkInput, setSocialLinkInput] = useState(() => {
+        try {
+            const savedForm = localStorage.getItem(STORAGE_KEY);
+            if (savedForm) {
+                const parsed = JSON.parse(savedForm);
+                return parsed.socialLinkInput || "";
+            }
+        } catch (error) {
+            console.warn('Failed to parse saved socialLinkInput:', error);
+        }
+        return "";
+    });
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
     const fileInputRef = useRef(null);
     const [dragActive, setDragActive] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [dataRestored, setDataRestored] = useState(false);
+    const [customCategory, setCustomCategory] = useState("");
+    const [showCustomCategoryInput, setShowCustomCategoryInput] = useState(false);
     const apibaseUrl = import.meta.env.VITE_BASE_URL;
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
+        
         if (type === "checkbox" && name === "termsAccepted") {
             setForm({ ...form, [name]: checked });
         } else if (type === "checkbox" && name === "productCategories") {
             let updated = [...form.productCategories];
+            
             if (checked) {
-                updated.push(value);
+                if (value === "Other") {
+                    setShowCustomCategoryInput(true);
+                    updated.push(value);
+                } else {
+                    updated.push(value);
+                }
             } else {
-                updated = updated.filter((cat) => cat !== value);
+                if (value === "Other") {
+                    setShowCustomCategoryInput(false);
+                    setCustomCategory("");
+                    // Remove custom category if it exists
+                    updated = updated.filter(cat => cat !== "Other" && cat !== customCategory);
+                } else {
+                    updated = updated.filter((cat) => cat !== value);
+                }
             }
+            
             setForm({ ...form, productCategories: updated });
         } else if (type === "file") {
             setForm({ ...form, portfolio: files[0] });
         } else if (name !== "socialLinks") {
-            setForm({ ...form, [name]: value });
+            // For text inputs, allow spaces in the middle but prevent leading/trailing spaces
+            let processedValue = value;
+            if (type === "text" || type === "email" || type === "textarea") {
+                // Allow spaces in the middle (like "Sachin Padyar") but remove leading/trailing spaces
+                // This regex removes only leading (^) and trailing ($) spaces, keeping middle spaces intact
+                processedValue = value.replace(/^\s+|\s+$/g, '');
+            }
+            setForm({ ...form, [name]: processedValue });
         }
     };
 
@@ -70,6 +126,28 @@ const VendorVerification = () => {
             ...form,
             socialLinks: form.socialLinks.filter((l) => l !== linkToRemove),
         });
+    };
+
+    const handleCustomCategoryChange = (e) => {
+        const value = e.target.value;
+        setCustomCategory(value);
+        
+        // Don't update form until user finishes typing (onBlur or when they stop typing)
+        // This prevents saving every single character
+    };
+
+    const handleCustomCategoryBlur = () => {
+        // Force update form with custom category when user leaves the field
+        if (customCategory && customCategory.trim().length >= 2) {
+            let updated = [...form.productCategories];
+            const otherIndex = updated.indexOf("Other");
+            
+            if (otherIndex !== -1) {
+                // Replace "Other" with the actual custom category
+                updated[otherIndex] = customCategory.trim();
+                setForm({ ...form, productCategories: updated });
+            }
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -106,6 +184,14 @@ const VendorVerification = () => {
                 showMessage('success', 'Application submitted successfully!');
                 setSuccess(true);
                 setForm(initialState);
+                setSocialLinkInput("");
+                setErrors({});
+                // Clear localStorage on successful submission
+                try {
+                    localStorage.removeItem(STORAGE_KEY);
+                } catch (error) {
+                    console.warn('Failed to clear localStorage on submission:', error);
+                }
                 window.scrollTo(0, 0);
             } else {
                 showMessage('error', 'Failed to submit application.');
@@ -142,17 +228,87 @@ const VendorVerification = () => {
     // Validate form fields according to backend schema
     const validateForm = () => {
         const errors = {};
-        if (!form.fullName.trim()) errors.fullName = 'Full Name is required.';
-        if (!form.email.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) errors.email = 'Valid Email Address is required.';
-        if (!form.mobileNumber.trim() || !/^\d{10}$/.test(form.mobileNumber.trim())) errors.mobileNumber = 'Valid 10-digit Mobile Number is required.';
-        if (!form.brandName.trim()) errors.brandName = 'Brand Name is required.';
-        if (!form.brandDescription.trim()) errors.brandDescription = 'Brand Description is required.';
-        if (!form.portfolioUrl) errors.portfolioUpload = 'Portfolio upload is required.';
-        if (!form.socialLinks || !Array.isArray(form.socialLinks) || form.socialLinks.length === 0) errors.socialMediaLinks = 'At least one social media link is required.';
-        if (!form.productCategories || !Array.isArray(form.productCategories) || form.productCategories.length === 0) errors.productCategories = 'At least one product category is required.';
-        if (!form.priceRange.trim() || !/^\s*\d+\s*-\s*\d+\s*$/.test(form.priceRange)) errors.priceRange = 'Price Range must be in format: start - end (e.g. 100 - 500)';
-        if (!form.whyNamunjii.trim()) errors.whyNamunjii = 'This field is required.';
-        if (!form.termsAccepted) errors.termsAccepted = 'You must agree to the terms.';
+        
+        // Full Name validation - allows spaces in middle (like "Sachin Padyar"), no leading/trailing spaces, minimum 2 characters
+        if (!form.fullName.trim()) {
+            errors.fullName = 'Full Name is required.';
+        } else if (form.fullName.trim().length < 2) {
+            errors.fullName = 'Full Name must be at least 2 characters long.';
+        } else if (/^\s|\s$/.test(form.fullName)) {
+            errors.fullName = 'Full Name cannot start or end with spaces (but spaces in middle are allowed).';
+        }
+        
+        // Email validation
+        if (!form.email.trim()) {
+            errors.email = 'Email Address is required.';
+        } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
+            errors.email = 'Please enter a valid email address.';
+        }
+        
+        // Mobile Number validation
+        if (!form.mobileNumber.trim()) {
+            errors.mobileNumber = 'Mobile Number is required.';
+        } else if (!/^\d{10}$/.test(form.mobileNumber.trim())) {
+            errors.mobileNumber = 'Please enter a valid 10-digit mobile number.';
+        }
+        
+        // Brand Name validation - allows spaces in middle, no leading/trailing spaces, minimum 2 characters
+        if (!form.brandName.trim()) {
+            errors.brandName = 'Brand Name is required.';
+        } else if (form.brandName.trim().length < 2) {
+            errors.brandName = 'Brand Name must be at least 2 characters long.';
+        } else if (/^\s|\s$/.test(form.brandName)) {
+            errors.brandName = 'Brand Name cannot start or end with spaces (but spaces in middle are allowed).';
+        }
+        
+        // Brand Description validation
+        if (!form.brandDescription.trim()) {
+            errors.brandDescription = 'Brand Description is required.';
+        } else if (form.brandDescription.trim().length < 20) {
+            errors.brandDescription = 'Brand Description must be at least 20 characters long.';
+        }
+        
+        // Portfolio validation
+        if (!form.portfolioUrl) {
+            errors.portfolioUpload = 'Portfolio upload is required.';
+        }
+        
+        // Social Media Links validation
+        if (!form.socialLinks || !Array.isArray(form.socialLinks) || form.socialLinks.length === 0) {
+            errors.socialMediaLinks = 'At least one social media link is required.';
+        }
+        
+        // Product Categories validation
+        if (!form.productCategories || !Array.isArray(form.productCategories) || form.productCategories.length === 0) {
+            errors.productCategories = 'At least one product category is required.';
+        } else if (form.productCategories.includes("Other") && (!customCategory || customCategory.trim().length < 2)) {
+            errors.productCategories = 'Please specify a custom category (minimum 2 characters).';
+        }
+        
+        // Price Range validation
+        if (!form.priceRange.trim()) {
+            errors.priceRange = 'Price Range is required.';
+        } else if (!/^\s*\d+\s*-\s*\d+\s*$/.test(form.priceRange)) {
+            errors.priceRange = 'Price Range must be in format: start - end (e.g. 1000 - 10000)';
+        } else {
+            const [start, end] = form.priceRange.split('-').map(s => parseInt(s.trim(), 10));
+            if (start >= end) {
+                errors.priceRange = 'Start price must be less than end price.';
+            }
+        }
+        
+        // Why Namunjii validation
+        if (!form.whyNamunjii.trim()) {
+            errors.whyNamunjii = 'This field is required.';
+        } else if (form.whyNamunjii.trim().length < 10) {
+            errors.whyNamunjii = 'Please provide a more detailed response (minimum 10 characters).';
+        }
+        
+        // Terms validation
+        if (!form.termsAccepted) {
+            errors.termsAccepted = 'You must agree to the terms and conditions.';
+        }
+        
         return errors;
     };
 
@@ -237,6 +393,105 @@ const VendorVerification = () => {
         fileInputRef.current.click();
     };
 
+    // Function to manually clear form and localStorage
+    const clearForm = () => {
+        setForm(initialState);
+        setSocialLinkInput("");
+        setCustomCategory("");
+        setShowCustomCategoryInput(false);
+        setErrors({});
+        setDataRestored(false);
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+            showMessage('success', 'Form cleared successfully!');
+        } catch (error) {
+            console.warn('Failed to clear form data:', error);
+        }
+    };
+
+    // Save to localStorage in real-time with minimal delay
+    useEffect(() => {
+        const saveTimer = setTimeout(() => {
+            try {
+                // Create a copy of form data without the file object for localStorage
+                const formDataToSave = {
+                    ...form,
+                    socialLinkInput: socialLinkInput, // Also save the current social link input
+                    customCategory: customCategory, // Save custom category
+                    showCustomCategoryInput: showCustomCategoryInput // Save custom category input state
+                };
+                delete formDataToSave.portfolio; // Don't save file object
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(formDataToSave));
+            } catch (error) {
+                console.warn('Failed to save form data to localStorage:', error);
+            }
+        }, 100); // Reduced delay for more real-time saving
+
+        return () => clearTimeout(saveTimer);
+    }, [form, socialLinkInput, STORAGE_KEY]);
+
+    // Clear localStorage on successful submission
+    useEffect(() => {
+        if (success) {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch (error) {
+                console.warn('Failed to clear saved form data:', error);
+            }
+        }
+    }, [success, STORAGE_KEY]);
+
+    // Restore custom category state from localStorage after component mounts
+    useEffect(() => {
+        try {
+            const savedForm = localStorage.getItem(STORAGE_KEY);
+            if (savedForm) {
+                const parsed = JSON.parse(savedForm);
+                
+                // Restore custom category state
+                if (parsed.customCategory) {
+                    setCustomCategory(parsed.customCategory);
+                }
+                if (parsed.showCustomCategoryInput) {
+                    setShowCustomCategoryInput(parsed.showCustomCategoryInput);
+                }
+                
+                // Check if the saved data has meaningful content to show notification
+                const hasContent = Object.keys(parsed).some(key => {
+                    if (key === 'termsAccepted') return false; // Don't count checkbox for notification
+                    if (Array.isArray(parsed[key])) return parsed[key].length > 0;
+                    if (typeof parsed[key] === 'string') return parsed[key].trim() !== '';
+                    return false;
+                });
+                
+                if (hasContent) {
+                    setTimeout(() => setDataRestored(true), 100); // Show notification after component mounts
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to restore custom category state:', error);
+        }
+    }, [STORAGE_KEY]);
+
+    // Debounced effect to update custom category in form after user stops typing
+    useEffect(() => {
+        if (customCategory && customCategory.length >= 2) {
+            const timer = setTimeout(() => {
+                // Update form with custom category after 500ms of no typing
+                let updated = [...form.productCategories];
+                const otherIndex = updated.indexOf("Other");
+                
+                if (otherIndex !== -1) {
+                    // Replace "Other" with the actual custom category
+                    updated[otherIndex] = customCategory.trim();
+                    setForm({ ...form, productCategories: updated });
+                }
+            }, 500); // Wait 500ms after user stops typing
+
+            return () => clearTimeout(timer);
+        }
+    }, [customCategory, form.productCategories]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -246,11 +501,11 @@ const VendorVerification = () => {
             <div className="MainContainer paddingBottom50 VendorVerificationPage marginTop50">
                 <div className="PaddingTop">
                     <div className="Container">
-                        <div className="breadCrumbContainer  marginBottom20 marginTop20">
+                        {/* <div className="breadCrumbContainer  marginBottom20 marginTop20">
                             <Link to="/">Home</Link>
                             <span> | </span>
                             <Link to="/vendor-verification" className="ColorBlack">Join Us</Link>
-                        </div>
+                        </div> */}
                         <div className="marginBottom50">
                             <div className="CommonFlexGap ">
                                 <h2>Are You A Designer?</h2>
@@ -260,13 +515,100 @@ const VendorVerification = () => {
 
                             <p></p>
                             <div className="VendorVerificationFormContainer marginTop50">
-                                {success && (
+                                {/* {success && (
                                     <div className="success-message">Thank you for submitting your application! We will review and get back to you soon.</div>
-                                )}
+                                )} */}
+
+                                {/* Data restored notification */}
+                                {/* {dataRestored && (
+                                    <div style={{
+                                        backgroundColor: '#d4edda',
+                                        border: '1px solid #c3e6cb',
+                                        color: '#155724',
+                                        padding: '12px',
+                                        borderRadius: '4px',
+                                        marginBottom: '20px',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        <span>✓ Your previous form data has been restored!</span>
+                                        <button 
+                                            type="button"
+                                            onClick={() => setDataRestored(false)}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                color: '#155724',
+                                                cursor: 'pointer',
+                                                fontSize: '16px',
+                                                padding: '0'
+                                            }}
+                                            title="Dismiss"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                )} */}
+
+                                {/* Auto-save indicator and clear button */}
+                                {/* <div style={{ 
+                                    display: 'flex', 
+                                    justifyContent: 'space-between', 
+                                    alignItems: 'center', 
+                                    marginBottom: '20px',
+                                    padding: '10px',
+                                    backgroundColor: '#f8f9fa',
+                                    borderRadius: '4px',
+                                    fontSize: '14px'
+                                }}>
+                                    <span style={{ color: '#28a745' }}>
+                                        ✓ Your progress is automatically saved (real-time)
+                                    </span>
+                                    <button 
+                                        type="button" 
+                                        onClick={clearForm}
+                                        style={{
+                                            background: 'none',
+                                            border: '1px solid #dc3545',
+                                            color: '#dc3545',
+                                            padding: '4px 12px',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '12px'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.target.style.backgroundColor = '#dc3545';
+                                            e.target.style.color = 'white';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.backgroundColor = 'transparent';
+                                            e.target.style.color = '#dc3545';
+                                        }}
+                                    >
+                                        Clear All Data
+                                    </button>
+                                </div>
+                                 */}
                                 <form className="vendor-form" onSubmit={handleSubmit}>
                                     <div className="form-group">
                                         <label>Full Name<span className="required">*</span></label>
-                                        <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required placeholder="Enter your full name" />
+                                        <input 
+                                            type="text" 
+                                            name="fullName" 
+                                            value={form.fullName} 
+                                            onChange={handleChange} 
+                                            onBlur={() => {
+                                                const fieldErrors = validateForm();
+                                                if (fieldErrors.fullName) {
+                                                    setErrors(prev => ({ ...prev, fullName: fieldErrors.fullName }));
+                                                } else {
+                                                    setErrors(prev => ({ ...prev, fullName: undefined }));
+                                                }
+                                            }}
+                                            required 
+                                            placeholder="Enter your full name (e.g. Sachin Padyar)" 
+                                        />
                                         {errors.fullName && <p className="error-message">{errors.fullName}</p>}
                                     </div>
                                     <div className="form-group">
@@ -281,7 +623,22 @@ const VendorVerification = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>Brand Name<span className="required">*</span></label>
-                                        <input type="text" name="brandName" value={form.brandName} onChange={handleChange} required placeholder="Enter your brand name" />
+                                        <input 
+                                            type="text" 
+                                            name="brandName" 
+                                            value={form.brandName} 
+                                            onChange={handleChange} 
+                                            onBlur={() => {
+                                                const fieldErrors = validateForm();
+                                                if (fieldErrors.brandName) {
+                                                    setErrors(prev => ({ ...prev, brandName: fieldErrors.brandName }));
+                                                } else {
+                                                    setErrors(prev => ({ ...prev, brandName: undefined }));
+                                                }
+                                            }}
+                                            required 
+                                            placeholder="Enter your brand name (e.g. My Brand Name)" 
+                                        />
                                         {errors.brandName && <p className="error-message">{errors.brandName}</p>}
                                     </div>
                                     <div className="form-group">
@@ -378,15 +735,44 @@ const VendorVerification = () => {
                                                         checked={form.productCategories.includes(cat)}
                                                         onChange={handleChange}
                                                     />
-                                                    {cat}
+                                                    {cat === "Other" ? "Other (specify below)" : cat}
                                                 </label>
                                             ))}
                                         </div>
+                                        
+                                        {/* Custom Category Input */}
+                                        {showCustomCategoryInput && (
+                                            <div className="custom-category-input" style={{ marginTop: '10px' }}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter your custom category..."
+                                                    value={customCategory}
+                                                    onChange={handleCustomCategoryChange}
+                                                    onBlur={handleCustomCategoryBlur}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '8px 12px',
+                                                        border: '1px solid #ddd',
+                                                        borderRadius: '4px',
+                                                        fontSize: '14px'
+                                                    }}
+                                                />
+                                                <small style={{ color: '#666', fontSize: '12px', marginTop: '5px', display: 'block' }}>
+                                                    Please specify your custom product category (minimum 2 characters)
+                                                    {customCategory && customCategory.length >= 2 && (
+                                                        <span style={{ color: '#28a745', marginLeft: '5px' }}>
+                                                            ✓ Will be saved as: "{customCategory.trim()}"
+                                                        </span>
+                                                    )}
+                                                </small>
+                                            </div>
+                                        )}
+                                        
                                         {errors.productCategories && <p className="error-message">{errors.productCategories}</p>}
                                     </div>
                                     <div className="form-group">
                                         <label>Price Range<span className="required">*</span></label>
-                                        <input type="text" name="priceRange" value={form.priceRange} onChange={handleChange} required placeholder="e.g. ₹ 50 - ₹ 500" />
+                                        <input type="text" name="priceRange" value={form.priceRange} onChange={handleChange} required placeholder="e.g. ₹ 1000 - ₹ 10000" />
                                         {errors.priceRange && <p className="error-message">{errors.priceRange}</p>}
                                     </div>
                                     <div className="form-group">
@@ -407,9 +793,22 @@ const VendorVerification = () => {
                                         </label>
                                         {errors.termsAccepted && <p className="error-message">{errors.termsAccepted}</p>}
                                     </div>
-                                    <button className="CommonBtn" type="submit" disabled={submitting || !isFormValid()}>
-                                        <span>{submitting ? "Submitting..." : "Submit Application"}</span>
-                                    </button>
+                                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                        <small style={{ color: '#666', display: 'block', marginBottom: '10px' }}>
+                                            <span style={{ color: '#dc3545' }}>*</span> All fields are mandatory
+                                        </small>
+                                        <button 
+                                            className="CommonBtn" 
+                                            type="submit" 
+                                            disabled={submitting || !isFormValid()}
+                                            style={{
+                                                opacity: isFormValid() ? 1 : 0.6,
+                                                cursor: isFormValid() ? 'pointer' : 'not-allowed'
+                                            }}
+                                        >
+                                            <span>{submitting ? "Submitting..." : "Submit Application"}</span>
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

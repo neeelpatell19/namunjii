@@ -5,9 +5,11 @@
 }
 
 .InstagramGridImage {
-    min-height: 400px;
-    max-height: 400px;
+    min-height: 300px;
+    max-height: 300px;
+    height: 300px;
     overflow: hidden;
+    opacity: 0.2;
 
 }
 
@@ -60,11 +62,11 @@
     height: unset !important;
 }
 
-.InstagramPromoBg {
-    /* background-color: white;
-    border: none !important; */
+/* .InstagramPromoBg {
+    background-color: white;
+    border: none !important;
     box-shadow: 0 20px 130px 95px white !important;
-}
+} */
 
 
 .InstagramPromoCenter {
@@ -82,14 +84,14 @@
     pointer-events: none;
     animation: fadeIn 1s ease;
     /* display: none; */
-    transition: .5s;
-    opacity: 0;
-}
-
-.RelativeContainer:hover .InstagramPromoCenter {
     opacity: 1;
     transition: .5s;
 }
+/* 
+.RelativeContainer:hover .InstagramPromoCenter {
+    opacity: 1;
+    transition: .5s;
+} */
 
 .InstagramIcon {
     width: 24px;

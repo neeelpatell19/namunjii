@@ -1,15 +1,15 @@
 const InstagramGridData = [
     {
         id: 1,
-        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NamunjiiInsta1.jpeg",
-    },
-    {
-        id: 2,
         image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NamunjiiInsta4.jpeg",
     },
     {
+        id: 2,
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUsNamunjji1.jpg",
+    },
+    {
         id: 3,
-        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NamunjiiInsta3.jpeg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUsNamunjji2.jpeg",
     },
     {
         id: 4,

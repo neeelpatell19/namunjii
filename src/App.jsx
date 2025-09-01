@@ -17,6 +17,7 @@ import AllProduct from './Components/StoreLogic/AllProducts/AllProducts/AllProdu
 import VendorVerification from './Components/OthersComponents/VendorVerification/VendorVerification';
 import AboutUs from './Components/OthersComponents/AboutUs/AboutUs';
 import ContactUs from './Components/OthersComponents/ContactUs/ContactUs';
+import WhatsAppBtn from './Components/WhatsAppBtn';
 
 // Page transition variants
 const pageVariants = {
@@ -122,6 +123,7 @@ function App() {
         {/* <CommonUserInteractionsPopup /> */}
         <InstagramGrid />
         {/* <Cookies /> */}
+        <WhatsAppBtn />
       </BrowserRouter>
     </>
   )

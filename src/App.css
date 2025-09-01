@@ -99,7 +99,7 @@ p {
 }
 
 .Container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -308,9 +308,9 @@ b {
   color: black;
 }
 
-@media (min-width:1250px) and (max-width:2000px){
+@media (min-width:1250px) and (max-width:1500px){
   .Container {
-    max-width: 1300px;
+    max-width: 1100px;
     margin: 0 auto;
   }
 }
@@ -338,19 +338,8 @@ b {
   min-height: 100vh;
 }
 
-/* Prevent layout shifts during transitions */
-* {
-  box-sizing: border-box;
-}
-
-/* Smooth scrolling for better transitions */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Ensure content doesn't jump during animations */
-body {
-  overflow-x: hidden;
+.CommonFlexGap h2{
+  font-weight: 300 !important;
 }
 
 /* Optimize animations for performance */

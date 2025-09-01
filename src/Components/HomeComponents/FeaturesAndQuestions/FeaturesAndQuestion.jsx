@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import "./FeaturesAndQuestion.css";
 import { Row, Col, Card, Typography, Button, Collapse } from "antd";
 import {
@@ -9,6 +10,42 @@ import {
 } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
+
+// Animation variants for staggered animations
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2,
+            delayChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.6,
+            ease: "easeOut"
+        }
+    }
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut"
+        }
+    }
+};
 
 const FeaturesAndQuestion = () => {
     const [activeKeys, setActiveKeys] = useState([]);
@@ -91,80 +128,109 @@ const FeaturesAndQuestion = () => {
     return (
         <div className="MainContainer FeaturesAndQuestion paddingBottom50">
             <div className="PaddingTop">
-                <div className="Container">
+                <motion.div 
+                    className="Container"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.3 }}
+                    variants={containerVariants}
+                >
                     <Row>
                         {/* Features Column */}
                         <Col lg={12} md={24} sm={24} xs={24}>
-                            <div className="FeaturesSection">
+                            <motion.div 
+                                className="FeaturesSection"
+                                variants={itemVariants}
+                            >
                                 <h2 className="godber-heading">Features & Facility</h2>
-                                <div className="FeaturesGrid">
+                                <motion.div 
+                                    className="FeaturesGrid"
+                                    variants={containerVariants}
+                                >
                                     <Row gutter={[30, 30]}>
                                         {features.map((feature, index) => (
                                             <Col lg={12} md={24} sm={24} xs={24} key={index}>
-                                                <Card key={index} className="FeatureCard">
-                                                    <div className="FeatureContent">
-                                                        <div className="FeatureIcon">
-                                                            {feature.icon}
+                                                <motion.div
+                                                    variants={cardVariants}
+                                                    whileHover={{ y: -5 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <Card className="FeatureCard">
+                                                        <div className="FeatureContent">
+                                                            <div className="FeatureIcon">
+                                                                {feature.icon}
+                                                            </div>
+                                                            <div className="FeatureText">
+                                                                <h4 className="FeatureTitle">
+                                                                    {feature.title}
+                                                                </h4>
+                                                                <p className="FeatureDescription">
+                                                                    {feature.description}
+                                                                </p>
+                                                            </div>
                                                         </div>
-                                                        <div className="FeatureText">
-                                                            <h4 className="FeatureTitle">
-                                                                {feature.title}
-                                                            </h4>
-                                                            <p className="FeatureDescription">
-                                                                {feature.description}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </Card>
+                                                    </Card>
+                                                </motion.div>
                                             </Col>
                                         ))}
-
                                     </Row>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         </Col>
 
                         {/* Questions Column */}
-                        <Col lg={12} md={24} sm={24} xs={24} >
-                            <div className="QuestionsSection">
+                        <Col lg={12} md={24} sm={24} xs={24}>
+                            <motion.div 
+                                className="QuestionsSection"
+                                variants={itemVariants}
+                            >
                                 <h2 className="godber-heading">Question</h2>
-                                <div className="QuestionsList">
+                                <motion.div 
+                                    className="QuestionsList"
+                                    variants={containerVariants}
+                                >
                                     <Collapse
                                         activeKey={activeKeys}
                                         onChange={handlePanelChange}
                                         className="CustomAccordion"
                                         expandIcon={false}
                                     >
-                                        {questions.map((question) => (
-                                            <Collapse.Panel
+                                        {questions.map((question, index) => (
+                                            <motion.div
                                                 key={question.key}
-                                                header={
-                                                    <div className="QuestionHeader">
-                                                        <h4 className="QuestionTitle">
-                                                            {question.title}
-                                                        </h4>
-                                                        <Button
-                                                            type="text"
-                                                            className="QuestionAction"
-                                                            size="small"
-                                                        >
-                                                            {getButtonText(question.key)}
-                                                        </Button>
-                                                    </div>
-                                                }
-                                                showArrow={false}
+                                                variants={cardVariants}
+                                                whileHover={{ x: 5 }}
+                                                transition={{ duration: 0.2 }}
                                             >
-                                                <p className="QuestionText">
-                                                    {question.content}
-                                                </p>
-                                            </Collapse.Panel>
+                                                <Collapse.Panel
+                                                    header={
+                                                        <div className="QuestionHeader">
+                                                            <h4 className="QuestionTitle">
+                                                                {question.title}
+                                                            </h4>
+                                                            <Button
+                                                                type="text"
+                                                                className="QuestionAction"
+                                                                size="small"
+                                                            >
+                                                                {getButtonText(question.key)}
+                                                            </Button>
+                                                        </div>
+                                                    }
+                                                    showArrow={false}
+                                                >
+                                                    <p className="QuestionText">
+                                                        {question.content}
+                                                    </p>
+                                                </Collapse.Panel>
+                                            </motion.div>
                                         ))}
                                     </Collapse>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         </Col>
                     </Row>
-                </div>
+                </motion.div>
             </div>
         </div>
     );
