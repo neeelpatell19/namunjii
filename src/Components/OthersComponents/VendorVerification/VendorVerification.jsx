@@ -614,7 +614,7 @@ const VendorVerification = () => {
                                                 }
                                             }}
                                             required
-                                            placeholder="Enter your full name (e.g. Sachin Padyar)"
+                                            placeholder="Enter your full name"
                                         />
                                         {errors.fullName && <p className="error-message">{errors.fullName}</p>}
                                     </div>
@@ -802,7 +802,7 @@ const VendorVerification = () => {
                                     </div> */}
                                     <div style={{ marginTop: '20px', textAlign: 'center' }}>
                                         <small style={{ color: '#666', display: 'block', marginBottom: '10px' }}>
-                                            <span style={{ color: '#dc3545' }}>*</span> All fields are mandatory &nbsp;<button onClick={clearForm} style={{ backgroundColor: '#6c757d', border: '1px solid #6c757d', opacity: 0.8,color:"white" }}>Reset Form</button>
+                                            <span style={{ color: '#dc3545' }}>*</span> All fields are mandatory &nbsp;<button onClick={clearForm} style={{ backgroundColor: '#6c757d', border: '1px solid #6c757d', opacity: 0.8, color: "white" }}>Reset Form</button>
                                         </small>
                                         <button
                                             className="CommonBtn"
