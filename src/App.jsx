@@ -123,7 +123,7 @@ function App() {
         {/* <CommonUserInteractionsPopup /> */}
         <InstagramGrid />
         {/* <Cookies /> */}
-        <WhatsAppBtn />
+        {/* <WhatsAppBtn /> */}
       </BrowserRouter>
     </>
   )

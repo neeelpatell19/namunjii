@@ -308,10 +308,11 @@ b {
   color: black;
 }
 
-@media (min-width:1250px) and (max-width:1500px){
+@media (min-width:1250px) and (max-width:1500px) {
   .Container {
     max-width: 1100px;
     margin: 0 auto;
+    overflow: hidden;
   }
 }
 
@@ -338,7 +339,7 @@ b {
   min-height: 100vh;
 }
 
-.CommonFlexGap h2{
+.CommonFlexGap h2 {
   font-weight: 300 !important;
 }
 

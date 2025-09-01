@@ -130,14 +130,14 @@ const AboutUs = () => {
                                     className="LeftsideAboutContainer"
                                     variants={itemVariants}
                                 >
-                                    <div className="marginBottom50">
+                                    <div>
                                         <p>In a world where visibility is everything, even the most promising brands can struggle to break through. Hundreds of independent brands are building beautiful products—carefully crafted collections and stories worth sharing.</p>
                                         <br />
                                         <p><b>That's where the idea of Namunjii was born.</b></p>
                                     </div>
                                 </motion.div>
                             </Col>
-                            <Col lg={24} md={12} sm={24} xs={24}>
+                            {/* <Col lg={24} md={12} sm={24} xs={24}>
                                 <motion.div 
                                     className="RightsideAboutContainer marginBottom50"
                                     variants={imageVariants}
@@ -149,7 +149,7 @@ const AboutUs = () => {
                                         <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/AboutUsNamunjji2.jpeg" alt="About Namunjii" />
                                     </div>
                                 </motion.div>
-                            </Col>
+                            </Col> */}
                         </Row>
                     </motion.div>
                     
