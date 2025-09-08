@@ -7,10 +7,36 @@
   padding: 40px 32px;
 }
 
+.vendor-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
 .vendor-form .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* Two-column layout for shorter fields */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Full width for longer fields */
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .vendor-form label {
@@ -35,10 +61,43 @@
   transition: border 0.2s;
 }
 
-.vendor-form input[type="text"]:focus,
-.vendor-form input[type="email"]:focus,
-.vendor-form textarea:focus {
-  border: 1.5px solid var(--brandColor);
+/* Phone Input Styling */
+.phone-input {
+    font-family: var(--Poppins-font);
+    font-size: 15px;
+    padding: 12px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    outline: none;
+    background: #fafbfc;
+    transition: border 0.2s;
+    /* width: 100%; */
+}
+
+.phone-input:focus {
+    border: 1.5px solid var(--brandColor);
+}
+
+.phone-input .PhoneInputCountry {
+    margin-right: 8px;
+}
+
+.phone-input .PhoneInputCountrySelect {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+}
+
+.phone-input .PhoneInputInput {
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    outline: none;
+    width: 100%;
+}
+
+.phone-input .PhoneInputInput:focus {
+    outline: none;
 }
 
 .vendor-form textarea {
@@ -95,12 +154,13 @@
   align-items: center;
   margin-bottom: 10px;
 }
-.social-links-input-row input{
-    width: 100%;
+
+.social-links-input-row input {
+  width: 100%;
 }
 
 .add-link-btn {
-  background: var(--brandColor);
+  background: black;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -112,11 +172,13 @@
   transition: background 0.2s;
   width: 200px;
 }
+
 .add-link-btn:disabled {
   background: #bfc5ca;
   cursor: not-allowed;
   width: 200px;
 }
+
 .add-link-btn:not(:disabled):hover {
   background: var(--OrangeColor);
   color: #fff;
@@ -157,6 +219,7 @@
   transition: color 0.2s;
   padding: 0 4px;
 }
+
 .remove-link-btn:hover {
   color: #c0392b;
 }
@@ -167,9 +230,11 @@
   align-items: center;
   margin-bottom: 10px;
 }
+
 .product-categories-input-row input {
   width: 100%;
 }
+
 .add-category-btn {
   background: var(--brandColor);
   color: #fff;
@@ -183,15 +248,18 @@
   transition: background 0.2s;
   width: 200px;
 }
+
 .add-category-btn:disabled {
   background: #bfc5ca;
   cursor: not-allowed;
   width: 200px;
 }
+
 .add-category-btn:not(:disabled):hover {
   background: var(--OrangeColor);
   color: #fff;
 }
+
 .category-checkbox-item {
   display: flex;
   align-items: center;
@@ -205,6 +273,7 @@
   margin-right: 10px;
   gap: 8px;
 }
+
 .remove-category-btn {
   background: none;
   border: none;
@@ -216,6 +285,7 @@
   transition: color 0.2s;
   padding: 0 4px;
 }
+
 .remove-category-btn:hover {
   color: #c0392b;
 }
@@ -236,10 +306,12 @@
   position: relative;
   padding: 32px 0;
 }
+
 .drag-drop-area.drag-active {
   border-color: var(--OrangeColor);
   background: #f3ede7;
 }
+
 .drag-drop-prompt {
   display: flex;
   flex-direction: column;
@@ -250,6 +322,7 @@
   gap: 12px;
   width: 100%;
 }
+
 .drag-drop-icon {
   font-size: 48px;
   margin-bottom: 0;
@@ -257,12 +330,14 @@
   align-items: center;
   justify-content: center;
 }
+
 .drag-drop-text {
   font-size: 22px;
   font-weight: 500;
   color: #222;
   text-align: center;
 }
+
 .drag-drop-hint {
   font-size: 16px;
   color: #888;
@@ -270,6 +345,7 @@
   text-align: center;
   font-weight: 400;
 }
+
 .file-selected {
   display: flex;
   align-items: center;
@@ -279,9 +355,11 @@
   color: var(--brandColor);
   padding: 10px 0;
 }
+
 .file-icon {
   font-size: 22px;
 }
+
 .file-name {
   font-size: 15px;
   word-break: break-all;
@@ -298,4 +376,8 @@
   .VendorVerificationFormContainer {
     padding: 20px 5px;
   }
+}
+
+.PhoneInputCountryIcon .PhoneInputInternationalIconGlobe{
+  display: none !important;
 }

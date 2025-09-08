@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./VendorVerification.css";
 import { Link } from "react-router-dom";
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 const initialState = {
     fullName: "",
@@ -17,10 +19,13 @@ const initialState = {
 };
 
 const categories = [
-    "Apparel",
-    "Accessories",
-    "Footwear",
-    "Jewelry",
+    "Blazers",
+    "Shirts",
+    "Vest Coats",
+    "Trench Coats",
+    "Kurtas",
+    "Tunics",
+    "Dresses",
     "Other"
 ];
 
@@ -107,6 +112,18 @@ const VendorVerification = () => {
                     processedValue = '';
                 }
             }
+
+            // Special handling for WhatsApp number - only allow digits and limit to 10
+            if (name === "mobileNumber") {
+                // PhoneInput component handles validation automatically
+                processedValue = value;
+            }
+
+            // Auto-capitalize first letter of each word for specific fields
+            if ((name === "fullName" || name === "brandName") && processedValue) {
+                processedValue = processedValue.replace(/\b\w/g, (char) => char.toUpperCase());
+            }
+
             setForm({ ...form, [name]: processedValue });
         }
     };
@@ -211,7 +228,7 @@ const VendorVerification = () => {
         return (
             form.fullName.trim() !== "" &&
             form.email.trim() !== "" &&
-            form.mobileNumber.trim() !== "" &&
+            form.mobileNumber &&
             form.brandName.trim() !== "" &&
             form.brandDescription.trim() !== "" &&
             form.portfolio !== null &&
@@ -250,11 +267,16 @@ const VendorVerification = () => {
             errors.email = 'Please enter a valid email address.';
         }
 
-        // Mobile Number validation
-        if (!form.mobileNumber.trim()) {
-            errors.mobileNumber = 'Mobile Number is required.';
-        } else if (!/^\d{10}$/.test(form.mobileNumber.trim())) {
-            errors.mobileNumber = 'Please enter a valid 10-digit mobile number.';
+        // Phone Number validation
+        if (!form.mobileNumber) {
+            errors.mobileNumber = 'WhatsApp Number is required.';
+        } else if (!form.mobileNumber.startsWith('+')) {
+            errors.mobileNumber = 'Please select a valid country code.';
+        } else if (form.mobileNumber.startsWith('+91')) {
+            // For India, enforce exactly +91 followed by 10 digits
+            if (!/^\+91\d{10}$/.test(form.mobileNumber)) {
+                errors.mobileNumber = 'For +91, please enter exactly 10 digits after country code.';
+            }
         }
 
         // Brand Name validation - check for empty, spaces-only, and consecutive spaces
@@ -598,63 +620,90 @@ const VendorVerification = () => {
                                 </div>
                                  */}
                                 <form className="vendor-form" onSubmit={handleSubmit}>
-                                    <div className="form-group">
-                                        <label>Full Name<span className="required">*</span></label>
-                                        <input
-                                            type="text"
-                                            name="fullName"
-                                            value={form.fullName}
-                                            onChange={handleChange}
-                                            onBlur={() => {
-                                                const fieldErrors = validateForm();
-                                                if (fieldErrors.fullName) {
-                                                    setErrors(prev => ({ ...prev, fullName: fieldErrors.fullName }));
-                                                } else {
-                                                    setErrors(prev => ({ ...prev, fullName: undefined }));
-                                                }
-                                            }}
-                                            required
-                                            placeholder="Enter your full name"
-                                        />
-                                        {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+                                    {/* Personal Information Row */}
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>Full Name</label>
+                                            <input
+                                                type="text"
+                                                name="fullName"
+                                                value={form.fullName}
+                                                onChange={handleChange}
+                                                onBlur={() => {
+                                                    const fieldErrors = validateForm();
+                                                    if (fieldErrors.fullName) {
+                                                        setErrors(prev => ({ ...prev, fullName: fieldErrors.fullName }));
+                                                    } else {
+                                                        setErrors(prev => ({ ...prev, fullName: undefined }));
+                                                    }
+                                                }}
+                                                required
+                                                placeholder="Enter your full name"
+                                            />
+                                            {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email Address</label>
+                                            <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" />
+                                            {errors.email && <p className="error-message">{errors.email}</p>}
+                                        </div>
                                     </div>
-                                    <div className="form-group">
-                                        <label>Email Address<span className="required">*</span></label>
-                                        <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" />
-                                        {errors.email && <p className="error-message">{errors.email}</p>}
+
+                                    {/* Contact Information Row */}
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>WhatsApp Number</label>
+                                            <PhoneInput
+                                                international
+                                                defaultCountry="IN"
+                                                value={form.mobileNumber}
+                                                onChange={(value) => {
+                                                    // If user changes country, clear the number part but keep country code
+                                                    if (form.mobileNumber && value && 
+                                                        form.mobileNumber.split(' ')[0] !== value.split(' ')[0]) {
+                                                        // Country code changed, keep only the new country code
+                                                        const countryCode = value.split(' ')[0];
+                                                        setForm({ ...form, mobileNumber: countryCode });
+                                                    } else {
+                                                        setForm({ ...form, mobileNumber: value });
+                                                    }
+                                                }}
+                                                placeholder="Enter your WhatsApp number"
+                                                className="phone-input"
+                                                flags={false}
+                                            />
+                                            {errors.mobileNumber && <p className="error-message">{errors.mobileNumber}</p>}
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Brand Name</label>
+                                            <input
+                                                type="text"
+                                                name="brandName"
+                                                value={form.brandName}
+                                                onChange={handleChange}
+                                                onBlur={() => {
+                                                    const fieldErrors = validateForm();
+                                                    if (fieldErrors.brandName) {
+                                                        setErrors(prev => ({ ...prev, brandName: fieldErrors.brandName }));
+                                                    } else {
+                                                        setErrors(prev => ({ ...prev, brandName: undefined }));
+                                                    }
+                                                }}
+                                                required
+                                                placeholder="Enter your brand name"
+                                            />
+                                            {errors.brandName && <p className="error-message">{errors.brandName}</p>}
+                                        </div>
                                     </div>
-                                    <div className="form-group">
-                                        <label>Mobile Number<span className="required">*</span></label>
-                                        <input type="text" name="mobileNumber" value={form.mobileNumber} onChange={handleChange} required placeholder="Enter your phone number" inputMode="numeric" pattern="[0-9]{10}" />
-                                        {errors.mobileNumber && <p className="error-message">{errors.mobileNumber}</p>}
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Brand Name<span className="required">*</span></label>
-                                        <input
-                                            type="text"
-                                            name="brandName"
-                                            value={form.brandName}
-                                            onChange={handleChange}
-                                            onBlur={() => {
-                                                const fieldErrors = validateForm();
-                                                if (fieldErrors.brandName) {
-                                                    setErrors(prev => ({ ...prev, brandName: fieldErrors.brandName }));
-                                                } else {
-                                                    setErrors(prev => ({ ...prev, brandName: undefined }));
-                                                }
-                                            }}
-                                            required
-                                            placeholder="Enter your brand name (e.g. My Brand Name)"
-                                        />
-                                        {errors.brandName && <p className="error-message">{errors.brandName}</p>}
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Brand Description<span className="required">*</span></label>
+
+                                    {/* Full Width Fields */}
+                                    <div className="form-group full-width">
+                                        <label>Brand Description</label>
                                         <textarea name="brandDescription" value={form.brandDescription} onChange={handleChange} required rows={4} placeholder="Tell us about your brand (3-4 sentences)"></textarea>
                                         {errors.brandDescription && <p className="error-message">{errors.brandDescription}</p>}
                                     </div>
-                                    <div className="form-group">
-                                        <label>Portfolio/Lookbook Upload<span className="required">*</span></label>
+                                    <div className="form-group full-width">
+                                        <label>Portfolio/Lookbook Upload</label>
                                         <div
                                             className={`drag-drop-area${dragActive ? " drag-active" : ""}`}
                                             onDragOver={handleDragOver}
@@ -731,7 +780,7 @@ const VendorVerification = () => {
                                         {errors.socialMediaLinks && <p className="error-message">{errors.socialMediaLinks}</p>}
                                     </div>
                                     <div className="form-group">
-                                        <label>Product Categories<span className="required">*</span></label>
+                                        <label>Product Categories</label>
                                         <div className="checkbox-group">
                                             {categories.map((cat) => (
                                                 <label key={cat} className="checkbox-label">
@@ -778,12 +827,12 @@ const VendorVerification = () => {
                                         {errors.productCategories && <p className="error-message">{errors.productCategories}</p>}
                                     </div>
                                     <div className="form-group">
-                                        <label>Price Range<span className="required">*</span></label>
+                                        <label>Price Range</label>
                                         <input type="text" name="priceRange" value={form.priceRange} onChange={handleChange} required placeholder="e.g. ₹ 1000 - ₹ 10000" />
                                         {errors.priceRange && <p className="error-message">{errors.priceRange}</p>}
                                     </div>
                                     <div className="form-group">
-                                        <label>Why Namunjii?<span className="required">*</span></label>
+                                        <label>Why Namunjii?</label>
                                         <textarea name="whyNamunjii" value={form.whyNamunjii} onChange={handleChange} required rows={3} placeholder="Why do you want to join us?"></textarea>
                                         {errors.whyNamunjii && <p className="error-message">{errors.whyNamunjii}</p>}
                                     </div>
