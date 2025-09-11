@@ -18,6 +18,7 @@ import VendorVerification from './Components/OthersComponents/VendorVerification
 import AboutUs from './Components/OthersComponents/AboutUs/AboutUs';
 import ContactUs from './Components/OthersComponents/ContactUs/ContactUs';
 import WhatsAppBtn from './Components/WhatsAppBtn';
+import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
 
 // Page transition variants
 const pageVariants = {
@@ -104,6 +105,11 @@ const AnimatedRoutes = () => {
         <Route path="/contact-us" element={
           <PageTransition>
             <ContactUs />
+          </PageTransition>
+        } />
+        <Route path="/privacy-policy" element={
+          <PageTransition>
+            <PrivacyPolicy />
           </PageTransition>
         } />
       </Routes>
