@@ -63,41 +63,41 @@
 
 /* Phone Input Styling */
 .phone-input {
-    font-family: var(--Poppins-font);
-    font-size: 15px;
-    padding: 12px 14px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    outline: none;
-    background: #fafbfc;
-    transition: border 0.2s;
-    /* width: 100%; */
+  font-family: var(--Poppins-font);
+  font-size: 15px;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  background: #fafbfc;
+  transition: border 0.2s;
+  /* width: 100%; */
 }
 
 .phone-input:focus {
-    border: 1.5px solid var(--brandColor);
+  border: 1.5px solid var(--brandColor);
 }
 
 .phone-input .PhoneInputCountry {
-    margin-right: 8px;
+  margin-right: 8px;
 }
 
 .phone-input .PhoneInputCountrySelect {
-    background: transparent;
-    border: none;
-    font-size: 14px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
 }
 
 .phone-input .PhoneInputInput {
-    border: none;
-    background: transparent;
-    font-size: 15px;
-    outline: none;
-    width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+  width: 100%;
 }
 
 .phone-input .PhoneInputInput:focus {
-    outline: none;
+  outline: none;
 }
 
 .vendor-form textarea {
@@ -378,6 +378,6 @@
   }
 }
 
-.PhoneInputCountryIcon .PhoneInputInternationalIconGlobe{
+.PhoneInputCountryIcon .PhoneInputInternationalIconGlobe {
   display: none !important;
 }

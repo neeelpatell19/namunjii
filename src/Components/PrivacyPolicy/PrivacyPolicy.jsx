@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                     <p>By using our Service, you agree to the collection and use of information in accordance with this Privacy Policy. If you do not agree with the terms of this Privacy Policy, please do not access the Service.</p>
 
                     <h3>Information We Collect</h3>
-                    
+
                     <h4>Personal Information</h4>
                     <p>We may collect personally identifiable information that you voluntarily provide to us when you:</p>
                     <ul>
@@ -65,7 +65,7 @@ const PrivacyPolicy = () => {
 
                     <h3>Information Sharing and Disclosure</h3>
                     <p>We do not sell, trade, or rent your personal information to third parties. We may share your information in the following circumstances:</p>
-                    
+
                     <h4>With Your Consent</h4>
                     <p>We may share your information when you have given us explicit consent to do so.</p>
 

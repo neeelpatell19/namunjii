@@ -18,14 +18,22 @@ const initialState = {
     termsAccepted: false,
 };
 
-const categories = [
-    "Blazers",
-    "Shirts",
-    "Vest Coats",
-    "Trench Coats",
-    "Kurtas",
-    "Tunics",
-    "Dresses",
+const mainCategories = {
+    "Mens Wear": [
+        "Shirts",
+        "Blazers",
+        "Vest Coats"
+    ],
+    "Womens Wear": [
+        "Dresses",
+        "Tunics",
+        "Kurtas"
+    ]
+};
+
+const allCategories = [
+    ...mainCategories["Mens Wear"],
+    ...mainCategories["Womens Wear"],
     "Other"
 ];
 
@@ -71,6 +79,7 @@ const VendorVerification = () => {
     const [dataRestored, setDataRestored] = useState(false);
     const [customCategory, setCustomCategory] = useState("");
     const [showCustomCategoryInput, setShowCustomCategoryInput] = useState(false);
+    const [selectedMainCategories, setSelectedMainCategories] = useState([]);
     const apibaseUrl = import.meta.env.VITE_BASE_URL;
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -137,6 +146,21 @@ const VendorVerification = () => {
         const link = socialLinkInput.trim();
         if (!link) return;
         if (form.socialLinks.includes(link)) return;
+
+        // Validate URL format
+        if (!link.startsWith('http://') && !link.startsWith('https://')) {
+            showMessage('error', 'Please enter a valid URL starting with https:// or http://');
+            return;
+        }
+
+        // Additional URL validation
+        try {
+            new URL(link);
+        } catch (error) {
+            showMessage('error', 'Please enter a valid URL format');
+            return;
+        }
+
         setForm({ ...form, socialLinks: [...form.socialLinks, link] });
         setSocialLinkInput("");
     };
@@ -170,6 +194,36 @@ const VendorVerification = () => {
         }
     };
 
+    const handleMainCategoryChange = (mainCategory, checked) => {
+        let updatedMainCategories = [...selectedMainCategories];
+
+        if (checked) {
+            updatedMainCategories.push(mainCategory);
+        } else {
+            updatedMainCategories = updatedMainCategories.filter(cat => cat !== mainCategory);
+            // Remove all subcategories of this main category from form
+            const subcategoriesToRemove = mainCategories[mainCategory];
+            const updatedFormCategories = form.productCategories.filter(cat =>
+                !subcategoriesToRemove.includes(cat)
+            );
+            setForm({ ...form, productCategories: updatedFormCategories });
+        }
+
+        setSelectedMainCategories(updatedMainCategories);
+    };
+
+    const handleSubcategoryChange = (subcategory, checked) => {
+        let updated = [...form.productCategories];
+
+        if (checked) {
+            updated.push(subcategory);
+        } else {
+            updated = updated.filter((cat) => cat !== subcategory);
+        }
+
+        setForm({ ...form, productCategories: updated });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -180,8 +234,35 @@ const VendorVerification = () => {
             setSubmitting(false);
             return;
         }
+        
         // Parse price range
         const [start, end] = form.priceRange.split('-').map(s => parseInt(s.trim(), 10));
+        
+        // Transform product categories to match API schema
+        const structuredProductCategories = [];
+        
+        // Add main categories with their subcategories
+        selectedMainCategories.forEach(mainCat => {
+            const subcategories = form.productCategories.filter(cat => 
+                mainCategories[mainCat].includes(cat)
+            );
+            if (subcategories.length > 0) {
+                structuredProductCategories.push({
+                    mainCategory: mainCat,
+                    subcategories: subcategories
+                });
+            }
+        });
+        
+        // Add "Other" category if selected
+        if (form.productCategories.includes("Other") && customCategory.trim()) {
+            structuredProductCategories.push({
+                mainCategory: "Other",
+                subcategories: [],
+                otherSpecification: customCategory.trim()
+            });
+        }
+        
         const payload = {
             fullName: form.fullName,
             emailAddress: form.email,
@@ -190,7 +271,7 @@ const VendorVerification = () => {
             brandDescription: form.brandDescription,
             portfolioUpload: form.portfolioUrl,
             socialMediaLinks: form.socialLinks,
-            productCategories: form.productCategories,
+            productCategories: structuredProductCategories,
             priceRange: { start, end },
             whyNamunjii: form.whyNamunjii,
         };
@@ -225,6 +306,22 @@ const VendorVerification = () => {
 
     // Check if the form is valid for submission
     const isFormValid = () => {
+        // Check if at least one main category is selected
+        const hasMainCategory = selectedMainCategories.length > 0;
+        
+        // Check if at least one subcategory is selected or "Other" is selected
+        let hasSubcategories = false;
+        selectedMainCategories.forEach(mainCat => {
+            const subcategories = form.productCategories.filter(cat => 
+                mainCategories[mainCat].includes(cat)
+            );
+            if (subcategories.length > 0) {
+                hasSubcategories = true;
+            }
+        });
+        
+        const hasOtherCategory = form.productCategories.includes("Other") && customCategory.trim().length >= 2;
+        
         return (
             form.fullName.trim() !== "" &&
             form.email.trim() !== "" &&
@@ -234,7 +331,7 @@ const VendorVerification = () => {
             form.portfolio !== null &&
             form.priceRange.trim() !== "" &&
             form.whyNamunjii.trim() !== "" &&
-            form.productCategories.length > 0
+            hasMainCategory && (hasSubcategories || hasOtherCategory)
             // form.termsAccepted - temporarily hidden
         );
     };
@@ -305,13 +402,44 @@ const VendorVerification = () => {
         // Social Media Links validation
         if (!form.socialLinks || !Array.isArray(form.socialLinks) || form.socialLinks.length === 0) {
             errors.socialMediaLinks = 'At least one social media link is required.';
+        } else {
+            // Validate each social media link format
+            for (let i = 0; i < form.socialLinks.length; i++) {
+                const link = form.socialLinks[i];
+                if (!link.startsWith('http://') && !link.startsWith('https://')) {
+                    errors.socialMediaLinks = 'All social media links must start with https:// or http://';
+                    break;
+                }
+                try {
+                    new URL(link);
+                } catch (error) {
+                    errors.socialMediaLinks = 'Please enter valid URL formats for all social media links';
+                    break;
+                }
+            }
         }
 
         // Product Categories validation
-        if (!form.productCategories || !Array.isArray(form.productCategories) || form.productCategories.length === 0) {
-            errors.productCategories = 'At least one product category is required.';
-        } else if (form.productCategories.includes("Other") && (!customCategory || customCategory.trim().length < 2)) {
-            errors.productCategories = 'Please specify a custom category (minimum 2 characters).';
+        if (!selectedMainCategories || selectedMainCategories.length === 0) {
+            errors.productCategories = 'Please select at least one main category (Mens Wear or Womens Wear).';
+        } else {
+            let hasSelectedSubcategories = false;
+            selectedMainCategories.forEach(mainCat => {
+                const subcategories = form.productCategories.filter(cat => 
+                    mainCategories[mainCat].includes(cat)
+                );
+                if (subcategories.length > 0) {
+                    hasSelectedSubcategories = true;
+                }
+            });
+            
+            if (!hasSelectedSubcategories && !form.productCategories.includes("Other")) {
+                errors.productCategories = 'Please select at least one specific category or specify "Other".';
+            }
+            
+            if (form.productCategories.includes("Other") && (!customCategory || customCategory.trim().length < 2)) {
+                errors.productCategories = 'Please specify a custom category (minimum 2 characters).';
+            }
         }
 
         // Price Range validation
@@ -428,6 +556,7 @@ const VendorVerification = () => {
         setSocialLinkInput("");
         setCustomCategory("");
         setShowCustomCategoryInput(false);
+        setSelectedMainCategories([]);
         setErrors({});
         setDataRestored(false);
         try {
@@ -447,7 +576,8 @@ const VendorVerification = () => {
                     ...form,
                     socialLinkInput: socialLinkInput, // Also save the current social link input
                     customCategory: customCategory, // Save custom category
-                    showCustomCategoryInput: showCustomCategoryInput // Save custom category input state
+                    showCustomCategoryInput: showCustomCategoryInput, // Save custom category input state
+                    selectedMainCategories: selectedMainCategories // Save selected main categories
                 };
                 delete formDataToSave.portfolio; // Don't save file object
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(formDataToSave));
@@ -457,7 +587,7 @@ const VendorVerification = () => {
         }, 100); // Reduced delay for more real-time saving
 
         return () => clearTimeout(saveTimer);
-    }, [form, socialLinkInput, STORAGE_KEY]);
+    }, [form, socialLinkInput, selectedMainCategories, STORAGE_KEY]);
 
     // Clear localStorage on successful submission
     useEffect(() => {
@@ -483,6 +613,9 @@ const VendorVerification = () => {
                 }
                 if (parsed.showCustomCategoryInput) {
                     setShowCustomCategoryInput(parsed.showCustomCategoryInput);
+                }
+                if (parsed.selectedMainCategories) {
+                    setSelectedMainCategories(parsed.selectedMainCategories);
                 }
 
                 // Check if the saved data has meaningful content to show notification
@@ -643,38 +776,6 @@ const VendorVerification = () => {
                                             {errors.fullName && <p className="error-message">{errors.fullName}</p>}
                                         </div>
                                         <div className="form-group">
-                                            <label>Email Address</label>
-                                            <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" />
-                                            {errors.email && <p className="error-message">{errors.email}</p>}
-                                        </div>
-                                    </div>
-
-                                    {/* Contact Information Row */}
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label>WhatsApp Number</label>
-                                            <PhoneInput
-                                                international
-                                                defaultCountry="IN"
-                                                value={form.mobileNumber}
-                                                onChange={(value) => {
-                                                    // If user changes country, clear the number part but keep country code
-                                                    if (form.mobileNumber && value && 
-                                                        form.mobileNumber.split(' ')[0] !== value.split(' ')[0]) {
-                                                        // Country code changed, keep only the new country code
-                                                        const countryCode = value.split(' ')[0];
-                                                        setForm({ ...form, mobileNumber: countryCode });
-                                                    } else {
-                                                        setForm({ ...form, mobileNumber: value });
-                                                    }
-                                                }}
-                                                placeholder="Enter your WhatsApp number"
-                                                className="phone-input"
-                                                flags={false}
-                                            />
-                                            {errors.mobileNumber && <p className="error-message">{errors.mobileNumber}</p>}
-                                        </div>
-                                        <div className="form-group">
                                             <label>Brand Name</label>
                                             <input
                                                 type="text"
@@ -694,6 +795,40 @@ const VendorVerification = () => {
                                             />
                                             {errors.brandName && <p className="error-message">{errors.brandName}</p>}
                                         </div>
+
+                                    </div>
+
+                                    {/* Contact Information Row */}
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>WhatsApp Number</label>
+                                            <PhoneInput
+                                                international
+                                                defaultCountry="IN"
+                                                value={form.mobileNumber}
+                                                onChange={(value) => {
+                                                    // If user changes country, clear the number part but keep country code
+                                                    if (form.mobileNumber && value &&
+                                                        form.mobileNumber.split(' ')[0] !== value.split(' ')[0]) {
+                                                        // Country code changed, keep only the new country code
+                                                        const countryCode = value.split(' ')[0];
+                                                        setForm({ ...form, mobileNumber: countryCode });
+                                                    } else {
+                                                        setForm({ ...form, mobileNumber: value });
+                                                    }
+                                                }}
+                                                placeholder="Enter your WhatsApp number"
+                                                className="phone-input"
+                                                flags={false}
+                                            />
+                                            {errors.mobileNumber && <p className="error-message">{errors.mobileNumber}</p>}
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email Address</label>
+                                            <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="Enter your email address" />
+                                            {errors.email && <p className="error-message">{errors.email}</p>}
+                                        </div>
+
                                     </div>
 
                                     {/* Full Width Fields */}
@@ -761,7 +896,7 @@ const VendorVerification = () => {
                                                 name="socialLinksInput"
                                                 value={socialLinkInput}
                                                 onChange={handleSocialLinkInputChange}
-                                                placeholder="Paste a link (Instagram, Facebook, etc.)"
+                                                placeholder="https://instagram.com/yourprofile or https://facebook.com/yourpage"
                                             />
                                             <button className="add-link-btn" onClick={handleAddSocialLink} type="button" disabled={!socialLinkInput.trim() || form.socialLinks.includes(socialLinkInput.trim())}>
                                                 Add Link
@@ -781,19 +916,60 @@ const VendorVerification = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>Product Categories</label>
+
+                                        {/* Main Categories */}
+                                        <div style={{ marginBottom: '15px' }}>
+                                            {/* <h4 style={{ fontSize: '16px', marginBottom: '10px', color: '#333' }}>Select Category Type:</h4> */}
+                                            <div className="checkbox-group">
+                                                {Object.keys(mainCategories).map((mainCat) => (
+                                                    <label key={mainCat} className="checkbox-label" style={{ fontSize: '16px', fontWeight: '600' }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedMainCategories.includes(mainCat)}
+                                                            onChange={(e) => handleMainCategoryChange(mainCat, e.target.checked)}
+                                                        />
+                                                        {mainCat}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Subcategories */}
+                                        {selectedMainCategories.length > 0 && (
+                                            <div style={{ marginBottom: '15px' }}>
+                                                {/* <h4 style={{ fontSize: '14px', marginBottom: '10px', color: '#666' }}>Select Specific Categories:</h4> */}
+                                                {selectedMainCategories.map((mainCat) => (
+                                                    <div key={mainCat} style={{ marginBottom: '10px' }}>
+                                                        <h5 style={{ fontSize: '14px', marginBottom: '0px', color: '#555', marginTop: "10px" }}>{mainCat}:</h5>
+                                                        <div className="checkbox-group" style={{ marginLeft: '20px' }}>
+                                                            {mainCategories[mainCat].map((subcat) => (
+                                                                <label key={subcat} className="checkbox-label">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={form.productCategories.includes(subcat)}
+                                                                        onChange={(e) => handleSubcategoryChange(subcat, e.target.checked)}
+                                                                    />
+                                                                    {subcat}
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {/* Other Category */}
                                         <div className="checkbox-group">
-                                            {categories.map((cat) => (
-                                                <label key={cat} className="checkbox-label">
-                                                    <input
-                                                        type="checkbox"
-                                                        name="productCategories"
-                                                        value={cat}
-                                                        checked={form.productCategories.includes(cat)}
-                                                        onChange={handleChange}
-                                                    />
-                                                    {cat === "Other" ? "Other (specify below)" : cat}
-                                                </label>
-                                            ))}
+                                            <label className="checkbox-label">
+                                                <input
+                                                    type="checkbox"
+                                                    name="productCategories"
+                                                    value="Other"
+                                                    checked={form.productCategories.includes("Other")}
+                                                    onChange={handleChange}
+                                                />
+                                                Other (specify below)
+                                            </label>
                                         </div>
 
                                         {/* Custom Category Input */}
@@ -801,7 +977,7 @@ const VendorVerification = () => {
                                             <div className="custom-category-input" style={{ marginTop: '10px' }}>
                                                 <input
                                                     type="text"
-                                                    placeholder="Enter your custom category..."
+                                                    placeholder="Enter your category..."
                                                     value={customCategory}
                                                     onChange={handleCustomCategoryChange}
                                                     onBlur={handleCustomCategoryBlur}
@@ -814,12 +990,7 @@ const VendorVerification = () => {
                                                     }}
                                                 />
                                                 <small style={{ color: '#666', fontSize: '12px', marginTop: '5px', display: 'block' }}>
-                                                    Please specify your custom product category (minimum 2 characters)
-                                                    {/* {customCategory && customCategory.length >= 2 && (
-                                                        <span style={{ color: '#28a745', marginLeft: '5px' }}>
-                                                            ✓ Will be saved as: "{customCategory.trim()}"
-                                                        </span>
-                                                    )} */}
+                                                    Please specify your product category (minimum 2 characters)
                                                 </small>
                                             </div>
                                         )}
