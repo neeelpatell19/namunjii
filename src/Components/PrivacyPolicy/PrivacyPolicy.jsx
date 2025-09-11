@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./PrivacyPolicy.css";
 const PrivacyPolicy = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="MainContainer marginTop50 paddingBottom50">
             <br /><br /><br />

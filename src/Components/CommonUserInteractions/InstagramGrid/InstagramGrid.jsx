@@ -29,6 +29,11 @@ const InstagramGrid = () => {
                                     Opposite ITC Narmada,<br />
                                     Keshavbaug, Ahmedabad, 380015
                                 </span>
+                                {/* <br /> */}
+                                {/* <p>Privacy Policy</p> */}
+                                <Link to="/privacy-policy" className="contact-link">
+                                    <span>Privacy Policy</span>
+                                </Link>
                             </div>
                         </div>
                     </div>
