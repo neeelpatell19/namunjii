@@ -41,8 +41,8 @@ const cityCardVariants = {
 
 const AvailableCities = () => {
     const cities = [
-        "Ahmedabad", "Mumbai", "Delhi", "Dubai", "Goa", "Bengaluru",
-        "Bekal", "Hyderabad", "Cochin", "Chennai", "Abu Dhabi"
+        "Ahmedabad", "Bengaluru", "Chennai", "Dehradun", "Delhi", "Goa",
+        "Hydrabad", "Jodhpur", "Mumbai", "Dubai", "Rishikesh", "Udaipur"
     ];
 
     const contactInfo = {
