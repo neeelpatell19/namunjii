@@ -1,0 +1,118 @@
+.BackgroundOverlayImageContainerContainer {
+    min-height: 1000px;
+}
+
+.BackgroundOverlayImageContainer {
+    width: 100%;
+    height: 1000px;
+    overflow: hidden;
+    margin-top: -9rem !important;
+    position: absolute;
+}
+
+.BackgroundOverlayImageContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ProductDetaileContainer {
+    position: sticky;
+    z-index: 555;
+    height: 600px;
+    width: 100%;
+    top: 200px;
+    right: 0px;
+    /* background-color: red; */
+    /* margin-left: auto; */
+    display: flex;
+    justify-content: end;
+    margin-top: -50rem;
+}
+
+.DetailsContainerSticky {
+    background-color: white;
+    /* height: 100%; */
+    width: 45%;
+    padding: 30px;
+}
+
+/* .SingleProductPageDesign {
+    min-height: 700vh;
+} */
+
+.ProductDetailsTabContainer .ant-tabs-tab-btn {
+    color: rgb(126, 126, 126);
+    font-size: 12px !important;
+}
+
+.ProductDetailsTabContainer .ant-tabs-tab-btn:focus {
+    color: rgb(126, 126, 126) !important;
+}
+
+.ProductDetailsTabContainer .ant-tabs-tab-btn:hover {
+    color: rgb(126, 126, 126) !important;
+}
+
+.ProductDetailsTabContainer .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: black !important;
+}
+
+.ProductDetailsTabContainer .ant-tabs-tab-active .ant-tabs-tab-btn:focus {
+    color: black !important;
+}
+
+.ProductDetailsTabContainer .ant-tabs-ink-bar {
+    background: black !important;
+}
+
+.ProductDetaileContainer .ant-tabs-nav::before {
+    display: none !important;
+}
+
+.OtherAllImagesContainer {
+    width: 50%;
+}
+
+.OtherAllImagesContainer>div img {
+    width: 100%;
+}
+
+
+/* .DetailsContainerSticky .productDescription p{
+    margin-bottom: 20px;
+} */
+
+.ProductDetailsTabContainer .SizeBoxesContainerEdit {
+    gap: 0px !important;
+    border-radius: 0px !important;
+}
+
+.ProductDetailsTabContainer .SizeBoxesContainerEdit .SizeBox {
+    border-radius: 0px !important;
+    border-left: 0px !important;
+}
+
+.ProductDetailsTabContainer .SizeBoxesContainerEdit .SizeBox:first-child {
+    border-left: 1px solid var(--brandColor) !important;
+}
+
+.RelatedOtherProductsContainer {
+    background-color: white;
+    padding: 20px;
+}
+
+.RelatedOtherProductsContainer .HeaderContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* 
+.RelatedOtherProductsContainer .HeaderContainer .AnimatedLineButton {
+    color: white;
+}
+
+.RelatedOtherProductsContainer .HeaderContainer .AnimatedLineButton::after,
+.RelatedOtherProductsContainer .HeaderContainer .AnimatedLineButton::before {
+    border-bottom: 1px solid white;
+} */

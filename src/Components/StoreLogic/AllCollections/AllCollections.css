@@ -1,0 +1,139 @@
+.CollectionDesignImageContainer {
+    min-height: 500px;
+    max-height: 500px;
+    height: 500px;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.CollectionDesignImageContainer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.CollectionDesignImageContainer .CollectionDesignImage img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    background-position: center;
+}
+
+.CollectionItemImage {
+    height: 100%;
+}
+
+.CollectionItemImageContainer {
+    min-height: 400px;
+    height: 400px;
+    position: relative;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+}
+
+.CollectionItemImageContainer .BadgeContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 55;
+    background-color: black;
+    color: white;
+    padding: 3px 5px;
+
+}
+
+.CollectionItemImageContainer .BadgeContainer span {
+    font-size: 12px;
+}
+
+.CollectionItemImageContainer .CollectionItemImage:hover img {
+    transform: scale(1.05);
+    transition: .5s;
+}
+
+.CollectionItemImageContainer .CollectionItemImage img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    background-position: center;
+    transition: .5s;
+}
+
+.CollectionProductSwiperContainer {
+    margin-top: -10rem;
+}
+
+.CollectionDesignImageContainer div img {
+    width: 120%;
+    height: 100%;
+    object-fit: cover;
+    margin-top: -8rem;
+}
+
+.CollectionNameContainer {
+    position: absolute;
+    left: 20px;
+    max-width: 400px;
+    bottom: 20px;
+}
+
+.CollectionNameContainer h3 {
+    color: white;
+}
+
+.CollectionNameContainer p {
+    color: white;
+    font-size: 12px !important;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+}
+
+
+.CollectionItemImageContainer .PopUpcategoryBtn {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(100px);
+    transition: .5s;
+
+}
+
+.CollectionItemImageContainer:hover .PopUpcategoryBtn {
+    transform: translateY(0px);
+    transition: .5s;
+}
+
+.CollectionItemImageContainer .PopUpcategoryBtn button {
+    max-width: 80%;
+    height: 50px;
+    width: 100%;
+    border: none;
+    border: 1px solid #a08670;
+    transition: .5s;
+    color: white;
+    background-color: var(--OrangeColor);
+    font-size: 16px;
+}
+
+.CollectionItemImageContainer .PopUpcategoryBtn button:hover {
+    background-color: var(--brandColor);
+    border: 1px solid var(--brandColor);
+
+}
+
+.OtherAllCollectionsContainerContent .DesignersListCards {
+    display: block !important;
+}

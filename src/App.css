@@ -36,15 +36,15 @@ h1 {
   font-family: var(--Poppins-font);
   color: var(--brandColor);
   font-size: 64px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.2;
   margin: 0px;
 }
 
 h2 {
   font-family: var(--Poppins-font);
-  font-size: 45px;
-  font-weight: 500;
+  font-size: 50px;
+  font-weight: 400;
   line-height: 1;
   margin: 0px;
   color: var(--brandColor);
@@ -90,7 +90,7 @@ p {
   padding-top: 20px;
 }
 
-.sectionPaddingTop{
+.sectionPaddingTop {
   padding-top: 50px;
 }
 
@@ -103,7 +103,7 @@ p {
 }
 
 .Container {
-  max-width: 1000px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
@@ -164,7 +164,7 @@ p {
   position: relative;
   overflow: hidden;
   z-index: 2;
-  min-width: 300px;
+  min-width: 200px;
 }
 
 .CommonBtn span {
@@ -312,9 +312,97 @@ b {
   color: black;
 }
 
+
+/* Page Transition Styles */
+.page-transition-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.CommonFlexGap h2 {
+  font-weight: 300 !important;
+}
+
+/* Optimize animations for performance */
+.motion-div {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.newRouteSectionPadding {
+  padding-top: 5rem;
+}
+
+.FlexContainerWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 150px;
+}
+
+.FlexContainerWrapper div:first-child {
+  width: 50%;
+}
+
+.FlexContainerWrapper div:last-child {
+  width: 50%;
+}
+
+.AnimatedLineButton {
+  margin: 20px 0px;
+  background-color: transparent;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  padding: 10px 0px;
+  transition: .5s;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.AnimatedLineButton:hover::before,
+.AnimatedLineButton:hover::after {
+  width: 50%;
+  transition: .5s;
+}
+
+.AnimatedLineButton::before {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  left: 0;
+  bottom: 0;
+  width: 20%;
+  height: 2px;
+  border-bottom: 1px solid black;
+  transition: .5s;
+}
+
+.AnimatedLineButton::after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  bottom: 0;
+  width: 20%;
+  height: 2px;
+  border-bottom: 1px solid black;
+  transition: .5s;
+}
+
+.LeftPadding100px {
+  padding-left: 100px;
+}
+
+.maxWidth600 {
+  max-width: 600px;
+}
+
 @media (min-width:1250px) and (max-width:1500px) {
   .Container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     overflow: hidden;
   }
@@ -336,20 +424,6 @@ b {
  } */
 }
 
-/* Page Transition Styles */
-.page-transition-container {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-}
-
-.CommonFlexGap h2 {
-  font-weight: 300 !important;
-}
-
-/* Optimize animations for performance */
-.motion-div {
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translateZ(0);
+.smallFont {
+  font-size: 12px !important;
 }

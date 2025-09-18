@@ -19,7 +19,10 @@ import AboutUs from './Components/OthersComponents/AboutUs/AboutUs';
 import ContactUs from './Components/OthersComponents/ContactUs/ContactUs';
 import WhatsAppBtn from './Components/WhatsAppBtn';
 import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
-
+import Footer from './Components/OthersComponents/Footer/Footer';
+import AllCollections from './Components/StoreLogic/AllCollections/AllCollections';
+import SingleProductPageDesign from './Components/StoreLogic/AllProducts/IndiviDualProduct/SecondDesign/SingleProductPageDesign';
+import CollectionsViaProducts from './Components/StoreLogic/AllCollections/CollectionsViaProducts/CollectionsViaProducts';
 // Page transition variants
 const pageVariants = {
   initial: {
@@ -84,7 +87,7 @@ const AnimatedRoutes = () => {
         } />
         <Route path="/product/:productName" element={
           <PageTransition>
-            <IndividualProduct />
+            <SingleProductPageDesign />
           </PageTransition>
         } />
         <Route path="/all-products" element={
@@ -112,6 +115,21 @@ const AnimatedRoutes = () => {
             <PrivacyPolicy />
           </PageTransition>
         } />
+        <Route path="/all-collections" element={
+          <PageTransition>
+            <AllCollections />
+          </PageTransition>
+        } />
+        <Route path="/single-product-design" element={
+          <PageTransition>
+            <SingleProductPageDesign />
+          </PageTransition>
+        } />
+        <Route path="/collections-via-products" element={
+          <PageTransition>
+            <CollectionsViaProducts />
+          </PageTransition>
+        } />
       </Routes>
     </AnimatePresence>
   );
@@ -125,9 +143,11 @@ function App() {
       <BrowserRouter>
         <NavigationBar />
         <AnimatedRoutes />
+
         {/* <FeaturesAndQuestion /> */}
         {/* <CommonUserInteractionsPopup /> */}
-        <InstagramGrid />
+        {/* <InstagramGrid />
+        <Footer /> */}
         {/* <Cookies /> */}
         {/* <WhatsAppBtn /> */}
       </BrowserRouter>

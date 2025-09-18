@@ -32,14 +32,14 @@ const commonBrief = (
 const DesignerDummyData = [
     {
         slug: "Wabi-Sabi",
-        image: ["https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2803.jpeg", "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2803.jpeg",],
+        image: ["https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",],
         DesignerName: "Wabi-Sabi",
         DesignerDescription: "Isabella crafts timeless couture with a modern twist, specializing in silk evening gowns and bespoke luxury pieces.",
         DesignerProducts: [
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://images.unsplash.com/photo-1608748010899-18f300247112?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Bespoke Silk Evening Gown",
                 ProductDescription: commonDescription,
@@ -49,8 +49,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Crystal-Embellished Cape Dress",
                 ProductDescription: commonDescription,
@@ -60,8 +60,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Velvet Cocktail Dress",
                 ProductDescription: commonDescription,
@@ -71,8 +71,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Pearl-Trimmed Blazer",
                 ProductDescription: commonDescription,
@@ -95,16 +95,16 @@ const DesignerDummyData = [
     {
         slug: "Greyhorn",
         image: [
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2789.jpeg",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         ],
         DesignerName: "Greyhorn",
         DesignerDescription: "Elena's collections are inspired by Russian royalty, featuring opulent fabrics and intricate beadwork.",
         DesignerProducts: [
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Beaded Velvet Bespoke Gown",
                 ProductDescription: commonDescription,
@@ -114,8 +114,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Fur-Trimmed Bespoke Cape",
                 ProductDescription: commonDescription,
@@ -125,8 +125,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Satin Brocade Bespoke Dress",
                 ProductDescription: commonDescription,
@@ -136,8 +136,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Embellished Bespoke Headpiece",
                 ProductDescription: commonDescription,
@@ -160,16 +160,16 @@ const DesignerDummyData = [
     {
         slug: "luca-moretti",
         image: [
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2993.jpeg",
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2993.jpeg",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         ],
         DesignerName: "Luca Moretti",
         DesignerDescription: "Luca is renowned for his Italian craftsmanship, blending classic tailoring with avant-garde luxury fabrics.",
         DesignerProducts: [
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Bespoke Cashmere Overcoat",
                 ProductDescription: commonDescription,
@@ -179,8 +179,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Wool-Blend Bespoke Suit",
                 ProductDescription: commonDescription,
@@ -190,8 +190,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Silk-Lined Tuxedo",
                 ProductDescription: commonDescription,
@@ -201,8 +201,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Leather Accent Blazer",
                 ProductDescription: commonDescription,
@@ -225,16 +225,16 @@ const DesignerDummyData = [
     {
         slug: "sophie-dubois",
         image: [
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2996.jpeg",
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_2996.jpeg",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         ],
         DesignerName: "Sophie Dubois",
         DesignerDescription: "Sophie is a Parisian designer celebrated for her haute couture dresses and luxury ready-to-wear collections.",
         DesignerProducts: [
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Bespoke Chiffon Ball Gown",
                 ProductDescription: commonDescription,
@@ -244,8 +244,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Embroidered Mini Dress",
                 ProductDescription: commonDescription,
@@ -255,8 +255,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Feathered Cape Dress",
                 ProductDescription: commonDescription,
@@ -266,8 +266,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Sequin Sheath Dress",
                 ProductDescription: commonDescription,
@@ -290,16 +290,16 @@ const DesignerDummyData = [
     {
         slug: "mateo-garcia",
         image: [
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Demo1.jpeg",
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Demo1.jpeg",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         ],
         DesignerName: "Mateo García",
         DesignerDescription: "Mateo fuses Spanish tradition with modern luxury, known for his bold prints and opulent fabrics.",
         DesignerProducts: [
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Baroque Print Bespoke Blazer",
                 ProductDescription: commonDescription,
@@ -309,8 +309,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Velvet Bespoke Trousers",
                 ProductDescription: commonDescription,
@@ -320,8 +320,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Embroidered Kimono Jacket",
                 ProductDescription: commonDescription,
@@ -331,8 +331,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Silk Bespoke Scarf",
                 ProductDescription: commonDescription,
@@ -355,16 +355,16 @@ const DesignerDummyData = [
     {
         slug: "ava-chen",
         image: [
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_3563.jpeg",
-            "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/IMG_3563.jpeg",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         ],
         DesignerName: "Ava Chen",
         DesignerDescription: "Ava is a pioneer in sustainable luxury, creating eco-friendly couture with a focus on organic materials.",
         DesignerProducts: [
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Organic Cotton Bespoke Dress",
                 ProductDescription: commonDescription,
@@ -374,8 +374,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Recycled Wool Bespoke Coat",
                 ProductDescription: commonDescription,
@@ -385,8 +385,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Bamboo Silk Bespoke Blouse",
                 ProductDescription: commonDescription,
@@ -396,8 +396,8 @@ const DesignerDummyData = [
             },
             {
                 image: [
-                    "https://images.unsplash.com/photo-1574454004277-401a31cc564f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://plus.unsplash.com/premium_photo-1664202526047-405824c633e7?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 ],
                 ProductName: "Vegan Leather Bespoke Skirt",
                 ProductDescription: commonDescription,
@@ -421,6 +421,50 @@ const DesignerDummyData = [
 
 ];
 
+// Pool of random images to assign across designers and products
+const DUMMY_IMAGE_POOL = [
+    "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1589363358751-ab05797e5629?q=80&w=927&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1572853566605-af9816b0a77a?q=80&w=927&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+];
+
+const pickTwoRandomImages = () => {
+    const firstIndex = Math.floor(Math.random() * DUMMY_IMAGE_POOL.length);
+    let secondIndex = Math.floor(Math.random() * DUMMY_IMAGE_POOL.length);
+    if (DUMMY_IMAGE_POOL.length > 1) {
+        while (secondIndex === firstIndex) {
+            secondIndex = Math.floor(Math.random() * DUMMY_IMAGE_POOL.length);
+        }
+    }
+    return [DUMMY_IMAGE_POOL[firstIndex], DUMMY_IMAGE_POOL[secondIndex]];
+};
+
+// Randomize images for designers and their products from the pool
+const withRandomImages = (designers) =>
+    designers.map((designer) => ({
+        ...designer,
+        image: pickTwoRandomImages(),
+        DesignerProducts: designer.DesignerProducts.map((product) => ({
+            ...product,
+            image: pickTwoRandomImages(),
+        })),
+    }));
+
+// Attach a random sale flag to each product (boolean true/false)
+const addRandomSaleToProducts = (designers) =>
+    designers.map((designer) => ({
+        ...designer,
+        DesignerProducts: designer.DesignerProducts.map((product) => ({
+            ...product,
+            sale: Math.random() < 0.5,
+        })),
+    }));
+
+// First randomize images, then add sale flags
+const DesignerDummyDataWithImages = withRandomImages(DesignerDummyData);
+const DesignerDummyDataWithSale = addRandomSaleToProducts(DesignerDummyDataWithImages);
+
 const CollectionData = [
     {
         CollectionTitle: "Collection 1",
@@ -436,4 +480,4 @@ const CollectionData = [
     },
 ]
 
-export { DesignerDummyData, CollectionData };   
+export { DesignerDummyDataWithSale as DesignerDummyData, CollectionData };   

@@ -1,7 +1,137 @@
 .ProductForHome .ProductCardImageContainer {
     min-height: 320px;
     max-height: 320px;
-    overflow: hidden;
+    /* overflow: hidden; */
     position: relative;
     /* border-radius: 10px; */
+}
+
+
+.GridImagesContainer div img {
+    width: 100%;
+}
+
+.GridImagesContainer div {
+    display: flex;
+    align-items: center;
+}
+
+.GridImagesContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+}
+
+.AnimatedDesignersCarousalContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.GridImagesContainer div:nth-child(2) img {
+    width: 100% !important;
+}
+
+.NamunjiiDesignersTextEdit h2 {
+    font-size: 80px;
+    position: sticky;
+    /* z-index: 5; */
+    padding-bottom: 20px;
+    margin-top: -2rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.145);
+}
+
+.AboutDesignersContentContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.GridImageAndButtonContainer {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 20px;
+}
+
+.GridImageAndButtonContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.AboutDesignersContentContainer .AnimatedButtonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+/* Parallax effect styles */
+.parallax-image-left,
+.parallax-image-right {
+    /* overflow: hidden; */
+    border-radius: 8px;
+}
+
+.parallax-image-left img,
+.parallax-image-right img {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.GridImageAndButtonContainer {
+    position: relative;
+}
+
+.WomenShoppingIcon {
+    display: flex;
+    justify-content: center;
+}
+
+.WomenShoppingIcon img {
+    width: 80px;
+    opacity: 0.7;
+}
+
+.BrandMarketingTemplateContainer {
+    background: url("https://images.unsplash.com/flagged/photo-1580146170082-3ddef0fdf239?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 500px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+.BrandMarketingTemplateContainer {
+    position: relative;
+    overflow: hidden;
+}
+
+.BrandMarketingTemplateContainer::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 900px;
+    background: linear-gradient(to right, rgb(0 0 0 / 29%), rgba(0, 0, 0, 0.4), transparent);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 
+.BrandMarketingTemplateContainer:hover::before {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+} */
+
+.AttachmentContainerImageContent {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 5;
 }

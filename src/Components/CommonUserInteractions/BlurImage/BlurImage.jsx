@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import './BlurImage.css';
 
-const BlurImage = ({ 
-  src, 
-  alt, 
-  className = "", 
+const BlurImage = ({
+  src,
+  alt,
+  className = "",
   placeholderSrc = null,
   onLoad,
   onError,
-  ...props 
+  ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -34,7 +34,7 @@ const BlurImage = ({
           </div>
         </div>
       )}
-      
+
       {/* Actual image */}
       {!hasError && (
         <motion.img
@@ -42,11 +42,11 @@ const BlurImage = ({
           alt={alt}
           className="actual-image"
           initial={{ opacity: 0, filter: 'blur(10px)' }}
-          animate={{ 
+          animate={{
             opacity: isLoaded ? 1 : 0,
             filter: isLoaded ? 'blur(0px)' : 'blur(10px)'
           }}
-          transition={{ 
+          transition={{
             duration: 0.4,
             ease: "easeOut"
           }}
@@ -54,13 +54,13 @@ const BlurImage = ({
           onError={handleImageError}
         />
       )}
-      
+
       {/* Error fallback */}
       {hasError && (
         <div className="image-error">
           <div className="error-content">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#ccc"/>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#ccc" />
             </svg>
             <span>Image failed to load</span>
           </div>
