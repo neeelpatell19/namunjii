@@ -1000,12 +1000,12 @@ const VendorVerification = () => {
                                         {errors.priceRange && <p className="error-message">{errors.priceRange}</p>}
                                     </div>
                                     <div className="form-group full-width">
-                                        <label>Describe Your Brand</label>
+                                        <label>Describe Your Brand?</label>
                                         <textarea name="describeYourBrand" value={form.describeYourBrand} onChange={handleChange} required rows={3} placeholder="Tell us more about your brand, its values, and what makes it unique"></textarea>
                                         {errors.describeYourBrand && <p className="error-message">{errors.describeYourBrand}</p>}
                                     </div>
                                     <div className="form-group full-width">
-                                        <label>Describe Your Ideal Customer</label>
+                                        <label>Describe Your Ideal Customer?</label>
                                         <textarea name="describeYourIdealCustomer" value={form.describeYourIdealCustomer} onChange={handleChange} required rows={3} placeholder="Who is your target audience? Describe your ideal customer"></textarea>
                                         {errors.describeYourIdealCustomer && <p className="error-message">{errors.describeYourIdealCustomer}</p>}
                                     </div>
