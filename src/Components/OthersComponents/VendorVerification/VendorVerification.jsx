@@ -14,6 +14,8 @@ const initialState = {
     socialLinks: [],
     productCategories: [],
     priceRange: "",
+    describeYourBrand: "",
+    describeYourIdealCustomer: "",
     whyNamunjii: "",
     termsAccepted: false,
 };
@@ -181,17 +183,9 @@ const VendorVerification = () => {
     };
 
     const handleCustomCategoryBlur = () => {
-        // Force update form with custom category when user leaves the field
-        if (customCategory && customCategory.trim().length >= 2) {
-            let updated = [...form.productCategories];
-            const otherIndex = updated.indexOf("Other");
-
-            if (otherIndex !== -1) {
-                // Replace "Other" with the actual custom category
-                updated[otherIndex] = customCategory.trim();
-                setForm({ ...form, productCategories: updated });
-            }
-        }
+        // Don't replace "Other" in the array - keep it there for checkbox state
+        // The custom category is handled separately in the API payload logic
+        // This ensures the checkbox stays checked
     };
 
     const handleMainCategoryChange = (mainCategory, checked) => {
@@ -234,16 +228,16 @@ const VendorVerification = () => {
             setSubmitting(false);
             return;
         }
-        
+
         // Parse price range
         const [start, end] = form.priceRange.split('-').map(s => parseInt(s.trim(), 10));
-        
+
         // Transform product categories to match API schema
         const structuredProductCategories = [];
-        
+
         // Add main categories with their subcategories
         selectedMainCategories.forEach(mainCat => {
-            const subcategories = form.productCategories.filter(cat => 
+            const subcategories = form.productCategories.filter(cat =>
                 mainCategories[mainCat].includes(cat)
             );
             if (subcategories.length > 0) {
@@ -253,7 +247,7 @@ const VendorVerification = () => {
                 });
             }
         });
-        
+
         // Add "Other" category if selected
         if (form.productCategories.includes("Other") && customCategory.trim()) {
             structuredProductCategories.push({
@@ -262,7 +256,7 @@ const VendorVerification = () => {
                 otherSpecification: customCategory.trim()
             });
         }
-        
+
         const payload = {
             fullName: form.fullName,
             emailAddress: form.email,
@@ -273,6 +267,8 @@ const VendorVerification = () => {
             socialMediaLinks: form.socialLinks,
             productCategories: structuredProductCategories,
             priceRange: { start, end },
+            describeYourBrand: form.describeYourBrand,
+            describeYourIdealCustomer: form.describeYourIdealCustomer,
             whyNamunjii: form.whyNamunjii,
         };
         try {
@@ -308,20 +304,20 @@ const VendorVerification = () => {
     const isFormValid = () => {
         // Check if at least one main category is selected
         const hasMainCategory = selectedMainCategories.length > 0;
-        
+
         // Check if at least one subcategory is selected or "Other" is selected
         let hasSubcategories = false;
         selectedMainCategories.forEach(mainCat => {
-            const subcategories = form.productCategories.filter(cat => 
+            const subcategories = form.productCategories.filter(cat =>
                 mainCategories[mainCat].includes(cat)
             );
             if (subcategories.length > 0) {
                 hasSubcategories = true;
             }
         });
-        
+
         const hasOtherCategory = form.productCategories.includes("Other") && customCategory.trim().length >= 2;
-        
+
         return (
             form.fullName.trim() !== "" &&
             form.email.trim() !== "" &&
@@ -330,6 +326,8 @@ const VendorVerification = () => {
             form.brandDescription.trim() !== "" &&
             form.portfolio !== null &&
             form.priceRange.trim() !== "" &&
+            form.describeYourBrand.trim() !== "" &&
+            form.describeYourIdealCustomer.trim() !== "" &&
             form.whyNamunjii.trim() !== "" &&
             hasMainCategory && (hasSubcategories || hasOtherCategory)
             // form.termsAccepted - temporarily hidden
@@ -425,18 +423,18 @@ const VendorVerification = () => {
         } else {
             let hasSelectedSubcategories = false;
             selectedMainCategories.forEach(mainCat => {
-                const subcategories = form.productCategories.filter(cat => 
+                const subcategories = form.productCategories.filter(cat =>
                     mainCategories[mainCat].includes(cat)
                 );
                 if (subcategories.length > 0) {
                     hasSelectedSubcategories = true;
                 }
             });
-            
+
             if (!hasSelectedSubcategories && !form.productCategories.includes("Other")) {
                 errors.productCategories = 'Please select at least one specific category or specify "Other".';
             }
-            
+
             if (form.productCategories.includes("Other") && (!customCategory || customCategory.trim().length < 2)) {
                 errors.productCategories = 'Please specify a custom category (minimum 2 characters).';
             }
@@ -452,6 +450,20 @@ const VendorVerification = () => {
             if (start >= end) {
                 errors.priceRange = 'Start price must be less than end price.';
             }
+        }
+
+        // Describe Your Brand validation
+        if (!form.describeYourBrand.trim()) {
+            errors.describeYourBrand = 'This field is required.';
+        } else if (form.describeYourBrand.trim().length < 10) {
+            errors.describeYourBrand = 'Please provide a more detailed response (minimum 10 characters).';
+        }
+
+        // Describe Your Ideal Customer validation
+        if (!form.describeYourIdealCustomer.trim()) {
+            errors.describeYourIdealCustomer = 'This field is required.';
+        } else if (form.describeYourIdealCustomer.trim().length < 10) {
+            errors.describeYourIdealCustomer = 'Please provide a more detailed response (minimum 10 characters).';
         }
 
         // Why Namunjii validation
@@ -636,23 +648,8 @@ const VendorVerification = () => {
     }, [STORAGE_KEY]);
 
     // Debounced effect to update custom category in form after user stops typing
-    useEffect(() => {
-        if (customCategory && customCategory.length >= 2) {
-            const timer = setTimeout(() => {
-                // Update form with custom category after 500ms of no typing
-                let updated = [...form.productCategories];
-                const otherIndex = updated.indexOf("Other");
-
-                if (otherIndex !== -1) {
-                    // Replace "Other" with the actual custom category
-                    updated[otherIndex] = customCategory.trim();
-                    setForm({ ...form, productCategories: updated });
-                }
-            }, 500); // Wait 500ms after user stops typing
-
-            return () => clearTimeout(timer);
-        }
-    }, [customCategory, form.productCategories]);
+    // Removed this effect as it was causing the "Other" checkbox to uncheck
+    // The custom category is now handled separately in the API payload logic
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -1001,6 +998,16 @@ const VendorVerification = () => {
                                         <label>Price Range</label>
                                         <input type="text" name="priceRange" value={form.priceRange} onChange={handleChange} required placeholder="e.g. ₹ 1000 - ₹ 10000" />
                                         {errors.priceRange && <p className="error-message">{errors.priceRange}</p>}
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Describe Your Brand?</label>
+                                        <textarea name="describeYourBrand" value={form.describeYourBrand} onChange={handleChange} required rows={3} placeholder="Tell us more about your brand, its values, and what makes it unique"></textarea>
+                                        {errors.describeYourBrand && <p className="error-message">{errors.describeYourBrand}</p>}
+                                    </div>
+                                    <div className="form-group full-width">
+                                        <label>Describe Your Ideal Customer?</label>
+                                        <textarea name="describeYourIdealCustomer" value={form.describeYourIdealCustomer} onChange={handleChange} required rows={3} placeholder="Who is your target audience? Describe your ideal customer"></textarea>
+                                        {errors.describeYourIdealCustomer && <p className="error-message">{errors.describeYourIdealCustomer}</p>}
                                     </div>
                                     <div className="form-group">
                                         <label>Why Namunjii?</label>
