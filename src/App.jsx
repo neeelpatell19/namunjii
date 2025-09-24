@@ -25,6 +25,7 @@ import SingleProductPageDesign from './Components/StoreLogic/AllProducts/IndiviD
 import CollectionsViaProducts from './Components/StoreLogic/AllCollections/CollectionsViaProducts/CollectionsViaProducts';
 import UserDetailsModal from './Components/OthersComponents/UserDetailsModal/UserDetailsModal';
 import Cart from './Components/StoreLogic/Cart/Cart';
+import AppProvider from './Components/StoreLogic/Context/AppState';
 // Page transition variants
 const pageVariants = {
   initial: {
@@ -142,21 +143,23 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <NavigationBar />
-        <AnimatedRoutes />
+      <AppProvider>
+        <BrowserRouter>
+          <NavigationBar />
+          <AnimatedRoutes />
 
-        {/* <FeaturesAndQuestion /> */}
-        {/* <CommonUserInteractionsPopup /> */}
-        {/* <InstagramGrid />
-        <Footer /> */}
-        {/* <Cookies /> */}
-        {/* <WhatsAppBtn /> */}
-        
-        {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
-        <UserDetailsModal />
-        <Cart />
-      </BrowserRouter>
+          {/* <FeaturesAndQuestion /> */}
+          {/* <CommonUserInteractionsPopup /> */}
+          {/* <InstagramGrid />
+          <Footer /> */}
+          {/* <Cookies /> */}
+          {/* <WhatsAppBtn /> */}
+          
+          {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
+          <UserDetailsModal />
+          <Cart />
+        </BrowserRouter>
+      </AppProvider>
     </>
   )
 }

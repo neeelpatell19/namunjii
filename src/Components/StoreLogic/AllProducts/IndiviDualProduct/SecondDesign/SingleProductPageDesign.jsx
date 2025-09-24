@@ -8,15 +8,25 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
 import BlurImage from "../../../../CommonUserInteractions/BlurImage/BlurImage";
+import { useAppContext } from "../../../Context/AppContext";
 
 const SingleProductPageDesign = () => {
     const { productName } = useParams();
+    const { state } = useAppContext();
     const designer = DesignerDummyData.find(d => d.DesignerProducts.some(p => p.ProductName === productName));
     const product = designer?.DesignerProducts.find(p => p.ProductName === productName);
 
     const [selectedSize, setSelectedSize] = useState("M");
     const [modalOpen, setModalOpen] = useState(false);
-    const [currentMainImage, setCurrentMainImage] = useState(product?.image?.[0] || "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0");
+    const decodedName = decodeURIComponent(productName || "");
+    const apiProduct = Array.isArray(state?.products) ? state.products.find(p => (p.productName || p.name) === decodedName) : null;
+    const apiImages = Array.isArray(apiProduct?.images) ? apiProduct.images : [];
+    const [currentMainImage, setCurrentMainImage] = useState("");
+    useEffect(() => {
+        if (apiImages.length) {
+            setCurrentMainImage(apiImages[0]);
+        }
+    }, [decodedName, apiImages.join(",")]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -32,24 +42,23 @@ const SingleProductPageDesign = () => {
         };
     }, [product?.ProductName]);
 
-    const SizeBoxes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
+    const SizeBoxes = Array.isArray(apiProduct?.sizes) && apiProduct.sizes.length ? apiProduct.sizes : ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
     const sizeFullForms = { XXS: "Extra Extra Small", XS: "Extra Small", S: "Small", M: "Medium", L: "Large", XL: "Extra Large", XXL: "Double Extra Large" };
     const DISCOUNT_PERCENT = 20; // 20% discount for sale items
 
-    const mainImage = currentMainImage;
-    const secondaryImage = product?.image?.[1] || product?.image?.[0] || mainImage;
+    const mainImage = currentMainImage || apiImages[0] || "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0";
+    const secondaryImage = apiImages?.[1] || apiImages?.[0] || mainImage;
 
-    // Get related products (exclude current product)
-    const allProducts = DesignerDummyData.flatMap(designer =>
-        designer.DesignerProducts.map(product => ({
-            ...product,
-            designerName: designer.DesignerName
-        }))
-    );
-
-    const filteredProducts = allProducts
-        .filter(item => item.ProductName !== productName) // Exclude current product
-        .slice(0, 6); // Show maximum 6 related products
+    // Related products from API: same categories, exclude current product
+    const allApiProducts = Array.isArray(state?.products) ? state.products : [];
+    const relatedProducts = allApiProducts
+        .filter(p => (p.productName || p.name) !== decodedName)
+        .map(p => ({
+            ProductName: p.productName || p.name || 'Product',
+            price: Number(p.basePricing) || 0,
+            sale: typeof p.discount === 'number' && p.discount > 0,
+            image: Array.isArray(p.images) && p.images.length ? p.images : [],
+        }));
 
     return (
         <>
@@ -70,9 +79,9 @@ const SingleProductPageDesign = () => {
                         modules={[Autoplay]}
                         className="mobile-image-swiper"
                     >
-                        {product?.image?.map((imageSrc, index) => (
+                        {apiImages.map((imageSrc, index) => (
                             <SwiperSlide key={index}>
-                                <div 
+                                <div
                                     className="mobile-swiper-image-item"
                                     onClick={() => setCurrentMainImage(imageSrc)}
                                 >
@@ -91,9 +100,9 @@ const SingleProductPageDesign = () => {
                 <div className="ProductDetaileContainer Container">
                     <div className="DetailsContainerSticky ">
                         <div className="DetailsPanel">
-                            <h3>{product?.ProductName}</h3>
+                            <h3>{apiProduct?.productName || product?.ProductName}</h3>
                             <div className="CommonFlexGap">
-                                <p className="productPrice "><b>₹&nbsp;{product?.price?.toLocaleString('en-IN')}</b></p>
+                                <p className="productPrice "><b>₹&nbsp;{(Number(apiProduct?.basePricing) || product?.price || 0).toLocaleString('en-IN')}</b></p>
                                 <p className=" smallFont"><i>incl. local Tax & Shipping.</i></p>
                             </div>
                             {/* <div className="marginTop10 productDescription">
@@ -124,7 +133,11 @@ const SingleProductPageDesign = () => {
                                             label: "Description",
                                             children: (
                                                 <div>
-                                                    {product?.ProductBrief}
+                                                    {apiProduct?.productDescription ? (
+                                                        <div dangerouslySetInnerHTML={{ __html: apiProduct.productDescription }} />
+                                                    ) : (
+                                                        product?.ProductBrief
+                                                    )}
                                                 </div>
                                             ),
                                         },
@@ -212,7 +225,7 @@ const SingleProductPageDesign = () => {
                             },
                         }}
                     >
-                        {filteredProducts.map((item) => (
+                        {relatedProducts.map((item) => (
                             <SwiperSlide key={item.ProductName + item.price}>
                                 <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
                                     <div className="TrendingDesignsCard">

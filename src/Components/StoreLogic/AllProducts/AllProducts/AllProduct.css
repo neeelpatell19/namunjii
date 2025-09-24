@@ -307,26 +307,35 @@
 }
 
 .CategoriesNamesContainer {
-    max-width: 800px;
-    overflow: auto;
+    max-width: 50%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.CategoriesNamesContainer::-webkit-scrollbar {
+    display: none;
 }
 
 .CategoriesNamesContainer ul {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     list-style: none;
     gap: 20px;
-    justify-content: center;
-    padding: 0px !important
+    justify-content: flex-start;
+    padding: 0px !important;
+    scroll-snap-type: x mandatory;
+    white-space: nowrap;
 }
 
 .CategoriesNamesContainer ul li {
     padding: 5px 10px;
     transition: .5s;
     font-size: 14px;
+    scroll-snap-align: start;
+    white-space: nowrap;
 }
-
-
 
 .CategoriesNamesContainer ul li.active {
     background-color: var(--brandColor);
@@ -353,6 +362,11 @@
     display: flex !important;
     align-items: center;
     gap: 20px;
+}
+
+.ProductsCount {
+    font-size: 14px;
+    color: #666;
 }
 
 .ResetFilterButton {

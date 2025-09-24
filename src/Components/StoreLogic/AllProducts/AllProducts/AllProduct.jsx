@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Button } from "antd";
 import { Link } from "react-router-dom";
-import { DesignerDummyData, CollectionData } from "../../../OthersComponents/Designers/DesignerDummyData";
+// Using dynamic products from context; removed dummy data import
 import "./AllProduct.css";
 import { FiSearch } from "react-icons/fi";
 import { ReloadOutlined, FilterOutlined } from "@ant-design/icons";
@@ -10,6 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { useAppContext } from "../../Context/AppContext";
 
 // Custom hook for responsive screen detection
 const useResponsive = () => {
@@ -34,12 +35,30 @@ const useResponsive = () => {
 };
 
 const AllProduct = () => {
+    const { state, loadMoreProducts } = useAppContext();
+    const apiProducts = Array.isArray(state?.products) ? state.products : [];
+    useEffect(() => {
+        if (apiProducts.length) {
+            console.log('[AllProduct] Received products from context:', apiProducts);
+        } else {
+            console.log('[AllProduct] No API products yet');
+        }
+    }, [apiProducts]);
     const { isMobile } = useResponsive();
     const DISCOUNT_PERCENT = 10; // configure discount percent
-    const allProducts = DesignerDummyData.flatMap(designer => designer.DesignerProducts.map(product => ({
-        ...product,
-        designerName: designer.DesignerName
-    })));
+    // Map API products to the shape used by the UI; fallback to existing dummy data
+    const mappedApiProducts = apiProducts.map((p, idx) => ({
+        id: p._id || p.id || `${p.productName || 'prod'}-${idx}`,
+        ProductName: p.productName || p.name || 'Product',
+        price: Number(p.basePricing) || 0,
+        image: Array.isArray(p.images) && p.images.length ? p.images : [
+            'https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/NoProductFound.png'
+        ],
+        designerName: p.vendorName || p.brand || '',
+        categories: Array.isArray(p.categories) ? p.categories : [],
+        sale: typeof p.discount === 'number' && p.discount > 0,
+    }));
+    const allProducts = mappedApiProducts;
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -69,25 +88,11 @@ const AllProduct = () => {
             const filterValue = filterSearchValue.trim().toLowerCase();
             let filtered = allProducts;
 
-            // Filter by category first
+            // Filter by category first (using product.categories from API)
             if (activeCategory !== "All") {
                 filtered = filtered.filter(item => {
-                    // Add your category filtering logic here based on product properties
-                    // For now, we'll use a simple keyword match
-                    const categoryKeywords = {
-                        "Mens Wear": ["suit", "blazer", "trousers", "overcoat", "tuxedo"],
-                        "Womens Wear": ["dress", "gown", "blouse", "skirt", "evening", "cocktail"],
-                        "Kids Wear": ["kids", "child", "baby"],
-                        "Home Decor": ["decor", "home", "furniture"],
-                        "Jewelry": ["jewelry", "necklace", "ring", "bracelet"],
-                        "Accessories": ["scarf", "bag", "hat", "belt"],
-                        "Shoes": ["shoes", "boots", "sneakers", "heels", "sandals", "loafers"]
-                    };
-
-                    const keywords = categoryKeywords[activeCategory] || [];
-                    return keywords.some(keyword =>
-                        item.ProductName.toLowerCase().includes(keyword)
-                    );
+                    const itemCategories = Array.isArray(item.categories) ? item.categories.map(c => (c || '').toLowerCase()) : [];
+                    return itemCategories.includes((activeCategory || '').toLowerCase());
                 });
             }
 
@@ -134,17 +139,39 @@ const AllProduct = () => {
     }, [searchValue, allProducts, activeCategory, filterSearchValue, priceRange, saleOnly]);
 
 
-    const CategoriesNames = [
-        "All",
-        "Mens Wear",
-        "Womens Wear",
-        "Kids Wear",
-        "Home Decor",
-        "Jewelry",
-        "Accessories",
-        "Shoes",
-    ]
+    const derivedCategories = Array.isArray(state?.categories) && state.categories.length
+        ? state.categories
+        : (() => {
+            const categoriesSet = new Set();
+            allProducts.forEach(p => {
+                (p.categories || []).forEach(c => {
+                    if (typeof c === 'string' && c.trim()) {
+                        categoriesSet.add(c.trim());
+                    }
+                });
+            });
+            return Array.from(categoriesSet);
+        })();
+    const sortedCategories = [...derivedCategories].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    const CategoriesNames = ["All", ...sortedCategories]
     useEffect(() => { window.scrollTo(0, 0); }, []);
+    const sentinelRef = React.useRef(null);
+    useEffect(() => {
+        if (!sentinelRef.current) return;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const hasActiveFilters = (activeCategory && activeCategory !== 'All') || !!filterSearchValue || saleOnly || priceRange.min !== 0 || priceRange.max !== 50000;
+                    if (!hasActiveFilters) {
+                        loadMoreProducts && loadMoreProducts();
+                    }
+                }
+            });
+        }, { rootMargin: '200px' });
+        observer.observe(sentinelRef.current);
+        return () => observer.disconnect();
+    }, [sentinelRef, loadMoreProducts, activeCategory, filterSearchValue, saleOnly, priceRange.min, priceRange.max]);
+
     return (
         <div className="MainContainer marginTop50 paddingBottom50 newRouteSectionPadding AllProductsPage">
             <div className="PaddingTop">
@@ -164,30 +191,30 @@ const AllProduct = () => {
 
                 </div>
                 <div className="FiltersAndCategoriesContainer marginTop50">
-                {isMobile && (
-                <div className="mobile-filter-section">
-                    <h4>Search Products</h4>
-                    <div className="mobile-search-wrapper">
-                        <FiSearch className="mobile-search-icon" />
-                        <input
-                            type="text"
-                            className="mobile-search-input"
-                            placeholder="Search products..."
-                            value={filterSearchValue}
-                            onChange={(e) => setFilterSearchValue(e.target.value)}
-                        />
-                        {filterSearchValue && (
-                            <button
-                                className="mobile-search-clear"
-                                onClick={() => setFilterSearchValue("")}
-                                type="button"
-                            >
-                                ×
-                            </button>
-                        )}
-                    </div>
-                </div>
-            )}
+                    {isMobile && (
+                        <div className="mobile-filter-section">
+                            <h4>Search Products</h4>
+                            <div className="mobile-search-wrapper">
+                                <FiSearch className="mobile-search-icon" />
+                                <input
+                                    type="text"
+                                    className="mobile-search-input"
+                                    placeholder="Search products..."
+                                    value={filterSearchValue}
+                                    onChange={(e) => setFilterSearchValue(e.target.value)}
+                                />
+                                {filterSearchValue && (
+                                    <button
+                                        className="mobile-search-clear"
+                                        onClick={() => setFilterSearchValue("")}
+                                        type="button"
+                                    >
+                                        ×
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
                     <div className="Container">
                         <div className="AllProductsFilterHeaderFlexContainer">
 
@@ -207,6 +234,7 @@ const AllProduct = () => {
                             </div>
 
                             <div className="AnimatedButtonContainer desktop-only">
+                                <span className="ProductsCount" title="Products shown">{filteredProducts.length}</span>
                                 <button
                                     className="AnimatedLineButton"
                                     onClick={() => setShowFilters(!showFilters)}
@@ -373,76 +401,79 @@ const AllProduct = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <Row gutter={[30, 50]} id="AllProductsRow">
-                                        {filteredProducts.map((item) => (
-                                            <Col lg={8} md={8} sm={12} xs={12} key={item.ProductName + item.price}>
-                                                <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
-                                                    <div className="TrendingDesignsCard">
-                                                        {item.sale && (
-                                                            <div className="BadgeContainer">
-                                                                <span className="smallFont">Sale</span>
-                                                            </div>
-                                                        )}
-                                                        <div className="CommonFlexGap">
-                                                            <div className="ProductTitle">
-                                                                {isMobile ? (
-                                                                    <h5 className="text-center">{item.ProductName}</h5>
-                                                                ) : (
-                                                                    <h4 className="text-center">{item.ProductName}</h4>
-                                                                )}
-                                                            </div>
-                                                            <div className="ProductPrize">
-                                                                {item.sale ? (
-                                                                    (() => {
-                                                                        const original = Number(item.price) || 0;
-                                                                        const discounted = Math.round(original * (1 - DISCOUNT_PERCENT / 100));
-                                                                        return (
-                                                                            <p className="text-center smallFont">
+                                    <>
+                                        <Row gutter={[30, 50]} id="AllProductsRow">
+                                            {filteredProducts.map((item) => (
+                                                <Col lg={8} md={8} sm={12} xs={12} key={item.id}>
+                                                    <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
+                                                        <div className="TrendingDesignsCard">
+                                                            {item.sale && (
+                                                                <div className="BadgeContainer">
+                                                                    <span className="smallFont">Sale</span>
+                                                                </div>
+                                                            )}
+                                                            <div className="CommonFlexGap">
+                                                                <div className="ProductTitle">
+                                                                    {isMobile ? (
+                                                                        <h5 className="text-center">{item.ProductName}</h5>
+                                                                    ) : (
+                                                                        <h4 className="text-center">{item.ProductName}</h4>
+                                                                    )}
+                                                                </div>
+                                                                <div className="ProductPrize">
+                                                                    {item.sale ? (
+                                                                        (() => {
+                                                                            const original = Number(item.price) || 0;
+                                                                            const discounted = Math.round(original * (1 - DISCOUNT_PERCENT / 100));
+                                                                            return (
+                                                                                <p className="text-center smallFont">
 
-                                                                                <span className="smallFont" style={{ textDecoration: 'line-through', opacity: 0.7 }}>₹&nbsp;{original.toLocaleString('en-IN')}</span>
-                                                                                &nbsp;&nbsp;
-                                                                                <span className="smallFont">₹&nbsp;{discounted.toLocaleString('en-IN')}</span>
-                                                                                &nbsp;
-                                                                                {/* <span className="DiscountPercent">{DISCOUNT_PERCENT}% off</span> */}
-                                                                            </p>
-                                                                        );
-                                                                    })()
-                                                                ) : (
-                                                                    <p className="text-center smallFont">₹&nbsp;{item.price?.toLocaleString('en-IN')}</p>
-                                                                )}
+                                                                                    <span className="smallFont" style={{ textDecoration: 'line-through', opacity: 0.7 }}>₹&nbsp;{original.toLocaleString('en-IN')}</span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span className="smallFont">₹&nbsp;{discounted.toLocaleString('en-IN')}</span>
+                                                                                    &nbsp;
+                                                                                    {/* <span className="DiscountPercent">{DISCOUNT_PERCENT}% off</span> */}
+                                                                                </p>
+                                                                            );
+                                                                        })()
+                                                                    ) : (
+                                                                        <p className="text-center smallFont">₹&nbsp;{item.price?.toLocaleString('en-IN')}</p>
+                                                                    )}
+                                                                </div>
+                                                                <br />
                                                             </div>
-                                                            <br />
-                                                        </div>
-                                                        <div className="ProductCardImageContainer">
-                                                            <div className="ProductCardImage AllProductSwiperContainer">
-                                                                <Swiper
-                                                                    slidesPerView={1}
-                                                                    loop={true}
-                                                                    navigation={true}
-                                                                    // autoplay={{ delay: 2000, disableOnInteraction: false }}
-                                                                    modules={[Autoplay, Navigation]}
-                                                                >
-                                                                    {item.image?.map((imgSrc, idx) => (
-                                                                        <SwiperSlide key={idx}>
-                                                                            <BlurImage
-                                                                                src={imgSrc}
-                                                                                alt={item.ProductName}
-                                                                                className="product-image"
-                                                                            />
-                                                                        </SwiperSlide>
-                                                                    ))}
-                                                                </Swiper>
+                                                            <div className="ProductCardImageContainer">
+                                                                <div className="ProductCardImage AllProductSwiperContainer">
+                                                                    <Swiper
+                                                                        slidesPerView={1}
+                                                                        loop={true}
+                                                                        navigation={true}
+                                                                        // autoplay={{ delay: 2000, disableOnInteraction: false }}
+                                                                        modules={[Autoplay, Navigation]}
+                                                                    >
+                                                                        {item.image?.map((imgSrc, idx) => (
+                                                                            <SwiperSlide key={idx}>
+                                                                                <BlurImage
+                                                                                    src={imgSrc}
+                                                                                    alt={item.ProductName}
+                                                                                    className="product-image"
+                                                                                />
+                                                                            </SwiperSlide>
+                                                                        ))}
+                                                                    </Swiper>
+                                                                </div>
+                                                                <div className="PopUpcategoryBtn">
+                                                                    <button>View Product</button>
+                                                                </div>
                                                             </div>
-                                                            <div className="PopUpcategoryBtn">
-                                                                <button>View Product</button>
-                                                            </div>
-                                                        </div>
 
-                                                    </div>
-                                                </Link>
-                                            </Col>
-                                        ))}
-                                    </Row>
+                                                        </div>
+                                                    </Link>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                        <div ref={sentinelRef} style={{ height: 1 }} />
+                                    </>
                                 )}
                             </div>
 
@@ -472,7 +503,7 @@ const AllProduct = () => {
                     </Row>
                 </div>
             </div>
-           
+
             {/* Mobile Filter Button */}
             {isMobile && (
                 <div className="mobile-filter-container">
