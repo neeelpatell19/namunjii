@@ -1,0 +1,196 @@
+/* Newsletter Modal Styles */
+.newsletter-modal .ant-modal-content {
+    border-radius: 0px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.newsletter-modal .ant-modal-body {
+    padding: 0;
+}
+
+.newsletter-modal-content {
+    position: relative;
+    background: #fff;
+    padding: 0px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Close Button */
+.newsletter-close-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: #333;
+    border: none;
+    border-radius: 0px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.newsletter-close-btn:hover {
+    background: #555;
+    transform: scale(1.05);
+}
+
+/* Header */
+.newsletter-header {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-top: 0px;
+}
+
+.newsletter-header p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Form */
+.newsletter-form {
+    margin-bottom: 20px;
+}
+
+.newsletter-form .ant-form-item {
+    margin-bottom: 16px;
+}
+
+.newsletter-form .ant-input,
+.newsletter-form .ant-input-password {
+    border-radius: 0px;
+    border: 1px solid #d9d9d9;
+    padding: 12px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.newsletter-form .ant-input:focus,
+.newsletter-form .ant-input-password:focus,
+.newsletter-form .ant-input-focused,
+.newsletter-form .ant-input-password-focused {
+    border-color: var(--brandColor, #1890ff);
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.newsletter-form .ant-input-prefix {
+    color: #999;
+    margin-right: 8px;
+}
+
+.ant-form-item-control-input-content .ant-input{
+    border-radius: 0px !important;
+}
+/* Submit Button */
+.newsletter-submit-btn {
+    background: #333;
+    border-color: #333;
+    border-radius: 0px;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.newsletter-submit-btn:hover {
+    background: #555;
+    border-color: #555;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.newsletter-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Footer */
+.newsletter-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.newsletter-footer p {
+    font-size: 12px;
+    color: #999;
+    margin: 0;
+    line-height: 1.4;
+}
+.newsletter-modal-image{
+    height:500px;
+}
+
+.newsletter-modal-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.newsletter-header h3{
+    text-align: start;
+}
+
+.newsletter-header p{
+    text-align: start;
+}
+
+.AdjustFlexContainer{
+    /* height: 100%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px 0px !important;
+    padding-right: 30px !important;
+}
+/* Responsive Design */
+@media (max-width: 480px) {
+    .AdjustFlexContainer{
+        padding: 20px 0px !important;
+        padding-top: 0px !important;
+    }
+    .newsletter-modal-image{
+        height:200px;
+    }
+    .newsletter-modal-content {
+        padding: 20px;
+    }
+ 
+    
+    .newsletter-form .ant-input,
+    .newsletter-form .ant-input-password {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .newsletter-submit-btn {
+        height: 44px;
+        font-size: 14px;
+    }
+}
+
+/* Animation for modal appearance */
+.newsletter-modal .ant-modal {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

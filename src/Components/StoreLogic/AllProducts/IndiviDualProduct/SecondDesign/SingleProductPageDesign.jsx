@@ -16,6 +16,7 @@ const SingleProductPageDesign = () => {
 
     const [selectedSize, setSelectedSize] = useState("M");
     const [modalOpen, setModalOpen] = useState(false);
+    const [currentMainImage, setCurrentMainImage] = useState(product?.image?.[0] || "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0");
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -35,7 +36,7 @@ const SingleProductPageDesign = () => {
     const sizeFullForms = { XXS: "Extra Extra Small", XS: "Extra Small", S: "Small", M: "Medium", L: "Large", XL: "Extra Large", XXL: "Double Extra Large" };
     const DISCOUNT_PERCENT = 20; // 20% discount for sale items
 
-    const mainImage = product?.image?.[0] || "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0";
+    const mainImage = currentMainImage;
     const secondaryImage = product?.image?.[1] || product?.image?.[0] || mainImage;
 
     // Get related products (exclude current product)
@@ -58,7 +59,33 @@ const SingleProductPageDesign = () => {
                         <img src={mainImage} alt={product?.ProductName || "Product"} />
                     </div>
                 </div>
-
+                <div className="MobilesOnlySwiperImageContainer">
+                    <Swiper
+                        slidesPerView={4}
+                        spaceBetween={10}
+                        autoplay={{
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        }}
+                        modules={[Autoplay]}
+                        className="mobile-image-swiper"
+                    >
+                        {product?.image?.map((imageSrc, index) => (
+                            <SwiperSlide key={index}>
+                                <div 
+                                    className="mobile-swiper-image-item"
+                                    onClick={() => setCurrentMainImage(imageSrc)}
+                                >
+                                    <BlurImage
+                                        src={imageSrc}
+                                        alt={`${product?.ProductName} - Image ${index + 1}`}
+                                        className={`mobile-swiper-image ${currentMainImage === imageSrc ? 'active' : ''}`}
+                                    />
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
                 {/* <div className="Container"> */}
                 {/* <div> */}
                 <div className="ProductDetaileContainer Container">

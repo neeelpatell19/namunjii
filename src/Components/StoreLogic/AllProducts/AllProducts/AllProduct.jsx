@@ -1,16 +1,40 @@
-import React, { useEffect } from "react";
-import { Row, Col } from "antd";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Button } from "antd";
 import { Link } from "react-router-dom";
 import { DesignerDummyData, CollectionData } from "../../../OthersComponents/Designers/DesignerDummyData";
 import "./AllProduct.css";
 import { FiSearch } from "react-icons/fi";
+import { ReloadOutlined, FilterOutlined } from "@ant-design/icons";
 import BlurImage from "../../../CommonUserInteractions/BlurImage/BlurImage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
+// Custom hook for responsive screen detection
+const useResponsive = () => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        // Check on mount
+        checkScreenSize();
+
+        // Add event listener
+        window.addEventListener('resize', checkScreenSize);
+
+        // Cleanup
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
+
+    return { isMobile };
+};
+
 const AllProduct = () => {
+    const { isMobile } = useResponsive();
     const DISCOUNT_PERCENT = 10; // configure discount percent
     const allProducts = DesignerDummyData.flatMap(designer => designer.DesignerProducts.map(product => ({
         ...product,
@@ -25,8 +49,18 @@ const AllProduct = () => {
     const [activeCategory, setActiveCategory] = React.useState("All");
     const [showFilters, setShowFilters] = React.useState(false);
     const [filterSearchValue, setFilterSearchValue] = React.useState("");
-    const [priceRange, setPriceRange] = React.useState({ min: 0, max: 100000 });
+    const [priceRange, setPriceRange] = React.useState({ min: 0, max: 50000 });
     const [saleOnly, setSaleOnly] = React.useState(false);
+    const [showMobileFilter, setShowMobileFilter] = React.useState(false);
+
+    // Reset all filters function
+    const resetFilters = () => {
+        setSearchValue("");
+        setFilterSearchValue("");
+        setActiveCategory("All");
+        setPriceRange({ min: 0, max: 50000 });
+        setSaleOnly(false);
+    };
 
     React.useEffect(() => {
         // setFade(true);
@@ -60,7 +94,14 @@ const AllProduct = () => {
             // Filter by price range
             filtered = filtered.filter(item => {
                 const price = Number(item.price) || 0;
-                return price >= priceRange.min && price <= priceRange.max;
+                const minPrice = Number(priceRange.min) || 0;
+                const maxPrice = Number(priceRange.max) || 50000;
+                const isInRange = price >= minPrice && price <= maxPrice;
+                // Debug logging
+                if (priceRange.min !== 0 || priceRange.max !== 50000) {
+                    console.log(`Product: ${item.ProductName}, Price: ${price}, Range: ${minPrice}-${maxPrice}, InRange: ${isInRange}`);
+                }
+                return isInRange;
             });
 
             // Filter by sale only
@@ -103,6 +144,7 @@ const AllProduct = () => {
         "Accessories",
         "Shoes",
     ]
+    useEffect(() => { window.scrollTo(0, 0); }, []);
     return (
         <div className="MainContainer marginTop50 paddingBottom50 newRouteSectionPadding AllProductsPage">
             <div className="PaddingTop">
@@ -122,10 +164,34 @@ const AllProduct = () => {
 
                 </div>
                 <div className="FiltersAndCategoriesContainer marginTop50">
+                {isMobile && (
+                <div className="mobile-filter-section">
+                    <h4>Search Products</h4>
+                    <div className="mobile-search-wrapper">
+                        <FiSearch className="mobile-search-icon" />
+                        <input
+                            type="text"
+                            className="mobile-search-input"
+                            placeholder="Search products..."
+                            value={filterSearchValue}
+                            onChange={(e) => setFilterSearchValue(e.target.value)}
+                        />
+                        {filterSearchValue && (
+                            <button
+                                className="mobile-search-clear"
+                                onClick={() => setFilterSearchValue("")}
+                                type="button"
+                            >
+                                ×
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
                     <div className="Container">
                         <div className="AllProductsFilterHeaderFlexContainer">
 
-                            <div className="CategoriesNamesContainer">
+                            <div className="CategoriesNamesContainer desktop-only">
                                 <ul>
                                     {CategoriesNames.map((item) => (
                                         <li
@@ -139,13 +205,23 @@ const AllProduct = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <div className="AnimatedButtonContainer">
+
+                            <div className="AnimatedButtonContainer desktop-only">
                                 <button
                                     className="AnimatedLineButton"
                                     onClick={() => setShowFilters(!showFilters)}
                                 >
                                     Filter
                                 </button>
+                                <Button
+                                    type="default"
+                                    icon={<ReloadOutlined />}
+                                    onClick={resetFilters}
+                                    className="ResetFilterButton"
+                                    title="Reset all filters"
+                                >
+                                    Reset
+                                </Button>
                             </div>
                         </div>
                         {showFilters && (
@@ -178,30 +254,42 @@ const AllProduct = () => {
                                     {/* Price Range Filter */}
                                     <div className="FilterItem">
                                         <h4>Price Range</h4>
-                                        <div className="PriceRangeContainer">
-                                            <div className="PriceInputGroup">
-                                                <label>Min Price</label>
+                                        <div className="PriceRangeSliderContainer">
+                                            <div className="PriceRangeSlider">
+                                                <div className="PriceRangeTrack"></div>
                                                 <input
-                                                    type="number"
-                                                    className="PriceInput"
-                                                    placeholder="0"
+                                                    type="range"
+                                                    min="0"
+                                                    max="50000"
+                                                    step="100"
                                                     value={priceRange.min}
-                                                    onChange={(e) => setPriceRange({ ...priceRange, min: Number(e.target.value) || 0 })}
+                                                    onChange={(e) => {
+                                                        const value = parseInt(e.target.value, 10);
+                                                        if (value <= priceRange.max) {
+                                                            setPriceRange({ ...priceRange, min: value });
+                                                        }
+                                                    }}
+                                                    className="PriceRangeSliderInput min"
                                                 />
-                                            </div>
-                                            <div className="PriceInputGroup">
-                                                <label>Max Price</label>
                                                 <input
-                                                    type="number"
-                                                    className="PriceInput"
-                                                    placeholder="100000"
+                                                    type="range"
+                                                    min="0"
+                                                    max="50000"
+                                                    step="100"
                                                     value={priceRange.max}
-                                                    onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) || 100000 })}
+                                                    onChange={(e) => {
+                                                        const value = parseInt(e.target.value, 10);
+                                                        if (value >= priceRange.min) {
+                                                            setPriceRange({ ...priceRange, max: value });
+                                                        }
+                                                    }}
+                                                    className="PriceRangeSliderInput max"
                                                 />
                                             </div>
-                                        </div>
-                                        <div className="PriceRangeDisplay">
-                                            ₹{priceRange.min.toLocaleString('en-IN')} - ₹{priceRange.max.toLocaleString('en-IN')}
+                                            <div className="PriceRangeValues">
+                                                <span className="PriceValue">₹{priceRange.min.toLocaleString('en-IN')}</span>
+                                                <span className="PriceValue">₹{priceRange.max.toLocaleString('en-IN')}</span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -268,7 +356,7 @@ const AllProduct = () => {
                             </div>
                         </Col> */}
                         <Col lg={24}>
-                            <div className={`marginTop50 fade-grid${fade ? ' fade' : ''}`}>
+                            <div className={`marginTop50 fade-grid${fade ? ' fade' : ''} AdjustRowOnMobile`}>
                                 {filteredProducts.length === 0 ? (
                                     <div className="NoProductsFoundScreen">
                                         <div className="NoProductsFoundIcon">
@@ -287,7 +375,7 @@ const AllProduct = () => {
                                 ) : (
                                     <Row gutter={[30, 50]} id="AllProductsRow">
                                         {filteredProducts.map((item) => (
-                                            <Col lg={8} md={8} sm={12} xs={24} key={item.ProductName + item.price}>
+                                            <Col lg={8} md={8} sm={12} xs={12} key={item.ProductName + item.price}>
                                                 <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
                                                     <div className="TrendingDesignsCard">
                                                         {item.sale && (
@@ -297,7 +385,11 @@ const AllProduct = () => {
                                                         )}
                                                         <div className="CommonFlexGap">
                                                             <div className="ProductTitle">
-                                                                <h4 className="text-center" style={{ fontWeight: "400" }}>{item.ProductName}</h4>
+                                                                {isMobile ? (
+                                                                    <h5 className="text-center">{item.ProductName}</h5>
+                                                                ) : (
+                                                                    <h4 className="text-center">{item.ProductName}</h4>
+                                                                )}
                                                             </div>
                                                             <div className="ProductPrize">
                                                                 {item.sale ? (
@@ -353,10 +445,178 @@ const AllProduct = () => {
                                     </Row>
                                 )}
                             </div>
+
+                            {/* Search Bar */}
+                            <div className="products-search-container">
+                                <div className="products-search-wrapper">
+                                    <FiSearch className="products-search-icon" />
+                                    <input
+                                        type="text"
+                                        className="products-search-input"
+                                        placeholder="Search products..."
+                                        value={filterSearchValue}
+                                        onChange={(e) => setFilterSearchValue(e.target.value)}
+                                    />
+                                    {filterSearchValue && (
+                                        <button
+                                            className="products-search-clear"
+                                            onClick={() => setFilterSearchValue("")}
+                                            type="button"
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </Col>
                     </Row>
                 </div>
             </div>
+           
+            {/* Mobile Filter Button */}
+            {isMobile && (
+                <div className="mobile-filter-container">
+                    <button
+                        className="mobile-filter-btn"
+                        onClick={() => setShowMobileFilter(!showMobileFilter)}
+                    >
+                        <FilterOutlined />
+                        <span>Filter</span>
+                    </button>
+
+                    {/* Mobile Filter Modal */}
+                    {showMobileFilter && (
+                        <div className="mobile-filter-overlay" onClick={() => setShowMobileFilter(false)}>
+                            <div className="mobile-filter-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="mobile-filter-header">
+                                    <h3>Filter Products</h3>
+                                    <button
+                                        className="mobile-filter-close"
+                                        onClick={() => setShowMobileFilter(false)}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+
+                                <div className="mobile-filter-body">
+                                    {/* Search Filter */}
+                                    {/* <div className="mobile-filter-section">
+                                        <h4>Search Products</h4>
+                                        <div className="mobile-search-wrapper">
+                                            <FiSearch className="mobile-search-icon" />
+                                            <input
+                                                type="text"
+                                                className="mobile-search-input"
+                                                placeholder="Search products..."
+                                                value={filterSearchValue}
+                                                onChange={(e) => setFilterSearchValue(e.target.value)}
+                                            />
+                                            {filterSearchValue && (
+                                                <button
+                                                    className="mobile-search-clear"
+                                                    onClick={() => setFilterSearchValue("")}
+                                                    type="button"
+                                                >
+                                                    ×
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div> */}
+
+                                    {/* Categories */}
+                                    <div className="mobile-filter-section">
+                                        <h4>Categories</h4>
+                                        <div className="mobile-categories-list">
+                                            {CategoriesNames.map((item) => (
+                                                <button
+                                                    key={item}
+                                                    className={`mobile-category-btn ${activeCategory === item ? "active" : ""}`}
+                                                    onClick={() => setActiveCategory(item)}
+                                                >
+                                                    {item}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Price Range Filter */}
+                                    <div className="mobile-filter-section">
+                                        <h4>Price Range</h4>
+                                        <div className="mobile-price-range-container">
+                                            <div className="mobile-price-range-slider">
+                                                <div className="mobile-price-range-track"></div>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="50000"
+                                                    step="100"
+                                                    value={priceRange.min}
+                                                    onChange={(e) => {
+                                                        const value = parseInt(e.target.value, 10);
+                                                        if (value <= priceRange.max) {
+                                                            setPriceRange({ ...priceRange, min: value });
+                                                        }
+                                                    }}
+                                                    className="mobile-price-range-input min"
+                                                />
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="50000"
+                                                    step="100"
+                                                    value={priceRange.max}
+                                                    onChange={(e) => {
+                                                        const value = parseInt(e.target.value, 10);
+                                                        if (value >= priceRange.min) {
+                                                            setPriceRange({ ...priceRange, max: value });
+                                                        }
+                                                    }}
+                                                    className="mobile-price-range-input max"
+                                                />
+                                            </div>
+                                            <div className="mobile-price-range-values">
+                                                <span className="mobile-price-value">₹{priceRange.min.toLocaleString('en-IN')}</span>
+                                                <span className="mobile-price-value">₹{priceRange.max.toLocaleString('en-IN')}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Sale Filter */}
+                                    <div className="mobile-filter-section">
+                                        <h4>Special Offers</h4>
+                                        <div className="mobile-sale-filter">
+                                            <label className="mobile-sale-checkbox-label">
+                                                <input
+                                                    type="checkbox"
+                                                    className="mobile-sale-checkbox"
+                                                    checked={saleOnly}
+                                                    onChange={(e) => setSaleOnly(e.target.checked)}
+                                                />
+                                                <span className="mobile-checkbox-custom"></span>
+                                                Show only sale items
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {/* Reset Button */}
+                                    <div className="mobile-reset-section">
+                                        <button
+                                            className="mobile-reset-btn"
+                                            onClick={() => {
+                                                resetFilters();
+                                                setShowMobileFilter(false);
+                                            }}
+                                        >
+                                            <ReloadOutlined />
+                                            Reset All Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

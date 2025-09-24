@@ -23,6 +23,8 @@ import Footer from './Components/OthersComponents/Footer/Footer';
 import AllCollections from './Components/StoreLogic/AllCollections/AllCollections';
 import SingleProductPageDesign from './Components/StoreLogic/AllProducts/IndiviDualProduct/SecondDesign/SingleProductPageDesign';
 import CollectionsViaProducts from './Components/StoreLogic/AllCollections/CollectionsViaProducts/CollectionsViaProducts';
+import UserDetailsModal from './Components/OthersComponents/UserDetailsModal/UserDetailsModal';
+import Cart from './Components/StoreLogic/Cart/Cart';
 // Page transition variants
 const pageVariants = {
   initial: {
@@ -150,6 +152,10 @@ function App() {
         <Footer /> */}
         {/* <Cookies /> */}
         {/* <WhatsAppBtn /> */}
+        
+        {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
+        <UserDetailsModal />
+        <Cart />
       </BrowserRouter>
     </>
   )
