@@ -353,3 +353,9 @@ b {
   backface-visibility: hidden;
   transform: translateZ(0);
 }
+
+.WhatsAppBtnContainer a{
+  background-color: black;
+  padding: 12px 15px;
+  color: white;
+}
