@@ -93,7 +93,7 @@ const AnimatedRoutes = () => {
             <SingleProductPageDesign />
           </PageTransition>
         } />
-        <Route path="/all-products" element={
+        <Route path="/products" element={
           <PageTransition>
             <AllProduct />
           </PageTransition>

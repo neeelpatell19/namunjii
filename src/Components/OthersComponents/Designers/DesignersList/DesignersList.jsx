@@ -41,6 +41,9 @@ const DesignersList = () => {
                         {vendors.map((vendor, idx) => {
                             const name = vendor.brandName || vendor.fullName || 'Designer';
                             const description = vendor.brandDescription || '';
+                            const shortDesc = description
+                                ? description.split(/\s+/).slice(0, 20).join(' ') + (description.trim().split(/\s+/).length > 20 ? '...' : '')
+                                : '';
                             const slug = toSlug(vendor.brandName || vendor.fullName, vendor._id);
                             const imageSrc = pickImage(idx);
                             return (
@@ -51,7 +54,7 @@ const DesignersList = () => {
                                         </div>
                                         <div className='DesignersListCardsItemText'>
                                             <h3>{name}</h3>
-                                            <p>{description}</p>
+                                            <p>{shortDesc}</p>
                                         </div>
                                     </div>
                                 </Link>
