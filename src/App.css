@@ -72,7 +72,7 @@ h4 {
   margin: 0px !important;
 }
 
-h5{
+h5 {
   margin: 0px !important;
   color: var(--brandColor);
 }
@@ -447,7 +447,7 @@ b {
   transform: translateZ(0);
 }
 
-.WhatsAppBtnContainer a{
+.WhatsAppBtnContainer a {
   background-color: black;
   padding: 12px 15px;
   color: white;

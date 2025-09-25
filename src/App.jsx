@@ -150,14 +150,14 @@ function App() {
 
           {/* <FeaturesAndQuestion /> */}
           {/* <CommonUserInteractionsPopup /> */}
-          {/* <InstagramGrid />
-          <Footer /> */}
+         <InstagramGrid />
+            {/*<Footer /> */}
           {/* <Cookies /> */}
           {/* <WhatsAppBtn /> */}
           
           {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
           <UserDetailsModal />
-          <Cart />
+          {/* <Cart /> */}
         </BrowserRouter>
       </AppProvider>
     </>
