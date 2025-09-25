@@ -1014,6 +1014,15 @@ const VendorVerification = () => {
                                         <textarea name="whyNamunjii" value={form.whyNamunjii} onChange={handleChange} required rows={3} placeholder="Why do you want to join us?"></textarea>
                                         {errors.whyNamunjii && <p className="error-message">{errors.whyNamunjii}</p>}
                                     </div>
+                                    <br />
+                                    <div className="WhatsAppBtnContainer">
+                                        <a href="https://wa.me/919106350206?text=Hi%20I%20would%20like%20to%20connect" target="_blank" rel="noopener noreferrer">
+                                            <span>Get Credentials on WhatsApp</span>
+                                        </a>
+                                        <br />
+                                        <br />
+                                        <p>You need to send the message: "Hi, I would like to connect.</p>
+                                    </div>
                                     {/* <div className="form-group terms">
                                         <label className="checkbox-label">
                                             <input
