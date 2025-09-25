@@ -156,7 +156,7 @@ function App() {
           {/* <WhatsAppBtn /> */}
           
           {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
-          <UserDetailsModal />
+          {/* <UserDetailsModal /> */}
           {/* <Cart /> */}
         </BrowserRouter>
       </AppProvider>
