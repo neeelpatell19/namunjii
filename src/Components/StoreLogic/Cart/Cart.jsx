@@ -77,7 +77,7 @@ const Cart = () => {
     };
 
     const getSubtotal = () => {
-        return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+        return cartItems.reduce((total, item) => total + (item.basePricing * item.quantity), 0);
     };
 
     return (

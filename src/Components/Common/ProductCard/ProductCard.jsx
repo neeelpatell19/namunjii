@@ -1,14 +1,25 @@
 import React from "react";
+import { HeartOutlined, EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
+import { useDevice } from "../../../hooks/useDevice";
+import cartApi from "../../../apis/cart";
+import wishlistApi from "../../../apis/wishlist";
 import "./ProductCard.css";
 
 export default function ProductCard({
   product,
   showQuickView = true,
   showAddToCart = true,
+  showViewProduct = true,
   onQuickView,
   onAddToCart,
+  onViewProduct,
   className = "",
 }) {
+  const navigate = useNavigate();
+  const { deviceId } = useDevice();
+  const { triggerCartDrawer, triggerWishlistDrawer } = useCartWishlist();
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -17,15 +28,66 @@ export default function ProductCard({
     }).format(price);
   };
 
+  const calculateFinalPrice = (basePricing, discount) => {
+    if (!basePricing) return 0;
+    const discountAmount = discount ? (basePricing * discount) / 100 : 0;
+    return Math.round(basePricing - discountAmount);
+  };
+
   const handleQuickView = () => {
     if (onQuickView) {
       onQuickView(product);
     }
   };
 
-  const handleAddToCart = () => {
-    if (onAddToCart) {
-      onAddToCart(product);
+  const handleAddToCart = async () => {
+    if (!deviceId) return;
+
+    try {
+      const response = await cartApi.addToCart({
+        deviceId,
+        productId: product._id,
+        quantity: 1,
+      });
+
+      if (response.success) {
+        // Trigger cart drawer to open
+        triggerCartDrawer();
+
+        // Call custom onAddToCart if provided
+        if (onAddToCart) {
+          onAddToCart(product);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    }
+  };
+
+  const handleAddToWishlist = async () => {
+    if (!deviceId) return;
+
+    try {
+      const response = await wishlistApi.addToWishlist({
+        deviceId,
+        productId: product._id,
+      });
+
+      if (response.success) {
+        // Trigger wishlist drawer to open
+        triggerWishlistDrawer();
+      }
+    } catch (error) {
+      console.error("Failed to add to wishlist:", error);
+    }
+  };
+
+  const handleViewProduct = () => {
+    if (onViewProduct) {
+      onViewProduct(product);
+    } else {
+      // Navigate to product detail page
+      navigate(`/product/${product._id}`);
     }
   };
 
@@ -48,14 +110,22 @@ export default function ProductCard({
           <p>Image not available</p>
         </div>
 
-        {/* Quick view button */}
-        {showQuickView && (
+        {/* Quick view and wishlist buttons */}
+        {(showQuickView || showAddToCart) && (
           <div className="product-card-overlay">
+            {showQuickView && (
+              <button
+                className="product-card-quick-view-btn"
+                onClick={handleQuickView}
+              >
+                Quick View
+              </button>
+            )}
             <button
-              className="product-card-quick-view-btn"
-              onClick={handleQuickView}
+              className="product-card-wishlist-btn"
+              onClick={handleAddToWishlist}
             >
-              Quick View
+              <HeartOutlined />
             </button>
           </div>
         )}
@@ -77,7 +147,9 @@ export default function ProductCard({
                   {formatPrice(product.basePricing)}
                 </span>
                 <span className="product-card-discounted-price">
-                  {formatPrice(product.finalPrice)}
+                  {formatPrice(
+                    calculateFinalPrice(product.basePricing, product.discount)
+                  )}
                 </span>
                 <span className="product-card-discount-badge">
                   {product.discount}% OFF
@@ -85,19 +157,30 @@ export default function ProductCard({
               </>
             ) : (
               <span className="product-card-price">
-                {formatPrice(product.finalPrice)}
+                {formatPrice(product.basePricing)}
               </span>
             )}
           </div>
 
-          {showAddToCart && (
-            <button
-              className="product-card-add-to-cart-btn"
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </button>
-          )}
+          <div className="product-card-action-buttons">
+            {showViewProduct && (
+              <button
+                className="product-card-view-btn"
+                onClick={handleViewProduct}
+              >
+                <EyeOutlined />
+                View Product
+              </button>
+            )}
+            {showAddToCart && (
+              <button
+                className="product-card-add-to-cart-btn"
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

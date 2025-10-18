@@ -1,201 +1,355 @@
-.BackgroundOverlayImageContainerContainer {
-    min-height: 1000px;
+/* Namunjii Product Page Styles */
+.modern-product-page {
+  background: #fafafa;
+  min-height: 100vh;
+  padding: 20px 0;
+  font-family: "Jost", sans-serif;
 }
 
-.BackgroundOverlayImageContainer {
-    width: 100%;
-    height: 1000px;
-    overflow: hidden;
-    margin-top: -9rem !important;
-    position: absolute;
+.product-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.BackgroundOverlayImageContainer img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* Product Images Section */
+.product-images-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.ProductDetaileContainer {
-    position: sticky;
-    z-index: 555;
-    height: 600px;
-    width: 100%;
-    top: 200px;
-    right: 0px;
-    /* background-color: red; */
-    /* margin-left: auto; */
-    display: flex;
-    justify-content: end;
-    margin-top: -50rem;
+.main-image-container {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.DetailsContainerSticky {
-    background-color: white;
-    /* height: 100%; */
-    width: 45%;
-    padding: 30px;
+.main-product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* .SingleProductPageDesign {
-    min-height: 700vh;
-} */
-
-.ProductDetailsTabContainer .ant-tabs-tab-btn {
-    color: rgb(126, 126, 126);
-    font-size: 12px !important;
+.no-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 18px;
 }
 
-.ProductDetailsTabContainer .ant-tabs-tab-btn:focus {
-    color: rgb(126, 126, 126) !important;
+.placeholder-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
 }
 
-.ProductDetailsTabContainer .ant-tabs-tab-btn:hover {
-    color: rgb(126, 126, 126) !important;
+.thumbnail-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
 }
 
-.ProductDetailsTabContainer .ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: black !important;
+.thumbnail {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
 }
 
-.ProductDetailsTabContainer .ant-tabs-tab-active .ant-tabs-tab-btn:focus {
-    color: black !important;
+.thumbnail.active {
+  border-color: #8b4513;
 }
 
-.ProductDetailsTabContainer .ant-tabs-ink-bar {
-    background: black !important;
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.ProductDetaileContainer .ant-tabs-nav::before {
-    display: none !important;
+/* Product Details Section */
+.product-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.OtherAllImagesContainer {
-    width: 50%;
+.product-header {
+  margin-bottom: 10px;
 }
 
-.OtherAllImagesContainer>div img {
-    width: 100%;
+.brand-name {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-
-/* .DetailsContainerSticky .productDescription p{
-    margin-bottom: 20px;
-} */
-
-.ProductDetailsTabContainer .SizeBoxesContainerEdit {
-    gap: 0px !important;
-    border-radius: 0px !important;
+.product-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  line-height: 1.3;
 }
 
-.ProductDetailsTabContainer .SizeBoxesContainerEdit .SizeBox {
-    border-radius: 0px !important;
-    border-left: 0px !important;
+/* Pricing */
+.pricing-section {
+  margin-bottom: 20px;
 }
 
-.ProductDetailsTabContainer .SizeBoxesContainerEdit .SizeBox:first-child {
-    border-left: 1px solid var(--brandColor) !important;
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 5px;
 }
 
-.RelatedOtherProductsContainer {
-    background-color: white;
-    padding: 20px;
+.current-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
 }
 
-.RelatedOtherProductsContainer .HeaderContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.original-price {
+  font-size: 18px;
+  color: #999;
+  text-decoration: line-through;
 }
 
-/* 
-.RelatedOtherProductsContainer .HeaderContainer .AnimatedLineButton {
-    color: white;
+.discount-badge {
+  background: #8b4513;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.RelatedOtherProductsContainer .HeaderContainer .AnimatedLineButton::after,
-.RelatedOtherProductsContainer .HeaderContainer .AnimatedLineButton::before {
-    border-bottom: 1px solid white;
-} */
-/* Hide mobile swiper on desktop */
-.MobilesOnlySwiperImageContainer {
-    display: none;
+.tax-note {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
 }
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.add-to-bag-btn {
+  flex: 1;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.add-to-bag-btn:hover {
+  background: #555;
+  transform: translateY(-1px);
+}
+
+.wishlist-btn {
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.wishlist-btn:hover {
+  border-color: #8b4513;
+  color: #8b4513;
+}
+
+/* Features Section */
+.features-section {
+  margin-bottom: 25px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.feature-icon {
+  width: 20px;
+  height: 20px;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Product Details Tabs */
+.product-details-tabs {
+  margin-top: 40px;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tabs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Custom Ant Design Tabs Styling for Namunjii */
+.tabs-container .ant-tabs-tab {
+  font-weight: 600;
+  font-size: 16px;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tabs-container .ant-tabs-tab:hover {
+  color: #8b4513;
+}
+
+.tabs-container .ant-tabs-tab.ant-tabs-tab-active {
+  color: #8b4513;
+  border-bottom-color: #8b4513;
+}
+
+.tabs-container .ant-tabs-ink-bar {
+  background: #8b4513;
+  height: 3px;
+}
+
+.tabs-container .ant-tabs-content-holder {
+  padding-top: 20px;
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.product-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.specifications {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.spec-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.spec-value {
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .product-page-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .specifications {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
-    .OtherAllImagesContainer {
-        width: 100% !important;
-        display: none;
-    }
+  .modern-product-page {
+    padding: 10px 0;
+  }
 
-    .ProductDetaileContainer {
-        position: static !important;
-        margin-top: 0rem !important;
-        width: unset !important;
-        height: 100% !important;
-    }
+  .product-page-container {
+    padding: 20px;
+    margin: 0 10px;
+  }
 
-    .BackgroundOverlayImageContainer {
-        margin-top: 0rem !important;
-        position: static !important;
-    }
+  .product-title {
+    font-size: 20px;
+  }
 
-    .SingleProductPageDesign {
-        margin-top: 0px !important;
-        padding-bottom: 0px !important;
-    }
+  .current-price {
+    font-size: 24px;
+  }
 
-    .BackgroundOverlayImageContainerContainer {
-        min-height: 100% !important;
-    }
-
-    .BackgroundOverlayImageContainer {
-        height: 500px;
-    }
-
-    .DetailsContainerSticky {
-        width: 100% !important;
-        padding: 20px 0px !important;
-    }
-
-    /* Mobile-only swiper container */
-    .MobilesOnlySwiperImageContainer {
-        display: block;
-        padding: 15px;
-        background: #f8f8f8;
-        margin: 10px 0;
-    }
-
-    .mobile-image-swiper {
-        width: 100%;
-        height: 100px;
-    }
-
-    .mobile-swiper-image-item {
-        cursor: pointer;
-        border-radius: 8px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-    }
-
-    .mobile-swiper-image-item:hover {
-        transform: scale(1.05);
-    }
-
-    .mobile-swiper-image-item.active {
-        border-color: #333;
-        box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.2);
-    }
-
-    .mobile-swiper-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 6px;
-    }
-
-    .mobile-swiper-image.active {
-        opacity: 0.8;
-    }
+  .action-buttons {
+    flex-direction: column;
+  }
 }
 
+@media (max-width: 480px) {
+  .product-page-container {
+    padding: 15px;
+    margin: 0 5px;
+  }
+
+  .thumbnail-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-title {
+    font-size: 18px;
+  }
+
+  .current-price {
+    font-size: 20px;
+  }
+}

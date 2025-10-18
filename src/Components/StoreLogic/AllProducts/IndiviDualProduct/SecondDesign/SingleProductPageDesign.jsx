@@ -1,296 +1,428 @@
 import React, { useEffect, useState } from "react";
-import { Tabs } from "antd";
-import { useParams } from "react-router-dom";
-import { DesignerDummyData } from "../../../../OthersComponents/Designers/DesignerDummyData";
-import CommonUnderworkingModal from "../../../../CommonUserInteractions/CommonUnderworkingModal";
-import "./SingleProductPageDesign.css";
-import { Link } from "react-router-dom";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation } from 'swiper/modules';
-import BlurImage from "../../../../CommonUserInteractions/BlurImage/BlurImage";
+import { Tabs, Spin, Alert, Button, Badge } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  HeartOutlined,
+  ShoppingCartOutlined,
+  EyeOutlined,
+  StarOutlined,
+  TruckOutlined,
+  SafetyOutlined,
+  UndoOutlined,
+} from "@ant-design/icons";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Thumbs } from "swiper/modules";
+import productApi from "../../../../../apis/product";
+import cartApi from "../../../../../apis/cart";
+import wishlistApi from "../../../../../apis/wishlist";
+import { useDevice } from "../../../../../hooks/useDevice";
+import { useCartWishlist } from "../../../Context/CartWishlistContext";
 import { useAppContext } from "../../../Context/AppContext";
+import ProductCard from "../../../../Common/ProductCard/ProductCard";
+import "./SingleProductPageDesign.css";
 
 const SingleProductPageDesign = () => {
-    const { productName } = useParams();
-    const { state } = useAppContext();
-    const designer = DesignerDummyData.find(d => d.DesignerProducts.some(p => p.ProductName === productName));
-    const product = designer?.DesignerProducts.find(p => p.ProductName === productName);
+  const { productId } = useParams();
+  const navigate = useNavigate();
+  const { deviceId } = useDevice();
+  const { triggerCartDrawer, triggerWishlistDrawer } = useCartWishlist();
+  const { state } = useAppContext();
 
-    const [selectedSize, setSelectedSize] = useState("M");
-    const [modalOpen, setModalOpen] = useState(false);
-    const decodedName = decodeURIComponent(productName || "");
-    const apiProduct = Array.isArray(state?.products) ? state.products.find(p => (p.productName || p.name) === decodedName) : null;
-    const apiImages = Array.isArray(apiProduct?.images) ? apiProduct.images : [];
-    const [currentMainImage, setCurrentMainImage] = useState("");
-    useEffect(() => {
-        if (apiImages.length) {
-            setCurrentMainImage(apiImages[0]);
-        }
-    }, [decodedName, apiImages.join(",")]);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+  // Fetch product data (primary method - try API first, fallback to context)
+  const fetchProduct = async () => {
+    if (!productId) {
+      setError("Product ID is required");
+      setLoading(false);
+      return;
+    }
 
-    useEffect(() => {
-        const prevTitle = document.title;
-        if (product?.ProductName) {
-            document.title = `${product.ProductName} | Namunjii`;
-        }
-        return () => {
-            document.title = prevTitle;
-        };
-    }, [product?.ProductName]);
+    try {
+      setLoading(true);
+      setError(null);
 
-    const SizeBoxes = Array.isArray(apiProduct?.sizes) && apiProduct.sizes.length ? apiProduct.sizes : ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-    const sizeFullForms = { XXS: "Extra Extra Small", XS: "Extra Small", S: "Small", M: "Medium", L: "Large", XL: "Extra Large", XXL: "Double Extra Large" };
-    const DISCOUNT_PERCENT = 20; // 20% discount for sale items
+      // First try to find product from app context (faster if available)
+      const apiProducts = Array.isArray(state?.products) ? state.products : [];
+      console.log("Looking for product ID:", productId);
+      console.log("Available products:", apiProducts.length);
+      const foundProduct = apiProducts.find((p) => p._id === productId);
 
-    const mainImage = currentMainImage || apiImages[0] || "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0";
-    const secondaryImage = apiImages?.[1] || apiImages?.[0] || mainImage;
+      if (foundProduct) {
+        setProduct(foundProduct);
+        setSelectedSize(foundProduct.size || "");
+        setSelectedColor(foundProduct.color || "");
 
-    // Related products from API: same categories, exclude current product
-    const allApiProducts = Array.isArray(state?.products) ? state.products : [];
-    const relatedProducts = allApiProducts
-        .filter(p => (p.productName || p.name) !== decodedName)
-        .map(p => ({
-            ProductName: p.productName || p.name || 'Product',
-            price: Number(p.basePricing) || 0,
-            sale: typeof p.discount === 'number' && p.discount > 0,
-            image: Array.isArray(p.images) && p.images.length ? p.images : [],
-        }));
+        // Set page title
+        document.title = `${foundProduct.productName} | Namunjii`;
 
+        // Get related products from the same context
+        const related = apiProducts
+          .filter((p) => p._id !== productId)
+          .slice(0, 6);
+        setRelatedProducts(related);
+        setLoading(false);
+        return;
+      }
+
+      // If not found in context, try API call
+      const response = await productApi.getProductById(productId);
+      console.log("API Response:", response);
+
+      // Handle the API response structure: { success: true, data: {...} }
+      if (response && response.success && response.data) {
+        const productData = response.data;
+        setProduct(productData);
+        setSelectedSize(productData.size || "");
+        setSelectedColor(productData.color || "");
+
+        // Set page title
+        document.title = `${productData.productName} | Namunjii`;
+
+        // Get related products from context
+        const related = apiProducts
+          .filter((p) => p._id !== productId)
+          .slice(0, 6);
+        setRelatedProducts(related);
+      } else {
+        setError("Product not found");
+      }
+    } catch (err) {
+      console.error("Error loading product:", err);
+      setError(err.message || "Failed to load product");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Alternative: Try to fetch product via API (if backend supports it)
+  const fetchProductViaAPI = async () => {
+    try {
+      const response = await productApi.getProductById(productId);
+
+      // Handle the API response structure: { success: true, data: {...} }
+      if (response && response.success && response.data) {
+        const productData = response.data;
+        setProduct(productData);
+        setSelectedSize(productData.size || "");
+        setSelectedColor(productData.color || "");
+
+        // Set page title
+        document.title = `${productData.productName} | Namunjii`;
+
+        // Get related products from context
+        const apiProducts = Array.isArray(state?.products)
+          ? state.products
+          : [];
+        const related = apiProducts
+          .filter((p) => p._id !== productId)
+          .slice(0, 6);
+        setRelatedProducts(related);
+        setLoading(false);
+      } else {
+        setError("Product not found via API");
+      }
+    } catch (err) {
+      console.error("API Error:", err);
+      // If API fails, fall back to context method
+      findProduct();
+    }
+  };
+
+  // Add to cart
+  const handleAddToCart = async () => {
+    if (!deviceId || !product) return;
+
+    try {
+      const response = await cartApi.addToCart({
+        deviceId,
+        productId: product._id,
+        quantity,
+        size: selectedSize,
+        color: selectedColor,
+      });
+
+      if (response.success) {
+        triggerCartDrawer();
+      }
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+    }
+  };
+
+  // Add to wishlist
+  const handleAddToWishlist = async () => {
+    if (!deviceId || !product) return;
+
+    try {
+      const response = await wishlistApi.addToWishlist({
+        deviceId,
+        productId: product._id,
+      });
+
+      if (response.success) {
+        triggerWishlistDrawer();
+      }
+    } catch (err) {
+      console.error("Failed to add to wishlist:", err);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchProduct();
+  }, [productId, state.products]);
+
+  // Calculate final price
+  const calculateFinalPrice = () => {
+    if (!product) return 0;
+    const basePrice = product.basePricing || 0;
+    const discount = product.discount || 0;
+    return Math.round(basePrice * (1 - discount / 100));
+  };
+
+  const finalPrice = calculateFinalPrice();
+  const images = product?.coverImage || [];
+  const otherImages = product?.otherImages || [];
+  const allImages = [...images, ...otherImages];
+
+  // Fallback image if no images are available
+  const fallbackImage =
+    "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0";
+  const displayImages = allImages.length > 0 ? allImages : [fallbackImage];
+
+  if (loading) {
     return (
-        <>
-            <div className="MainContainer marginTop50 paddingBottom50 newRouteSectionPadding SingleProductPageDesign">
-                <div className="BackgroundOverlayImageContainerContainer">
-                    <div className="BackgroundOverlayImageContainer">
-                        <img src={mainImage} alt={product?.ProductName || "Product"} />
-                    </div>
-                </div>
-                <div className="MobilesOnlySwiperImageContainer">
-                    <Swiper
-                        slidesPerView={4}
-                        spaceBetween={10}
-                        autoplay={{
-                            delay: 3000,
-                            disableOnInteraction: false,
-                        }}
-                        modules={[Autoplay]}
-                        className="mobile-image-swiper"
-                    >
-                        {apiImages.map((imageSrc, index) => (
-                            <SwiperSlide key={index}>
-                                <div
-                                    className="mobile-swiper-image-item"
-                                    onClick={() => setCurrentMainImage(imageSrc)}
-                                >
-                                    <BlurImage
-                                        src={imageSrc}
-                                        alt={`${product?.ProductName} - Image ${index + 1}`}
-                                        className={`mobile-swiper-image ${currentMainImage === imageSrc ? 'active' : ''}`}
-                                    />
-                                </div>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
-                {/* <div className="Container"> */}
-                {/* <div> */}
-                <div className="ProductDetaileContainer Container">
-                    <div className="DetailsContainerSticky ">
-                        <div className="DetailsPanel">
-                            <h3>{apiProduct?.productName || product?.ProductName}</h3>
-                            <div className="CommonFlexGap">
-                                <p className="productPrice "><b>₹&nbsp;{(Number(apiProduct?.basePricing) || product?.price || 0).toLocaleString('en-IN')}</b></p>
-                                <p className=" smallFont"><i>incl. local Tax & Shipping.</i></p>
-                            </div>
-                            {/* <div className="marginTop10 productDescription">
-                            {product?.ProductDescription}
-                        </div> */}
+      <div className="single-product-loading">
+        <Spin size="large" />
+        <p>Loading product details...</p>
+      </div>
+    );
+  }
 
-                            {/* <div className="marginTop20 SizeBoxesContainer">
-                            <p>Select Size: <span style={{ color: "#fff" }}>{sizeFullForms[selectedSize]}</span></p>
-                            <div className="SizeBoxesContainerEdit">
-                                {SizeBoxes.map((size) => (
-                                    <div
-                                        key={size}
-                                        className={selectedSize === size ? "SizeBox selected" : "SizeBox"}
-                                        onClick={() => setSelectedSize(size)}
-                                        style={{ cursor: "pointer" }}
-                                    >
-                                        <p>{size}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div> */}
-                            <div className="ProductDetailsTabContainer marginTop20">
-                                <Tabs
-                                    defaultActiveKey="description"
-                                    items={[
-                                        {
-                                            key: "description",
-                                            label: "Description",
-                                            children: (
-                                                <div>
-                                                    {apiProduct?.productDescription ? (
-                                                        <div dangerouslySetInnerHTML={{ __html: apiProduct.productDescription }} />
-                                                    ) : (
-                                                        product?.ProductBrief
-                                                    )}
-                                                </div>
-                                            ),
-                                        },
-                                        {
-                                            key: "delivery",
-                                            label: "Delivery Information",
-                                            children: (
-                                                <div>
-                                                    <p>Shipping within India: 3-7 business days. International: 7-15 business days. Free shipping on orders above ₹5,000.</p>
-                                                </div>
-                                            ),
-                                        },
-                                        {
-                                            key: "size",
-                                            label: "Size",
-                                            children: (
-                                                <div>
-                                                    <div className=" SizeBoxesContainer">
-                                                        <p className="smallFont">Select Size: <span className="smallFont">{sizeFullForms[selectedSize]}</span></p>
-                                                        <div className="SizeBoxesContainerEdit">
-                                                            {SizeBoxes.map((size) => (
-                                                                <div
-                                                                    key={size}
-                                                                    className={selectedSize === size ? "SizeBox selected" : "SizeBox"}
-                                                                    onClick={() => setSelectedSize(size)}
-                                                                    style={{ cursor: "pointer" }}
-                                                                >
-                                                                    <p className="smallFont">{size}</p>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ),
-                                        }
-                                    ]}
-                                />
-                            </div>
-                            <div className="BuyingOptionsContainer marginTop20">
-                                <button className="CommonBtn" onClick={() => setModalOpen(true)}><span>Add to Cart</span></button>
-                                <button className="CommonBtn" onClick={() => setModalOpen(true)}><span>Buy Now</span></button>
-                            </div>
+  if (error) {
+    return (
+      <div className="single-product-error">
+        <Alert
+          message="Error"
+          description={error}
+          type="error"
+          showIcon
+          action={
+            <Button size="small" onClick={() => navigate(-1)}>
+              Go Back
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
 
-                        </div>
-                    </div>
-                </div>
-                <div className="OtherAllImagesContainer">
-                    <div>
-                        <img src={secondaryImage} alt={product?.ProductName || "Product"} />
-                        <img src={mainImage} alt={product?.ProductName || "Product"} />
-                    </div>
-                </div>
-                <CommonUnderworkingModal open={modalOpen} onClose={() => setModalOpen(false)} />
+  if (!product && !loading) {
+    return (
+      <div className="single-product-not-found">
+        <Alert
+          message="Product Not Found"
+          description="The product you're looking for doesn't exist or hasn't loaded yet."
+          type="warning"
+          showIcon
+          action={[
+            <Button
+              key="retry"
+              size="small"
+              onClick={() => {
+                setLoading(true);
+                setError(null);
+                fetchProduct();
+              }}
+            >
+              Retry
+            </Button>,
+            <Button key="back" size="small" onClick={() => navigate(-1)}>
+              Go Back
+            </Button>,
+          ]}
+        />
+      </div>
+    );
+  }
 
-                {/* </div> */}
-                {/* </div> */}
+  // Show loading state while products are being fetched from context
+  if (!product && loading && (!state.products || state.products.length === 0)) {
+    return (
+      <div className="single-product-loading">
+        <Spin size="large" />
+        <p>Loading product details...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="modern-product-page">
+      <div className="product-page-container">
+        {/* Product Images Section */}
+        <div className="product-images-section">
+          <div className="main-image-container">
+            {displayImages.length > 0 ? (
+              <img
+                src={displayImages[currentImageIndex]}
+                alt={product.productName}
+                className="main-product-image"
+              />
+            ) : (
+              <div className="no-image-placeholder">
+                <div className="placeholder-icon">📷</div>
+                <p>No image available</p>
+              </div>
+            )}
+          </div>
+
+          {displayImages.length > 1 && (
+            <div className="thumbnail-container">
+              {displayImages.slice(0, 4).map((image, index) => (
+                <div
+                  key={index}
+                  className={`thumbnail ${
+                    currentImageIndex === index ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentImageIndex(index)}
+                >
+                  <img
+                    src={image}
+                    alt={`${product.productName} - ${index + 1}`}
+                  />
+                </div>
+              ))}
             </div>
-            <div className="RelatedOtherProductsContainer Container marginTop50">
-                <div className="HeaderContainer">
-                    <h3>People also liked</h3>
-                    <div className="AnimatedButtonContainer">
-                        <button className="AnimatedLineButton">View All</button>
-                    </div>
-                </div>
-                <div className="RelatedProductSwiperContainer marginTop50">
-                    <Swiper
-                        slidesPerView={1}
-                        spaceBetween={30}
-                        loop={true}
-                        // navigation={true}
-                        autoplay={{ delay: 3000, disableOnInteraction: false }}
-                        modules={[Autoplay, Navigation]}
-                        breakpoints={{
-                            640: {
-                                slidesPerView: 2,
-                                spaceBetween: 20,
-                            },
-                            768: {
-                                slidesPerView: 3,
-                                spaceBetween: 30,
-                            },
-                            1024: {
-                                slidesPerView: 3,
-                                spaceBetween: 30,
-                            },
-                        }}
-                    >
-                        {relatedProducts.map((item) => (
-                            <SwiperSlide key={item.ProductName + item.price}>
-                                <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
-                                    <div className="TrendingDesignsCard">
-                                        {item.sale && (
-                                            <div className="BadgeContainer">
-                                                <span className="smallFont">Sale</span>
-                                            </div>
-                                        )}
-                                        <div className="CommonFlexGap">
-                                            <div className="ProductTitle">
-                                                <h4 className="text-center" style={{ fontWeight: "400" }}>{item.ProductName}</h4>
-                                            </div>
-                                            <div className="ProductPrize">
-                                                {item.sale ? (
-                                                    (() => {
-                                                        const original = Number(item.price) || 0;
-                                                        const discounted = Math.round(original * (1 - DISCOUNT_PERCENT / 100));
-                                                        return (
-                                                            <p className="text-center smallFont">
-                                                                <span className="smallFont" style={{ textDecoration: 'line-through', opacity: 0.7 }}>₹&nbsp;{original.toLocaleString('en-IN')}</span>
-                                                                &nbsp;&nbsp;
-                                                                <span className="smallFont">₹&nbsp;{discounted.toLocaleString('en-IN')}</span>
-                                                                &nbsp;
-                                                            </p>
-                                                        );
-                                                    })()
-                                                ) : (
-                                                    <p className="text-center smallFont">₹&nbsp;{item.price?.toLocaleString('en-IN')}</p>
-                                                )}
-                                            </div>
-                                            <br />
-                                        </div>
-                                        <div className="ProductCardImageContainer">
-                                            <div className="ProductCardImage AllProductSwiperContainer">
-                                                <Swiper
-                                                    slidesPerView={1}
-                                                    loop={true}
-                                                    // navigation={true}
-                                                    // autoplay={{ delay: 2000, disableOnInteraction: false }}
-                                                    modules={[Autoplay, Navigation]}
-                                                >
-                                                    {item.image?.map((imgSrc, idx) => (
-                                                        <SwiperSlide key={idx}>
-                                                            <BlurImage
-                                                                src={imgSrc}
-                                                                alt={item.ProductName}
-                                                                className="product-image"
-                                                            />
-                                                        </SwiperSlide>
-                                                    ))}
-                                                </Swiper>
-                                            </div>
-                                            <div className="PopUpcategoryBtn">
-                                                <button>View Product</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
+          )}
+        </div>
+
+        {/* Product Details Section */}
+        <div className="product-details-section">
+          {/* Brand and Product Name */}
+          <div className="product-header">
+            <div className="brand-name">
+              {product.vendorId?.name || "Namunjii"}
             </div>
-        </>
-    )
-}
+            <h1 className="product-title">{product.productName}</h1>
+          </div>
+
+          {/* Pricing */}
+          <div className="pricing-section">
+            <div className="price-row">
+              <span className="current-price">
+                ₹{finalPrice.toLocaleString("en-IN")}
+              </span>
+              {product.discount > 0 && (
+                <>
+                  <span className="original-price">
+                    ₹{product.basePricing.toLocaleString("en-IN")}
+                  </span>
+                  <span className="discount-badge">
+                    ({product.discount}% OFF)
+                  </span>
+                </>
+              )}
+            </div>
+            <p className="tax-note">inclusive of all taxes</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="action-buttons">
+            <button className="add-to-bag-btn" onClick={handleAddToCart}>
+              <ShoppingCartOutlined />
+              ADD TO BAG
+            </button>
+            <button className="wishlist-btn" onClick={handleAddToWishlist}>
+              <HeartOutlined />
+              WISHLIST
+            </button>
+          </div>
+
+          {/* Product Features */}
+          <div className="features-section">
+            <div className="feature-item">
+              <div className="feature-icon">✓</div>
+              <span>100% Original Products</span>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">✓</div>
+              <span>Pay on delivery might be available</span>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">✓</div>
+              <span>Easy 14 days returns and exchanges</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Product Details Tabs */}
+      <div className="product-details-tabs">
+        <div className="tabs-container">
+          <Tabs
+            defaultActiveKey="details"
+            items={[
+              {
+                key: "details",
+                label: "PRODUCT DETAILS",
+                children: (
+                  <div className="tab-content">
+                    <div className="product-description">
+                      {product.productDescription ||
+                        "Premium quality product crafted with attention to detail."}
+                    </div>
+                    <div className="specifications">
+                      <div className="spec-row">
+                        <span className="spec-label">Sleeve Length:</span>
+                        <span className="spec-value">Short Sleeves</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Collar:</span>
+                        <span className="spec-value">Spread Collar</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Fit:</span>
+                        <span className="spec-value">Regular Fit</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Brand Fit Name:</span>
+                        <span className="spec-value">Comfort</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Length:</span>
+                        <span className="spec-value">Regular</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Hemline:</span>
+                        <span className="spec-value">Curved</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Placket:</span>
+                        <span className="spec-value">Button Placket</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Placket Length:</span>
+                        <span className="spec-value">Full</span>
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default SingleProductPageDesign;

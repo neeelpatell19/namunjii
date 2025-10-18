@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../StoreLogic/Context/UserContext";
 import "./HomeComponents.css";
 import Carousel from "./Carousel";
+import Categories from "./Categories";
 import BestSellers from "./BestSellers";
 import FeaturedProducts from "./FeaturedProducts";
 import NewArrivals from "./NewArrivals";
@@ -159,7 +160,8 @@ export default function HomeComponents() {
 
   return (
     <div>
-      <Carousel HomeData={HomeData} />
+      {/* <Carousel HomeData={HomeData} />
+      <Categories HomeData={HomeData} /> */}
       <BestSellers HomeData={HomeData} />
       <FeaturedProducts HomeData={HomeData} />
       <NewArrivals HomeData={HomeData} />

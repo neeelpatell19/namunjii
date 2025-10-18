@@ -12,7 +12,12 @@ import PrivacyPolicy from "./Components/Policies/PrivacyPolicy";
 import Footer from "./Components/Footer/Footer";
 import AllCollections from "./Components/StoreLogic/AllCollections/AllCollections";
 import SingleProductPageDesign from "./Components/StoreLogic/AllProducts/IndiviDualProduct/SecondDesign/SingleProductPageDesign";
+import ProductsPage from "./Components/StoreLogic/AllProducts/ProductsPage/ProductsPage";
 import CollectionsViaProducts from "./Components/StoreLogic/AllCollections/CollectionsViaProducts/CollectionsViaProducts";
+import CheckoutFlow from "./Components/StoreLogic/Checkout/CheckoutFlow";
+import PaymentSuccess from "./Components/StoreLogic/Checkout/PaymentSuccess";
+import PaymentFailed from "./Components/StoreLogic/Checkout/PaymentFailed";
+import CartPage from "./Components/StoreLogic/Cart/CartPage";
 import AppProvider from "./Components/StoreLogic/Context/AppState";
 import ReturnPolicy from "./Components/Policies/ReturnPolicy";
 import ShippingPolicy from "./Components/Policies/ShippingPolicy";
@@ -22,6 +27,7 @@ import TermsOfUse from "./Components/Policies/TermsOfUse";
 import HomeComponents from "./Components/HomeComponents";
 import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
+import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
 // Page transition variants
 const pageVariants = {
   initial: {
@@ -94,7 +100,7 @@ const AnimatedRoutes = () => {
           }
         />
         <Route
-          path="/product/:productName"
+          path="/product/:productId"
           element={
             <PageTransition>
               <SingleProductPageDesign />
@@ -105,7 +111,39 @@ const AnimatedRoutes = () => {
           path="/products"
           element={
             <PageTransition>
-              <AllProduct />
+              <ProductsPage />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <PageTransition>
+              <CartPage />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <PageTransition>
+              <CheckoutFlow />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/checkout/payment-success"
+          element={
+            <PageTransition>
+              <PaymentSuccess />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/checkout/payment-failed"
+          element={
+            <PageTransition>
+              <PaymentFailed />
             </PageTransition>
           }
         />
@@ -216,28 +254,30 @@ function App() {
     <>
       <AppProvider>
         <UserProvider>
-          <BrowserRouter>
-            <div
-              style={{
-                width: "100vw",
-                overflowX: "hidden",
-                paddingTop: lg ? "120px" : "60px",
-              }}
-            >
-              <Header />
-              <AnimatedRoutes />
+          <CartWishlistProvider>
+            <BrowserRouter>
+              <div
+                style={{
+                  width: "100vw",
+                  overflowX: "hidden",
+                  paddingTop: lg ? "120px" : "60px",
+                }}
+              >
+                <Header />
+                <AnimatedRoutes />
 
-              {/* <FeaturesAndQuestion /> */}
-              {/* <CommonUserInteractionsPopup /> */}
-              <Footer />
-              {/* <Cookies /> */}
-              {/* <WhatsAppBtn /> */}
+                {/* <FeaturesAndQuestion /> */}
+                {/* <CommonUserInteractionsPopup /> */}
+                <Footer />
+                {/* <Cookies /> */}
+                {/* <WhatsAppBtn /> */}
 
-              {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
-              {/* <UserDetailsModal /> */}
-              {/* <Cart /> */}
-            </div>
-          </BrowserRouter>
+                {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
+                {/* <UserDetailsModal /> */}
+                {/* <Cart /> */}
+              </div>
+            </BrowserRouter>
+          </CartWishlistProvider>
         </UserProvider>
       </AppProvider>
     </>

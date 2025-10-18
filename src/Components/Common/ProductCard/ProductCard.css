@@ -108,6 +108,34 @@
   box-shadow: 0 6px 20px rgba(54, 66, 78, 0.15);
 }
 
+.product-card-wishlist-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(54, 66, 78, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+.product-card-wishlist-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
 /* Content Section */
 .product-card-content {
   padding: 1rem 1.5rem 1.5rem 1.5rem;
@@ -196,6 +224,39 @@
   letter-spacing: 0.5px;
 }
 
+/* Action Buttons Container */
+.product-card-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* View Product Button */
+.product-card-view-btn {
+  width: 100%;
+  background: var(--bg-white);
+  color: var(--brandColor);
+  border: 1px solid var(--brandColor);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: var(--Poppins-font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.product-card-view-btn:hover {
+  background: var(--brandColor);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(54, 66, 78, 0.2);
+}
+
 /* Add to Cart Button */
 .product-card-add-to-cart-btn {
   width: 100%;
@@ -278,7 +339,8 @@
 
 /* Accessibility Improvements */
 .product-card-add-to-cart-btn:focus,
-.product-card-quick-view-btn:focus {
+.product-card-quick-view-btn:focus,
+.product-card-view-btn:focus {
   outline: 3px solid var(--brand-400);
   outline-offset: 2px;
 }
@@ -289,7 +351,8 @@
   .product-card-image,
   .product-card-overlay,
   .product-card-add-to-cart-btn,
-  .product-card-quick-view-btn {
+  .product-card-quick-view-btn,
+  .product-card-view-btn {
     transition: none;
   }
 

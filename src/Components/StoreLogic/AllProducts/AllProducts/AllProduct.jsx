@@ -98,7 +98,7 @@ const AllProduct = () => {
 
             // Filter by price range
             filtered = filtered.filter(item => {
-                const price = Number(item.price) || 0;
+                const price = Number(item.basePricing) || 0;
                 const minPrice = Number(priceRange.min) || 0;
                 const maxPrice = Number(priceRange.max) || 50000;
                 const isInRange = price >= minPrice && price <= maxPrice;
@@ -423,7 +423,7 @@ const AllProduct = () => {
                                                                 <div className="ProductPrize">
                                                                     {item.sale ? (
                                                                         (() => {
-                                                                            const original = Number(item.price) || 0;
+                                                                            const original = Number(item.basePricing) || 0;
                                                                             const discounted = Math.round(original * (1 - DISCOUNT_PERCENT / 100));
                                                                             return (
                                                                                 <p className="text-center smallFont">
@@ -437,7 +437,7 @@ const AllProduct = () => {
                                                                             );
                                                                         })()
                                                                     ) : (
-                                                                        <p className="text-center smallFont">₹&nbsp;{item.price?.toLocaleString('en-IN')}</p>
+                                                                        <p className="text-center smallFont">₹&nbsp;{item.basePricing?.toLocaleString('en-IN')}</p>
                                                                     )}
                                                                 </div>
                                                                 <br />

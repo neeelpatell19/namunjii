@@ -125,7 +125,7 @@ const IndividualProductPage = () => {
                                     <div>
                                         <div className="CommonFlexGap">
                                             <h2>{product?.ProductName}</h2>
-                                            <p className="productPrice"><b>₹&nbsp;{product?.price?.toLocaleString('en-IN')}</b></p>
+                                            <p className="productPrice"><b>₹&nbsp;{product?.basePricing?.toLocaleString('en-IN')}</b></p>
                                             <p><i>incl. local Tax & Shipping.</i></p>
                                         </div>
                                         <div className="marginTop20">

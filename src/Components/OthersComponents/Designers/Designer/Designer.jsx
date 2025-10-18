@@ -17,7 +17,7 @@ const Designers = () => {
     }, []);
 
     // --- FILTER LOGIC ---
-    const allPrices = designer.DesignerProducts.map(p => p.price);
+    const allPrices = designer.DesignerProducts.map(p => p.basePricing);
     const minPrice = Math.min(...allPrices);
     const maxPrice = Math.max(...allPrices);
     const allAvailability = Array.from(new Set(designer.DesignerProducts.map(p => p.availability)));
@@ -42,7 +42,7 @@ const Designers = () => {
         setTimeout(() => setFade(false), 200);
     };
     const filteredProducts = designer.DesignerProducts.filter(product => {
-        let priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
+        let priceMatch = product.basePricing >= priceRange[0] && product.basePricing <= priceRange[1];
         let availMatch = selectedAvailability ? product.availability === selectedAvailability : true;
         return priceMatch && availMatch;
     });
@@ -131,7 +131,7 @@ const Designers = () => {
                     <div className={`DesignerProductsGrid fade-grid${fade ? ' fade' : ''}`}>
                         <Row gutter={[30, 30]}>
                             {filteredProducts.map((item) => (
-                                <Col lg={6} md={8} sm={12} xs={24} key={item.ProductName + item.price}>
+                                <Col lg={6} md={8} sm={12} xs={24} key={item.ProductName + item.basePricing}>
                                     <Link to={`/product/${encodeURIComponent(item.ProductName)}`}>
                                         <div className="TrendingDesignsCard">
                                             <div className="ProductCardImageContainer">
@@ -148,7 +148,7 @@ const Designers = () => {
                                                     <h4>{item.ProductName}</h4>
                                                 </div>
                                                 <div className="ProductPrize">
-                                                    <p>₹&nbsp;{item.price}</p>
+                                                    <p>₹&nbsp;{item.basePricing}</p>
                                                 </div>
                                             </div>
                                         </div>

@@ -180,15 +180,6 @@
   color: var(--neutral-100);
 }
 
-.DropdownArrow {
-  font-size: 12px;
-  transition: transform 0.3s ease;
-}
-
-.CategoryItem:hover .DropdownArrow {
-  transform: rotate(180deg);
-}
-
 /* Mobile Menu Styles */
 .CategoryNavBar.mobile-open {
   display: block;
@@ -274,10 +265,6 @@
     align-items: center;
     width: 100%;
   }
-
-  .DropdownArrow {
-    font-size: 12px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -314,9 +301,5 @@
   .CategoryLink {
     font-size: 13px;
     padding: 10px 0;
-  }
-
-  .DropdownArrow {
-    font-size: 11px;
   }
 }
