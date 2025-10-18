@@ -1,0 +1,322 @@
+/* Header Container */
+.HeaderContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--bg-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Navigation Bar */
+.MainNavBar {
+  background: var(--bg-white);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--neutral-950);
+}
+
+.NavLeft {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.SearchIcon {
+  font-size: 20px;
+  color: var(--brand-primary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.SearchIcon:hover {
+  color: var(--brand-500);
+}
+
+.MobileMenuToggle {
+  display: none;
+  font-size: 20px;
+  color: var(--brand-primary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.MobileMenuToggle:hover {
+  color: var(--brand-500);
+}
+
+.LogoContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.Logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.LogoIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.LogoIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.LogoText {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brand-primary);
+  letter-spacing: 1px;
+  font-family: var(--Poppins-font);
+}
+
+.NavActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.WishlistIcon {
+  font-size: 20px;
+  color: var(--brand-primary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.WishlistIcon:hover {
+  color: var(--brand-500);
+}
+
+.CartContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.CartContainer:hover .CartText {
+  color: var(--brand-500);
+}
+
+.CartText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.CartBadge {
+  background: var(--brand-primary);
+  color: var(--bg-white);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Brand Separator Line */
+.SeparatorLine {
+  height: 2px;
+  background: var(--brand-primary);
+  width: 100%;
+}
+
+/* Secondary Navigation Bar */
+.CategoryNavBar {
+  background: var(--bg-light-beige);
+  padding: 12px 0;
+}
+
+.CategoryLinks {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.CategoryItem {
+  position: relative;
+}
+
+.CategoryLink {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--brand-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+  font-family: var(--Poppins-font);
+}
+
+.CategoryLink:hover {
+  color: var(--brand-500);
+}
+
+.CategoryLink.special {
+  color: var(--brand-100);
+  font-weight: 600;
+}
+
+.CategoryLink.special:hover {
+  color: var(--neutral-100);
+}
+
+.DropdownArrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.CategoryItem:hover .DropdownArrow {
+  transform: rotate(180deg);
+}
+
+/* Mobile Menu Styles */
+.CategoryNavBar.mobile-open {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .CategoryLinks {
+    gap: 30px;
+  }
+
+  .CategoryLink {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .MainNavBar {
+    padding: 12px 0;
+  }
+
+  .MobileMenuToggle {
+    display: block;
+  }
+
+  .LogoText {
+    font-size: 18px;
+  }
+
+  .SearchIcon {
+    font-size: 18px;
+  }
+
+  .WishlistIcon {
+    font-size: 18px;
+  }
+
+  .CartText {
+    font-size: 12px;
+  }
+
+  .CartBadge {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .CategoryNavBar {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-light-beige);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+
+  .CategoryNavBar.mobile-open {
+    display: block;
+  }
+
+  .CategoryLinks {
+    flex-direction: column;
+    gap: 0;
+    padding: 16px;
+  }
+
+  .CategoryItem {
+    width: 100%;
+    border-bottom: 1px solid var(--neutral-950);
+  }
+
+  .CategoryItem:last-child {
+    border-bottom: none;
+  }
+
+  .CategoryLink {
+    font-size: 14px;
+    padding: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .DropdownArrow {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .MainNavBar {
+    padding: 10px 0;
+  }
+
+  .LogoText {
+    font-size: 16px;
+  }
+
+  .SearchIcon {
+    font-size: 16px;
+  }
+
+  .WishlistIcon {
+    font-size: 16px;
+  }
+
+  .CartText {
+    font-size: 10px;
+  }
+
+  .CartBadge {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+
+  .CategoryLinks {
+    padding: 12px;
+  }
+
+  .CategoryLink {
+    font-size: 13px;
+    padding: 10px 0;
+  }
+
+  .DropdownArrow {
+    font-size: 11px;
+  }
+}

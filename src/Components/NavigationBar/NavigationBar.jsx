@@ -12,165 +12,178 @@ import { DesignerDummyData } from "../OthersComponents/Designers/DesignerDummyDa
 import { FiSearch } from "react-icons/fi";
 import { FiMenu } from "react-icons/fi";
 const shopMegaMenuData = [
-    {
-        label: "Category 1",
-        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-        link: "/shop/watch",
-    },
-    {
-        label: "Category 2",
-        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-        link: "/shop/ring",
-    },
-    {
-        label: "Category 3",
-        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-        link: "/shop/earrings",
-    },
-    {
-        label: "Category 4",
-        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-        link: "/shop/necklace",
-    },
-    // {
-    //     label: "Category 5",
-    //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-    //     link: "/shop/bracelet",
-    // },
-    // {
-    //     label: "Category 5",
-    //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-    //     link: "/shop/bracelet",
-    // },
-    // {
-    //     label: "Category 5",
-    //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
-    //     link: "/shop/bracelet",
-    // },
+  {
+    label: "Category 1",
+    image:
+      "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+    link: "/shop/watch",
+  },
+  {
+    label: "Category 2",
+    image:
+      "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+    link: "/shop/ring",
+  },
+  {
+    label: "Category 3",
+    image:
+      "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+    link: "/shop/earrings",
+  },
+  {
+    label: "Category 4",
+    image:
+      "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+    link: "/shop/necklace",
+  },
+  // {
+  //     label: "Category 5",
+  //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+  //     link: "/shop/bracelet",
+  // },
+  // {
+  //     label: "Category 5",
+  //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+  //     link: "/shop/bracelet",
+  // },
+  // {
+  //     label: "Category 5",
+  //     image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/MegamenuDummyImage.jpg",
+  //     link: "/shop/bracelet",
+  // },
 ];
 
-
 const NavigationBar = () => {
-    const [showMegaMenu, setShowMegaMenu] = useState(false);
-    const [navScrolled, setNavScrolled] = useState(false);
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [mobileNavDrawerOpen, setMobileNavDrawerOpen] = useState(false);
-    const location = useLocation();
-    const isHome = location.pathname === "/";
-    const useWhite = isHome && !navScrolled;
+  const [showMegaMenu, setShowMegaMenu] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [mobileNavDrawerOpen, setMobileNavDrawerOpen] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+  const isAboutUs = location.pathname === "/about-us";
+  const useWhite = (isHome || isAboutUs) && !navScrolled;
 
-    useEffect(() => {
-        window.addEventListener("scroll", () => {
-            setNavScrolled(window.scrollY > 100);
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      setNavScrolled(window.scrollY > 100);
+    });
+  }, []);
+
+  const drawerContentData = [
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+    {
+      image:
+        "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
+    },
+  ];
+
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const inputRef = useRef(null);
+
+  const openSearchModal = () => {
+    setSearchModalOpen(true);
+    setTimeout(() => inputRef.current && inputRef.current.focus(), 200);
+  };
+  const closeSearchModal = () => {
+    setSearchModalOpen(false);
+    setSearch("");
+    setSearchResults([]);
+  };
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") closeSearchModal();
+    };
+    if (searchModalOpen) {
+      window.addEventListener("keydown", handleEsc);
+    } else {
+      window.removeEventListener("keydown", handleEsc);
+    }
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [searchModalOpen]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    if (!value.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const results = [];
+    DesignerDummyData.forEach((designer) => {
+      // Match designer name
+      if (designer.DesignerName.toLowerCase().includes(value.toLowerCase())) {
+        results.push({
+          type: "designer",
+          name: designer.DesignerName,
+          slug: designer.slug,
+          image: designer.image,
         });
-    }, []);
-
-    const drawerContentData = [
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-        {
-            image: "https://cdn.prod.website-files.com/6548826a7a4896c258f7cb63/658121274b431bddbc2f507e_Popup-collection-03.jpg",
-        },
-
-    ];
-
-    const [searchModalOpen, setSearchModalOpen] = useState(false);
-    const [search, setSearch] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
-    const inputRef = useRef(null);
-
-    const openSearchModal = () => {
-        setSearchModalOpen(true);
-        setTimeout(() => inputRef.current && inputRef.current.focus(), 200);
-    };
-    const closeSearchModal = () => {
-        setSearchModalOpen(false);
-        setSearch("");
-        setSearchResults([]);
-    };
-
-    useEffect(() => {
-        const handleEsc = (e) => {
-            if (e.key === "Escape") closeSearchModal();
-        };
-        if (searchModalOpen) {
-            window.addEventListener("keydown", handleEsc);
-        } else {
-            window.removeEventListener("keydown", handleEsc);
+      }
+      // Match products
+      designer.DesignerProducts.forEach((product) => {
+        if (product.ProductName.toLowerCase().includes(value.toLowerCase())) {
+          results.push({
+            type: "product",
+            name: product.ProductName,
+            designer: designer.DesignerName,
+            productSlug: product.ProductName,
+            image: product.image,
+            designerSlug: designer.slug,
+          });
         }
-        return () => window.removeEventListener("keydown", handleEsc);
-    }, [searchModalOpen]);
+      });
+    });
+    setSearchResults(results);
+  };
 
-    const handleSearch = (e) => {
-        const value = e.target.value;
-        setSearch(value);
-
-        if (!value.trim()) {
-            setSearchResults([]);
-            return;
-        }
-
-        const results = [];
-        DesignerDummyData.forEach(designer => {
-            // Match designer name
-            if (designer.DesignerName.toLowerCase().includes(value.toLowerCase())) {
-                results.push({
-                    type: "designer",
-                    name: designer.DesignerName,
-                    slug: designer.slug,
-                    image: designer.image
-                });
-            }
-            // Match products
-            designer.DesignerProducts.forEach(product => {
-                if (product.ProductName.toLowerCase().includes(value.toLowerCase())) {
-                    results.push({
-                        type: "product",
-                        name: product.ProductName,
-                        designer: designer.DesignerName,
-                        productSlug: product.ProductName,
-                        image: product.image,
-                        designerSlug: designer.slug
-                    });
-                }
-            });
-        });
-        setSearchResults(results);
-    };
-
-    return (
-        <div className={`NavigationBarContainer ${navScrolled ? "nav-scrolled" : ""}`}>
-            <div className={`Container ${navScrolled ? "nav-scrolled" : ""}`}>
-                <Row>
-                    <Col lg={12} xs={12} sm={12}>
-                        <div className="NavigationBarLogoContainer">
-                            <div>
-                                <Link to="/">
-                                    <img src={useWhite ? LogoFile : LogoFileBlack} alt="" />
-                                </Link>
-                            </div>
-                        </div>
-                    </Col>
-                    {/* <Col lg={12} xs={12} sm={12}>
+  return (
+    <div
+      className={`NavigationBarContainer ${navScrolled ? "nav-scrolled" : ""}`}
+    >
+      <div className={`Container ${navScrolled ? "nav-scrolled" : ""}`}>
+        <Row>
+          <Col lg={12} xs={12} sm={12}>
+            <div className="NavigationBarLogoContainer">
+              <div>
+                <Link to="/">
+                  <img src={useWhite ? LogoFile : LogoFileBlack} alt="" />
+                </Link>
+              </div>
+            </div>
+          </Col>
+          {/* <Col lg={12} xs={12} sm={12}>
                         <div className="NavigationBarMenuContainer">
                             {NavigationData.map((item) => {
                                 return item.name === "Shop" ? (
@@ -193,14 +206,16 @@ const NavigationBar = () => {
                             )}
                         </div>
                     </Col> */}
-                    <Col lg={12} xs={12} sm={12}>
-                        <div className="FunctionlityButtonsContainer" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-                         
-                            {/* <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 8 }}>
+          <Col lg={12} xs={12} sm={12}>
+            <div
+              className="FunctionlityButtonsContainer"
+              style={{ display: "flex", alignItems: "center", gap: 18 }}
+            >
+              {/* <div className="SearchIconNav" onClick={openSearchModal} style={{ cursor: "pointer", fontSize: 22, color: "#b79a80", marginRight: 8 }}>
                                 <FiSearch />
                             </div> */}
-                           
-                            {/* {searchModalOpen && (
+
+              {/* {searchModalOpen && (
                                 <div
                                     className="FullscreenSearchModal"
                                     style={{
@@ -328,128 +343,159 @@ const NavigationBar = () => {
                                     </div>
                                 </div>
                             )} */}
-                            {/* ...existing menu drawer button... */}
-                            {/* <div className="MenuDrawerBtn" style={{ fontSize: 22, color: "#b79a80" }} onClick={() => setDrawerOpen(true)}>
+              {/* ...existing menu drawer button... */}
+              {/* <div className="MenuDrawerBtn" style={{ fontSize: 22, color: "#b79a80" }} onClick={() => setDrawerOpen(true)}>
                                 <CgMenuGridO style={{ color: useWhite ? "white" : "black" }} />
                             </div> */}
-                            {/* Mobile Hamburger Icon (only visible on mobile) */}
-                            {/* <div className="MobileNavDrawerBtn" onClick={() => setMobileNavDrawerOpen(true)} style={{ display: 'none', fontSize: 26, color: "#b79a80", marginLeft: 8 }}>
+              {/* Mobile Hamburger Icon (only visible on mobile) */}
+              {/* <div className="MobileNavDrawerBtn" onClick={() => setMobileNavDrawerOpen(true)} style={{ display: 'none', fontSize: 26, color: "#b79a80", marginLeft: 8 }}>
                                 <FiMenu />
                             </div> */}
-                           <Link to="/vendor-verification"> <button className="CommonBtn"><span>Join Us</span></button></Link>
-                        </div>
-                    </Col>
-                </Row>
-                {showMegaMenu && (
-                    <div
-                        className="MegaMenuGridContainer fade-in"
-                        onMouseEnter={() => setShowMegaMenu(true)}
-                        onMouseLeave={() => setShowMegaMenu(false)}
-                    >
-                        <div className="MegaMenuGrid">
-                            <div className="MegaMenuGridRow">
-                                {DesignerDummyData.slice(0, 5).map((menu, idx) => (
-                                    <div>
-                                        <Link to={`/designers/${menu.slug}`} className="MegaMenuGridItem" key={idx}>
-                                            <div className="MegaMenuGridItemImage">
-                                                <img src={menu.image} alt={menu.label} />
-                                            </div>
-                                            <div className="MegaMenuLabelRow">
-                                                <span className="MegaMenuLabel">{menu.DesignerName}</span>
-                                                <RightOutlined className="MegaMenuArrow" />
-                                            </div>
-                                        </Link>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                )}
+              <Link to="/vendor-verification">
+                {" "}
+                <button className="CommonBtn">
+                  <span>Join Us</span>
+                </button>
+              </Link>
             </div>
-            <Drawer
-                title={null}
-                placement="right"
-                headerStyle={{ display: "none" }}
-                open={drawerOpen}
-                width={600}
-                onClose={() => setDrawerOpen(false)}
-            >
-                <div className="DrawerContentContainer">
-                    <div className="DrawerContent">
-                        <div className="DrawerContentHeader">
-                            <div className="DrawerContentHeaderCloseBtn">
-                                <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/icons8-cancel-50.png" onClick={() => setDrawerOpen(false)} />
-                            </div>
-                            <div className="DrawerContentHeaderTitle">
-                                <div>
-                                    <h2>Namunjii</h2>
-                                    <p>Fashion is a multifaceted realm that extends beyond clothing, embracing diverse styles, trends, and cultural influences.</p>
-                                    <Link to="/vendor-verification">
-                                        <div>
-                                            <button className="CommonBtn" onClick={() => {
-                                                setDrawerOpen(false);
-                                            }}><span>Join Us</span></button>
-                                        </div>
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="ProductsImagesContainer">
-                                <Row gutter={[20, 20]}>
-                                    {DummyData.products.slice(0, 8).map((item, idx) => (
-                                        <Col lg={6} key={idx}>
-                                            <div className="ProductImage">
-                                                <img src={item.images[0]} alt="" style={{ width: "100%" }} />
-                                            </div>
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </div>
-                            <div className="paddingTop50">
-                                <h2>Follow Us</h2>
-                                <div className="SocialIconsContainer">
-                                    <ul>
-                                        {SocialIconsData.map((item, idx) => (
-                                            <li key={idx}>
-                                                <a href={item.link} target="_blank" rel="noopener noreferrer">
-                                                    {item.icon}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+          </Col>
+        </Row>
+        {showMegaMenu && (
+          <div
+            className="MegaMenuGridContainer fade-in"
+            onMouseEnter={() => setShowMegaMenu(true)}
+            onMouseLeave={() => setShowMegaMenu(false)}
+          >
+            <div className="MegaMenuGrid">
+              <div className="MegaMenuGridRow">
+                {DesignerDummyData.slice(0, 5).map((menu, idx) => (
+                  <div>
+                    <Link
+                      to={`/designers/${menu.slug}`}
+                      className="MegaMenuGridItem"
+                      key={idx}
+                    >
+                      <div className="MegaMenuGridItemImage">
+                        <img src={menu.image} alt={menu.label} />
+                      </div>
+                      <div className="MegaMenuLabelRow">
+                        <span className="MegaMenuLabel">
+                          {menu.DesignerName}
+                        </span>
+                        <RightOutlined className="MegaMenuArrow" />
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <Drawer
+        title={null}
+        placement="right"
+        headerStyle={{ display: "none" }}
+        open={drawerOpen}
+        width={600}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <div className="DrawerContentContainer">
+          <div className="DrawerContent">
+            <div className="DrawerContentHeader">
+              <div className="DrawerContentHeaderCloseBtn">
+                <img
+                  src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/icons8-cancel-50.png"
+                  onClick={() => setDrawerOpen(false)}
+                />
+              </div>
+              <div className="DrawerContentHeaderTitle">
+                <div>
+                  <h2>Namunjii</h2>
+                  <p>
+                    Fashion is a multifaceted realm that extends beyond
+                    clothing, embracing diverse styles, trends, and cultural
+                    influences.
+                  </p>
+                  <Link to="/vendor-verification">
+                    <div>
+                      <button
+                        className="CommonBtn"
+                        onClick={() => {
+                          setDrawerOpen(false);
+                        }}
+                      >
+                        <span>Join Us</span>
+                      </button>
                     </div>
+                  </Link>
                 </div>
-            </Drawer>
-            {/* Mobile Navigation Drawer */}
-            <Drawer
-                title={null}
-                placement="right"
-                open={mobileNavDrawerOpen}
-                onClose={() => setMobileNavDrawerOpen(false)}
-                width={260}
-                bodyStyle={{ padding: 0 }}
-                className="MobileNavLinksDrawer"
-            >
-                {/* <div className="mobile-nav-header">
+              </div>
+              <div className="ProductsImagesContainer">
+                <Row gutter={[20, 20]}>
+                  {DummyData.products.slice(0, 8).map((item, idx) => (
+                    <Col lg={6} key={idx}>
+                      <div className="ProductImage">
+                        <img
+                          src={item.images[0]}
+                          alt=""
+                          style={{ width: "100%" }}
+                        />
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+              <div className="paddingTop50">
+                <h2>Follow Us</h2>
+                <div className="SocialIconsContainer">
+                  <ul>
+                    {SocialIconsData.map((item, idx) => (
+                      <li key={idx}>
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.icon}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Drawer>
+      {/* Mobile Navigation Drawer */}
+      <Drawer
+        title={null}
+        placement="right"
+        open={mobileNavDrawerOpen}
+        onClose={() => setMobileNavDrawerOpen(false)}
+        width={260}
+        bodyStyle={{ padding: 0 }}
+        className="MobileNavLinksDrawer"
+      >
+        {/* <div className="mobile-nav-header">
                     <button className="mobile-nav-close-btn" onClick={() => setMobileNavDrawerOpen(false)} aria-label="Close Menu">&times;</button>
                 </div> */}
-                <div className="mobile-nav-links-list">
-                    {NavigationData.map((item) => (
-                        <Link
-                            key={item.id}
-                            to={item.path}
-                            className="mobile-nav-link"
-                            onClick={() => setMobileNavDrawerOpen(false)}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
-                </div>
-            </Drawer>
+        <div className="mobile-nav-links-list">
+          {NavigationData.map((item) => (
+            <Link
+              key={item.id}
+              to={item.path}
+              className="mobile-nav-link"
+              onClick={() => setMobileNavDrawerOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
         </div>
-    );
+      </Drawer>
+    </div>
+  );
 };
 
-export default NavigationBar;   
+export default NavigationBar;
