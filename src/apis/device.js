@@ -17,3 +17,4 @@ const createDeviceApi = () => {
 const deviceApi = createDeviceApi();
 
 export default deviceApi;
+

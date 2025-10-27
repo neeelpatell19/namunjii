@@ -160,8 +160,8 @@ export default function HomeComponents() {
 
   return (
     <div>
-      {/* <Carousel HomeData={HomeData} />
-      <Categories HomeData={HomeData} /> */}
+      <Carousel HomeData={HomeData} />
+      <Categories HomeData={HomeData} />
       <BestSellers HomeData={HomeData} />
       <FeaturedProducts HomeData={HomeData} />
       <NewArrivals HomeData={HomeData} />

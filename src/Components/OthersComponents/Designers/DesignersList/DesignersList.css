@@ -1,91 +1,163 @@
 .DesignersListCards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .DesignersListCardsItem {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    object-fit: cover;
-    position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  position: relative;
 }
 
 .DesignersListCardsItem .DesignersListCardsItemImage {
-    height: 450px;
-    width: 100%;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    position: relative;
+  height: 450px;
+  width: 100%;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .DesignersListCardsItem .DesignersListCardsItemImage:hover {
-    height: 430px;
-    width: 98%;
-    transition: all 0.3s ease;
+  height: 430px;
+  width: 98%;
+  transition: all 0.3s ease;
 }
 
 .DesignersListCardsItemText h3,
 .DesignersListCardsItemText p {
-    color: white !important;
-    transition: .5s;
+  color: white !important;
+  transition: 0.5s;
 }
 
 /* Bottom to top shadow effect on hover */
 .DesignersListCardsItem .DesignersListCardsItemImage::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 400px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 2;
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .DesignersListCardsItem:hover .DesignersListCardsItemImage::after {
-    opacity: 1;
-    transition: opacity 0.3s ease;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 .DesignersListCardsItem .DesignersListCardsItemImage img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
 }
 
 .DesignersListCardsItem .DesignersListCardsItemText {
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 30px;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 3;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 30px;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 3;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .DesignersListCardsItem:hover .DesignersListCardsItemText {
-    opacity: 1;
-    transition: all 0.3s ease;
-    visibility: visible;
+  opacity: 1;
+  transition: all 0.3s ease;
+  visibility: visible;
 }
 
-@media (min-width:900px) and (max-width:1400px) {
-    .DesignersListCards {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Tablet view - 2 columns */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .DesignersListCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-@media (max-width:890px) {
-    .DesignersListCards {
-        grid-template-columns: repeat(1, 1fr);
-    }
+/* Mobile view - 1 column */
+@media (max-width: 767px) {
+  .DesignersListCards {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .DesignersListCardsItem {
+    margin-bottom: 10px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemImage {
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemImage img {
+    height: 300px;
+    border-radius: 8px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemText {
+    left: 15px;
+    right: 15px;
+    bottom: 20px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemText h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemText p {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Ensure hover effects work on mobile */
+  .DesignersListCardsItem:hover .DesignersListCardsItemImage {
+    height: 300px;
+    width: 100%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .DesignersListCards {
+    gap: 10px;
+    padding: 0 5px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemImage {
+    height: 250px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemImage img {
+    height: 250px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemText h3 {
+    font-size: 16px;
+  }
+
+  .DesignersListCardsItem .DesignersListCardsItemText p {
+    font-size: 13px;
+  }
 }

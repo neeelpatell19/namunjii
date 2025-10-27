@@ -1,125 +1,199 @@
 .ProductForHome .ProductCardImageContainer {
-    min-height: 320px;
-    max-height: 320px;
-    /* overflow: hidden; */
-    position: relative;
-    /* border-radius: 10px; */
+  min-height: 320px;
+  max-height: 320px;
+  /* overflow: hidden; */
+  position: relative;
+  /* border-radius: 10px; */
 }
 
-
 .GridImagesContainer div img {
-    width: 100%;
+  width: 100%;
 }
 
 .GridImagesContainer div {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .GridImagesContainer {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+}
+
+/* Rotating Image Container */
+.RotatingImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.rotating-image {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 767px) {
+  .DesignersPageContainer {
+    flex-direction: column;
     gap: 20px;
+  }
+}
+
+/* Mobile view - show only one image at a time */
+@media (max-width: 767px) {
+  .RotatingImageContainer {
+    height: 300px;
+    padding: 0 20px;
+  }
+
+  .rotating-image {
+    height: 300px;
+    max-width: 350px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Improve carousel container on mobile */
+  .CarousalContainer {
+    padding: 0 10px;
+  }
+
+  .AnimatedDesignersCarousalContainer {
+    padding: 20px 0;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .RotatingImageContainer {
+    height: 250px;
+    padding: 0 15px;
+  }
+
+  .rotating-image {
+    height: 250px;
+    max-width: 300px;
+    border-radius: 6px;
+  }
+
+  .CarousalContainer {
+    padding: 0 5px;
+  }
 }
 
 .AnimatedDesignersCarousalContainer {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .GridImagesContainer div:nth-child(2) img {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 .NamunjiiDesignersTextEdit h2 {
-    font-size: 80px;
-    position: sticky;
-    /* z-index: 5; */
-    padding-bottom: 20px;
-    margin-top: -2rem;
-    text-transform: uppercase;
-    opacity: 0.8;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.145);
+  font-size: 80px;
+  position: sticky;
+  /* z-index: 5; */
+  padding-bottom: 20px;
+  margin-top: -2rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.145);
 }
 
 .AboutDesignersContentContainer {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .GridImageAndButtonContainer {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 20px;
 }
 
 .GridImageAndButtonContainer img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .AboutDesignersContentContainer .AnimatedButtonContainer {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 /* Parallax effect styles */
 .parallax-image-left,
 .parallax-image-right {
-    /* overflow: hidden; */
-    border-radius: 8px;
+  /* overflow: hidden; */
+  border-radius: 8px;
 }
 
 .parallax-image-left img,
 .parallax-image-right img {
-    transition: transform 0.1s ease-out;
-    will-change: transform;
+  transition: transform 0.1s ease-out;
+  will-change: transform;
 }
 
 .GridImageAndButtonContainer {
-    position: relative;
+  position: relative;
 }
 
 .WomenShoppingIcon {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .WomenShoppingIcon img {
-    width: 80px;
-    opacity: 0.7;
+  width: 80px;
+  opacity: 0.7;
 }
 
 .BrandMarketingTemplateContainer {
-    background: url("https://images.unsplash.com/flagged/photo-1580146170082-3ddef0fdf239?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    min-height: 500px;
-    position: relative;
-    display: flex;
-    align-items: center;
+  background: url("https://images.unsplash.com/flagged/photo-1580146170082-3ddef0fdf239?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+    no-repeat center center;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-
 .BrandMarketingTemplateContainer {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .BrandMarketingTemplateContainer::before {
-    content: "";
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 100%;
-    width: 900px;
-    background: linear-gradient(to right, rgb(0 0 0 / 29%), rgba(0, 0, 0, 0.4), transparent);
-    opacity: 1;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 900px;
+  background: linear-gradient(
+    to right,
+    rgb(0 0 0 / 29%),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
 }
 
 /* 
@@ -129,9 +203,9 @@
 } */
 
 .AttachmentContainerImageContent {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    position: relative;
-    z-index: 5;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 5;
 }

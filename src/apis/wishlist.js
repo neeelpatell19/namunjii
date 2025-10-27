@@ -31,3 +31,4 @@ const createWishlistApi = () => {
 const wishlistApi = createWishlistApi();
 
 export default wishlistApi;
+
