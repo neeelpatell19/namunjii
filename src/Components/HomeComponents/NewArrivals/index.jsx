@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./NewArrivals.css";
+import { Link } from "react-router-dom";
 
 export default function NewArrivals({ HomeData }) {
   const newArrivals = useMemo(() => {
@@ -59,7 +60,9 @@ export default function NewArrivals({ HomeData }) {
     <div className="new-arrivals-container">
       <div className="new-arrivals-header">
         <h2 className="new-arrivals-title">New Arrivals</h2>
-        <p className="new-arrivals-subtitle">Fresh styles just landed</p>
+       <Link to="/collections" className="view-all-btn">
+          View All <span className="arrow-icon">→</span>
+        </Link>
       </div>
 
       <div className="new-arrivals-grid">

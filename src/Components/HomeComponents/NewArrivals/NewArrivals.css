@@ -1,55 +1,61 @@
-/* New Arrivals Container */
+
 .new-arrivals-container {
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 2rem 0;
-  background-color: #ffffff;
+  padding: 4rem 0;
 }
 
-/* Header Section */
 .new-arrivals-header {
-  text-align: center;
-  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
 }
 
 .new-arrivals-title {
-  font-family: var(--Poppins-font);
-  font-size: 3rem;
-  font-weight: 500;
-  color: var(--brandColor);
-  margin: 0 0 1rem 0;
-  position: relative;
-}
-
-.new-arrivals-title::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, #10b981, var(--brandColor));
-  border-radius: 2px;
-}
-
-.new-arrivals-subtitle {
-  font-family: var(--Poppins-font);
-  font-size: 1.1rem;
-  color: var(--BodyTextColor);
+  font-family: 'Playfair Display', serif;
+  font-size: 40px;
+  color: #775242;
   margin: 0;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: 8px;
+}
+
+.view-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 20px 32px;
+  border: 1.2px solid #775242;
+  border-radius: 32px;
+  color: #775242;
+  text-decoration: none;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  cursor: pointer;
   font-weight: 400;
 }
 
-/* Grid Layout */
+.view-all-btn:hover {
+  background-color: #775242;
+  color: #dfd6d6;
+}
+
+.arrow-icon {
+  font-size: 18px;
+}
+
 .new-arrivals-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  margin-bottom: 3rem;
-  padding: 1rem;
+  gap: 24px;
+  padding: 0 1rem;
 }
+
+/* Keep existing loading and empty states */
 
 /* Loading State */
 .new-arrivals-loading {
