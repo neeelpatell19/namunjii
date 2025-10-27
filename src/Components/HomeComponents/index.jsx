@@ -7,6 +7,10 @@ import BestSellers from "./BestSellers";
 import FeaturedProducts from "./FeaturedProducts";
 import NewArrivals from "./NewArrivals";
 import FeaturedDeals from "./FeaturedDeals";
+import BrandMarquee from "./Marque";
+import SectionHeading from "./HeroText";
+import HeroHome from "../OthersComponents/AboutUs/HeroHome/HeroHome";
+import AnimatedSection from "./AnimatedSection";
 
 // Loading Component with Skeleton Animation
 const LoadingState = () => {
@@ -160,11 +164,16 @@ export default function HomeComponents() {
 
   return (
     <div>
+      <HeroHome />
       {/* <Carousel HomeData={HomeData} /> */}
+      <BrandMarquee />
+      <AnimatedSection>
+        <SectionHeading />
+      </AnimatedSection>
       {/* <Categories HomeData={HomeData} /> */}
+      <NewArrivals HomeData={HomeData} />
       <BestSellers HomeData={HomeData} />
       <FeaturedProducts HomeData={HomeData} />
-      <NewArrivals HomeData={HomeData} />
       <FeaturedDeals HomeData={HomeData} />
     </div>
   );

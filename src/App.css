@@ -36,6 +36,8 @@ body {
   --brand-975: #d6daee;
   --brand-990: #eaedf2;
 
+  
+
   /* Neutral Colors */
   --neutral-100: #000000;
   --neutral-200: #1a1a1a;
@@ -54,6 +56,13 @@ body {
   --bg-light-beige: #f5f5dc;
   --bg-white: #ffffff;
   --bg-off-white: #fafafa;
+
+  /* Hero Section Color */
+
+  --color-hero-text: #775242;
+
+  /* Hero-Heading-Brand */
+  --color-heroSection-brand: #5C5C5C;
 }
 
 html,
