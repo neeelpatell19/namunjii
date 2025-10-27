@@ -15,3 +15,4 @@ export const useDevice = () => {
     isDeviceReady: Device && !DeviceLoading && !DeviceError,
   };
 };
+
