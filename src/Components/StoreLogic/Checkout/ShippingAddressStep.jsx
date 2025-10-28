@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Card, Typography, Select, Row, Col } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Button, Select, Row, Col, Typography } from "antd";
 import {
   HomeOutlined,
   EnvironmentOutlined,
   PhoneOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+import checkoutApi from "../../../apis/checkout";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
-const { TextArea } = Input;
 
-const ShippingAddressStep = ({
-  onSubmit,
-  loading,
-  initialData,
-  customerInfo,
-}) => {
+const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
   const indianStates = [
     "Andhra Pradesh",
@@ -58,20 +55,36 @@ const ShippingAddressStep = ({
     "Puducherry",
   ];
 
-  useEffect(() => {
-    if (initialData) {
-      form.setFieldsValue(initialData);
-    } else if (customerInfo) {
-      // Pre-fill with customer info
-      form.setFieldsValue({
-        fullName: customerInfo.name,
-        mobileNumber: customerInfo.mobileNumber,
+  const handleSubmit = async (values) => {
+    try {
+      setLoading(true);
+      const response = await checkoutApi.addShippingAddress({
+        orderId: orderData.orderId,
+        fullName: values.fullName,
+        mobileNumber: values.mobileNumber,
+        addressLine1: values.addressLine1,
+        addressLine2: values.addressLine2,
+        city: values.city,
+        state: values.state,
+        pincode: values.pincode,
+        country: values.country || "India",
+        addressType: values.addressType || "home",
       });
-    }
-  }, [initialData, customerInfo, form]);
 
-  const handleSubmit = (values) => {
-    onSubmit(values);
+      if (response.success) {
+        onComplete({
+          shippingAddress: response.data.shippingAddress,
+          status: response.data.status,
+        });
+      }
+    } catch (error) {
+      console.error("Error adding shipping address:", error);
+      onError(
+        error.response?.data?.message || "Failed to add shipping address"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -79,8 +92,7 @@ const ShippingAddressStep = ({
       <div className="step-header">
         <Title level={3}>Shipping Address</Title>
         <Text type="secondary">
-          Please provide the delivery address where you want to receive your
-          order.
+          Please provide your shipping address for delivery
         </Text>
       </div>
 
@@ -88,8 +100,24 @@ const ShippingAddressStep = ({
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        className="shipping-address-form"
-        requiredMark={false}
+        initialValues={{
+          fullName:
+            orderData?.shippingAddress?.fullName ||
+            orderData?.customerInfo?.name ||
+            "",
+          mobileNumber:
+            orderData?.shippingAddress?.mobileNumber ||
+            orderData?.customerInfo?.mobileNumber ||
+            "",
+          addressLine1: orderData?.shippingAddress?.addressLine1 || "",
+          addressLine2: orderData?.shippingAddress?.addressLine2 || "",
+          city: orderData?.shippingAddress?.city || "",
+          state: orderData?.shippingAddress?.state || "",
+          pincode: orderData?.shippingAddress?.pincode || "",
+          country: orderData?.shippingAddress?.country || "India",
+          addressType: orderData?.shippingAddress?.addressType || "home",
+        }}
+        className="shipping-form"
       >
         <Row gutter={16}>
           <Col xs={24} sm={12}>
@@ -97,14 +125,13 @@ const ShippingAddressStep = ({
               name="fullName"
               label="Full Name"
               rules={[
-                { required: true, message: "Please enter the recipient name" },
+                { required: true, message: "Please enter your full name" },
                 { min: 2, message: "Name must be at least 2 characters" },
-                { max: 50, message: "Name must not exceed 50 characters" },
               ]}
             >
               <Input
-                prefix={<HomeOutlined />}
-                placeholder="Recipient's full name"
+                prefix={<UserOutlined />}
+                placeholder="Enter your full name"
                 size="large"
               />
             </Form.Item>
@@ -114,7 +141,7 @@ const ShippingAddressStep = ({
               name="mobileNumber"
               label="Mobile Number"
               rules={[
-                { required: true, message: "Please enter mobile number" },
+                { required: true, message: "Please enter your mobile number" },
                 {
                   pattern: /^[0-9]{10}$/,
                   message: "Mobile number must be 10 digits",
@@ -123,7 +150,7 @@ const ShippingAddressStep = ({
             >
               <Input
                 prefix={<PhoneOutlined />}
-                placeholder="10-digit mobile number"
+                placeholder="Enter your 10-digit mobile number"
                 size="large"
                 maxLength={10}
               />
@@ -136,19 +163,21 @@ const ShippingAddressStep = ({
           label="Address Line 1"
           rules={[
             { required: true, message: "Please enter your address" },
-            { min: 10, message: "Please enter a complete address" },
-            { max: 100, message: "Address must not exceed 100 characters" },
+            { min: 10, message: "Address must be at least 10 characters" },
           ]}
         >
           <Input
-            prefix={<EnvironmentOutlined />}
-            placeholder="House/Flat number, Building name, Street"
+            prefix={<HomeOutlined />}
+            placeholder="House/Flat number, Street name"
             size="large"
           />
         </Form.Item>
 
         <Form.Item name="addressLine2" label="Address Line 2 (Optional)">
-          <Input placeholder="Area, Landmark, Locality" size="large" />
+          <Input
+            placeholder="Apartment, suite, unit, building, floor, etc."
+            size="large"
+          />
         </Form.Item>
 
         <Row gutter={16}>
@@ -157,22 +186,25 @@ const ShippingAddressStep = ({
               name="city"
               label="City"
               rules={[
-                { required: true, message: "Please enter city" },
-                { min: 2, message: "City name must be at least 2 characters" },
-                { max: 30, message: "City name must not exceed 30 characters" },
+                { required: true, message: "Please enter your city" },
+                { min: 2, message: "City must be at least 2 characters" },
               ]}
             >
-              <Input placeholder="City" size="large" />
+              <Input
+                prefix={<EnvironmentOutlined />}
+                placeholder="Enter your city"
+                size="large"
+              />
             </Form.Item>
           </Col>
           <Col xs={24} sm={8}>
             <Form.Item
               name="state"
               label="State"
-              rules={[{ required: true, message: "Please select state" }]}
+              rules={[{ required: true, message: "Please select your state" }]}
             >
               <Select
-                placeholder="Select State"
+                placeholder="Select your state"
                 size="large"
                 showSearch
                 filterOption={(input, option) =>
@@ -193,50 +225,48 @@ const ShippingAddressStep = ({
               name="pincode"
               label="Pincode"
               rules={[
-                { required: true, message: "Please enter pincode" },
+                { required: true, message: "Please enter your pincode" },
                 { pattern: /^[0-9]{6}$/, message: "Pincode must be 6 digits" },
               ]}
             >
-              <Input placeholder="6-digit pincode" size="large" maxLength={6} />
+              <Input
+                placeholder="Enter 6-digit pincode"
+                size="large"
+                maxLength={6}
+              />
             </Form.Item>
           </Col>
         </Row>
 
-        <Form.Item name="addressType" label="Address Type" initialValue="home">
-          <Select size="large">
-            <Option value="home">Home</Option>
-            <Option value="work">Work</Option>
-            <Option value="other">Other</Option>
-          </Select>
-        </Form.Item>
+        <Row gutter={16}>
+          <Col xs={24} sm={12}>
+            <Form.Item name="country" label="Country">
+              <Input placeholder="Country" size="large" disabled />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item name="addressType" label="Address Type">
+              <Select placeholder="Select address type" size="large">
+                <Option value="home">Home</Option>
+                <Option value="work">Work</Option>
+                <Option value="other">Other</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <div className="form-actions">
+        <Form.Item className="form-actions">
           <Button
             type="primary"
             htmlType="submit"
             size="large"
             loading={loading}
-            className="submit-button"
+            block
           >
             Continue to Order Confirmation
           </Button>
-        </div>
+        </Form.Item>
       </Form>
-
-      <div className="step-info">
-        <Card size="small" className="info-card">
-          <Text type="secondary">
-            <strong>Delivery Information:</strong>
-            <br />
-            • Free shipping on orders above ₹1,000
-            <br />
-            • Standard delivery: 3-5 business days
-            <br />
-            • Express delivery available for select areas
-            <br />• We'll send SMS updates to the provided mobile number
-          </Text>
-        </Card>
-      </div>
     </div>
   );
 };

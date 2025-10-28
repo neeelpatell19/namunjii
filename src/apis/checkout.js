@@ -29,18 +29,21 @@ const createCheckoutApi = () => {
         .then((res) => res.data);
     },
 
-    // Get order details
+    // Get order details by ID
     getOrderDetails: (orderId) => {
       return api.get(`/checkout/order/${orderId}`).then((res) => res.data);
     },
 
+    // Get order details by order number (for checkout flow refresh)
+    getOrderByOrderNumber: (orderNumber) => {
+      return api
+        .get(`/checkout/order-number/${orderNumber}`)
+        .then((res) => res.data);
+    },
+
     // Get user orders
-    getUserOrders: (params = {}) => {
-      const queryString = new URLSearchParams(params).toString();
-      const url = queryString
-        ? `/checkout/orders?${queryString}`
-        : "/checkout/orders";
-      return api.get(url).then((res) => res.data);
+    getUserOrders: (params) => {
+      return api.get("/checkout/orders", { params }).then((res) => res.data);
     },
   };
 };

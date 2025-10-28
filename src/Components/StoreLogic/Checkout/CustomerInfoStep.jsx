@@ -1,20 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
+import checkoutApi from "../../../apis/checkout";
 
 const { Title, Text } = Typography;
 
-const CustomerInfoStep = ({ onSubmit, loading, initialData }) => {
+const CustomerInfoStep = ({ orderData, onComplete, onError }) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (initialData) {
-      form.setFieldsValue(initialData);
+  const handleSubmit = async (values) => {
+    try {
+      setLoading(true);
+      const response = await checkoutApi.addCustomerInfo({
+        orderId: orderData.orderId,
+        name: values.name,
+        email: values.email,
+        mobileNumber: values.mobileNumber,
+      });
+
+      if (response.success) {
+        onComplete({
+          customerInfo: response.data.customerInfo,
+          status: response.data.status,
+        });
+      }
+    } catch (error) {
+      console.error("Error adding customer info:", error);
+      onError(
+        error.response?.data?.message || "Failed to add customer information"
+      );
+    } finally {
+      setLoading(false);
     }
-  }, [initialData, form]);
-
-  const handleSubmit = (values) => {
-    onSubmit(values);
   };
 
   return (
@@ -22,8 +40,7 @@ const CustomerInfoStep = ({ onSubmit, loading, initialData }) => {
       <div className="step-header">
         <Title level={3}>Customer Information</Title>
         <Text type="secondary">
-          Please provide your contact details for order confirmation and
-          delivery updates.
+          Please provide your contact details for order confirmation
         </Text>
       </div>
 
@@ -31,8 +48,12 @@ const CustomerInfoStep = ({ onSubmit, loading, initialData }) => {
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        className="customer-info-form"
-        requiredMark={false}
+        initialValues={{
+          name: orderData?.customerInfo?.name || "",
+          email: orderData?.customerInfo?.email || "",
+          mobileNumber: orderData?.customerInfo?.mobileNumber || "",
+        }}
+        className="customer-form"
       >
         <Form.Item
           name="name"
@@ -40,7 +61,6 @@ const CustomerInfoStep = ({ onSubmit, loading, initialData }) => {
           rules={[
             { required: true, message: "Please enter your full name" },
             { min: 2, message: "Name must be at least 2 characters" },
-            { max: 50, message: "Name must not exceed 50 characters" },
           ]}
         >
           <Input
@@ -54,8 +74,8 @@ const CustomerInfoStep = ({ onSubmit, loading, initialData }) => {
           name="email"
           label="Email Address"
           rules={[
-            { required: true, message: "Please enter your email address" },
-            { type: "email", message: "Please enter a valid email address" },
+            { required: true, message: "Please enter your email" },
+            { type: "email", message: "Please enter a valid email" },
           ]}
         >
           <Input
@@ -85,31 +105,18 @@ const CustomerInfoStep = ({ onSubmit, loading, initialData }) => {
           />
         </Form.Item>
 
-        <div className="form-actions">
+        <Form.Item className="form-actions">
           <Button
             type="primary"
             htmlType="submit"
             size="large"
             loading={loading}
-            className="submit-button"
+            block
           >
             Continue to Shipping Address
           </Button>
-        </div>
+        </Form.Item>
       </Form>
-
-      <div className="step-info">
-        <Card size="small" className="info-card">
-          <Text type="secondary">
-            <strong>Why we need this information:</strong>
-            <br />
-            • Email: For order confirmation and tracking updates
-            <br />
-            • Mobile: For delivery coordination and SMS updates
-            <br />• Name: For delivery verification and documentation
-          </Text>
-        </Card>
-      </div>
     </div>
   );
 };

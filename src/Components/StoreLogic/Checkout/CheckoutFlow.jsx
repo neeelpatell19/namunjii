@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Steps, Card, Button, Spin, Alert } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useAppContext } from "../Context/AppContext";
@@ -14,8 +14,8 @@ import "./CheckoutFlow.css";
 const { Step } = Steps;
 
 const CheckoutFlow = () => {
+  const { orderNumber } = useParams();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { deviceId } = useDevice();
   const { state } = useAppContext();
 
@@ -23,14 +23,38 @@ const CheckoutFlow = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [orderData, setOrderData] = useState(null);
-  const [customerInfo, setCustomerInfo] = useState(null);
-  const [shippingAddress, setShippingAddress] = useState(null);
   const [cartItems, setCartItems] = useState([]);
 
-  // Check if we have an orderId in URL (for returning from payment)
-  const orderId = searchParams.get("orderId");
+  // Fetch order data
+  const fetchOrderData = async () => {
+    if (!orderNumber) return;
 
-  // Fetch cart items
+    try {
+      setLoading(true);
+      const response = await checkoutApi.getOrderByOrderNumber(orderNumber);
+      if (response.success) {
+        setOrderData(response.data);
+
+        // Determine current step based on progress
+        if (response.data.progress.paymentComplete) {
+          setCurrentStep(3);
+        } else if (response.data.progress.step3Complete) {
+          setCurrentStep(2);
+        } else if (response.data.progress.step2Complete) {
+          setCurrentStep(1);
+        } else if (response.data.progress.step1Complete) {
+          setCurrentStep(0);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      setError("Failed to load order data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch cart items for initial order creation
   const fetchCartItems = async () => {
     if (!deviceId) return;
 
@@ -41,208 +65,176 @@ const CheckoutFlow = () => {
       }
     } catch (error) {
       console.error("Error fetching cart items:", error);
-      setError("Failed to load cart items");
     }
   };
 
-  useEffect(() => {
-    if (orderId) {
-      // If we have an orderId, fetch order details
-      fetchOrderDetails(orderId);
-    } else {
-      // Fetch cart items
-      fetchCartItems();
-    }
-  }, [orderId, deviceId]);
-
-  useEffect(() => {
-    if (!orderId && cartItems.length === 0 && deviceId) {
-      // If no cart items and no orderId, redirect to cart
-      navigate("/cart");
-    }
-  }, [cartItems.length, orderId, deviceId, navigate]);
-
-  const fetchOrderDetails = async (id) => {
-    try {
-      setLoading(true);
-      const response = await checkoutApi.getOrderDetails(id);
-      if (response.success) {
-        setOrderData(response.data);
-        setCustomerInfo(response.data.customerInfo);
-        setShippingAddress(response.data.shippingAddress);
-
-        // Set current step based on order status
-        if (response.data.status === "draft") {
-          setCurrentStep(0);
-        } else if (response.data.status === "user_info_added") {
-          setCurrentStep(1);
-        } else if (response.data.status === "address_added") {
-          setCurrentStep(2);
-        } else if (response.data.status === "payment_pending") {
-          setCurrentStep(2);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-      setError("Failed to load order details");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Create order from cart (Step 0)
   const handleCreateOrder = async () => {
     try {
       setLoading(true);
-      setError(null);
-
       const response = await checkoutApi.createOrderFromCart({
         deviceId,
-        userId: null, // Add userId if user is logged in
+        userId: state.user?.id,
       });
 
       if (response.success) {
-        setOrderData(response.data);
-        setCurrentStep(1);
-      } else {
-        setError(response.message || "Failed to create order");
+        // Navigate to checkout with order number
+        navigate(`/checkout/${response.data.orderNumber}`);
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      setError("Failed to create order. Please try again.");
+      setError(error.response?.data?.message || "Failed to create order");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCustomerInfoSubmit = async (info) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await checkoutApi.addCustomerInfo({
-        orderId: orderData.orderId,
-        ...info,
-      });
-
-      if (response.success) {
-        setCustomerInfo(info);
-        setOrderData((prev) => ({ ...prev, ...response.data }));
-        setCurrentStep(2);
-      } else {
-        setError(response.message || "Failed to save customer information");
-      }
-    } catch (error) {
-      console.error("Error saving customer info:", error);
-      setError("Failed to save customer information. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  // Handle step completion
+  const handleStepComplete = (stepData) => {
+    setOrderData((prev) => ({ ...prev, ...stepData }));
+    setCurrentStep((prev) => prev + 1);
   };
 
-  const handleShippingAddressSubmit = async (address) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await checkoutApi.addShippingAddress({
-        orderId: orderData.orderId,
-        ...address,
-      });
-
-      if (response.success) {
-        setShippingAddress(address);
-        setOrderData((prev) => ({ ...prev, ...response.data }));
-        setCurrentStep(3);
-      } else {
-        setError(response.message || "Failed to save shipping address");
-      }
-    } catch (error) {
-      console.error("Error saving shipping address:", error);
-      setError("Failed to save shipping address. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  // Handle payment success
+  const handlePaymentSuccess = () => {
+    navigate(`/checkout/payment-success?orderNumber=${orderNumber}`);
   };
 
-  const handlePaymentConfirmation = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await checkoutApi.confirmOrderAndGeneratePayment({
-        orderId: orderData.orderId,
-      });
-
-      if (response.success) {
-        // Redirect to Razorpay payment link
-        window.location.href = response.data.paymentLink;
-      } else {
-        setError(response.message || "Failed to generate payment link");
-      }
-    } catch (error) {
-      console.error("Error confirming payment:", error);
-      setError("Failed to process payment. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  // Handle payment failure
+  const handlePaymentFailure = () => {
+    navigate(`/checkout/payment-failed?orderNumber=${orderNumber}`);
   };
 
-  const handleBackToCart = () => {
-    navigate("/cart");
-  };
-
-  const handleGoBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+  useEffect(() => {
+    if (orderNumber) {
+      fetchOrderData();
     } else {
-      handleBackToCart();
+      fetchCartItems();
     }
-  };
+  }, [orderNumber, deviceId]);
+
+  // If no order number, show initial checkout button
+  if (!orderNumber) {
+    return (
+      <div className="checkout-flow-container">
+        <div className="checkout-initial">
+          <Card className="checkout-card">
+            <div className="checkout-header">
+              <h2>Ready to Checkout?</h2>
+              <p>Review your cart and proceed to checkout</p>
+            </div>
+
+            {cartItems.length === 0 ? (
+              <div className="empty-cart">
+                <p>Your cart is empty</p>
+                <Button type="primary" onClick={() => navigate("/products")}>
+                  Continue Shopping
+                </Button>
+              </div>
+            ) : (
+              <div className="cart-summary">
+                <h3>Cart Summary</h3>
+                <div className="cart-items">
+                  {cartItems.map((item, index) => (
+                    <div key={index} className="cart-item">
+                      <img
+                        src={item.productId?.coverImage?.[0]}
+                        alt={item.productId?.productName}
+                        className="item-image"
+                      />
+                      <div className="item-details">
+                        <h4>{item.productId?.productName}</h4>
+                        <p>Size: {item.size || "One Size"}</p>
+                        <p>Color: {item.color || "Default"}</p>
+                        <p>Quantity: {item.quantity}</p>
+                        <p className="item-price">
+                          ₹
+                          {(() => {
+                            const basePrice = item.productId?.basePricing || 0;
+                            const discount = item.productId?.discount || 0;
+                            const finalPrice =
+                              discount > 0
+                                ? Math.round(basePrice * (1 - discount / 100))
+                                : basePrice;
+                            return (
+                              finalPrice * item.quantity
+                            ).toLocaleString();
+                          })()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="checkout-actions">
+                  <Button
+                    type="primary"
+                    size="large"
+                    loading={loading}
+                    onClick={handleCreateOrder}
+                  >
+                    Proceed to Checkout
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <Alert
+                message="Error"
+                description={error}
+                type="error"
+                showIcon
+                style={{ marginTop: 16 }}
+              />
+            )}
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   if (loading && !orderData) {
     return (
-      <div className="checkout-loading">
-        <Spin size="large" />
-        <p>Loading checkout...</p>
+      <div className="checkout-flow-container">
+        <div className="checkout-loading">
+          <Spin size="large" />
+          <p>Loading checkout...</p>
+        </div>
       </div>
     );
   }
 
   if (error && !orderData) {
     return (
-      <div className="checkout-error">
-        <Alert
-          message="Error"
-          description={error}
-          type="error"
-          showIcon
-          action={
-            <Button size="small" onClick={handleBackToCart}>
-              Back to Cart
-            </Button>
-          }
-        />
+      <div className="checkout-flow-container">
+        <div className="checkout-error">
+          <Alert message="Error" description={error} type="error" showIcon />
+          <Button onClick={() => navigate("/cart")}>
+            <ArrowLeftOutlined /> Back to Cart
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="checkout-flow">
+    <div className="checkout-flow-container">
       <div className="checkout-header">
         <Button
-          type="text"
           icon={<ArrowLeftOutlined />}
-          onClick={handleGoBack}
+          onClick={() => navigate("/products")}
           className="back-button"
         >
-          Back
+          Back to Shopping
         </Button>
         <h1>Checkout</h1>
+        <p>Order #{orderData?.orderNumber}</p>
       </div>
 
       <div className="checkout-content">
         <div className="checkout-steps">
-          <Steps current={currentStep} direction="horizontal" responsive>
+          <Steps current={currentStep} direction="horizontal">
             <Step title="Customer Info" />
             <Step title="Shipping Address" />
             <Step title="Order Confirmation" />
@@ -250,80 +242,42 @@ const CheckoutFlow = () => {
           </Steps>
         </div>
 
-        <div className="checkout-form-container">
-          {error && (
-            <Alert
-              message="Error"
-              description={error}
-              type="error"
-              showIcon
-              closable
-              onClose={() => setError(null)}
-              style={{ marginBottom: "20px" }}
-            />
-          )}
-
-          <Card className="checkout-form-card">
+        <div className="checkout-main">
+          <Card className="checkout-card">
             {currentStep === 0 && (
-              <div className="checkout-start">
-                <h2>Ready to Checkout?</h2>
-                <p>Review your cart items and proceed to checkout.</p>
-                <div className="cart-summary">
-                  <p>
-                    <strong>Items in cart:</strong> {cartItems.length}
-                  </p>
-                  <p>
-                    <strong>Total:</strong> ₹
-                    {cartItems
-                      .reduce((sum, item) => {
-                        const basePrice = item.productId.basePricing || 0;
-                        const discount = item.productId.discount || 0;
-                        const finalPrice =
-                          discount > 0
-                            ? Math.round(basePrice * (1 - discount / 100))
-                            : basePrice;
-                        return sum + finalPrice * item.quantity;
-                      }, 0)
-                      .toLocaleString()}
-                  </p>
-                </div>
-                <Button
-                  type="primary"
-                  size="large"
-                  onClick={handleCreateOrder}
-                  loading={loading}
-                  disabled={cartItems.length === 0}
-                >
-                  Proceed to Checkout
-                </Button>
-              </div>
+              <CustomerInfoStep
+                orderData={orderData}
+                onComplete={handleStepComplete}
+                onError={setError}
+              />
             )}
 
             {currentStep === 1 && (
-              <CustomerInfoStep
-                onSubmit={handleCustomerInfoSubmit}
-                loading={loading}
-                initialData={customerInfo}
+              <ShippingAddressStep
+                orderData={orderData}
+                onComplete={handleStepComplete}
+                onError={setError}
               />
             )}
 
             {currentStep === 2 && (
-              <ShippingAddressStep
-                onSubmit={handleShippingAddressSubmit}
-                loading={loading}
-                initialData={shippingAddress}
-                customerInfo={customerInfo}
+              <OrderConfirmationStep
+                orderData={orderData}
+                onComplete={handleStepComplete}
+                onPaymentSuccess={handlePaymentSuccess}
+                onPaymentFailure={handlePaymentFailure}
+                onError={setError}
               />
             )}
 
             {currentStep === 3 && (
-              <OrderConfirmationStep
-                orderData={orderData}
-                customerInfo={customerInfo}
-                shippingAddress={shippingAddress}
-                onConfirmPayment={handlePaymentConfirmation}
-                loading={loading}
-              />
+              <div className="payment-complete">
+                <h2>Payment Complete!</h2>
+                <p>Your order has been successfully placed.</p>
+                <Button type="primary" onClick={() => navigate("/products")}>
+                  Continue Shopping
+                </Button>
+              </div>
             )}
           </Card>
         </div>
