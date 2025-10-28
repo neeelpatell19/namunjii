@@ -131,7 +131,9 @@ const AboutUs = () => {
               variants={itemVariants}
             >
               <h2 style={{ textAlign: "start", textTransform: "uppercase" }}>
-                Namunjii
+               <span className="img-logo-resize"><img src="/LogoImages/BrandColorIconLogo.svg" alt="" /></span>
+                
+               Namunjii
               </h2>
               <p style={{ textAlign: "start" }}>
                 <b>
