@@ -2,6 +2,20 @@ import React from "react";
 import "./AvailableCities.css";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+// Import all city icons from Cityicon folder
+import AhmedabadIcon from "../../../assets/Cityicon/Ahmedabad.svg";
+import BengaluruIcon from "../../../assets/Cityicon/Bengaluru.svg";
+import ChennaiIcon from "../../../assets/Cityicon/Chennai.svg";
+import DehradunIcon from "../../../assets/Cityicon/Dehradun.svg";
+import DelhiIcon from "../../../assets/Cityicon/Delhi.svg";
+import GoaIcon from "../../../assets/Cityicon/Goa.svg";
+import HyderabadIcon from "../../../assets/Cityicon/Hyderabad.svg";
+import JodhpurIcon from "../../../assets/Cityicon/Jodhpur.svg";
+import MumbaiIcon from "../../../assets/Cityicon/Mumbai.svg";
+import DubaiIcon from "../../../assets/Cityicon/Dubai.svg";
+import RishikeshIcon from "../../../assets/Cityicon/Rishikesh.svg";
+import UdaipurIcon from "../../../assets/Cityicon/Udaipur.svg";
+
 // Animation variants for staggered animations
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -40,18 +54,31 @@ const cityCardVariants = {
 
 const AvailableCities = () => {
   const cities = [
-    "Ahmedabad",
-    "Bengaluru",
-    "Chennai",
-    "Dehradun",
-    "Delhi",
-    "Goa",
-    "Hydrabad",
-    "Jodhpur",
-    "Mumbai",
-    "Dubai",
-    "Rishikesh",
-    "Udaipur",
+    // "Ahmedabad",
+    // "Bengaluru",
+    // "Chennai",
+    // "Dehradun",
+    // "Delhi",
+    // "Goa",
+    // "Hydrabad",
+    // "Jodhpur",
+    // "Mumbai",
+    // "Dubai",
+    // "Rishikesh",
+    // "Udaipur",
+
+    { name: "Ahmedabad", icon: AhmedabadIcon },
+    { name: "Bengaluru", icon: BengaluruIcon },
+    { name: "Chennai", icon: ChennaiIcon },
+    { name: "Dehradun", icon: DehradunIcon },
+    { name: "Delhi", icon: DelhiIcon },
+    { name: "Goa", icon: GoaIcon },
+    { name: "Hyderabad", icon: HyderabadIcon },
+    { name: "Jodhpur", icon: JodhpurIcon },
+    { name: "Mumbai", icon: MumbaiIcon },
+    { name: "Dubai", icon: DubaiIcon },
+    { name: "Rishikesh", icon: RishikeshIcon },
+    { name: "Udaipur", icon: UdaipurIcon },
   ];
 
   return (
@@ -68,9 +95,9 @@ const AvailableCities = () => {
             className="marginBottom20 marginTop20 text-center"
             variants={itemVariants}
           >
-            <h2>Our Presence</h2>
+            <h2 className="About-heading">Our Presence</h2>
             <p>
-              <b>across luxury retail spaces</b>
+             
             </p>
           </motion.div>
 
@@ -81,7 +108,7 @@ const AvailableCities = () => {
           >
             {cities
               .slice() // Create a copy to avoid mutating the original array
-              .sort((a, b) => a.localeCompare(b)) // Sort alphabetically
+              .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
               .map((city, index) => (
                 <motion.div
                   key={index}
@@ -90,7 +117,12 @@ const AvailableCities = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="CityName">{city}</span>
+                  <img
+                    src={city.icon}
+                    alt={`${city.name} icon`}
+                    className="CityIcon"
+                  />
+                  <span className="CityName">{city.name}</span>
                 </motion.div>
               ))}
           </motion.div>
@@ -102,7 +134,7 @@ const AvailableCities = () => {
           >
             {cities
               .slice() // Create a copy to avoid mutating the original array
-              .sort((a, b) => a.localeCompare(b)) // Sort alphabetically
+              .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
               .map((city, index) => (
                 <motion.div
                   key={index}
@@ -111,7 +143,12 @@ const AvailableCities = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="CityName">{city}</span>
+                  <img
+                    src={city.icon}
+                    alt={`${city.name} icon`}
+                    className="CityIconMobile"
+                  />
+                  <span className="CityName">{city.name}</span>
                 </motion.div>
               ))}
           </motion.div>

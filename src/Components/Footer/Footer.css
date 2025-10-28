@@ -48,6 +48,10 @@
   font-weight: 300;
 }
 
+.ContactDetails p span{
+font-weight: bold;
+}
+
 /* Footer Description paragrah tag */
  .nowraap{
   white-space: nowrap;

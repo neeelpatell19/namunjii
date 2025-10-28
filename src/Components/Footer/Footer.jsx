@@ -52,8 +52,9 @@ const Footer = () => {
                   A HOME FOR EMERGING BRANDS
                 </p>
                 <div className="ContactDetails">
-                  <p>Phone number: +91 98789 11223</p>
-                  <p>Email: design@namunjii.com</p>
+                  <p> <span> Phone number:</span>
+                    +91 98789 11223</p>
+                  <p> <span> Email:</span> design@namunjii.com</p>
                 </div>
               </div>
             </Col>

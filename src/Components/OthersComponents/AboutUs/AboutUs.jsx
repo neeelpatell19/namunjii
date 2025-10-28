@@ -7,6 +7,7 @@ import Testimonials from "../Testemonial/Testimonials";
 import AvailableCities from "../AvailableCities/AvailableCities";
 import HeroHome from "./HeroHome/HeroHome";
 import InstagramGrid from "../../CommonUserInteractions/InstagramGrid/InstagramGrid";
+import Partnerus from "../../PartnerUs/Partnerus";
 
 // Animation variants for staggered animations
 const containerVariants = {
@@ -222,6 +223,8 @@ const AboutUs = () => {
 
         {/* Available Cities Section - Moved from home page */}
         <AvailableCities />
+
+        <Partnerus/>
       </div>
 
       {/* Instagram Grid Section */}
