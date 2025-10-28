@@ -32,7 +32,7 @@
 .FooterLogoText {
   font-family: var(--Poppins-font);
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--bg-white);
   letter-spacing: 1px;
 }
@@ -40,18 +40,26 @@
 /* Footer Description */
 .FooterDescription {
   font-family: var(--Poppins-font);
-  font-size: 14px;
+  font-size: 16px !important;
   line-height: 1.6;
   color: var(--neutral-800);
   margin: 0;
+  /* white-space: nowrap; */
+  font-weight: 300;
 }
+
+/* Footer Description paragrah tag */
+ .nowraap{
+  white-space: nowrap;
+ }
 
 /* Contact Details */
 .ContactDetails p {
   font-family: var(--Poppins-font);
-  font-size: 14px;
+  font-size: 16px !important;
   color: var(--neutral-800);
   margin: 8px 0;
+  white-space: nowrap;
 }
 
 /* Footer Headings */

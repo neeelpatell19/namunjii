@@ -73,7 +73,7 @@
 
 .LogoText {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--brand-primary);
   letter-spacing: 1px;
   font-family: var(--Poppins-font);

@@ -48,9 +48,8 @@ const Footer = () => {
                   </div>
                   <span className="FooterLogoText">NAMUNJII</span>
                 </div>
-                <p className="FooterDescription">
-                  Jaane connects designers with buyers, showcasing unique and
-                  innovative products.
+                <p className="FooterDescription  nowraap">
+                  A HOME FOR EMERGING BRANDS
                 </p>
                 <div className="ContactDetails">
                   <p>Phone number: +91 98789 11223</p>
