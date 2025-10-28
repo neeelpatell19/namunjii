@@ -17,7 +17,6 @@ import CollectionsViaProducts from "./Components/StoreLogic/AllCollections/Colle
 import CheckoutFlow from "./Components/StoreLogic/Checkout/CheckoutFlow";
 import PaymentSuccess from "./Components/StoreLogic/Checkout/PaymentSuccess";
 import PaymentFailed from "./Components/StoreLogic/Checkout/PaymentFailed";
-import CartPage from "./Components/StoreLogic/Cart/CartPage";
 import AppProvider from "./Components/StoreLogic/Context/AppState";
 import ReturnPolicy from "./Components/Policies/ReturnPolicy";
 import ShippingPolicy from "./Components/Policies/ShippingPolicy";
@@ -108,23 +107,15 @@ const AnimatedRoutes = () => {
           }
         />
         <Route
-          path="/products"
-          element={
-            <PageTransition>
-              <ProductsPage />
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <PageTransition>
-              <CartPage />
-            </PageTransition>
-          }
-        />
-        <Route
           path="/checkout"
+          element={
+            <PageTransition>
+              <CheckoutFlow />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/checkout/:orderNumber"
           element={
             <PageTransition>
               <CheckoutFlow />

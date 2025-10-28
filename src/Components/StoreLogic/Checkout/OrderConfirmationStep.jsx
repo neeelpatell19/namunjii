@@ -1,27 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, Typography, Button, Divider, Row, Col, Tag, Space } from "antd";
 import {
   CheckCircleOutlined,
   EditOutlined,
   CreditCardOutlined,
 } from "@ant-design/icons";
+import checkoutApi from "../../../apis/checkout";
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const OrderConfirmationStep = ({
   orderData,
-  customerInfo,
-  shippingAddress,
-  onConfirmPayment,
-  loading,
+  onComplete,
+  onPaymentSuccess,
+  onPaymentFailure,
+  onError,
 }) => {
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
+  const [loading, setLoading] = useState(false);
 
   const calculateItemTotal = (item) => {
     const basePrice = item.price || 0;
@@ -31,65 +26,85 @@ const OrderConfirmationStep = ({
     return finalPrice * item.quantity;
   };
 
+  const handleProceedToPayment = async () => {
+    try {
+      setLoading(true);
+      const response = await checkoutApi.confirmOrderAndGeneratePayment({
+        orderId: orderData.orderId,
+      });
+
+      if (response.success) {
+        // Replace current window with payment link
+        window.location.replace(response.data.paymentLink);
+
+        // Update order data
+        onComplete({
+          paymentInfo: {
+            paymentLink: response.data.paymentLink,
+            paymentStatus: "pending",
+          },
+          status: response.data.status,
+        });
+      }
+    } catch (error) {
+      console.error("Error generating payment link:", error);
+      onError(
+        error.response?.data?.message || "Failed to generate payment link"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="order-confirmation-step">
       <div className="step-header">
         <Title level={3}>Order Confirmation</Title>
         <Text type="secondary">
-          Please review your order details before proceeding to payment.
+          Please review your order details before proceeding to payment
         </Text>
       </div>
 
-      <div className="confirmation-content">
+      <div className="order-summary">
         <Row gutter={[24, 24]}>
-          {/* Order Summary */}
+          {/* Order Items */}
           <Col xs={24} lg={16}>
-            <Card title="Order Summary" className="order-summary-card">
+            <Card title="Order Items" className="order-items-card">
               <div className="order-items">
                 {orderData?.items?.map((item, index) => (
                   <div key={index} className="order-item">
                     <div className="item-image">
                       <img
-                        src={item.coverImage || "/placeholder-product.jpg"}
+                        src={item.coverImage}
                         alt={item.productName}
-                        onError={(e) => {
-                          e.target.src = "/placeholder-product.jpg";
-                        }}
+                        className="product-image"
                       />
                     </div>
                     <div className="item-details">
                       <h4>{item.productName}</h4>
                       <div className="item-specs">
-                        {item.size && <Tag>Size: {item.size}</Tag>}
-                        {item.color && <Tag>Color: {item.color}</Tag>}
-                        <Tag>Qty: {item.quantity}</Tag>
+                        <Tag color="blue">Size: {item.size || "One Size"}</Tag>
+                        <Tag color="green">
+                          Color: {item.color || "Default"}
+                        </Tag>
+                        <Tag color="orange">Qty: {item.quantity}</Tag>
                       </div>
                       <div className="item-pricing">
-                        {item.discount > 0 ? (
-                          <div className="discounted-price">
-                            <span className="original-price">
-                              {formatPrice(item.price)}
-                            </span>
-                            <span className="final-price">
-                              {formatPrice(
-                                calculateItemTotal(item) / item.quantity
-                              )}
-                            </span>
-                            <span className="discount-badge">
-                              {item.discount}% OFF
-                            </span>
-                          </div>
-                        ) : (
-                          <span className="final-price">
-                            {formatPrice(
-                              calculateItemTotal(item) / item.quantity
-                            )}
-                          </span>
+                        <Text strong>₹{item.finalPrice?.toLocaleString()}</Text>
+                        {item.discount > 0 && (
+                          <Space>
+                            <Text delete type="secondary">
+                              ₹{item.price?.toLocaleString()}
+                            </Text>
+                            <Tag color="red">{item.discount}% OFF</Tag>
+                          </Space>
                         )}
                       </div>
                     </div>
                     <div className="item-total">
-                      {formatPrice(calculateItemTotal(item))}
+                      <Text strong>
+                        ₹{calculateItemTotal(item).toLocaleString()}
+                      </Text>
                     </div>
                   </div>
                 ))}
@@ -97,122 +112,113 @@ const OrderConfirmationStep = ({
             </Card>
           </Col>
 
-          {/* Order Details & Payment */}
+          {/* Order Summary */}
           <Col xs={24} lg={8}>
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
-              {/* Customer Information */}
-              <Card
-                title="Customer Information"
-                size="small"
-                extra={<EditOutlined />}
-                className="info-card"
-              >
-                <div className="info-item">
-                  <Text strong>Name:</Text>
-                  <Text>{customerInfo?.name}</Text>
+            <Card title="Order Summary" className="order-summary-card">
+              <div className="summary-section">
+                <div className="summary-item">
+                  <Text>Subtotal:</Text>
+                  <Text>₹{orderData?.subtotal?.toLocaleString()}</Text>
                 </div>
-                <div className="info-item">
-                  <Text strong>Email:</Text>
-                  <Text>{customerInfo?.email}</Text>
+                <div className="summary-item">
+                  <Text>Discount:</Text>
+                  <Text type="success">
+                    -₹{orderData?.discount?.toLocaleString()}
+                  </Text>
                 </div>
-                <div className="info-item">
-                  <Text strong>Mobile:</Text>
-                  <Text>{customerInfo?.mobileNumber}</Text>
-                </div>
-              </Card>
-
-              {/* Shipping Address */}
-              <Card
-                title="Shipping Address"
-                size="small"
-                extra={<EditOutlined />}
-                className="info-card"
-              >
-                <div className="address-details">
-                  <Text strong>{shippingAddress?.fullName}</Text>
-                  <br />
-                  <Text>{shippingAddress?.addressLine1}</Text>
-                  {shippingAddress?.addressLine2 && (
-                    <>
-                      <br />
-                      <Text>{shippingAddress.addressLine2}</Text>
-                    </>
-                  )}
-                  <br />
+                <div className="summary-item">
+                  <Text>Shipping:</Text>
                   <Text>
-                    {shippingAddress?.city}, {shippingAddress?.state} -{" "}
-                    {shippingAddress?.pincode}
-                  </Text>
-                  <br />
-                  <Text>{shippingAddress?.country}</Text>
-                  <br />
-                  <Text type="secondary">
-                    Mobile: {shippingAddress?.mobileNumber}
+                    {orderData?.shippingCharges === 0 ? (
+                      <Tag color="green">FREE</Tag>
+                    ) : (
+                      `₹${orderData?.shippingCharges?.toLocaleString()}`
+                    )}
                   </Text>
                 </div>
-              </Card>
+                <div className="summary-item">
+                  <Text>Tax (GST):</Text>
+                  <Text>₹{orderData?.tax?.toLocaleString()}</Text>
+                </div>
+                <Divider />
+                <div className="summary-item total">
+                  <Text strong>Total:</Text>
+                  <Text strong>₹{orderData?.total?.toLocaleString()}</Text>
+                </div>
+              </div>
+            </Card>
 
-              {/* Order Total */}
-              <Card title="Order Total" className="order-total-card">
-                <div className="total-breakdown">
-                  <div className="total-row">
-                    <Text>Subtotal:</Text>
-                    <Text>{formatPrice(orderData?.subtotal || 0)}</Text>
-                  </div>
-                  {orderData?.discount > 0 && (
-                    <div className="total-row discount">
-                      <Text>Discount:</Text>
-                      <Text>-{formatPrice(orderData.discount)}</Text>
-                    </div>
-                  )}
-                  <div className="total-row">
-                    <Text>Shipping:</Text>
-                    <Text>
-                      {orderData?.shippingCharges === 0 ? (
-                        <Tag color="green">FREE</Tag>
-                      ) : (
-                        formatPrice(orderData?.shippingCharges || 0)
-                      )}
-                    </Text>
-                  </div>
-                  <div className="total-row">
-                    <Text>Tax (GST):</Text>
-                    <Text>{formatPrice(orderData?.tax || 0)}</Text>
-                  </div>
-                  <Divider />
-                  <div className="total-row final-total">
-                    <Text strong>Total:</Text>
-                    <Text strong>{formatPrice(orderData?.total || 0)}</Text>
-                  </div>
+            {/* Customer Info */}
+            <Card title="Customer Information" className="customer-info-card">
+              <div className="customer-details">
+                <div className="detail-item">
+                  <Text strong>Name:</Text>
+                  <Text>{orderData?.customerInfo?.name}</Text>
                 </div>
-              </Card>
+                <div className="detail-item">
+                  <Text strong>Email:</Text>
+                  <Text>{orderData?.customerInfo?.email}</Text>
+                </div>
+                <div className="detail-item">
+                  <Text strong>Mobile:</Text>
+                  <Text>{orderData?.customerInfo?.mobileNumber}</Text>
+                </div>
+              </div>
+            </Card>
 
-              {/* Payment Button */}
-              <Card className="payment-card">
-                <div className="payment-info">
-                  <CheckCircleOutlined className="secure-icon" />
-                  <Text type="secondary">
-                    Secure payment powered by Razorpay
+            {/* Shipping Address */}
+            <Card title="Shipping Address" className="shipping-info-card">
+              <div className="shipping-details">
+                <div className="detail-item">
+                  <Text strong>{orderData?.shippingAddress?.fullName}</Text>
+                </div>
+                <div className="detail-item">
+                  <Text>{orderData?.shippingAddress?.addressLine1}</Text>
+                </div>
+                {orderData?.shippingAddress?.addressLine2 && (
+                  <div className="detail-item">
+                    <Text>{orderData?.shippingAddress?.addressLine2}</Text>
+                  </div>
+                )}
+                <div className="detail-item">
+                  <Text>
+                    {orderData?.shippingAddress?.city},{" "}
+                    {orderData?.shippingAddress?.state} -{" "}
+                    {orderData?.shippingAddress?.pincode}
                   </Text>
                 </div>
-                <Button
-                  type="primary"
-                  size="large"
-                  icon={<CreditCardOutlined />}
-                  onClick={onConfirmPayment}
-                  loading={loading}
-                  className="payment-button"
-                  block
-                >
-                  Proceed to Payment
-                </Button>
-                <Text type="secondary" className="payment-note">
-                  You will be redirected to a secure payment page
-                </Text>
-              </Card>
-            </Space>
+                <div className="detail-item">
+                  <Text>{orderData?.shippingAddress?.country}</Text>
+                </div>
+                <div className="detail-item">
+                  <Text>
+                    Mobile: {orderData?.shippingAddress?.mobileNumber}
+                  </Text>
+                </div>
+              </div>
+            </Card>
           </Col>
         </Row>
+      </div>
+
+      <div className="payment-actions">
+        <Button
+          type="primary"
+          size="large"
+          icon={<CreditCardOutlined />}
+          loading={loading}
+          onClick={handleProceedToPayment}
+          className="proceed-payment-btn"
+        >
+          Proceed to Payment
+        </Button>
+      </div>
+
+      <div className="payment-info">
+        <Paragraph type="secondary">
+          <CheckCircleOutlined /> You will be redirected to a secure payment
+          page. Your order will be confirmed once payment is successful.
+        </Paragraph>
       </div>
     </div>
   );

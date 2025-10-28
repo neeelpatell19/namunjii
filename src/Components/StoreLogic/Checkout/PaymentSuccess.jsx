@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Result, Button, Card, Typography, Space, Divider } from "antd";
 import {
@@ -7,7 +7,6 @@ import {
   ShoppingOutlined,
 } from "@ant-design/icons";
 import checkoutApi from "../../../apis/checkout";
-import "./PaymentPages.css";
 
 const { Title, Text } = Typography;
 
@@ -21,25 +20,22 @@ const PaymentSuccess = () => {
   const orderNumber = searchParams.get("orderNumber");
 
   useEffect(() => {
-    if (orderId) {
-      fetchOrderDetails();
-    } else {
-      setLoading(false);
-    }
-  }, [orderId]);
-
-  const fetchOrderDetails = async () => {
-    try {
-      const response = await checkoutApi.getOrderDetails(orderId);
-      if (response.success) {
-        setOrderData(response.data);
+    const fetchOrderDetails = async () => {
+      if (orderId) {
+        try {
+          const response = await checkoutApi.getOrderDetails(orderId);
+          if (response.success) {
+            setOrderData(response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching order details:", error);
+        }
       }
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-    } finally {
       setLoading(false);
-    }
-  };
+    };
+
+    fetchOrderDetails();
+  }, [orderId]);
 
   const handleContinueShopping = () => {
     navigate("/products");
@@ -50,113 +46,102 @@ const PaymentSuccess = () => {
   };
 
   const handleViewOrder = () => {
-    // Navigate to order details or order history
-    navigate("/orders");
+    // Navigate to order details page if implemented
+    console.log("View order:", orderNumber);
   };
 
   return (
-    <div className="payment-page">
-      <div className="payment-container">
+    <div className="payment-success-container">
+      <div className="payment-success-content">
         <Result
+          status="success"
           icon={<CheckCircleOutlined style={{ color: "#52c41a" }} />}
           title="Payment Successful!"
           subTitle={
-            <div className="success-message">
-              <Text type="secondary">
-                Thank you for your order! Your payment has been processed
-                successfully.
-              </Text>
+            <div>
+              <Text>Your order has been placed successfully.</Text>
               {orderNumber && (
-                <div className="order-info">
+                <div style={{ marginTop: 8 }}>
                   <Text strong>Order Number: {orderNumber}</Text>
                 </div>
               )}
             </div>
           }
-          extra={
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
-              <Space size="middle">
-                <Button
-                  type="primary"
-                  icon={<ShoppingOutlined />}
-                  onClick={handleContinueShopping}
-                  size="large"
-                >
-                  Continue Shopping
-                </Button>
-                <Button
-                  icon={<HomeOutlined />}
-                  onClick={handleGoHome}
-                  size="large"
-                >
-                  Go to Home
-                </Button>
-              </Space>
-
-              {orderData && (
-                <Card className="order-summary-card" size="small">
-                  <Title level={4}>Order Summary</Title>
-                  <div className="order-details">
-                    <div className="detail-row">
-                      <Text>Order Total:</Text>
-                      <Text strong>₹{orderData.total?.toLocaleString()}</Text>
-                    </div>
-                    <div className="detail-row">
-                      <Text>Items:</Text>
-                      <Text>{orderData.items?.length} item(s)</Text>
-                    </div>
-                    <div className="detail-row">
-                      <Text>Payment Status:</Text>
-                      <Text type="success">Completed</Text>
-                    </div>
-                    {orderData.shippingAddress && (
-                      <>
-                        <Divider />
-                        <div className="shipping-info">
-                          <Text strong>Shipping to:</Text>
-                          <div className="address">
-                            <Text>{orderData.shippingAddress.fullName}</Text>
-                            <br />
-                            <Text>
-                              {orderData.shippingAddress.addressLine1}
-                            </Text>
-                            {orderData.shippingAddress.addressLine2 && (
-                              <>
-                                <br />
-                                <Text>
-                                  {orderData.shippingAddress.addressLine2}
-                                </Text>
-                              </>
-                            )}
-                            <br />
-                            <Text>
-                              {orderData.shippingAddress.city},{" "}
-                              {orderData.shippingAddress.state} -{" "}
-                              {orderData.shippingAddress.pincode}
-                            </Text>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </Card>
-              )}
-
-              <div className="next-steps">
-                <Title level={5}>What's Next?</Title>
-                <ul>
-                  <li>You will receive an order confirmation email shortly</li>
-                  <li>We'll send you SMS updates about your order status</li>
-                  <li>
-                    Your order will be processed and shipped within 1-2 business
-                    days
-                  </li>
-                  <li>Expected delivery: 3-5 business days</li>
-                </ul>
-              </div>
-            </Space>
-          }
+          extra={[
+            <Button
+              type="primary"
+              key="continue"
+              onClick={handleContinueShopping}
+            >
+              <ShoppingOutlined /> Continue Shopping
+            </Button>,
+            <Button key="home" onClick={handleGoHome}>
+              <HomeOutlined /> Go to Home
+            </Button>,
+          ]}
         />
+
+        {orderData && (
+          <Card className="order-summary-card" style={{ marginTop: 24 }}>
+            <Title level={4}>Order Summary</Title>
+            <div className="order-summary">
+              <div className="summary-item">
+                <Text>Order Number:</Text>
+                <Text strong>{orderData.orderNumber}</Text>
+              </div>
+              <div className="summary-item">
+                <Text>Total Amount:</Text>
+                <Text strong>₹{orderData.total?.toLocaleString()}</Text>
+              </div>
+              <div className="summary-item">
+                <Text>Payment Status:</Text>
+                <Text strong style={{ color: "#52c41a" }}>
+                  Completed
+                </Text>
+              </div>
+              <div className="summary-item">
+                <Text>Order Date:</Text>
+                <Text>
+                  {new Date(orderData.createdAt).toLocaleDateString()}
+                </Text>
+              </div>
+            </div>
+
+            <Divider />
+
+            <div className="next-steps">
+              <Title level={5}>What's Next?</Title>
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <Text>
+                  • You will receive an order confirmation email shortly
+                </Text>
+                <Text>
+                  • Your order will be processed and shipped within 2-3 business
+                  days
+                </Text>
+                <Text>• You can track your order using the order number</Text>
+                <Text>
+                  • For any queries, please contact our customer support
+                </Text>
+              </Space>
+            </div>
+          </Card>
+        )}
+
+        <div className="contact-support">
+          <Card>
+            <Title level={5}>Need Help?</Title>
+            <Text>
+              If you have any questions about your order, please contact our
+              customer support team.
+            </Text>
+            <div style={{ marginTop: 16 }}>
+              <Button type="link" onClick={() => navigate("/contact-us")}>
+                Contact Support
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );

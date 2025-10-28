@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Result, Button, Card, Typography, Space, Alert } from "antd";
 import {
@@ -7,35 +7,55 @@ import {
   HomeOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import "./PaymentPages.css";
+import checkoutApi from "../../../apis/checkout";
 
 const { Title, Text } = Typography;
 
 const PaymentFailed = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [orderData, setOrderData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const orderId = searchParams.get("orderId");
   const reason = searchParams.get("reason");
 
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      if (orderId) {
+        try {
+          const response = await checkoutApi.getOrderDetails(orderId);
+          if (response.success) {
+            setOrderData(response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching order details:", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchOrderDetails();
+  }, [orderId]);
+
   const handleRetryPayment = () => {
-    // Navigate back to checkout or retry payment
-    if (orderId) {
-      navigate(`/checkout?orderId=${orderId}`);
+    if (orderData?.paymentInfo?.paymentLink) {
+      window.open(orderData.paymentInfo.paymentLink, "_blank");
     } else {
-      navigate("/checkout");
+      // Navigate back to checkout
+      navigate(`/checkout/${orderData?.orderNumber}`);
     }
   };
 
   const handleGoToCart = () => {
-    navigate("/cart");
+    navigate("/products");
   };
 
   const handleGoHome = () => {
     navigate("/");
   };
 
-  const getFailureMessage = (reason) => {
+  const getFailureMessage = () => {
     switch (reason) {
       case "cancelled":
         return "Payment was cancelled by you.";
@@ -45,142 +65,139 @@ const PaymentFailed = () => {
         return "Payment session timed out.";
       case "insufficient_funds":
         return "Insufficient funds in your account.";
-      case "card_declined":
-        return "Your card was declined by the bank.";
+      case "Order not found":
+        return "Order not found. Please try again.";
       default:
-        return "Payment could not be processed. Please try again.";
+        return "Payment failed. Please try again.";
     }
   };
 
-  const getFailureSuggestions = (reason) => {
+  const getSuggestions = () => {
     switch (reason) {
       case "cancelled":
         return [
-          "Check your payment details and try again",
-          "Ensure you have sufficient funds",
+          "You can retry the payment using the same payment method",
+          "Try using a different payment method",
           "Contact your bank if the issue persists",
         ];
       case "failed":
         return [
           "Check your internet connection",
           "Try using a different payment method",
-          "Contact support if the problem continues",
+          "Contact your bank for assistance",
         ];
       case "timeout":
         return [
           "Complete the payment process quickly",
           "Ensure stable internet connection",
-          "Try again with a different browser",
+          "Try again with a different payment method",
         ];
       case "insufficient_funds":
         return [
           "Add money to your account",
           "Use a different payment method",
-          "Check with your bank about available balance",
-        ];
-      case "card_declined":
-        return [
-          "Verify your card details",
-          "Check with your bank about card status",
-          "Try using a different card",
+          "Try using a credit card instead",
         ];
       default:
         return [
-          "Check your payment details",
-          "Ensure stable internet connection",
-          "Try a different payment method",
-          "Contact support for assistance",
+          "Try using a different payment method",
+          "Check your internet connection",
+          "Contact customer support if the issue persists",
         ];
     }
   };
 
   return (
-    <div className="payment-page">
-      <div className="payment-container">
+    <div className="payment-failed-container">
+      <div className="payment-failed-content">
         <Result
+          status="error"
           icon={<CloseCircleOutlined style={{ color: "#ff4d4f" }} />}
           title="Payment Failed"
           subTitle={
-            <div className="failure-message">
-              <Text type="secondary">{getFailureMessage(reason)}</Text>
-              {orderId && (
-                <div className="order-info">
-                  <Text type="secondary">Order ID: {orderId}</Text>
+            <div>
+              <Text>{getFailureMessage()}</Text>
+              {orderData?.orderNumber && (
+                <div style={{ marginTop: 8 }}>
+                  <Text strong>Order Number: {orderData.orderNumber}</Text>
                 </div>
               )}
             </div>
           }
-          extra={
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
-              <Space size="middle">
-                <Button
-                  type="primary"
-                  icon={<ReloadOutlined />}
-                  onClick={handleRetryPayment}
-                  size="large"
-                >
-                  Try Again
+          extra={[
+            <Button type="primary" key="retry" onClick={handleRetryPayment}>
+              <ReloadOutlined /> Retry Payment
+            </Button>,
+            <Button key="cart" onClick={handleGoToCart}>
+              <ShoppingCartOutlined /> Go to Cart
+            </Button>,
+            <Button key="home" onClick={handleGoHome}>
+              <HomeOutlined /> Go to Home
+            </Button>,
+          ]}
+        />
+
+        <Alert
+          message="What you can do:"
+          description={
+            <ul style={{ marginBottom: 0 }}>
+              {getSuggestions().map((suggestion, index) => (
+                <li key={index}>{suggestion}</li>
+              ))}
+            </ul>
+          }
+          type="info"
+          showIcon
+          style={{ marginBottom: 24 }}
+        />
+
+        {orderData && (
+          <Card className="order-details-card">
+            <Title level={4}>Order Details</Title>
+            <div className="order-details">
+              <div className="detail-item">
+                <Text>Order Number:</Text>
+                <Text strong>{orderData.orderNumber}</Text>
+              </div>
+              <div className="detail-item">
+                <Text>Total Amount:</Text>
+                <Text strong>₹{orderData.total?.toLocaleString()}</Text>
+              </div>
+              <div className="detail-item">
+                <Text>Payment Status:</Text>
+                <Text strong style={{ color: "#ff4d4f" }}>
+                  Failed
+                </Text>
+              </div>
+              <div className="detail-item">
+                <Text>Order Date:</Text>
+                <Text>
+                  {new Date(orderData.createdAt).toLocaleDateString()}
+                </Text>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        <div className="contact-support">
+          <Card>
+            <Title level={5}>Need Help?</Title>
+            <Text>
+              If you continue to experience payment issues, please contact our
+              customer support team.
+            </Text>
+            <div style={{ marginTop: 16 }}>
+              <Space>
+                <Button type="link" onClick={() => navigate("/contact-us")}>
+                  Contact Support
                 </Button>
-                <Button
-                  icon={<ShoppingCartOutlined />}
-                  onClick={handleGoToCart}
-                  size="large"
-                >
-                  Back to Cart
-                </Button>
-                <Button
-                  icon={<HomeOutlined />}
-                  onClick={handleGoHome}
-                  size="large"
-                >
-                  Go to Home
+                <Button type="link" onClick={() => navigate("/products")}>
+                  Continue Shopping
                 </Button>
               </Space>
-
-              <Card className="help-card" size="small">
-                <Title level={5}>What you can do:</Title>
-                <ul className="suggestions-list">
-                  {getFailureSuggestions(reason).map((suggestion, index) => (
-                    <li key={index}>{suggestion}</li>
-                  ))}
-                </ul>
-              </Card>
-
-              <Alert
-                message="Need Help?"
-                description={
-                  <div>
-                    <Text>
-                      If you continue to experience issues, please contact our
-                      support team:
-                    </Text>
-                    <br />
-                    <Text strong>Email:</Text> support@namunjii.com
-                    <br />
-                    <Text strong>Phone:</Text> +91-XXXX-XXXX
-                    <br />
-                    <Text strong>Hours:</Text> 9 AM - 6 PM (Mon-Sat)
-                  </div>
-                }
-                type="info"
-                showIcon
-              />
-
-              <div className="payment-methods">
-                <Title level={5}>Available Payment Methods:</Title>
-                <div className="payment-options">
-                  <Text>• Credit/Debit Cards (Visa, Mastercard, RuPay)</Text>
-                  <br />
-                  <Text>• Net Banking</Text>
-                  <br />
-                  <Text>• UPI (Google Pay, PhonePe, Paytm)</Text>
-                  <br />
-                  <Text>• Wallets (Paytm, Mobikwik)</Text>
-                </div>
-              </div>
-            </Space>
-          }
-        />
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );
