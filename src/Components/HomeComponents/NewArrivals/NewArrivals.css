@@ -129,6 +129,9 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
   }
+   .view-all-btn{
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 480px) {
@@ -139,6 +142,9 @@
   .new-arrivals-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  .view-all-btn{
+    white-space: nowrap;
   }
 }
 

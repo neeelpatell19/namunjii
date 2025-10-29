@@ -135,6 +135,7 @@
     .partnerus-container {
         gap: 20px;
         padding: 10px;
+        align-items: center;
         
     }
     
@@ -186,7 +187,7 @@
     
     /* Stack input and button vertically */
     .partnerus-input-button {
-        flex-direction: column;
+        /* flex-direction: column; */
         padding: 12px;
         gap: 12px;
     }
@@ -197,7 +198,7 @@
     }
     
     .partnerus-input-button button {
-        width: 100%;
+        width: 39%;
         justify-content: center;
     }
 }
@@ -235,7 +236,7 @@
     }
     
     .partnerus-input-button button {
-        font-size: 14px;
+        font-size: 12px;
         padding: 10px 20px;
     }
 }
@@ -268,7 +269,7 @@
     
     .input-field,
     .partnerus-input-button button {
-        font-size: 13px;
+        font-size: 10px;
         padding: 8px;
     }
 }

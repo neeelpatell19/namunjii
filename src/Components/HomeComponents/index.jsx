@@ -11,6 +11,7 @@ import BrandMarquee from "./Marque";
 import SectionHeading from "./HeroText";
 import HeroHome from "../OthersComponents/AboutUs/HeroHome/HeroHome";
 import AnimatedSection from "./AnimatedSection";
+import Partnerus from "../PartnerUs/Partnerus";
 
 // Loading Component with Skeleton Animation
 const LoadingState = () => {
@@ -175,6 +176,7 @@ export default function HomeComponents() {
       <BestSellers HomeData={HomeData} />
       <FeaturedProducts HomeData={HomeData} />
       <FeaturedDeals HomeData={HomeData} />
+      <Partnerus />
     </div>
   );
 }
