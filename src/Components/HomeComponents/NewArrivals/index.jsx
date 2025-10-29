@@ -86,6 +86,9 @@ export default function NewArrivals({ HomeData }) {
        
 
         {/* ===== NEW COLLECTIONS CARDS - STAGGERED LAYOUT ===== */}
+
+          {/* currently the card is hardcoded with dummy data and not a component but can be converted into component */}
+
         {/* {[
           {
             id: 1,
