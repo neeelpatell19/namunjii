@@ -217,8 +217,13 @@
   }
 
   .new-arrivals-title {
-    font-size: 32px;
+    font-size:3rem;
     letter-spacing: 6px;
+  }
+  .view-all-btn{
+    display: flex;
+    gap: 40px;
+    font-size: 2rem;
   }
 }
 
@@ -229,14 +234,23 @@
   }
 
   .new-arrivals-header {
-    flex-direction: column;
-    align-items: flex-start;
+    /* flex-direction: column;
+    align-items: flex-start; */
     gap: 1.5rem;
     margin-bottom: 2rem;
+    white-space: nowrap;
+   
   }
 
+  .view-all-btn{
+    font-size: 15px;
+    padding: 12px 25px;
+   display: flex;
+   gap: 4px;
+   white-space: nowrap;
+  }
   .new-arrivals-title {
-    font-size: 2.5rem;
+    font-size: 1.7rem;
   }
 
   .new-arrivals-subtitle {
@@ -289,7 +303,12 @@
   }
 
   .new-arrivals-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .view-all-btn{
+    display: flex;
+    gap: 3px;
   }
 
   .new-arrivals-grid {
