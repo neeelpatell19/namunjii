@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./BestSellers.css";
+import { Link } from "react-router-dom";
+import NewArrivalCard from "../NewArrivals/NewArrivalCard";
 
 export default function BestSellers({ HomeData }) {
   const bestsellers = useMemo(() => {
@@ -54,7 +56,11 @@ export default function BestSellers({ HomeData }) {
     <div className="bestsellers-container">
       <div className="bestsellers-header">
         <h2 className="bestsellers-title">Best Sellers</h2>
-        <p className="bestsellers-subtitle">Discover our most loved products</p>
+        {/* <p className="bestsellers-subtitle">Discover our most loved products</p> */}
+        <Link to="/bestsellers" className="view-all-link">
+          View All
+          <span className="arrow-icon">→</span>
+        </Link>
       </div>
 
       <div className="bestsellers-grid">
