@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import ProductCard from "../../Common/ProductCard/ProductCard";
+import NewArrivalCard from "./NewArrivalCard";
 import "./NewArrivals.css";
 import { Link } from "react-router-dom";
 
@@ -66,69 +67,9 @@ export default function NewArrivals({ HomeData }) {
       </div>
 
       <div className="new-arrivals-grid">
-
         {newArrivals.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            showQuickView={true}
-            showAddToCart={true}
-            onQuickView={(product) => {
-              console.log("Quick view:", product);
-              // Add your quick view logic here
-            }}
-            onAddToCart={(product) => {
-              console.log("Add to cart:", product);
-              // Add your add to cart logic here
-            }}
-          />
+          <NewArrivalCard key={product._id || product.id} product={product} />
         ))}
-       
-
-        {/* ===== NEW COLLECTIONS CARDS - STAGGERED LAYOUT ===== */}
-
-          {/* currently the card is hardcoded with dummy data and not a component but can be converted into component */}
-
-        {/* {[
-          {
-            id: 1,
-            brandName: "Brand Name",
-            shopName: "SHOP CHOKER",
-            image: "https://images.pexels.com/photos/34433617/pexels-photo-34433617.jpeg"
-          },
-          {
-            id: 2,
-            brandName: "Brand Name",
-            shopName: "SHOP CHOKER",
-            image: "https://images.pexels.com/photos/34433617/pexels-photo-34433617.jpeg"
-
-          },
-          {
-            id: 3,
-            brandName: "Brand Name",
-            shopName: "SHOP CHOKER",
-            image: "https://images.pexels.com/photos/34433617/pexels-photo-34433617.jpeg"
-
-          },
-          {
-            id: 4,
-            brandName: "Brand Name",
-            shopName: "SHOP CHOKER",
-            image: "https://images.pexels.com/photos/34433617/pexels-photo-34433617.jpeg"
-          }
-        ].map((product) => (
-          <div key={product.id} className="new-collections-card">
-            <p className="new-collections-brand">{product.brandName}</p>
-            <div className="new-collections-image-container">
-              <img src={product.image} alt={product.shopName} className="new-collections-image" />
-            </div>
-            <div className="new-collections-footer">
-              <span className="new-collections-shop">{product.shopName}</span>
-              <span className="new-collections-shop-arrow"><img src="/icons/Arrow.svg" alt="" /></span>
-            </div>
-          </div>
-        ))} */}
-        {/* ===== END NEW COLLECTIONS CARDS ===== */}
       </div>
     </div>
   );
