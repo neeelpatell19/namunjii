@@ -194,7 +194,7 @@
     
     .input-field {
         width: 100%;
-        text-align: center;
+        text-align: start;
     }
     
     .partnerus-input-button button {
@@ -244,9 +244,8 @@
 /* Small Mobile - 360px */
 @media screen and (max-width: 360px) {
     
-    .partnerus-img{
-        padding: 2px;
-    }
+    
+
     .partnerus-container {
         margin-top: 12px;
         gap: 12px;
