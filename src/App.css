@@ -36,6 +36,8 @@ body {
   --brand-975: #d6daee;
   --brand-990: #eaedf2;
 
+  
+
   /* Neutral Colors */
   --neutral-100: #000000;
   --neutral-200: #1a1a1a;
@@ -60,7 +62,7 @@ body {
   --color-hero-text: #775242;
 
   /* Hero-Heading-Brand */
-  --color-heroSection-brand: #5c5c5c;
+  --color-heroSection-brand: #5C5C5C;
 }
 
 html,
@@ -498,142 +500,6 @@ b {
   background-color: var(--brandColor);
   padding: 12px 15px;
   color: white;
-}
-
-/* Maintenance Page Styles */
-.maintenance-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5dc 0%, #e8e8d3 50%, #dcdcc6 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  font-family: var(--Poppins-font);
-}
-
-.maintenance-container {
-  max-width: 800px;
-  width: 100%;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 60px 40px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.logo-container {
-  margin-bottom: 40px;
-}
-
-.maintenance-logo {
-  max-width: 300px;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-}
-
-.maintenance-title {
-  font-family: "Godber", sans-serif;
-  font-size: 48px;
-  font-weight: normal;
-  color: var(--brandColor);
-  margin-bottom: 30px;
-  line-height: 1.2;
-}
-
-.maintenance-message {
-  margin-bottom: 40px;
-}
-
-.greeting {
-  font-size: 24px;
-  color: var(--brandColor);
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-.main-text {
-  font-size: 20px;
-  color: var(--BodyTextColor);
-  line-height: 1.6;
-  margin-bottom: 20px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.sub-text {
-  font-size: 18px;
-  color: var(--BodyTextColor);
-  line-height: 1.5;
-  font-style: italic;
-}
-
-.maintenance-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-  padding-top: 30px;
-  border-top: 1px solid rgba(54, 66, 78, 0.1);
-}
-
-.contact-info {
-  text-align: center;
-}
-
-.contact-info p {
-  margin: 5px 0;
-  font-size: 16px;
-  color: var(--brandColor);
-}
-
-.contact-info a {
-  color: var(--OrangeColor);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.contact-info a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-  .maintenance-container {
-    padding: 40px 20px;
-    margin: 20px;
-  }
-
-  .maintenance-title {
-    font-size: 36px;
-  }
-
-  .main-text {
-    font-size: 18px;
-  }
-
-  .maintenance-footer {
-    text-align: center;
-  }
-
-  .maintenance-logo {
-    max-width: 250px;
-  }
-}
-
-@media (max-width: 480px) {
-  .maintenance-title {
-    font-size: 28px;
-  }
-
-  .main-text {
-    font-size: 16px;
-  }
-
-  .greeting {
-    font-size: 20px;
-  }
 }
 
 
