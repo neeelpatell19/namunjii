@@ -1,4 +1,3 @@
-
 .new-arrivals-container {
   width: 100%;
   max-width: 1300px;
@@ -46,8 +45,14 @@
 
 .arrow-icon {
   font-size: 18px;
+  transition: transform 0.3s ease;
 }
 
+.view-all-btn:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+/* Grid with Staggered Effect */
 .new-arrivals-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -55,7 +60,89 @@
   padding: 0 1rem;
 }
 
-/* Keep existing loading and empty states */
+/* Stagger effect: products at index 1 and 3 (2nd and 4th cards) are offset down */
+.new-collections-card {
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.new-collections-card:nth-child(2),
+.new-collections-card:nth-child(4) {
+  margin-top: 60px;
+}
+
+/* Image Container - NO PADDING, FILLS SPACE */
+.new-collections-image-container {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #f5f5f5;
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+}
+
+.new-collections-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.new-collections-card:hover .new-collections-image {
+  transform: scale(1.02);
+}
+
+/* Brand Section - Centered Above Image */
+.new-collections-brand {
+  font-size: 20px !important;
+  color: #775242;
+  letter-spacing: 0.5px;
+  text-align: end;
+  margin: 0 0 12px 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  order: -1;
+ 
+}
+
+/* Footer Section - Simple Text Below Image */
+.new-collections-footer {
+  padding: 0;
+  background: transparent;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  flex-direction: row;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 0;
+  margin-top: 12px;
+}
+
+.new-collections-shop {
+  font-style: playfair display;
+  font-size: 18px;
+  color: #2E1D0B;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  text-align: left;
+}
+
+.new-collections-shop-arrow {
+  font-size: 14px;
+  color: #999999;
+  transition: all 0.3s ease;
+  text-align: right;
+}
+
+.new-collections-card:hover .new-collections-shop-arrow {
+  color: #333;
+  transform: translateX(3px);
+}
 
 /* Loading State */
 .new-arrivals-loading {
@@ -116,7 +203,38 @@
 }
 
 /* Responsive Design */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .new-arrivals-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .new-collections-card:nth-child(2),
+  .new-collections-card:nth-child(4) {
+    margin-top: 40px;
+  }
+
+  .new-arrivals-title {
+    font-size: 32px;
+    letter-spacing: 6px;
+  }
+}
+
+/* Tablet (768px and below) */
 @media (max-width: 768px) {
+  .new-arrivals-container {
+    padding: 3rem 0;
+  }
+
+  .new-arrivals-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
   .new-arrivals-title {
     font-size: 2.5rem;
   }
@@ -126,15 +244,50 @@
   }
 
   .new-arrivals-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 0 1rem;
   }
-   .view-all-btn{
-    white-space: nowrap;
+
+  /* Remove stagger on tablet for better layout */
+  .new-collections-card:nth-child(2),
+  .new-collections-card:nth-child(3),
+  .new-collections-card:nth-child(4) {
+    margin-top: 0;
+  }
+
+  .new-collections-image-container {
+    aspect-ratio: 3 / 4;
+    margin-bottom: 12px;
+  }
+
+  .new-collections-brand {
+    text-align: left;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .new-collections-footer {
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  .new-collections-shop {
+    font-size: 11px;
   }
 }
 
+/* Mobile (480px and below) */
 @media (max-width: 480px) {
+  .new-arrivals-container {
+    padding: 2rem 0;
+  }
+
+  .new-arrivals-header {
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
   .new-arrivals-title {
     font-size: 2rem;
   }
@@ -143,8 +296,54 @@
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  .view-all-btn{
-    white-space: nowrap;
+
+  .new-collections-image-container {
+    aspect-ratio: 3 / 4;
+    margin-bottom: 10px;
+  }
+
+  .new-collections-brand {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .new-collections-footer {
+    padding: 8px 0;
+    margin-top: 8px;
+  }
+
+  .new-collections-shop {
+    font-size: 10px;
+  }
+
+  .new-collections-shop-arrow {
+    font-size: 12px;
+  }
+}
+
+/* Small Mobile (360px and below) */
+@media (max-width: 360px) {
+  .new-arrivals-title {
+    font-size: 20px;
+    letter-spacing: 1.5px;
+  }
+
+  .view-all-btn {
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+
+  .new-arrivals-grid {
+    gap: 12px;
+    padding: 0 0.5rem;
+  }
+
+  .new-collections-brand {
+    font-size: 10px;
+  }
+
+  .new-collections-shop {
+    font-size: 9px;
   }
 }
 
