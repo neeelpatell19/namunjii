@@ -207,7 +207,7 @@
 @media screen and (max-width: 480px) {
    
     .partnerus-img{
-        padding: 5px;
+        padding-left: 0px;
     }
     .partnerus-container {
         margin-top: 16px;

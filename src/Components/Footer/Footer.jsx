@@ -120,8 +120,8 @@ const Footer = () => {
 
       {/* Copyright Section */}
       <div className="FooterCopyright">
-        <div className="Container">
-          <p>Copyright @ 2025 Namunjii</p>
+        <div className="Container FooterCopyrightContent">
+          <p>Copyright @ 2025  <span>Namunjii</span></p>
         </div>
       </div>
     </div>

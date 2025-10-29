@@ -163,6 +163,10 @@ font-weight: bold;
   margin: 0;
 }
 
+.FooterCopyrightContent p span{
+  color: #EFEDE9;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .FooterMain {
