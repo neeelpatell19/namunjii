@@ -312,13 +312,15 @@
 }
 
   .form-actions button,
-  .checkout-actions button
+  .checkout-actions button,
+  .payment-actions button
    {
     background-color: black;
     color: white;
   }
   .form-actions button:hover,
-  .checkout-actions button:hover {
+  .checkout-actions button:hover,
+  .payment-actions button:hover {
     background-color: rgba(0, 0, 0, 0.859) !important;
     color: white;
   }
