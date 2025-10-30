@@ -48,7 +48,8 @@ export default function ProductCard({
     }
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
 
     try {
@@ -72,7 +73,8 @@ export default function ProductCard({
     }
   };
 
-  const handleAddToWishlist = async () => {
+  const handleAddToWishlist = async (e) => {
+    e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
 
     try {
@@ -124,7 +126,7 @@ export default function ProductCard({
             <div className="product-card-overlay">
               <button
                 className="product-card-quick-view-btn"
-                onClick={handleViewProduct}
+                onClick={handleQuickView}
               >
                 <span><img src="/icons/mingcute_eye-line.svg" alt="eye" /></span>
                 Quick View
@@ -133,13 +135,13 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="product-card-content">
+        <div className="product-card-content" onClick={handleViewProduct}>
           <div className="product-card-info">
             <div className="product-card-header">
               <h3 className="product-card-name">{product.productName}</h3>
               <button
                 className="product-card-wishlist-btn"
-                onClick={handleAddToWishlist}
+                onClick={(e) => handleAddToWishlist(e)}
               >
                 <HeartOutlined />
               </button>
@@ -174,15 +176,15 @@ export default function ProductCard({
 
             <div className="product-card-action-buttons">
               {showAddToCart && (
-                <div className="product-card-add-to-cart-container">
-                  <button
-                    className="product-card-add-to-cart-btn"
-                    onClick={handleAddToCart}
-                    style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                <div 
+                  className="product-card-add-to-cart-container"
+                  onClick={handleAddToCart}
+                >
+                  <span className="product-card-add-to-cart-btn"
                   >
                     Add to Cart
-                  </button>
-                  <span className="product-card-add-to-cart-arrow">
+                  </span>
+                  <span className="product-card-add-to-cart-arrow" onClick={(e) => e.stopPropagation()}>
                     <img src="/icons/Arrow.svg" alt="arrow" />
                   </span>
                 </div>
