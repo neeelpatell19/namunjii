@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Header from "./Components/Header/Header";
 import AllDesigners from "./Components/OthersComponents/Designers/AllDesigners/AllDesigners";
 import Designer from "./Components/OthersComponents/Designers/Designer/Designer";
@@ -27,44 +27,9 @@ import HomeComponents from "./Components/HomeComponents";
 import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
 import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
-// Page transition variants
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    y: 20,
-    scale: 0.98,
-  },
-  in: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-  },
-  out: {
-    opacity: 0,
-    y: -20,
-    scale: 0.98,
-  },
-};
-
-const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
-  duration: 0.4,
-};
-
 // Wrapper component for page transitions
 const PageTransition = ({ children }) => {
-  return (
-    <motion.div
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div>{children}</div>;
 };
 
 // Routes component with transitions
@@ -231,6 +196,14 @@ const AnimatedRoutes = () => {
           element={
             <PageTransition>
               <CollectionsViaProducts />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <PageTransition>
+              <ProductsPage />
             </PageTransition>
           }
         />
