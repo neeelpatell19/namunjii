@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./FeaturedProducts.css";
+import { Link } from "react-router-dom";
 
 export default function FeaturedProducts({ HomeData }) {
   const featuredProducts = useMemo(() => {
@@ -61,9 +62,9 @@ export default function FeaturedProducts({ HomeData }) {
     <div className="featured-products-container">
       <div className="featured-products-header">
         <h2 className="featured-products-title">Featured Products</h2>
-        <p className="featured-products-subtitle">
-          Handpicked selections just for you
-        </p>
+        <Link to="/collections" className="view-all-btn">
+          View All <span className="arrow-icon">→</span>
+        </Link>
       </div>
 
       <div className="featured-products-grid">

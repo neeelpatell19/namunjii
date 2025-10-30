@@ -13,7 +13,14 @@ export default function ProductCard({
   showAddToCart = true,
   onQuickView,
   onAddToCart,
+  showViewProduct = true,
+  
+  onViewProduct,
   className = "",
+ 
+
+ 
+  
 }) {
   const navigate = useNavigate();
   const { deviceId } = useDevice();
@@ -82,6 +89,15 @@ export default function ProductCard({
       console.error("Failed to add to wishlist:", error);
     }
   };
+  const handleViewProduct = () => {
+    if (onViewProduct) {
+      onViewProduct(product);
+    } else {
+      // Navigate to product detail page
+      navigate(`/product/${product._id}`);
+    }
+  };
+
 
   return (
     <>
@@ -108,7 +124,7 @@ export default function ProductCard({
             <div className="product-card-overlay">
               <button
                 className="product-card-quick-view-btn"
-                onClick={handleQuickView}
+                onClick={handleViewProduct}
               >
                 <span><img src="/icons/mingcute_eye-line.svg" alt="eye" /></span>
                 Quick View
