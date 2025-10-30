@@ -156,7 +156,7 @@
 /* Small Mobile (360px and below) */
 @media (max-width: 360px) {
   .new-collections-brand {
-    font-size: 10px;
+    font-size: 0.9rem;
   }
 
   .new-collections-shop {
