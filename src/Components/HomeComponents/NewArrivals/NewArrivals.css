@@ -228,9 +228,13 @@
   }
   .view-all-btn{
     display: flex;
-    gap: 40px;
+    gap: 30px;
+    align-items: center;
     font-size: 2rem;
   }
+  .view-all-btn span{
+    font-size: 2rem;
+  };
 }
 
 /* Tablet (768px and below) */
@@ -356,8 +360,10 @@
   }
 
   .view-all-btn {
+    display: flex;
+    align-items: center;
     font-size: 12px;
-    padding: 10px 16px;
+    padding: 2px 16px;
   }
 
   .new-arrivals-grid {
