@@ -200,7 +200,7 @@
 .product-card-pricing {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
   flex: 0 0 auto;
   margin-top: 0.5rem;
 }
