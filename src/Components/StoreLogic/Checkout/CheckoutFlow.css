@@ -311,6 +311,23 @@
   margin-top: 20px;
 }
 
+  .form-actions button,
+  .checkout-actions button,
+  .payment-actions button
+   {
+    background-color: black;
+    color: white;
+  }
+  .form-actions button:hover,
+  .checkout-actions button:hover,
+  .payment-actions button:hover {
+    background-color: rgba(0, 0, 0, 0.859) !important;
+    color: white;
+  }
+/* Add this to your CSS file with maximum specificity */
+
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .checkout-flow-container {

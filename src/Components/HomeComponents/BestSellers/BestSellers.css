@@ -145,7 +145,7 @@
 
   .bestsellers-title {
     font-size: 3rem;
-    letter-spacing: 6px;
+    letter-spacing: 3px;
   }
 
   .view-all-link {
@@ -209,13 +209,15 @@
     display: flex;
     gap: 3px;
     font-size: 12px;
-    padding: 10px 16px;
+    padding: 0px 13px;
+    align-items: center;
   }
 
   .bestsellers-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
 }
 
 /* Reduced Motion Support */
