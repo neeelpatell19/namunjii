@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HeartOutlined, EyeOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
@@ -13,19 +13,23 @@ export default function ProductCard({
   showAddToCart = true,
   onQuickView,
   onAddToCart,
-  showViewProduct = true,
-  
+  // showViewProduct = true,
   onViewProduct,
   className = "",
- 
-
- 
-  
 }) {
   const navigate = useNavigate();
   const { deviceId } = useDevice();
-  const { triggerCartDrawer, triggerWishlistDrawer } = useCartWishlist();
+  const {
+    triggerCartDrawer,
+    triggerWishlistDrawer,
+    isInCart: ctxIsInCart,
+    isInWishlist: ctxIsInWishlist,
+    refreshCart,
+    refreshWishlist,
+  } = useCartWishlist();
   const [showQuickViewModal, setShowQuickViewModal] = useState(false);
+  const isInWishlist = ctxIsInWishlist(product?._id);
+  const isInCart = ctxIsInCart(product?._id);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -50,7 +54,7 @@ export default function ProductCard({
 
   const handleAddToCart = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
-    if (!deviceId) return;
+    if (!deviceId || isInCart) return;
 
     try {
       const response = await cartApi.addToCart({
@@ -62,6 +66,7 @@ export default function ProductCard({
       if (response.success) {
         // Trigger cart drawer to open
         triggerCartDrawer();
+        refreshCart();
 
         // Call custom onAddToCart if provided
         if (onAddToCart) {
@@ -76,6 +81,10 @@ export default function ProductCard({
   const handleAddToWishlist = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
+    if (isInWishlist) {
+      // Optionally you can remove from wishlist here in future
+      return;
+    }
 
     try {
       const response = await wishlistApi.addToWishlist({
@@ -86,6 +95,7 @@ export default function ProductCard({
       if (response.success) {
         // Trigger wishlist drawer to open
         triggerWishlistDrawer();
+        refreshWishlist();
       }
     } catch (error) {
       console.error("Failed to add to wishlist:", error);
@@ -100,6 +110,7 @@ export default function ProductCard({
     }
   };
 
+  // membership derived from context; no local fetching here
 
   return (
     <>
@@ -128,7 +139,9 @@ export default function ProductCard({
                 className="product-card-quick-view-btn"
                 onClick={handleQuickView}
               >
-                <span><img src="/icons/mingcute_eye-line.svg" alt="eye" /></span>
+                <span>
+                  <img src="/icons/mingcute_eye-line.svg" alt="eye" />
+                </span>
                 Quick View
               </button>
             </div>
@@ -143,7 +156,11 @@ export default function ProductCard({
                 className="product-card-wishlist-btn"
                 onClick={(e) => handleAddToWishlist(e)}
               >
-                <HeartOutlined />
+                {isInWishlist ? (
+                  <HeartFilled style={{ color: "#dc2626" }} />
+                ) : (
+                  <HeartOutlined />
+                )}
               </button>
             </div>
             <div className="product-card-details">
@@ -176,15 +193,17 @@ export default function ProductCard({
 
             <div className="product-card-action-buttons">
               {showAddToCart && (
-                <div 
+                <div
                   className="product-card-add-to-cart-container"
-                  onClick={handleAddToCart}
+                  onClick={isInCart ? undefined : handleAddToCart}
                 >
-                  <span className="product-card-add-to-cart-btn"
-                  >
-                    Add to Cart
+                  <span className="product-card-add-to-cart-btn">
+                    {isInCart ? "Added to Cart" : "Add to Cart"}
                   </span>
-                  <span className="product-card-add-to-cart-arrow" onClick={(e) => e.stopPropagation()}>
+                  <span
+                    className="product-card-add-to-cart-arrow"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <img src="/icons/Arrow.svg" alt="arrow" />
                   </span>
                 </div>
@@ -196,8 +215,8 @@ export default function ProductCard({
 
       {/* Quick View Modal */}
       {showQuickViewModal && (
-        <div 
-          className="product-card-modal" 
+        <div
+          className="product-card-modal"
           onClick={() => setShowQuickViewModal(false)}
         >
           <div className="product-card-modal-content">
@@ -207,8 +226,8 @@ export default function ProductCard({
             >
               ✕
             </button>
-            <img 
-              src={product.coverImage[0]} 
+            <img
+              src={product.coverImage[0]}
               alt={product.productName}
               className="product-card-modal-image"
             />

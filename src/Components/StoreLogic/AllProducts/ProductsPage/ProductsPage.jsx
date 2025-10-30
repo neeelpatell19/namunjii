@@ -6,7 +6,6 @@ import {
   Pagination,
   Select,
   Input,
-  Slider,
   Checkbox,
   Button,
   Row,
@@ -67,6 +66,10 @@ const ProductsPage = () => {
 
   // Price range state
   const [priceRange, setPriceRange] = useState([0, 10000]);
+  // Local input values for debouncing
+  const [priceInput, setPriceInput] = useState([0, 10000]);
+  // Search input local debounced state
+  const [searchInput, setSearchInput] = useState("");
 
   // Filter drawer state for mobile/tablet
   const [filterDrawerVisible, setFilterDrawerVisible] = useState(false);
@@ -86,7 +89,31 @@ const ProductsPage = () => {
 
   useEffect(() => {
     priceRangeRef.current = priceRange;
-  }, [priceRange]);
+  }, [priceRange, priceInput]);
+
+  // Keep local search input in sync with filters.search (e.g., URL changes)
+  useEffect(() => {
+    const current = filters.search || "";
+    if (searchInput !== current) {
+      setSearchInput(current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.search]);
+
+  // Keep local input in sync with external priceRange changes
+  useEffect(() => {
+    // Only sync when values actually changed to avoid loops
+    if (
+      !Array.isArray(priceInput) ||
+      priceInput[0] !== priceRange[0] ||
+      priceInput[1] !== priceRange[1]
+    ) {
+      setPriceInput(priceRange);
+    }
+  }, [priceRange, priceInput]);
+
+  // Debounce applying price range filters when user edits inputs
+  // (initialized later after handlePriceRangeChange definition)
 
   // Fetch products function
   const fetchProducts = useCallback(
@@ -105,7 +132,7 @@ const ProductsPage = () => {
         // Add price range
         if (currentPriceRange[0] > 0)
           queryParams.minPrice = currentPriceRange[0];
-        if (currentPriceRange[1] < 10000)
+        if (currentPriceRange[1] < 30000)
           queryParams.maxPrice = currentPriceRange[1];
 
         // Remove empty values
@@ -192,7 +219,7 @@ const ProductsPage = () => {
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value !== "" && value !== false && value !== 0) {
           if (key === "minPrice" && value > 0) params.set(key, value);
-          else if (key === "maxPrice" && value < 10000) params.set(key, value);
+          else if (key === "maxPrice" && value < 30000) params.set(key, value);
           else if (key !== "minPrice" && key !== "maxPrice")
             params.set(key, value);
         }
@@ -204,34 +231,65 @@ const ProductsPage = () => {
   );
 
   // Handle filter changes
-  const handleFilterChange = (key, value) => {
-    const newFilters = { ...filters, [key]: value, page: 1 }; // Reset to page 1 when filters change
-    setFilters(newFilters);
-    updateURL(newFilters);
+  const handleFilterChange = useCallback(
+    (key, value) => {
+      const newFilters = { ...filters, [key]: value, page: 1 }; // Reset to page 1 when filters change
+      setFilters(newFilters);
+      updateURL(newFilters);
 
-    // Fetch products with new filters
-    if (fetchProductsRef.current) {
-      fetchProductsRef.current(newFilters, priceRange);
-    }
-  };
+      // Fetch products with new filters
+      if (fetchProductsRef.current) {
+        fetchProductsRef.current(newFilters, priceRange);
+      }
+    },
+    [filters, updateURL, priceRange]
+  );
 
   // Handle price range change
-  const handlePriceRangeChange = (value) => {
-    setPriceRange(value);
-    const newFilters = {
-      ...filters,
-      minPrice: value[0] > 0 ? value[0] : "",
-      maxPrice: value[1] < 10000 ? value[1] : "",
-      page: 1,
-    };
-    setFilters(newFilters);
-    updateURL(newFilters);
+  const handlePriceRangeChange = useCallback(
+    (value) => {
+      setPriceRange(value);
+      const newFilters = {
+        ...filters,
+        minPrice: value[0] > 0 ? value[0] : "",
+        maxPrice: value[1] < 30000 ? value[1] : "",
+        page: 1,
+      };
+      setFilters(newFilters);
+      updateURL(newFilters);
 
-    // Fetch products with new price range
-    if (fetchProductsRef.current) {
-      fetchProductsRef.current(newFilters, value);
-    }
-  };
+      // Fetch products with new price range
+      if (fetchProductsRef.current) {
+        fetchProductsRef.current(newFilters, value);
+      }
+    },
+    [filters, updateURL]
+  );
+
+  // Debounce search input -> updates filters.search
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const current = filters.search || "";
+      if (searchInput !== current) {
+        handleFilterChange("search", searchInput);
+      }
+    }, 400);
+    return () => clearTimeout(t);
+  }, [searchInput, filters.search, handleFilterChange]);
+
+  // Debounce applying price range filters when user edits inputs
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (
+        Array.isArray(priceInput) &&
+        priceInput.length === 2 &&
+        (priceInput[0] !== priceRange[0] || priceInput[1] !== priceRange[1])
+      ) {
+        handlePriceRangeChange(priceInput);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [priceInput, priceRange, handlePriceRangeChange]);
 
   // Handle pagination
   const handlePageChange = (page) => {
@@ -278,7 +336,6 @@ const ProductsPage = () => {
   const renderFiltersContent = () => (
     <>
       <div className="filters-header">
-        <FilterOutlined />
         <h3>Filters</h3>
         <Button type="link" onClick={clearFilters} size="small">
           Clear All
@@ -288,35 +345,92 @@ const ProductsPage = () => {
       {/* Search */}
       <div className="filter-section">
         <h4>Search</h4>
-        <Search
+        <Input
           placeholder="Search products..."
-          value={filters.search}
-          onChange={(e) => handleFilterChange("search", e.target.value)}
-          onSearch={(value) => handleFilterChange("search", value)}
-          enterButton={<SearchOutlined />}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          allowClear
         />
       </div>
 
       {/* Price Range */}
       <div className="filter-section">
-        <h4>Price Range</h4>
-        <Slider
-          range
-          min={0}
-          max={10000}
-          step={100}
-          value={priceRange}
-          onChange={handlePriceRangeChange}
-          marks={{
-            0: "₹0",
-            2500: "₹2.5K",
-            5000: "₹5K",
-            7500: "₹7.5K",
-            10000: "₹10K+",
+        <div
+          className="price-range-header"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 10,
           }}
-        />
-        <div className="price-display">
-          ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
+        >
+          <h4 style={{ margin: 0 }}>Price Range</h4>
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--brand-primary)",
+            }}
+          >
+            ₹{priceInput[0].toLocaleString()} - ₹
+            {priceInput[1].toLocaleString()}
+          </span>
+        </div>
+        <div
+          className="price-inputs"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8,
+            width: "100%",
+          }}
+        >
+          <input
+            type="number"
+            min={0}
+            max={30000}
+            step={100}
+            value={priceInput[0]}
+            onChange={(e) => {
+              const raw = parseInt(e.target.value, 10);
+              const clamped = isNaN(raw)
+                ? 0
+                : Math.max(0, Math.min(30000, raw));
+              const newMin = Math.min(clamped, priceInput[1]);
+              setPriceInput([newMin, priceInput[1]]);
+            }}
+            className="price-input min"
+            style={{
+              width: 120,
+              padding: "6px 10px",
+              borderRadius: 8,
+              border: "1px solid #ddd",
+            }}
+          />
+          <span style={{ color: "#666" }}>to</span>
+          <input
+            type="number"
+            min={0}
+            max={30000}
+            step={100}
+            value={priceInput[1]}
+            onChange={(e) => {
+              const raw = parseInt(e.target.value, 10);
+              const clamped = isNaN(raw)
+                ? 0
+                : Math.max(0, Math.min(30000, raw));
+              const newMax = Math.max(clamped, priceInput[0]);
+              setPriceInput([priceInput[0], newMax]);
+            }}
+            className="price-input max"
+            style={{
+              width: 120,
+              padding: "6px 10px",
+              borderRadius: 8,
+              border: "1px solid #ddd",
+            }}
+          />
         </div>
       </div>
 

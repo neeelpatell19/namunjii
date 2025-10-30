@@ -3,6 +3,7 @@ import { Tabs, Spin, Alert, Button, Badge } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   HeartOutlined,
+  HeartFilled,
   ShoppingCartOutlined,
   EyeOutlined,
   StarOutlined,
@@ -25,7 +26,7 @@ const SingleProductPageDesign = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
-  const { triggerCartDrawer, triggerWishlistDrawer } = useCartWishlist();
+  const { triggerCartDrawer, triggerWishlistDrawer, isInCart: ctxIsInCart, isInWishlist: ctxIsInWishlist, refreshCart, refreshWishlist } = useCartWishlist();
   const { state } = useAppContext();
 
   const [product, setProduct] = useState(null);
@@ -37,6 +38,8 @@ const SingleProductPageDesign = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const isInWishlist = ctxIsInWishlist(product?._id);
+  const isInCart = ctxIsInCart(product?._id);
 
   // Fetch product data (primary method - try API first, fallback to context)
   const fetchProduct = async () => {
@@ -139,7 +142,7 @@ const SingleProductPageDesign = () => {
 
   // Add to cart
   const handleAddToCart = async () => {
-    if (!deviceId || !product) return;
+    if (!deviceId || !product || isInCart) return;
 
     try {
       const response = await cartApi.addToCart({
@@ -152,6 +155,7 @@ const SingleProductPageDesign = () => {
 
       if (response.success) {
         triggerCartDrawer();
+        refreshCart();
       }
     } catch (err) {
       console.error("Failed to add to cart:", err);
@@ -161,6 +165,7 @@ const SingleProductPageDesign = () => {
   // Add to wishlist
   const handleAddToWishlist = async () => {
     if (!deviceId || !product) return;
+    if (isInWishlist) return;
 
     try {
       const response = await wishlistApi.addToWishlist({
@@ -170,6 +175,7 @@ const SingleProductPageDesign = () => {
 
       if (response.success) {
         triggerWishlistDrawer();
+        refreshWishlist();
       }
     } catch (err) {
       console.error("Failed to add to wishlist:", err);
@@ -180,6 +186,8 @@ const SingleProductPageDesign = () => {
     window.scrollTo(0, 0);
     fetchProduct();
   }, [productId, state.products]);
+
+  // Status derived from provider; no local checking
 
   // Calculate final price
   const calculateFinalPrice = () => {
@@ -337,12 +345,20 @@ const SingleProductPageDesign = () => {
 
           {/* Action Buttons */}
           <div className="action-buttons">
-            <button className="add-to-bag-btn" onClick={handleAddToCart}>
+            <button
+              className="add-to-bag-btn"
+              onClick={handleAddToCart}
+              disabled={isInCart}
+            >
               <ShoppingCartOutlined />
-              ADD TO BAG
+              {isInCart ? "ADDED TO BAG" : "ADD TO BAG"}
             </button>
             <button className="wishlist-btn" onClick={handleAddToWishlist}>
-              <HeartOutlined />
+              {isInWishlist ? (
+                <HeartFilled style={{ color: "#dc2626" }} />
+              ) : (
+                <HeartOutlined />
+              )}
               WISHLIST
             </button>
           </div>
