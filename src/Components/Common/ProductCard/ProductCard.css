@@ -88,9 +88,13 @@
 }
 
 .product-card-quick-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background: var(--bg-white);
-  color: var(--brandColor);
-  border: none;
+  color: #775242;
+  /* border: none; */
   padding: 12px 24px;
   border-radius: 25px;
   font-family: var(--Poppins-font);
@@ -99,46 +103,49 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(54, 66, 78, 0.1);
+  text-align: center;
+}
+
+.product-card-quick-view-btn span{
+  display: flex;
+  align-items: center;
+ 
 }
 
 .product-card-quick-view-btn:hover {
-  background: var(--brandColor);
-  color: white;
+  background: #FFFFFFD9;
+  color: #775242;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(54, 66, 78, 0.15);
+  border: 1px solid #775242;
 }
 
 /* Wishlist Button */
 .product-card-wishlist-btn {
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #e0e0e0;
-  border-radius: 50%;
+  border: none;
+  
+  background-color: transparent;
+ 
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(54, 66, 78, 0.1);
+
   flex-shrink: 0;
 }
 
-.product-card-wishlist-btn:hover {
-  background: #ef4444;
-  color: white;
-  border-color: #ef4444;
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
+
 
 /* Content Section */
 .product-card-content {
-  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  padding: 0.5rem .2rem 1.5rem 0.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   flex: 1;
   background-color:var(--bg-off-white);
 }
@@ -158,10 +165,11 @@
 .product-card-name {
   font-family: var(--Poppins-font);
   font-size: 0.94rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #242424 !important;
   margin: 0;
-  line-height: 1.3;
+  line-height: 100%;
+  letter-spacing: 1%;
   flex: 1;
 }
 
@@ -173,12 +181,13 @@
 }
 
 .product-card-size {
-  font-family: var(--Poppins-font);
+  /* font-family: var(--Poppins-font); */
   font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--brand-600);
+  font-weight: 400;
+  color: #7E7A78;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0%;
+  font-family: Firasans;
 }
 
 /* Pricing Section */
@@ -198,9 +207,9 @@
 }
 
 .product-card-price {
-  font-family: var(--Poppins-font);
+  font-family: firasans;
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 300;
   color: #333333 !important;
 }
 

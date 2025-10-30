@@ -110,6 +110,7 @@ export default function ProductCard({
                 className="product-card-quick-view-btn"
                 onClick={handleQuickView}
               >
+                <span><img src="/icons/mingcute_eye-line.svg" alt="eye" /></span>
                 Quick View
               </button>
             </div>
