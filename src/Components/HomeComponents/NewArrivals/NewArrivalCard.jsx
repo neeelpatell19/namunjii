@@ -39,10 +39,10 @@ export default function NewArrivalCard({ product }) {
           loading="lazy"
         />
       </div>
-      <div className="new-collections-footer">
+      <div className="new-collections-footer" onClick={handleAddToCart}>
         <button
           className="new-collections-shop new-arrivals-buy-link"
-          onClick={handleAddToCart}
+          
           style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
         >
           Add to Cart
