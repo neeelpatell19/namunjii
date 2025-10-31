@@ -87,6 +87,25 @@
   transform: translateX(3px);
 }
 
+/* Disabled state for cart button */
+.new-collections-footer-disabled {
+  opacity: 0.7;
+  cursor: not-allowed !important;
+}
+
+.new-collections-footer-disabled:hover {
+  opacity: 0.7;
+}
+
+.new-collections-footer-disabled:hover .new-collections-shop {
+  color: #2e1d0b;
+}
+
+.new-collections-footer-disabled:hover .new-collections-shop-arrow {
+  transform: none;
+  color: #999999;
+}
+
 /* Responsive Design */
 
 /* Tablet (1024px and below) */

@@ -6,10 +6,12 @@ import "./NewArrivalCard.css";
 
 export default function NewArrivalCard({ product }) {
   const { deviceId } = useDevice();
-  const { triggerCartDrawer } = useCartWishlist();
+  const { triggerCartDrawer, isInCart: ctxIsInCart, refreshCart } = useCartWishlist();
+  const isInCart = ctxIsInCart(product?._id);
 
-  const handleAddToCart = async () => {
-    if (!deviceId) return;
+  const handleAddToCart = async (e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    if (!deviceId || isInCart) return;
 
     try {
       const response = await cartApi.addToCart({
@@ -21,6 +23,7 @@ export default function NewArrivalCard({ product }) {
       if (response.success) {
         // Trigger cart drawer to open
         triggerCartDrawer();
+        refreshCart();
         console.log("Added to cart:", product.productName);
       }
     } catch (error) {
@@ -39,15 +42,28 @@ export default function NewArrivalCard({ product }) {
           loading="lazy"
         />
       </div>
-      <div className="new-collections-footer" onClick={handleAddToCart}>
+      <div
+        className={`new-collections-footer ${
+          isInCart ? "new-collections-footer-disabled" : ""
+        }`}
+        onClick={isInCart ? (e) => e.stopPropagation() : handleAddToCart}
+        style={{ cursor: isInCart ? "not-allowed" : "pointer" }}
+      >
         <button
           className="new-collections-shop new-arrivals-buy-link"
-          
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: isInCart ? "not-allowed" : "pointer",
+            padding: 0,
+          }}
         >
-          Add to Cart
+          {isInCart ? "Already in cart" : "Add to Cart"}
         </button>
-        <span className="new-collections-shop-arrow">
+        <span
+          className="new-collections-shop-arrow"
+          onClick={(e) => e.stopPropagation()}
+        >
           <img src="/icons/Arrow.svg" alt="arrow" />
         </span>
       </div>

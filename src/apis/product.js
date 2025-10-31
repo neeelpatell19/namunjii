@@ -46,6 +46,12 @@ const createProductApi = () => {
         : "/products/public";
       return api.get(url).then((res) => res.data);
     },
+
+    // Get all unique sizes from products
+    getSizes: () => api.get("/products/sizes").then((res) => res.data),
+
+    // Get all unique colors from products
+    getColors: () => api.get("/products/colors").then((res) => res.data),
   };
 };
 
