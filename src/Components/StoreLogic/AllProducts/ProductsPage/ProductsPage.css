@@ -76,7 +76,7 @@
 }
 
 .filters-header .anticon {
-  color: #8b4513;
+  color: var(--brand-primary);
 }
 
 /* Filter Sections */
@@ -102,13 +102,13 @@
 
 .filter-section .ant-input-search .ant-input-search-button {
   border-radius: 0 8px 8px 0;
-  background: #8b4513;
-  border-color: #8b4513;
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
 }
 
 .filter-section .ant-input-search .ant-input-search-button:hover {
-  background: #a0522d;
-  border-color: #a0522d;
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
 }
 
 /* Price Range */
@@ -117,7 +117,7 @@
   margin-top: 10px;
   font-size: 14px;
   font-weight: 600;
-  color: #8b4513;
+  color: var(--brand-primary);
 }
 
 .filter-section .ant-slider {
@@ -125,17 +125,17 @@
 }
 
 .filter-section .ant-slider .ant-slider-track {
-  background: #8b4513;
+  background: var(--brand-primary);
 }
 
 .filter-section .ant-slider .ant-slider-handle {
-  border-color: #8b4513;
+  border-color: var(--brand-primary);
 }
 
 .filter-section .ant-slider .ant-slider-handle:hover,
 .filter-section .ant-slider .ant-slider-handle:focus {
-  border-color: #a0522d;
-  box-shadow: 0 0 0 5px rgba(139, 69, 19, 0.12);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 5px rgba(54, 66, 78, 0.12);
 }
 
 /* Select Dropdowns */
@@ -149,12 +149,12 @@
 }
 
 .filter-section .ant-select:hover .ant-select-selector {
-  border-color: #8b4513;
+  border-color: var(--brand-primary);
 }
 
 .filter-section .ant-select.ant-select-focused .ant-select-selector {
-  border-color: #8b4513;
-  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(54, 66, 78, 0.2);
 }
 
 /* Checkbox Group */
@@ -170,12 +170,12 @@
 }
 
 .checkbox-group .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #8b4513;
-  border-color: #8b4513;
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
 }
 
 .checkbox-group .ant-checkbox:hover .ant-checkbox-inner {
-  border-color: #8b4513;
+  border-color: var(--brand-primary);
 }
 
 /* Products Content */
@@ -226,12 +226,12 @@
 }
 
 .sort-options .ant-select:hover .ant-select-selector {
-  border-color: #8b4513;
+  border-color: var(--brand-primary);
 }
 
 .sort-options .ant-select.ant-select-focused .ant-select-selector {
-  border-color: #8b4513;
-  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(54, 66, 78, 0.2);
 }
 
 /* Products Grid */
@@ -290,16 +290,16 @@
 }
 
 .products-pagination .ant-pagination .ant-pagination-item:hover {
-  border-color: #8b4513;
+  border-color: var(--brand-primary);
 }
 
 .products-pagination .ant-pagination .ant-pagination-item:hover a {
-  color: #8b4513;
+  color: var(--brand-primary);
 }
 
 .products-pagination .ant-pagination .ant-pagination-item-active {
-  background: #8b4513;
-  border-color: #8b4513;
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
 }
 
 .products-pagination .ant-pagination .ant-pagination-item-active a {
@@ -314,8 +314,8 @@
 
 .products-pagination .ant-pagination .ant-pagination-prev:hover,
 .products-pagination .ant-pagination .ant-pagination-next:hover {
-  border-color: #8b4513;
-  color: #8b4513;
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
 }
 
 .products-pagination .ant-pagination .ant-pagination-options {
@@ -340,7 +340,7 @@
   .ant-pagination-options
   .ant-select:hover
   .ant-select-selector {
-  border-color: #8b4513;
+  border-color: var(--brand-primary);
 }
 
 /* Responsive Design */
@@ -474,12 +474,12 @@
 }
 
 .filters-sidebar::-webkit-scrollbar-thumb {
-  background: #8b4513;
+  background: var(--brand-primary);
   border-radius: 3px;
 }
 
 .filters-sidebar::-webkit-scrollbar-thumb:hover {
-  background: #a0522d;
+  background: var(--brand-primary);
 }
 
 /* Animation for smooth transitions */
@@ -622,15 +622,5 @@
 .filter-section .ant-input:focus,
 .filter-section .ant-select-focused .ant-select-selector,
 .sort-options .ant-select-focused .ant-select-selector {
-  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
-}
-
-/* Hover effects */
-.products-grid .product-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.products-grid .product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 2px rgba(54, 66, 78, 0.2);
 }
