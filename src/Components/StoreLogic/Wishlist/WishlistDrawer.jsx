@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useDevice } from "../../../hooks/useDevice";
+import { useCartWishlist } from "../Context/CartWishlistContext";
 import wishlistApi from "../../../apis/wishlist";
 import cartApi from "../../../apis/cart";
 import ProductCard from "../../Common/ProductCard/ProductCard";
@@ -8,6 +9,7 @@ import "./WishlistDrawer.css";
 
 const WishlistDrawer = ({ isOpen, onClose }) => {
   const { deviceId } = useDevice();
+  const { refreshWishlist, refreshCart } = useCartWishlist();
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -41,6 +43,8 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
         setWishlistItems((prev) =>
           prev.filter((item) => item.productId._id !== productId)
         );
+        // Refresh wishlist in context to update all ProductCard components
+        refreshWishlist();
       }
     } catch (err) {
       setError(err.message || "Failed to remove item from wishlist");
@@ -57,6 +61,8 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
       });
 
       if (response.success) {
+        // Refresh cart in context to update all ProductCard components
+        refreshCart();
         // Optionally show success message or remove from wishlist
         console.log("Added to cart successfully");
       }
@@ -72,6 +78,8 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
 
       if (response.success) {
         setWishlistItems([]);
+        // Refresh wishlist in context to update all ProductCard components
+        refreshWishlist();
       }
     } catch (err) {
       setError(err.message || "Failed to clear wishlist");
