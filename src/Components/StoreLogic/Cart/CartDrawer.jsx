@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useDevice } from "../../../hooks/useDevice";
+import { useCartWishlist } from "../Context/CartWishlistContext";
 import cartApi from "../../../apis/cart";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./CartDrawer.css";
@@ -9,6 +10,7 @@ import "./CartDrawer.css";
 const CartDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { deviceId } = useDevice();
+  const { refreshCart } = useCartWishlist();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,6 +44,8 @@ const CartDrawer = ({ isOpen, onClose }) => {
         setCartItems((prev) =>
           prev.filter((item) => item.productId._id !== productId)
         );
+        // Refresh cart in context to update all ProductCard components
+        refreshCart();
       }
     } catch (err) {
       setError(err.message || "Failed to remove item from cart");
@@ -84,6 +88,8 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
       if (response.success) {
         setCartItems([]);
+        // Refresh cart in context to update all ProductCard components
+        refreshCart();
       }
     } catch (err) {
       setError(err.message || "Failed to clear cart");
