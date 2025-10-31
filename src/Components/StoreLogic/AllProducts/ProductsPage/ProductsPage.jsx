@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Spin,
+  Skeleton,
   Alert,
-  Pagination,
   Select,
   Input,
   Checkbox,
@@ -22,7 +22,8 @@ import {
 } from "@ant-design/icons";
 import ProductCard from "../../../Common/ProductCard/ProductCard";
 import productApi from "../../../../apis/product";
-import { useAppContext } from "../../Context/AppContext";
+import categoryApi from "../../../../apis/category";
+import subcategoryApi from "../../../../apis/subcategory";
 import "./ProductsPage.css";
 
 const { Search } = Input;
@@ -30,12 +31,19 @@ const { Option } = Select;
 
 const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { state } = useAppContext();
 
   // State for products and loading
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [subcategories, setSubcategories] = useState([]);
+  const [subcategoriesLoading, setSubcategoriesLoading] = useState(false);
+  const [sizes, setSizes] = useState([]);
+  const [sizesLoading, setSizesLoading] = useState(false);
+  const [colors, setColors] = useState([]);
+  const [colorsLoading, setColorsLoading] = useState(false);
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -44,6 +52,7 @@ const ProductsPage = () => {
     hasNextPage: false,
     hasPrevPage: false,
   });
+  const [loadingMore, setLoadingMore] = useState(false);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -76,6 +85,7 @@ const ProductsPage = () => {
 
   // Ref to track if we're in initial load
   const isInitialLoad = useRef(true);
+  const hasLoadedProductsOnce = useRef(false);
 
   // Refs to store current values to avoid dependency issues
   const filtersRef = useRef(filters);
@@ -147,6 +157,7 @@ const ProductsPage = () => {
         if (response.success) {
           setProducts(response.data);
           setPagination(response.pagination);
+          hasLoadedProductsOnce.current = true;
         } else {
           setError(response.message || "Failed to fetch products");
         }
@@ -160,10 +171,159 @@ const ProductsPage = () => {
     []
   );
 
+  // Load more products for infinite scroll
+  const loadMoreProducts = useCallback(async () => {
+    // Don't load if already loading, no more pages, or already loading more
+    if (
+      loading ||
+      loadingMore ||
+      !pagination.hasNextPage ||
+      pagination.page >= pagination.totalPages
+    ) {
+      return;
+    }
+
+    try {
+      setLoadingMore(true);
+      const nextPage = pagination.page + 1;
+      const currentFilters = filtersRef.current;
+      const currentPriceRange = priceRangeRef.current;
+
+      // Prepare query parameters
+      const queryParams = { ...currentFilters, page: nextPage };
+
+      // Add price range
+      if (currentPriceRange[0] > 0) queryParams.minPrice = currentPriceRange[0];
+      if (currentPriceRange[1] < 30000)
+        queryParams.maxPrice = currentPriceRange[1];
+
+      // Remove empty values
+      Object.keys(queryParams).forEach((key) => {
+        if (queryParams[key] === "" || queryParams[key] === false) {
+          delete queryParams[key];
+        }
+      });
+
+      const response = await productApi.getProducts(queryParams);
+
+      if (response.success) {
+        // Append new products to existing ones
+        setProducts((prevProducts) => [...prevProducts, ...response.data]);
+        setPagination(response.pagination);
+        // Update filters to reflect the new page
+        setFilters((prevFilters) => ({ ...prevFilters, page: nextPage }));
+      }
+    } catch (err) {
+      console.error("Error loading more products:", err);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [loading, loadingMore, pagination]);
+
   // Store fetchProducts in ref
   useEffect(() => {
     fetchProductsRef.current = fetchProducts;
   }, [fetchProducts]);
+
+  // Fetch categories for selection
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+        const response = await categoryApi.getCategoriesForSelection();
+        if (response.success) {
+          setCategories(response.data || []);
+        } else {
+          console.error("Failed to fetch categories:", response.msg);
+          setCategories([]);
+        }
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+        setCategories([]);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch subcategories for selection when category is selected
+  useEffect(() => {
+    const fetchSubCategories = async () => {
+      // Only fetch if a category is selected
+      if (!filters.category) {
+        setSubcategories([]);
+        return;
+      }
+
+      try {
+        setSubcategoriesLoading(true);
+        const response = await subcategoryApi.getSubCategoriesForSelection({
+          category: filters.category,
+        });
+        if (response.success) {
+          setSubcategories(response.data || []);
+        } else {
+          console.error("Failed to fetch subcategories:", response.msg);
+          setSubcategories([]);
+        }
+      } catch (err) {
+        console.error("Error fetching subcategories:", err);
+        setSubcategories([]);
+      } finally {
+        setSubcategoriesLoading(false);
+      }
+    };
+
+    fetchSubCategories();
+  }, [filters.category]);
+
+  // Fetch sizes for selection
+  useEffect(() => {
+    const fetchSizes = async () => {
+      try {
+        setSizesLoading(true);
+        const response = await productApi.getSizes();
+        if (response.success) {
+          setSizes(response.data || []);
+        } else {
+          console.error("Failed to fetch sizes:", response.message);
+          setSizes([]);
+        }
+      } catch (err) {
+        console.error("Error fetching sizes:", err);
+        setSizes([]);
+      } finally {
+        setSizesLoading(false);
+      }
+    };
+
+    fetchSizes();
+  }, []);
+
+  // Fetch colors for selection
+  useEffect(() => {
+    const fetchColors = async () => {
+      try {
+        setColorsLoading(true);
+        const response = await productApi.getColors();
+        if (response.success) {
+          setColors(response.data || []);
+        } else {
+          console.error("Failed to fetch colors:", response.message);
+          setColors([]);
+        }
+      } catch (err) {
+        console.error("Error fetching colors:", err);
+        setColors([]);
+      } finally {
+        setColorsLoading(false);
+      }
+    };
+
+    fetchColors();
+  }, []);
 
   // Initialize filters from URL params and fetch products
   useEffect(() => {
@@ -233,10 +393,21 @@ const ProductsPage = () => {
   // Handle filter changes
   const handleFilterChange = useCallback(
     (key, value) => {
-      const newFilters = { ...filters, [key]: value, page: 1 }; // Reset to page 1 when filters change
+      // Normalize null/undefined to empty string for string filter fields
+      const normalizedValue =
+        value === null || value === undefined ? "" : value;
+      const newFilters = { ...filters, [key]: normalizedValue, page: 1 }; // Reset to page 1 when filters change
+
+      // If category changes, clear subcategory
+      if (key === "category") {
+        newFilters.subcategory = "";
+      }
+
       setFilters(newFilters);
       updateURL(newFilters);
 
+      // Reset products when filters change (don't append)
+      setProducts([]);
       // Fetch products with new filters
       if (fetchProductsRef.current) {
         fetchProductsRef.current(newFilters, priceRange);
@@ -258,6 +429,8 @@ const ProductsPage = () => {
       setFilters(newFilters);
       updateURL(newFilters);
 
+      // Reset products when price range changes (don't append)
+      setProducts([]);
       // Fetch products with new price range
       if (fetchProductsRef.current) {
         fetchProductsRef.current(newFilters, value);
@@ -291,17 +464,37 @@ const ProductsPage = () => {
     return () => clearTimeout(timer);
   }, [priceInput, priceRange, handlePriceRangeChange]);
 
-  // Handle pagination
-  const handlePageChange = (page) => {
-    const newFilters = { ...filters, page };
-    setFilters(newFilters);
-    updateURL(newFilters);
+  // Infinite scroll - detect when user scrolls near bottom
+  useEffect(() => {
+    const handleScroll = () => {
+      // Calculate scroll position
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
 
-    // Fetch products with new page
-    if (fetchProductsRef.current) {
-      fetchProductsRef.current(newFilters, priceRange);
-    }
-  };
+      // Load more when user is within 200px of bottom
+      const threshold = 200;
+      if (scrollHeight - (scrollTop + clientHeight) < threshold) {
+        loadMoreProducts();
+      }
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", throttledHandleScroll);
+    return () => window.removeEventListener("scroll", throttledHandleScroll);
+  }, [loadMoreProducts]);
 
   // Clear all filters
   const clearFilters = () => {
@@ -439,9 +632,10 @@ const ProductsPage = () => {
         <h4>Category</h4>
         <Select
           placeholder="Select Category"
-          value={filters.category || undefined}
+          value={filters.category || null}
           onChange={(value) => handleFilterChange("category", value)}
           allowClear
+          loading={categoriesLoading}
           style={{ width: "100%" }}
         >
           {categories.map((category) => (
@@ -458,18 +652,17 @@ const ProductsPage = () => {
           <h4>Subcategory</h4>
           <Select
             placeholder="Select Subcategory"
-            value={filters.subcategory || undefined}
+            value={filters.subcategory || null}
             onChange={(value) => handleFilterChange("subcategory", value)}
             allowClear
+            loading={subcategoriesLoading}
             style={{ width: "100%" }}
           >
-            {subcategories
-              .filter((sub) => sub.category === filters.category)
-              .map((subcategory) => (
-                <Option key={subcategory._id} value={subcategory._id}>
-                  {subcategory.name}
-                </Option>
-              ))}
+            {subcategories.map((subcategory) => (
+              <Option key={subcategory._id} value={subcategory._id}>
+                {subcategory.name}
+              </Option>
+            ))}
           </Select>
         </div>
       )}
@@ -479,7 +672,7 @@ const ProductsPage = () => {
         <h4>Gender</h4>
         <Select
           placeholder="Select Gender"
-          value={filters.gender || undefined}
+          value={filters.gender || null}
           onChange={(value) => handleFilterChange("gender", value)}
           allowClear
           style={{ width: "100%" }}
@@ -495,12 +688,13 @@ const ProductsPage = () => {
         <h4>Size</h4>
         <Select
           placeholder="Select Size"
-          value={filters.size || undefined}
+          value={filters.size || null}
           onChange={(value) => handleFilterChange("size", value)}
           allowClear
+          loading={sizesLoading}
           style={{ width: "100%" }}
         >
-          {getUniqueValues("size").map((size) => (
+          {sizes.map((size) => (
             <Option key={size} value={size}>
               {size}
             </Option>
@@ -513,12 +707,13 @@ const ProductsPage = () => {
         <h4>Color</h4>
         <Select
           placeholder="Select Color"
-          value={filters.color || undefined}
+          value={filters.color || null}
           onChange={(value) => handleFilterChange("color", value)}
           allowClear
+          loading={colorsLoading}
           style={{ width: "100%" }}
         >
-          {getUniqueValues("color").map((color) => (
+          {colors.map((color) => (
             <Option key={color} value={color}>
               {color}
             </Option>
@@ -557,24 +752,71 @@ const ProductsPage = () => {
     </>
   );
 
-  // Get unique values for filter options
-  const getUniqueValues = (key) => {
-    const values = new Set();
-    state.products?.forEach((product) => {
-      if (product[key]) values.add(product[key]);
-    });
-    return Array.from(values).sort();
+  // Render skeleton product cards
+  const renderSkeletonProducts = (count = 12) => {
+    return (
+      <div className="products-grid">
+        {Array.from({ length: count }).map((_, index) => (
+          <div key={index} className="product-card">
+            <div
+              className="product-card-image-container"
+              style={{ padding: 0 }}
+            >
+              <Skeleton.Image
+                active
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </div>
+            <div className="product-card-content" style={{ padding: "12px" }}>
+              <div className="product-card-info">
+                <Skeleton
+                  active
+                  paragraph={{ rows: 1 }}
+                  title={{ width: "80%" }}
+                />
+                <Skeleton active paragraph={{ rows: 1, width: "50%" }} />
+              </div>
+              <div className="product-card-pricing">
+                <Skeleton active paragraph={{ rows: 1, width: "60%" }} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
-  // Get categories from context
-  const categories = state.categories || [];
-  const subcategories = state.subcategories || [];
-
-  if (loading && products.length === 0) {
+  // Only show full-page loading on initial load (when no products have been loaded yet)
+  if (loading && !hasLoadedProductsOnce.current && products.length === 0) {
     return (
-      <div className="products-page-loading">
-        <Spin size="large" />
-        <p>Loading products...</p>
+      <div className="products-page">
+        <div className="products-page-container">
+          <div className="products-page-content">
+            {/* Filters Sidebar - Desktop */}
+            <div className="filters-sidebar desktop-filters">
+              {renderFiltersContent()}
+            </div>
+
+            {/* Products Content */}
+            <div className="products-content">
+              {/* Products Header */}
+              <div className="products-header">
+                <div className="products-info">
+                  <Skeleton.Input active size="large" style={{ width: 200 }} />
+                </div>
+              </div>
+
+              {/* Skeleton Products Grid */}
+              {renderSkeletonProducts()}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -666,9 +908,7 @@ const ProductsPage = () => {
 
             {/* Products Grid */}
             {loading ? (
-              <div className="products-loading">
-                <Spin size="large" />
-              </div>
+              renderSkeletonProducts()
             ) : products.length > 0 ? (
               <>
                 <div className="products-grid">
@@ -681,25 +921,17 @@ const ProductsPage = () => {
                   ))}
                 </div>
 
-                {/* Pagination */}
-                {pagination.totalPages > 1 && (
-                  <div className="products-pagination">
-                    <Pagination
-                      current={pagination.page}
-                      total={pagination.total}
-                      pageSize={pagination.limit}
-                      onChange={handlePageChange}
-                      showSizeChanger
-                      showQuickJumper
-                      showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} of ${total} products`
-                      }
-                      onShowSizeChange={(current, size) => {
-                        const newFilters = { ...filters, limit: size, page: 1 };
-                        setFilters(newFilters);
-                        updateURL(newFilters);
-                      }}
-                    />
+                {/* Loading More Indicator */}
+                {loadingMore && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      padding: "20px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Spin size="large" />
                   </div>
                 )}
               </>

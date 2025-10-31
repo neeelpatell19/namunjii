@@ -624,3 +624,13 @@
 .sort-options .ant-select-focused .ant-select-selector {
   box-shadow: 0 0 0 2px rgba(54, 66, 78, 0.2);
 }
+
+:where(
+    .css-dev-only-do-not-override-1odpy5d
+  ).ant-skeleton.ant-skeleton-element {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}

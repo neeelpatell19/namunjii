@@ -39,20 +39,22 @@ export const CartWishlistProvider = ({ children }) => {
   const refreshCart = useCallback(async () => {
     try {
       const res = await cartApi.getCart();
-      const items = Array.isArray(res?.data) ? res.data : res?.items || [];
+      const items = Array.isArray(res?.data) ? res.data : res?.data?.items || res?.items || [];
       setCartItems(items);
     } catch (e) {
-      // ignore
+      console.error("Error refreshing cart:", e);
+      setCartItems([]);
     }
   }, []);
 
   const refreshWishlist = useCallback(async () => {
     try {
       const res = await wishlistApi.getWishlist();
-      const items = Array.isArray(res?.data) ? res.data : res?.items || [];
+      const items = Array.isArray(res?.data) ? res.data : res?.data?.items || res?.items || [];
       setWishlistItems(items);
     } catch (e) {
-      // ignore
+      console.error("Error refreshing wishlist:", e);
+      setWishlistItems([]);
     }
   }, []);
 
@@ -64,24 +66,50 @@ export const CartWishlistProvider = ({ children }) => {
 
   const wishlistIdSet = useMemo(() => {
     const set = new Set();
-    wishlistItems.forEach((w) => set.add(w.productId || w._id || w.product?._id));
+    wishlistItems.forEach((w) => {
+      // Handle different possible structures
+      const productId = 
+        w.productId?._id || // nested product object
+        (typeof w.productId === 'string' ? w.productId : null) || // direct productId string
+        w.product?._id || // alternative product property
+        w._id; // item's own _id
+      if (productId) {
+        // Convert to string for consistent comparison
+        set.add(String(productId));
+      }
+    });
     return set;
   }, [wishlistItems]);
 
   const cartIdSet = useMemo(() => {
     const set = new Set();
-    cartItems.forEach((c) => set.add(c.productId || c._id || c.product?._id));
+    cartItems.forEach((c) => {
+      // Handle different possible structures
+      const productId = 
+        c.productId?._id || // nested product object (most common)
+        (typeof c.productId === 'string' ? c.productId : null) || // direct productId string
+        c.product?._id || // alternative product property
+        c._id; // item's own _id
+      if (productId) {
+        // Convert to string for consistent comparison
+        set.add(String(productId));
+      }
+    });
     return set;
   }, [cartItems]);
 
   const isInWishlist = useCallback((productId) => {
     if (!productId) return false;
-    return wishlistIdSet.has(productId);
+    // Convert to string for consistent comparison
+    const productIdStr = String(productId);
+    return wishlistIdSet.has(productIdStr);
   }, [wishlistIdSet]);
 
   const isInCart = useCallback((productId) => {
     if (!productId) return false;
-    return cartIdSet.has(productId);
+    // Convert to string for consistent comparison
+    const productIdStr = String(productId);
+    return cartIdSet.has(productIdStr);
   }, [cartIdSet]);
 
   const value = {

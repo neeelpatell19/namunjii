@@ -194,11 +194,14 @@ export default function ProductCard({
             <div className="product-card-action-buttons">
               {showAddToCart && (
                 <div
-                  className="product-card-add-to-cart-container"
-                  onClick={isInCart ? undefined : handleAddToCart}
+                  className={`product-card-add-to-cart-container ${
+                    isInCart ? "product-card-add-to-cart-disabled" : ""
+                  }`}
+                  onClick={isInCart ? (e) => e.stopPropagation() : handleAddToCart}
+                  style={{ cursor: isInCart ? "not-allowed" : "pointer" }}
                 >
                   <span className="product-card-add-to-cart-btn">
-                    {isInCart ? "Added to Cart" : "Add to Cart"}
+                    {isInCart ? "Already in cart" : "Add to Cart"}
                   </span>
                   <span
                     className="product-card-add-to-cart-arrow"

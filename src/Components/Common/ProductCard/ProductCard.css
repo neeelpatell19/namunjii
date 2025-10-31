@@ -304,6 +304,25 @@
   transform: translateX(3px);
 }
 
+/* Disabled state for cart button */
+.product-card-add-to-cart-disabled {
+  opacity: 0.7;
+  cursor: not-allowed !important;
+}
+
+.product-card-add-to-cart-disabled:hover {
+  opacity: 0.7;
+}
+
+.product-card-add-to-cart-disabled:hover .product-card-add-to-cart-btn {
+  color: #2e1d0b;
+}
+
+.product-card-add-to-cart-disabled:hover .product-card-add-to-cart-arrow {
+  transform: none;
+  color: #999999;
+}
+
 /* View Product Button */
 .product-card-view-btn {
   width: 100%;
