@@ -219,18 +219,107 @@ export default function ProductCard({
           className="product-card-modal"
           onClick={() => setShowQuickViewModal(false)}
         >
-          <div className="product-card-modal-content">
+          <div className="product-card-modal-content" onClick={(e) => e.stopPropagation()}>
             <button
               className="product-card-modal-close"
               onClick={() => setShowQuickViewModal(false)}
             >
               ✕
             </button>
-            <img
-              src={product.coverImage[0]}
-              alt={product.productName}
-              className="product-card-modal-image"
-            />
+            
+            <div className="product-card-modal-wrapper">
+              {/* Image Section - LEFT with Gradient */}
+              <div className="product-card-modal-image-section">
+                <img
+                  src={product.coverImage[0]}
+                  alt={product.productName}
+                  className="product-card-modal-image"
+                />
+                
+                {/* Image Carousel Dots */}
+                {product.coverImage && product.coverImage.length > 1 && (
+                  <div className="product-card-modal-carousel-dots">
+                    {product.coverImage.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`${product.productName} ${index + 1}`}
+                        className={`carousel-dot ${index === 0 ? 'active' : ''}`}
+                        onClick={() => {
+                          const mainImage = document.querySelector('.product-card-modal-image');
+                          if (mainImage) mainImage.src = image;
+                          // Update active dot
+                          document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                            dot.classList.toggle('active', i === index);
+                          });
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Product Details - RIGHT (White Background) */}
+              <div className="product-card-modal-details-white">
+                <h2>{product.productName}</h2>
+                
+                {/* Price and Rating */}
+                <div className="product-card-modal-price-rating">
+                  <div className="product-card-modal-price">
+                    {product.discount > 0 ? (
+                      <>
+                        <span className="discounted-price">
+                          {formatPrice(calculateFinalPrice(product.basePricing, product.discount))}
+                        </span>
+                        <span className="original-price">{formatPrice(product.basePricing)}</span>
+                      </>
+                    ) : (
+                      <span className="final-price">{formatPrice(product.basePricing)}</span>
+                    )}
+                  </div>
+                  
+                  {/* Star Rating */}
+                 
+                </div>
+                
+                {/* Description */}
+                {product.productDescription && (
+                  <p className="product-card-modal-description-white">{product.productDescription}</p>
+                )}
+                
+               
+                
+              
+               
+                
+                {/* Action Buttons */}
+                <div className="product-card-modal-actions-white">
+                  <button 
+                    className="product-card-modal-add-to-cart-outline"
+                    onClick={() => {
+                      handleAddToCart({ stopPropagation: () => {} });
+                      setShowQuickViewModal(false);
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                  <button 
+                    className="product-card-modal-wishlist-icon-btn"
+                    onClick={(e) => {
+                      handleAddToWishlist(e);
+                      setShowQuickViewModal(false);
+                    }}
+                    title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                  >
+                    {isInWishlist ? (
+                      <HeartFilled style={{ color: "#dc2626", fontSize: "24px" }} />
+                    ) : (
+                      <HeartOutlined style={{ fontSize: "24px" }} />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
