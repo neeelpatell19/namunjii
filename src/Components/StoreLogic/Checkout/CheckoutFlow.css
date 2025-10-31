@@ -62,7 +62,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .checkout-card {
@@ -332,13 +332,73 @@
 
 .order-items-card {
   margin-top: 20px;
-
+  position: sticky;
+  top: 20px;
+  z-index: 100;
 }
 
+/* ===== SCROLLABLE ORDER CONFIRMATION SECTION ===== */
+.order-confirmation-step {
+  padding: 30px;
+  max-height: 80vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+}
 
+/* Hide scrollbar for Chrome, Safari and Edge */
+.order-confirmation-step::-webkit-scrollbar {
+  display: none;
+}
 
-/* Responsive Design */
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+
+/* Desktop (1200px and above) */
+@media (min-width: 1200px) {
+  .order-confirmation-step {
+    padding: 30px;
+    max-height: 85vh;
+    overflow-y: scroll;
+  }
+
+  .order-items-card {
+    position: sticky;
+    top: 30px;
+  }
+}
+
+/* Tablet (768px to 1199px) */
+@media (max-width: 1199px) and (min-width: 769px) {
+  .order-confirmation-step {
+    padding: 25px;
+    max-height: 80vh;
+    overflow-y: scroll;
+  }
+
+  .order-items-card {
+    position: sticky;
+    top: 25px;
+  }
+}
+
+/* Mobile Landscape & Tablet Portrait (481px to 768px) */
 @media (max-width: 768px) {
+  .order-confirmation-step {
+    padding: 20px;
+    max-height: 75vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  .order-items-card {
+    position: sticky;
+    top: 15px;
+    z-index: 100;
+    margin-top: 10px;
+  }
+
   .checkout-flow-container {
     padding: 10px;
   }
@@ -387,7 +447,21 @@
   }
 }
 
+/* Mobile (480px and below) */
 @media (max-width: 480px) {
+  .order-confirmation-step {
+    padding: 15px;
+    max-height: 70vh;
+    overflow-y: scroll;
+  }
+
+  .order-items-card {
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+    margin-top: 5px;
+  }
+
   .checkout-header h1 {
     font-size: 1.8rem;
   }
@@ -400,10 +474,63 @@
 
   .order-item {
     padding: 10px 0;
+    flex-direction: column;
   }
 
   .item-image {
     width: 60px;
     height: 60px;
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+
+  .proceed-payment-btn {
+    width: 100%;
+    min-width: auto;
+    height: 45px;
+    font-size: 1rem;
+  }
+
+  .order-items-card {
+    margin-bottom: 15px;
+  }
+
+  .order-summary-card,
+  .customer-info-card,
+  .shipping-info-card {
+    margin-bottom: 15px;
+  }
+}
+
+/* Very Small Mobile (320px and below) */
+@media (max-width: 320px) {
+  .order-confirmation-step {
+    padding: 10px;
+    max-height: 65vh;
+    overflow-y: scroll;
+  }
+
+  .order-items-card {
+    position: sticky;
+    top: 5px;
+    margin-top: 0;
+  }
+
+  .checkout-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .item-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .item-details h4 {
+    font-size: 0.95rem;
+  }
+
+  .proceed-payment-btn {
+    height: 40px;
+    font-size: 0.9rem;
   }
 }
