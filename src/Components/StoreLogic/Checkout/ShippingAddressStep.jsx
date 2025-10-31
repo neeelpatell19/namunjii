@@ -149,7 +149,7 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
               ]}
             >
               <Input
-                prefix={<PhoneOutlined />}
+                prefix={<PhoneOutlined className="Flipped"    />}
                 placeholder="Enter your 10-digit mobile number"
                 size="large"
                 maxLength={10}
