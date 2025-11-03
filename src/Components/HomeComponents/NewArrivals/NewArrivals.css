@@ -14,7 +14,8 @@
 }
 
 .new-arrivals-title {
-  font-family:playfair display;
+  font-family:var(--playfair-display);
+  text-transform: uppercase;
   font-size: 40px;
   color: #775242;
   margin: 0;
@@ -313,13 +314,22 @@
     padding: 0 0.5rem;
   }
 
-  .new-arrivals-title {
+.new-arrivals-title {
     font-size: 1.5rem;
+  }
+
+  .new-arrivals-title {
+    font-size:1.5rem;
+    letter-spacing: 3px;
   }
 
   .view-all-btn{
     display: flex;
     gap: 3px;
+  }
+
+  .view-all-btn span{
+    font-size: 1rem !important;
   }
 
   .new-arrivals-grid {
@@ -349,23 +359,26 @@
   }
 
   .new-collections-shop-arrow {
-    font-size: 12px;
+    font-size: 3px;
   }
 }
 
 /* Small Mobile (360px and below) */
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .new-arrivals-title {
-    font-size: 20px;
-    letter-spacing: 1.5px;
+    font-size: 1.2rem;
+    letter-spacing: 2px !important;
   }
 
-  .view-all-btn {
+  /* .view-all-btn {
     display: flex;
     align-items: center;
     font-size: 12px;
     padding: 2px 16px;
-  }
+  } */
+      .view-all-btn span {
+        font-size: 1rem;
+    }
 
   .new-arrivals-grid {
     gap: 12px;

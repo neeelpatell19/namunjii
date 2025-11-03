@@ -124,7 +124,9 @@ export default function ProductCard({
             onError={(e) => {
               e.target.style.display = "none";
               e.target.nextSibling.style.display = "flex";
+             
             }}
+            onClick={handleViewProduct}
           />
           {/* Fallback for broken images */}
           <div className="product-card-image-fallback">
@@ -150,7 +152,9 @@ export default function ProductCard({
 
         <div className="product-card-content" onClick={handleViewProduct}>
           <div className="product-card-info">
+            <h3 className="product-card-brandname">{product.brandname} brand name</h3>
             <div className="product-card-header">
+              
               <h3 className="product-card-name">{product.productName}</h3>
               <button
                 className="product-card-wishlist-btn"

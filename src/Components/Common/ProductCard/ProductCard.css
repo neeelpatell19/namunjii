@@ -81,6 +81,7 @@
   transition: opacity 0.3s ease;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  pointer-events: none; /* Allow clicks to pass through */
 }
 
 .product-card:hover .product-card-overlay {
@@ -107,7 +108,7 @@
   font-weight: 400;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+  pointer-events: auto; /* Re-enable clicks on the button */
   text-align: center;
 }
 
@@ -149,7 +150,7 @@
 .product-card-content {
   /* position: relative;
   z-index: 1; */
-  padding: 0.5rem .2rem 1.5rem 0.5rem;
+  /* padding: 0.5rem .2rem 1.5rem 0.5rem; */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -198,7 +199,7 @@
   text-transform: uppercase;
   letter-spacing: 0%;
   font-family: Firasans;
-  margin-top: -10px;
+  margin-top: -6px;
 }
 
 /* Pricing Section */
@@ -673,6 +674,13 @@
   transform: rotate(90deg);
 }
 
+  .product-card-brandname{
+    font-size: 0.8rem;
+    color: #775242;
+    font-family: var(--playfair-display);
+    text-transform: capitalize;
+  }
+
 @keyframes fadeInModal {
   from {
     opacity: 0;
@@ -825,6 +833,7 @@
   .product-card-modal-image {
     max-height: 200px;
   }
+
 
   .carousel-dot {
     width: 40px;
