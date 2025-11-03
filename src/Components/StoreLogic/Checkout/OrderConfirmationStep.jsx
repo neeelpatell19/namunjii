@@ -69,6 +69,7 @@ const OrderConfirmationStep = ({
         <Row gutter={[24, 24]}>
           {/* Order Items */}
           <Col xs={24} lg={16}>
+          <div className="Sticky-wrraper">
             <Card title="Order Items" className="order-items-card">
               <div className="order-items">
                 {orderData?.items?.map((item, index) => (
@@ -109,7 +110,21 @@ const OrderConfirmationStep = ({
                   </div>
                 ))}
               </div>
+      
             </Card>
+            <div className="payment-actions">
+        <Button
+          type="primary"
+          size="large"
+          icon={<CreditCardOutlined />}
+          loading={loading}
+          onClick={handleProceedToPayment}
+          className="proceed-payment-btn forlgscreen"
+        >
+          Proceed to Payment
+        </Button>
+      </div>
+            </div>
           </Col>
 
           {/* Order Summary */}
@@ -208,7 +223,7 @@ const OrderConfirmationStep = ({
           icon={<CreditCardOutlined />}
           loading={loading}
           onClick={handleProceedToPayment}
-          className="proceed-payment-btn"
+          className="proceed-payment-btn forsmscreen"
         >
           Proceed to Payment
         </Button>

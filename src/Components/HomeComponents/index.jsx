@@ -175,7 +175,7 @@ export default function HomeComponents() {
       <NewArrivals HomeData={HomeData} />
       <BestSellers HomeData={HomeData} />
       <FeaturedProducts HomeData={HomeData} />
-      <FeaturedDeals HomeData={HomeData} />
+      {/* <FeaturedDeals HomeData={HomeData} /> */}
       <Partnerus />
     </div>
   );
