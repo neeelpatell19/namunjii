@@ -14,7 +14,7 @@
 }
 
 .new-arrivals-title {
-  font-family: var(--Poppins-font);
+  font-family:playfair display;
   font-size: 40px;
   color: #775242;
   margin: 0;
@@ -24,6 +24,7 @@
 }
 
 .view-all-btn {
+  font-family: playfair display;
   display: flex;
   align-items: center;
   gap: 11px;

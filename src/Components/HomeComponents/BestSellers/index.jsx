@@ -57,7 +57,11 @@ export default function BestSellers({ HomeData }) {
       <div className="bestsellers-header">
         <h2 className="bestsellers-title">Best Sellers</h2>
         {/* <p className="bestsellers-subtitle">Discover our most loved products</p> */}
-        <Link to="/bestsellers" className="view-all-link">
+        <Link
+          to="/products?isBestSeller=true"
+
+          className="view-all-link"
+        >
           View All
           <span className="arrow-icon">→</span>
         </Link>

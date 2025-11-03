@@ -16,7 +16,7 @@
 }
 
 .featured-products-title {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair-display);;
   font-size: 40px;
   color: #775242;
   margin: 0;
@@ -114,10 +114,13 @@
 }
 
 .featured-products-empty-text {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair-display);;
   font-size: 1.1rem;
   color: var(--BodyTextColor);
   margin: 0;
+}
+.view-all-btn{
+  font-family: var(--playfair-display);;
 }
 
 /* Responsive Design */

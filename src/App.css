@@ -1,14 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"); */
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 /* Godber Font Face */
-@font-face {
+/* @font-face {
   font-family: "Godber";
   src: url("./assets/godber-3lxoz.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 body {
   margin: 0;
@@ -63,6 +66,10 @@ body {
 
   /* Hero-Heading-Brand */
   --color-heroSection-brand: #5C5C5C;
+
+  --playfair-display: 'Playfair Display', sans-serif;
+  --fira-sans: 'Fira Sans', sans-serif;
+  --josefin-sans:'Josefin Sans',sans-serif
 }
 
 html,
@@ -76,7 +83,7 @@ a {
 }
 
 h1 {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair display);
   color: var(--brandColor);
   font-size: 64px;
   font-weight: 400;
@@ -85,7 +92,7 @@ h1 {
 }
 
 h2 {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair display);
   font-size: 50px;
   font-weight: 400;
   line-height: 1;
@@ -100,11 +107,11 @@ h3 {
   font-size: 25px;
   line-height: 1.4;
   margin: 0px;
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair display);
 }
 
 h4 {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair display);
   font-size: 18px;
   font-weight: 500;
   color: var(--brandColor);
@@ -128,7 +135,7 @@ span {
 p {
   margin: 0px;
   font-size: 18px !important;
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair display);
   color: var(--BodyTextColor);
 }
 

@@ -14,7 +14,7 @@
 .brand-marquee-item {
   display: inline-block;
   padding: 1.2rem;
-  font-family: "Playfair Display", serif;
+  font-family: var(--playfair-display) !important;
   font-size: 33px;
   white-space: nowrap;
   font-weight: 600;

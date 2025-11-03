@@ -62,7 +62,7 @@ export default function FeaturedProducts({ HomeData }) {
     <div className="featured-products-container">
       <div className="featured-products-header">
         <h2 className="featured-products-title">Featured Products</h2>
-        <Link to="/collections" className="view-all-btn">
+        <Link to="/products?isFeatured=true" className="view-all-btn">
           View All <span className="arrow-icon">→</span>
         </Link>
       </div>

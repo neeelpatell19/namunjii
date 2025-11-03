@@ -61,7 +61,11 @@ export default function NewArrivals({ HomeData }) {
     <div className="new-arrivals-container">
       <div className="new-arrivals-header">
         <h2 className="new-arrivals-title">New Arrivals</h2>
-        <Link to="/collections" className="view-all-btn">
+        <Link
+          to="/products?isNewArrival=true
+"
+          className="view-all-btn"
+        >
           View All <span className="arrow-icon">→</span>
         </Link>
       </div>

@@ -33,14 +33,14 @@
 }
 
 .partnerus-title p {
-    font-family: playfair display;
+    font-family: var(--playfair-display);;
     font-weight: 500;
     font-size: 40px !important;
     line-height: 100%;
 }
 
 .partnerus-text p {
-    font-family: playfair display;
+    font-family: var(--josefin-sans);
     font-weight: 500;
     font-size: 20px !important;
     line-height: 165%;
@@ -59,6 +59,7 @@
     border: 1px solid #E5E5E5;
     gap: 12px;
     cursor: pointer;
+    font-family: var(--playfair-display);;
 }
 
 .partnerus-input-button button:hover {
@@ -80,6 +81,7 @@
 }
 
 .input-field::placeholder {
+    font-family: var(--josefin-sans);
     color: #757575;
 }
 
@@ -89,7 +91,7 @@
     border-radius: 32px;
     padding: 12px 24px;
     color: #775242;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--josefin-sans);
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;

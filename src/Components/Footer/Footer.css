@@ -39,7 +39,7 @@
 
 /* Footer Description */
 .FooterDescription {
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
   font-size: 16px !important;
   line-height: 1.6;
   color: var(--neutral-800);
@@ -59,7 +59,7 @@ font-weight: bold;
 
 /* Contact Details */
 .ContactDetails p {
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
   font-size: 16px !important;
   color: var(--neutral-800);
   margin: 8px 0;
@@ -68,7 +68,7 @@ font-weight: bold;
 
 /* Footer Headings */
 .FooterHeading {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair-display);
   font-size: 14px;
   font-weight: 600;
   color: var(--bg-white);
@@ -92,7 +92,7 @@ font-weight: bold;
 }
 
 .FooterLink {
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
   font-size: 14px;
   color: var(--neutral-800);
   text-decoration: none;
