@@ -299,6 +299,7 @@
   align-items: center;
 }
 
+
 .product-card-add-to-cart-container:hover .product-card-add-to-cart-arrow {
   color: #333;
   transform: translateX(3px);
@@ -615,14 +616,14 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: var(--Poppins-font);
-  background: #1e40af;
+  background: var(--brandColor);
   color: white;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .product-card-modal-add-to-cart-outline:hover {
-  background: #1e3a8a;
+  background: #36424eec;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
 }
@@ -683,7 +684,7 @@
 
 /* Responsive Design */
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (min-width: 481px) {
   .product-card-content {
     padding: 1.25rem;
   }
@@ -761,7 +762,7 @@
 
   .product-card-modal-details-white {
     gap: 12px !important;
-    padding: 15px !important;
+    padding: 6px !important;
   }
 
   .product-card-modal-details-white h2 {
@@ -795,7 +796,15 @@
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 380px) {
+
+      .product-card-modal-image-section {
+       
+        
+        padding: 6px !important;
+        gap: 6px !important;
+     
+    }
   .product-card-modal-content {
     max-width: 100% !important;
     border-radius: 8px;
@@ -825,7 +834,7 @@
   .product-card-modal-details-white {
     flex: 0 0 auto !important;
     width: 100% !important;
-    padding: 12px !important;
+    padding: 2px !important;
     gap: 10px !important;
     overflow: visible !important;
     max-height: auto !important;
@@ -852,7 +861,7 @@
   }
 
   .product-card-modal-description-white {
-    font-size: 0.75rem;
+    font-size: 0.7rem !important;
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
