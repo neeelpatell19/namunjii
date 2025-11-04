@@ -3,7 +3,7 @@ import "./Partner.css";
 
 const Partnerus = () => {
   return (
-    <div className="partnerus-container MainContainer Container ">
+    <div className="partnerus-container MainContainer Container">
       <div className="partnerus-img">
         <img src="./Images/PartnerUsImage.svg" alt="img" />
       </div>
@@ -25,10 +25,7 @@ const Partnerus = () => {
               placeholder="Enter Your Email Here"
               className="input-field"
             />
-            <button>
-              Connect with us
-             
-            </button>
+            <button>Connect with us</button>
           </div>
         </div>
       </div>

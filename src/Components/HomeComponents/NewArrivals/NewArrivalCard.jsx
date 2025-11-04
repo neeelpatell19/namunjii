@@ -6,12 +6,11 @@ import "./NewArrivalCard.css";
 
 export default function NewArrivalCard({ product }) {
   const { deviceId } = useDevice();
-  const { triggerCartDrawer, isInCart: ctxIsInCart, refreshCart } = useCartWishlist();
-  const isInCart = ctxIsInCart(product?._id);
+  const { triggerCartDrawer, refreshCart } = useCartWishlist();
 
   const handleAddToCart = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
-    if (!deviceId || isInCart) return;
+    if (!deviceId) return;
 
     try {
       const response = await cartApi.addToCart({
@@ -43,22 +42,19 @@ export default function NewArrivalCard({ product }) {
         />
       </div>
       <div
-        className={`new-collections-footer ${
-          isInCart ? "new-collections-footer-disabled" : ""
-        }`}
-        onClick={isInCart ? (e) => e.stopPropagation() : handleAddToCart}
-        style={{ cursor: isInCart ? "not-allowed" : "pointer" }}
+        className="new-collections-footer"
+        onClick={handleAddToCart}
       >
         <button
           className="new-collections-shop new-arrivals-buy-link"
           style={{
             background: "none",
             border: "none",
-            cursor: isInCart ? "not-allowed" : "pointer",
+            cursor: "pointer",
             padding: 0,
           }}
         >
-          {isInCart ? "Already in cart" : "Add to Cart"}
+          Add to Cart
         </button>
         <span
           className="new-collections-shop-arrow"

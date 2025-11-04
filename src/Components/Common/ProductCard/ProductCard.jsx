@@ -54,7 +54,7 @@ export default function ProductCard({
 
   const handleAddToCart = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
-    if (!deviceId || isInCart) return;
+    if (!deviceId) return;
 
     try {
       const response = await cartApi.addToCart({
@@ -81,24 +81,29 @@ export default function ProductCard({
   const handleAddToWishlist = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
-    if (isInWishlist) {
-      // Optionally you can remove from wishlist here in future
-      return;
-    }
 
     try {
-      const response = await wishlistApi.addToWishlist({
-        deviceId,
-        productId: product._id,
-      });
+      if (isInWishlist) {
+        // Remove from wishlist if already in wishlist
+        const response = await wishlistApi.removeFromWishlist(product._id);
+        if (response.success) {
+          refreshWishlist();
+        }
+      } else {
+        // Add to wishlist if not in wishlist
+        const response = await wishlistApi.addToWishlist({
+          deviceId,
+          productId: product._id,
+        });
 
-      if (response.success) {
-        // Trigger wishlist drawer to open
-        triggerWishlistDrawer();
-        refreshWishlist();
+        if (response.success) {
+          // Trigger wishlist drawer to open
+          triggerWishlistDrawer();
+          refreshWishlist();
+        }
       }
     } catch (error) {
-      console.error("Failed to add to wishlist:", error);
+      console.error("Failed to update wishlist:", error);
     }
   };
   const handleViewProduct = () => {
@@ -194,14 +199,11 @@ export default function ProductCard({
             <div className="product-card-action-buttons">
               {showAddToCart && (
                 <div
-                  className={`product-card-add-to-cart-container ${
-                    isInCart ? "product-card-add-to-cart-disabled" : ""
-                  }`}
-                  onClick={isInCart ? (e) => e.stopPropagation() : handleAddToCart}
-                  style={{ cursor: isInCart ? "not-allowed" : "pointer" }}
+                  className="product-card-add-to-cart-container"
+                  onClick={handleAddToCart}
                 >
                   <span className="product-card-add-to-cart-btn">
-                    {isInCart ? "Already in cart" : "Add to Cart"}
+                    Add to Cart
                   </span>
                   <span
                     className="product-card-add-to-cart-arrow"
