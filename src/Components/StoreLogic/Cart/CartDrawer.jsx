@@ -52,11 +52,65 @@ const CartDrawer = ({ isOpen, onClose }) => {
     }
   };
 
+  // Get available stock for a product
+  const getAvailableStock = (item) => {
+    const product = item.productId || item.product;
+    // Check for common stock field names
+    return (
+      product?.stock ||
+      product?.stockQuantity ||
+      product?.availableQuantity ||
+      product?.quantity ||
+      null
+    );
+  };
+
+  // Check if product is in stock
+  const isInStock = (item) => {
+    const stock = getAvailableStock(item);
+    // If stock is null/undefined, assume it's available (backward compatibility)
+    if (stock === null || stock === undefined) {
+      return true;
+    }
+    // If stock is 0 or less, it's not available
+    return stock > 0;
+  };
+
+  // Check if quantity can be increased
+  const canIncreaseQuantity = (item) => {
+    if (!isInStock(item)) {
+      return false;
+    }
+    const stock = getAvailableStock(item);
+    // If stock is null/undefined, allow increase (backward compatibility)
+    if (stock === null || stock === undefined) {
+      return true;
+    }
+    // Allow increase only if current quantity is less than available stock
+    return item.quantity < stock;
+  };
+
   // Update item quantity
   const handleUpdateQuantity = async (productId, newQuantity) => {
     if (newQuantity < 1) {
       handleRemoveItem(productId);
       return;
+    }
+
+    // Find the item to check stock
+    const item = cartItems.find((item) => item.productId._id === productId);
+    if (!item) {
+      setError("Item not found in cart");
+      return;
+    }
+
+    // Check if increasing quantity is allowed
+    if (newQuantity > item.quantity) {
+      // User is trying to increase quantity
+      if (!canIncreaseQuantity(item)) {
+        setError("Product is out of stock or stock limit reached");
+        return;
+      }
     }
 
     try {
@@ -75,6 +129,9 @@ const CartDrawer = ({ isOpen, onClose }) => {
               : item
           )
         );
+        setError(null); // Clear any previous errors
+      } else {
+        setError(response.message || "Failed to update item quantity");
       }
     } catch (err) {
       setError(err.message || "Failed to update item quantity");
@@ -202,6 +259,14 @@ const CartDrawer = ({ isOpen, onClose }) => {
                               item.productId._id,
                               item.quantity + 1
                             )
+                          }
+                          disabled={!canIncreaseQuantity(item)}
+                          title={
+                            !isInStock(item)
+                              ? "Product is out of stock"
+                              : !canIncreaseQuantity(item)
+                              ? "Maximum stock limit reached"
+                              : "Increase quantity"
                           }
                         >
                           +

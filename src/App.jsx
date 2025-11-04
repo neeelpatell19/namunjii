@@ -29,7 +29,7 @@ import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
 import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
 // Wrapper component for page transitions
 const PageTransition = ({ children }) => {
-  return <div>{children}</div>;
+  return <div style={{ marginTop: -10 }}>{children}</div>;
 };
 
 // Routes component with transitions

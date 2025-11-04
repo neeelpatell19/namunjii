@@ -156,7 +156,7 @@ p {
 }
 
 .Container {
-  max-width: 12 00px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -466,6 +466,14 @@ b {
     max-width: 1200px;
     margin: 0 auto;
     overflow: hidden;
+  }
+}
+
+/* XL screens and above */
+@media (min-width: 1501px) {
+  .Container {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 
