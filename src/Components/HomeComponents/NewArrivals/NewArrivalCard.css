@@ -32,6 +32,7 @@
 
 /* Brand Section - Centered Above Image */
 .new-collections-brand {
+  font-family: var(--fira-sans);
   font-size: 20px !important;
   color: #775242;
   letter-spacing: 0.5px;
@@ -65,7 +66,7 @@
 
 .new-collections-shop {
   cursor: pointer;
-  font-style: playfair display;
+  font-family: var(--playfair-display);
   font-size: 18px;
   color: #2e1d0b;
   letter-spacing: 0.8px;

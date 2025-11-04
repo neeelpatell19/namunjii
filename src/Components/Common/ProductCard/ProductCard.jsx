@@ -161,7 +161,7 @@ export default function ProductCard({
                 onClick={(e) => handleAddToWishlist(e)}
               >
                 {isInWishlist ? (
-                  <HeartFilled style={{ color: "#dc2626" }} />
+                  <HeartFilled style={{ color: "#000" }} />
                 ) : (
                   <HeartOutlined />
                 )}

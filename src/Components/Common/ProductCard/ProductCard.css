@@ -79,7 +79,7 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(5px);
   pointer-events: none; /* Allow clicks to pass through */
 }
@@ -162,7 +162,7 @@
   /* flex: 0 0 auto; */
   display: flex;
   flex-direction: column;
-  
+  margin-bottom: -0.7rem;
 }
 
 .product-card-header {
@@ -170,18 +170,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 0.5rem;
+  margin-bottom: -0.1rem;
 }
 
 .product-card-name {
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair-display);
   font-size: 0.94rem;
   font-weight: 500;
   color: #242424 !important;
   margin: 0;
   line-height: 100%;
-  letter-spacing: 1%;
+  letter-spacing: 0%;
   flex: 1;
+  text-transform: capitalize;
 }
 
 .product-card-details {
@@ -193,12 +194,12 @@
 
 .product-card-size {
   /* font-family: var(--Poppins-font); */
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 400;
   color: #7E7A78;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0%;
-  font-family: Firasans;
+  font-family: var(--fira-sans) !important;
   margin-top: -6px;
 }
 
@@ -216,17 +217,18 @@
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin-top: -1px;
 }
 
 .product-card-price {
-  font-family: firasans;
+  font-family: var(--fira-sans) !important;
   font-size: 1.125rem;
-  font-weight: 300;
+  font-weight: 400;
   color: #333333 !important;
 }
 
 .product-card-original-price {
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans) !important;
   font-size: 0.825rem;
   font-weight: 500;
   color: var(--brand-600);
@@ -234,7 +236,7 @@
 }
 
 .product-card-discounted-price {
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans) !important;
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--brandColor);
@@ -277,11 +279,11 @@
 /* Add to Cart Button */
 .product-card-add-to-cart-btn {
   cursor: pointer;
-  font-family: var(--Poppins-font);
-  font-size: 0.9rem;
+  font-family: var(--playfair-display) !important;
+  font-size: 1rem;
   color: #2e1d0b;
   letter-spacing: 0.8px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-weight: 500;
   transition: color 0.3s ease;
   text-align: left;
@@ -333,7 +335,7 @@
   border: 1px solid var(--brandColor);
   padding: 10px 20px;
   border-radius: 12px;
-  font-family: var(--Poppins-font);
+  font-family: var(--playfair-display);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -675,10 +677,16 @@
 }
 
   .product-card-brandname{
+    margin-top: 6px;
     font-size: 0.8rem;
     color: #775242;
-    font-family: var(--playfair-display);
+    font-family: var(--fira-sans);
     text-transform: capitalize;
+    font-weight: 400 !important;
+  }
+
+  .anticon svg{
+    margin-left: 19px;
   }
 
 @keyframes fadeInModal {
@@ -693,10 +701,7 @@
 /* Responsive Design */
 /* Responsive Design */
 @media (max-width: 768px) and (min-width: 481px) {
-  .product-card-content {
-    padding: 1.25rem;
-  }
-
+ 
   .product-card-name {
     font-size: 1.1rem;
   }
@@ -764,10 +769,9 @@
 }
 
 @media (max-width: 480px) {
-  .product-card-content {
-    padding: 1rem;
+ .anticon svg{
+    margin-left: 16px;
   }
-
   .product-card-modal-details-white {
     gap: 12px !important;
     padding: 6px !important;
