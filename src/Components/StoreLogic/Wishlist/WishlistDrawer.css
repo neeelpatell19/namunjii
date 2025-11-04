@@ -316,7 +316,7 @@
   background: #ef4444;
   color: white;
   border: none;
-  padding: 0.5rem;
+  padding: 0;
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
@@ -326,6 +326,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
+}
+
+.remove-from-wishlist-btn .anticon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  line-height: 1;
 }
 
 .remove-from-wishlist-btn:hover {
@@ -498,6 +507,11 @@
     width: 28px;
     height: 28px;
     font-size: 12px;
+    padding: 0;
+  }
+  
+  .remove-from-wishlist-btn .anticon {
+    margin: 0;
   }
 }
 
@@ -564,6 +578,11 @@
     width: 28px;
     height: 28px;
     font-size: 12px;
+    padding: 0;
+  }
+  
+  .remove-from-wishlist-btn .anticon {
+    margin: 0;
   }
 
   .wishlist-footer {

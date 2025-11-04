@@ -14,7 +14,7 @@
 
 .product-card:hover {
   transform: translateY(-8px);
-  
+
   /* border-color: var(--brand-950); */
 }
 
@@ -97,7 +97,6 @@
   gap: 0.5rem;
   background: var(--bg-white);
   color: #775242;
-  
 
   border: none;
   outline: none;
@@ -112,14 +111,13 @@
   text-align: center;
 }
 
-.product-card-quick-view-btn span{
+.product-card-quick-view-btn span {
   display: flex;
   align-items: center;
- 
 }
 
 .product-card-quick-view-btn:hover {
-  background: #FFFFFFD9;
+  background: #ffffffd9;
   color: #775242;
   transform: translateY(-2px);
   /* box-shadow: 0 6px 20px rgba(54, 66, 78, 0.15); */
@@ -131,9 +129,9 @@
   width: 36px;
   height: 36px;
   border: none;
-  
+
   background-color: transparent;
- 
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,8 +142,6 @@
   flex-shrink: 0;
 }
 
-
-
 /* Content Section */
 .product-card-content {
   /* position: relative;
@@ -155,7 +151,7 @@
   flex-direction: column;
   justify-content: space-around;
   flex: 1;
-  background-color:#ffffff;
+  background-color: #ffffff;
 }
 
 .product-card-info {
@@ -196,7 +192,7 @@
   /* font-family: var(--Poppins-font); */
   font-size: 0.75rem;
   font-weight: 400;
-  color: #7E7A78;
+  color: #7e7a78;
   text-transform: capitalize;
   letter-spacing: 0%;
   font-family: var(--fira-sans) !important;
@@ -301,7 +297,6 @@
   display: flex;
   align-items: center;
 }
-
 
 .product-card-add-to-cart-container:hover .product-card-add-to-cart-arrow {
   color: #333;
@@ -496,8 +491,6 @@
   white-space: nowrap;
 }
 
-
-
 /* Description */
 .product-card-modal-description-white {
   font-size: 0.85rem;
@@ -650,7 +643,6 @@
   transform: scale(1.15);
 }
 
-
 .product-card-modal-close {
   position: absolute;
   top: 15px;
@@ -676,18 +668,14 @@
   transform: rotate(90deg);
 }
 
-  .product-card-brandname{
-    margin-top: 6px;
-    font-size: 0.8rem;
-    color: #775242;
-    font-family: var(--fira-sans);
-    text-transform: capitalize;
-    font-weight: 400 !important;
-  }
-
-  .anticon svg{
-    margin-left: 19px;
-  }
+.product-card-brandname {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #775242;
+  font-family: var(--fira-sans);
+  text-transform: capitalize;
+  font-weight: 400 !important;
+}
 
 @keyframes fadeInModal {
   from {
@@ -701,7 +689,6 @@
 /* Responsive Design */
 /* Responsive Design */
 @media (max-width: 768px) and (min-width: 481px) {
- 
   .product-card-name {
     font-size: 1.1rem;
   }
@@ -769,9 +756,6 @@
 }
 
 @media (max-width: 480px) {
- .anticon svg{
-    margin-left: 16px;
-  }
   .product-card-modal-details-white {
     gap: 12px !important;
     padding: 6px !important;
@@ -809,14 +793,10 @@
 }
 
 @media (max-width: 380px) {
-
-      .product-card-modal-image-section {
-       
-        
-        padding: 6px !important;
-        gap: 6px !important;
-     
-    }
+  .product-card-modal-image-section {
+    padding: 6px !important;
+    gap: 6px !important;
+  }
   .product-card-modal-content {
     max-width: 100% !important;
     border-radius: 8px;
@@ -837,7 +817,6 @@
   .product-card-modal-image {
     max-height: 200px;
   }
-
 
   .carousel-dot {
     width: 40px;

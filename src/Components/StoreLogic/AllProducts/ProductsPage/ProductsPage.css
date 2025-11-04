@@ -88,7 +88,7 @@
   font-size: 16px;
   font-weight: 600;
   color: #333;
-  margin: 0 0 12px 0;
+  margin: 0 0 10px 0;
 }
 
 /* Search */
@@ -118,6 +118,47 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--brand-primary);
+}
+
+.price-range-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.price-input {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.price-input.min,
+.price-input.max {
+  flex: 1 1 auto;
+  max-width: calc(50% - 12px);
+}
+
+.price-input-separator {
+  flex: 0 0 auto;
+  color: #666;
+  font-size: 14px;
+  white-space: nowrap;
+  padding: 0 4px;
 }
 
 .filter-section .ant-slider {

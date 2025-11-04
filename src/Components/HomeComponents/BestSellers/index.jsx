@@ -6,8 +6,6 @@ import NewArrivalCard from "../NewArrivals/NewArrivalCard";
 
 export default function BestSellers({ HomeData }) {
   const bestsellers = useMemo(() => {
-    console.log("HomeData in BestSellers:", HomeData);
-
     // Handle different data structures
     if (!HomeData) return [];
 
@@ -26,8 +24,6 @@ export default function BestSellers({ HomeData }) {
 
     return [];
   }, [HomeData]);
-
-  console.log("BestSellers data:", bestsellers);
 
   // Loading state
   if (!HomeData || (Array.isArray(HomeData) && HomeData.length === 0)) {

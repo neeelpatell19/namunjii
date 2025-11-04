@@ -61,10 +61,11 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
       });
 
       if (response.success) {
+        // Remove item from wishlist
+        await handleRemoveItem(product._id);
         // Refresh cart in context to update all ProductCard components
         refreshCart();
-        // Optionally show success message or remove from wishlist
-        console.log("Added to cart successfully");
+        console.log("Added to cart successfully and removed from wishlist");
       }
     } catch (err) {
       setError(err.message || "Failed to add item to cart");

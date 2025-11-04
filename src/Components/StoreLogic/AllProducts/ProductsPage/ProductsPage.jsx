@@ -74,9 +74,9 @@ const ProductsPage = () => {
   });
 
   // Price range state
-  const [priceRange, setPriceRange] = useState([0, 10000]);
-  // Local input values for debouncing
-  const [priceInput, setPriceInput] = useState([0, 10000]);
+  const [priceRange, setPriceRange] = useState([0, 15000]);
+  // Local input values for debouncing (empty string for 0 to show blank)
+  const [priceInput, setPriceInput] = useState(["", 15000]);
   // Search input local debounced state
   const [searchInput, setSearchInput] = useState("");
 
@@ -112,15 +112,27 @@ const ProductsPage = () => {
 
   // Keep local input in sync with external priceRange changes
   useEffect(() => {
-    // Only sync when values actually changed to avoid loops
-    if (
-      !Array.isArray(priceInput) ||
-      priceInput[0] !== priceRange[0] ||
-      priceInput[1] !== priceRange[1]
-    ) {
-      setPriceInput(priceRange);
+    // Only sync when priceRange changes and doesn't match priceInput
+    if (Array.isArray(priceRange) && priceRange.length === 2) {
+      // Convert 0 to empty string for display, but keep other values
+      const normalizedInput = [
+        priceRange[0] === 0 ? "" : priceRange[0],
+        priceRange[1] === 0 ? "" : priceRange[1],
+      ];
+
+      // Only update if values actually changed
+      if (
+        !Array.isArray(priceInput) ||
+        normalizedInput[0] !==
+          (priceInput[0] === "" || priceInput[0] === 0 ? "" : priceInput[0]) ||
+        normalizedInput[1] !==
+          (priceInput[1] === "" || priceInput[1] === 0 ? "" : priceInput[1])
+      ) {
+        setPriceInput(normalizedInput);
+      }
     }
-  }, [priceRange, priceInput]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [priceRange]);
 
   // Debounce applying price range filters when user edits inputs
   // (initialized later after handlePriceRangeChange definition)
@@ -142,7 +154,7 @@ const ProductsPage = () => {
         // Add price range
         if (currentPriceRange[0] > 0)
           queryParams.minPrice = currentPriceRange[0];
-        if (currentPriceRange[1] < 30000)
+        if (currentPriceRange[1] < 50000)
           queryParams.maxPrice = currentPriceRange[1];
 
         // Remove empty values
@@ -349,10 +361,15 @@ const ProductsPage = () => {
     }
 
     // Set price range from URL
-    let newPriceRange = [0, 10000];
+    let newPriceRange = [0, 15000];
     if (urlFilters.minPrice || urlFilters.maxPrice) {
-      newPriceRange = [urlFilters.minPrice || 0, urlFilters.maxPrice || 10000];
+      newPriceRange = [urlFilters.minPrice || 0, urlFilters.maxPrice || 15000];
       setPriceRange(newPriceRange);
+      // Convert 0 to empty string for display
+      setPriceInput([
+        newPriceRange[0] === 0 ? "" : newPriceRange[0],
+        newPriceRange[1] === 0 ? "" : newPriceRange[1],
+      ]);
     }
 
     // Update filters
@@ -379,7 +396,7 @@ const ProductsPage = () => {
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value !== "" && value !== false && value !== 0) {
           if (key === "minPrice" && value > 0) params.set(key, value);
-          else if (key === "maxPrice" && value < 30000) params.set(key, value);
+          else if (key === "maxPrice" && value < 50000) params.set(key, value);
           else if (key !== "minPrice" && key !== "maxPrice")
             params.set(key, value);
         }
@@ -419,11 +436,15 @@ const ProductsPage = () => {
   // Handle price range change
   const handlePriceRangeChange = useCallback(
     (value) => {
-      setPriceRange(value);
+      // Convert empty strings to 0 for filter logic, but keep for display
+      const minValue = value[0] === "" || value[0] === 0 ? 0 : value[0];
+      const maxValue = value[1] === "" || value[1] === 0 ? 15000 : value[1];
+
+      setPriceRange([minValue, maxValue]);
       const newFilters = {
         ...filters,
-        minPrice: value[0] > 0 ? value[0] : "",
-        maxPrice: value[1] < 30000 ? value[1] : "",
+        minPrice: minValue > 0 ? minValue : "",
+        maxPrice: maxValue < 50000 ? maxValue : "",
         page: 1,
       };
       setFilters(newFilters);
@@ -433,7 +454,7 @@ const ProductsPage = () => {
       setProducts([]);
       // Fetch products with new price range
       if (fetchProductsRef.current) {
-        fetchProductsRef.current(newFilters, value);
+        fetchProductsRef.current(newFilters, [minValue, maxValue]);
       }
     },
     [filters, updateURL]
@@ -453,12 +474,20 @@ const ProductsPage = () => {
   // Debounce applying price range filters when user edits inputs
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (
-        Array.isArray(priceInput) &&
-        priceInput.length === 2 &&
-        (priceInput[0] !== priceRange[0] || priceInput[1] !== priceRange[1])
-      ) {
-        handlePriceRangeChange(priceInput);
+      if (Array.isArray(priceInput) && priceInput.length === 2) {
+        // Normalize empty strings to 0 for comparison
+        const normalizedInput = [
+          priceInput[0] === "" || priceInput[0] === 0 ? 0 : priceInput[0],
+          priceInput[1] === "" || priceInput[1] === 0 ? 15000 : priceInput[1],
+        ];
+
+        // Only trigger if values actually changed
+        if (
+          normalizedInput[0] !== priceRange[0] ||
+          normalizedInput[1] !== priceRange[1]
+        ) {
+          handlePriceRangeChange(priceInput);
+        }
       }
     }, 400);
     return () => clearTimeout(timer);
@@ -516,12 +545,12 @@ const ProductsPage = () => {
       limit: 20,
     };
     setFilters(defaultFilters);
-    setPriceRange([0, 10000]);
+    setPriceRange([0, 15000]);
     setSearchParams(new URLSearchParams());
 
     // Fetch products with cleared filters
     if (fetchProductsRef.current) {
-      fetchProductsRef.current(defaultFilters, [0, 10000]);
+      fetchProductsRef.current(defaultFilters, [0, 15000]);
     }
   };
 
@@ -537,7 +566,7 @@ const ProductsPage = () => {
 
       {/* Search */}
       <div className="filter-section">
-        <h4>Search</h4>
+        <h4 style={{ paddingBottom: 6 }}>Search</h4>
         <Input
           placeholder="Search products..."
           value={searchInput}
@@ -548,15 +577,7 @@ const ProductsPage = () => {
 
       {/* Price Range */}
       <div className="filter-section">
-        <div
-          className="price-range-header"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 10,
-          }}
-        >
+        <div className="price-range-header">
           <h4 style={{ margin: 0 }}>Price Range</h4>
           <span
             style={{
@@ -565,71 +586,120 @@ const ProductsPage = () => {
               color: "var(--brand-primary)",
             }}
           >
-            ₹{priceInput[0].toLocaleString()} - ₹
-            {priceInput[1].toLocaleString()}
+            ₹
+            {(priceInput[0] === "" || priceInput[0] === 0
+              ? 0
+              : priceInput[0]
+            ).toLocaleString()}{" "}
+            - ₹
+            {(priceInput[1] === "" || priceInput[1] === 0
+              ? 0
+              : priceInput[1]
+            ).toLocaleString()}
           </span>
         </div>
-        <div
-          className="price-inputs"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 8,
-            width: "100%",
-          }}
-        >
+        <div className="price-inputs">
           <input
-            type="number"
-            min={0}
-            max={30000}
-            step={100}
-            value={priceInput[0]}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={priceInput[0] === 0 ? "" : priceInput[0]}
             onChange={(e) => {
-              const raw = parseInt(e.target.value, 10);
-              const clamped = isNaN(raw)
-                ? 0
-                : Math.max(0, Math.min(30000, raw));
-              const newMin = Math.min(clamped, priceInput[1]);
-              setPriceInput([newMin, priceInput[1]]);
+              const value = e.target.value;
+
+              // Allow empty string
+              if (value === "") {
+                setPriceInput(["", priceInput[1]]);
+                return;
+              }
+
+              // Remove leading zeros and non-numeric characters
+              const cleaned =
+                value.replace(/[^0-9]/g, "").replace(/^0+/, "") || "0";
+              const numValue = parseInt(cleaned, 10);
+
+              if (!isNaN(numValue)) {
+                const clamped = Math.max(0, Math.min(50000, numValue));
+                const maxValue =
+                  priceInput[1] === "" || priceInput[1] === 0
+                    ? 50000
+                    : priceInput[1];
+                const newMin = Math.min(clamped, maxValue);
+                setPriceInput([newMin, priceInput[1]]);
+              }
             }}
+            onBlur={(e) => {
+              // On blur, ensure min doesn't exceed max
+              const currentValue =
+                e.target.value === "" ? 0 : parseInt(e.target.value, 10);
+              if (!isNaN(currentValue)) {
+                const maxValue =
+                  priceInput[1] === "" || priceInput[1] === 0
+                    ? 50000
+                    : priceInput[1];
+                const clamped = Math.min(currentValue, maxValue);
+                if (clamped !== currentValue) {
+                  setPriceInput([clamped === 0 ? "" : clamped, priceInput[1]]);
+                }
+              }
+            }}
+            placeholder="0"
             className="price-input min"
-            style={{
-              width: 120,
-              padding: "6px 10px",
-              borderRadius: 8,
-              border: "1px solid #ddd",
-            }}
           />
-          <span style={{ color: "#666" }}>to</span>
+          <span className="price-input-separator">to</span>
           <input
-            type="number"
-            min={0}
-            max={30000}
-            step={100}
-            value={priceInput[1]}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={priceInput[1] === 0 ? "" : priceInput[1]}
             onChange={(e) => {
-              const raw = parseInt(e.target.value, 10);
-              const clamped = isNaN(raw)
-                ? 0
-                : Math.max(0, Math.min(30000, raw));
-              const newMax = Math.max(clamped, priceInput[0]);
-              setPriceInput([priceInput[0], newMax]);
+              const value = e.target.value;
+
+              // Allow empty string
+              if (value === "") {
+                setPriceInput([priceInput[0], ""]);
+                return;
+              }
+
+              // Remove leading zeros and non-numeric characters
+              const cleaned =
+                value.replace(/[^0-9]/g, "").replace(/^0+/, "") || "0";
+              const numValue = parseInt(cleaned, 10);
+
+              if (!isNaN(numValue)) {
+                const clamped = Math.max(0, Math.min(50000, numValue));
+                const minValue =
+                  priceInput[0] === "" || priceInput[0] === 0
+                    ? 0
+                    : priceInput[0];
+                const newMax = Math.max(clamped, minValue);
+                setPriceInput([priceInput[0], newMax]);
+              }
             }}
+            onBlur={(e) => {
+              // On blur, ensure max is not less than min
+              const currentValue =
+                e.target.value === "" ? 50000 : parseInt(e.target.value, 10);
+              if (!isNaN(currentValue)) {
+                const minValue =
+                  priceInput[0] === "" || priceInput[0] === 0
+                    ? 0
+                    : priceInput[0];
+                const clamped = Math.max(currentValue, minValue);
+                if (clamped !== currentValue) {
+                  setPriceInput([priceInput[0], clamped === 0 ? "" : clamped]);
+                }
+              }
+            }}
+            placeholder="0"
             className="price-input max"
-            style={{
-              width: 120,
-              padding: "6px 10px",
-              borderRadius: 8,
-              border: "1px solid #ddd",
-            }}
           />
         </div>
       </div>
 
       {/* Category */}
       <div className="filter-section">
-        <h4>Category</h4>
+        <h4 style={{ paddingBottom: 6 }}>Category</h4>
         <Select
           placeholder="Select Category"
           value={filters.category || null}
@@ -649,7 +719,7 @@ const ProductsPage = () => {
       {/* Subcategory */}
       {filters.category && (
         <div className="filter-section">
-          <h4>Subcategory</h4>
+          <h4 style={{ paddingBottom: 6 }}>Subcategory</h4>
           <Select
             placeholder="Select Subcategory"
             value={filters.subcategory || null}
@@ -669,7 +739,7 @@ const ProductsPage = () => {
 
       {/* Gender */}
       <div className="filter-section">
-        <h4>Gender</h4>
+        <h4 style={{ paddingBottom: 6 }}>Gender</h4>
         <Select
           placeholder="Select Gender"
           value={filters.gender || null}
@@ -685,7 +755,7 @@ const ProductsPage = () => {
 
       {/* Size */}
       <div className="filter-section">
-        <h4>Size</h4>
+        <h4 style={{ paddingBottom: 6 }}>Size</h4>
         <Select
           placeholder="Select Size"
           value={filters.size || null}
@@ -704,7 +774,7 @@ const ProductsPage = () => {
 
       {/* Color */}
       <div className="filter-section">
-        <h4>Color</h4>
+        <h4 style={{ paddingBottom: 6 }}>Color</h4>
         <Select
           placeholder="Select Color"
           value={filters.color || null}

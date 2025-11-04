@@ -59,7 +59,6 @@ const Header = () => {
 
   const handleSearchClick = () => {
     // Add search functionality here
-    console.log("Search clicked");
   };
 
   const handleWishlistClick = () => {

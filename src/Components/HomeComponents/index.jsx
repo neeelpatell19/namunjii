@@ -144,8 +144,6 @@ export default function HomeComponents() {
     refetchHome,
   } = useContext(UserContext);
 
-  console.log(HomeData);
-
   const handleRetry = () => {
     if (refetchHome) {
       refetchHome();

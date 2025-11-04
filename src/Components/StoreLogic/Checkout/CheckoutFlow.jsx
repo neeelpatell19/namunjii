@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Steps, Card, Button, Spin, Alert } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useAppContext } from "../Context/AppContext";
 import { useDevice } from "../../../hooks/useDevice";
 import checkoutApi from "../../../apis/checkout";
@@ -36,9 +35,7 @@ const CheckoutFlow = () => {
         setOrderData(response.data);
 
         // Determine current step based on progress
-        if (response.data.progress.paymentComplete) {
-          setCurrentStep(3);
-        } else if (response.data.progress.step3Complete) {
+        if (response.data.progress.step3Complete) {
           setCurrentStep(2);
         } else if (response.data.progress.step2Complete) {
           setCurrentStep(1);
@@ -211,7 +208,7 @@ const CheckoutFlow = () => {
         <div className="checkout-error">
           <Alert message="Error" description={error} type="error" showIcon />
           <Button onClick={() => navigate("/cart")}>
-            <ArrowLeftOutlined /> Back to Cart
+            Back to Cart
           </Button>
         </div>
       </div>
@@ -221,15 +218,7 @@ const CheckoutFlow = () => {
   return (
     <div className="checkout-flow-container">
       <div className="checkout-header">
-        <Button
-          icon={<ArrowLeftOutlined />}
-          onClick={() => navigate("/products")}
-          className="back-button"
-        >
-          Back to Shopping
-        </Button>
         <h1>Checkout</h1>
-        <p>Order #{orderData?.orderNumber}</p>
       </div>
 
       <div className="checkout-content">
@@ -238,7 +227,6 @@ const CheckoutFlow = () => {
             <Step title="Customer Info" />
             <Step title="Shipping Address" />
             <Step title="Order Confirmation" />
-            <Step title="Payment" />
           </Steps>
         </div>
 
@@ -268,16 +256,6 @@ const CheckoutFlow = () => {
                 onPaymentFailure={handlePaymentFailure}
                 onError={setError}
               />
-            )}
-
-            {currentStep === 3 && (
-              <div className="payment-complete">
-                <h2>Payment Complete!</h2>
-                <p>Your order has been successfully placed.</p>
-                <Button type="primary" onClick={() => navigate("/products")}>
-                  Continue Shopping
-                </Button>
-              </div>
             )}
           </Card>
         </div>

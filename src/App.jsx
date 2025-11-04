@@ -27,6 +27,9 @@ import HomeComponents from "./Components/HomeComponents";
 import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
 import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
+import { Provider } from "react-redux";
+import store from "./store";
+import { useEffect } from "react";
 // Wrapper component for page transitions
 const PageTransition = ({ children }) => {
   return <div style={{ marginTop: -10 }}>{children}</div>;
@@ -34,7 +37,14 @@ const PageTransition = ({ children }) => {
 
 // Routes component with transitions
 const AnimatedRoutes = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [pathname]);
 
   return (
     <AnimatePresence mode="wait">
@@ -216,34 +226,36 @@ function App() {
   const { lg } = Grid.useBreakpoint();
   return (
     <>
-      <AppProvider>
-        <UserProvider>
-          <CartWishlistProvider>
-            <BrowserRouter>
-              <div
-                style={{
-                  width: "100vw",
-                  overflowX: "hidden",
-                  paddingTop: lg ? "120px" : "60px",
-                }}
-              >
-                <Header />
-                <AnimatedRoutes />
+      <Provider store={store}>
+        <AppProvider>
+          <UserProvider>
+            <CartWishlistProvider>
+              <BrowserRouter>
+                <div
+                  style={{
+                    width: "100vw",
+                    overflowX: "hidden",
+                    paddingTop: lg ? "120px" : "60px",
+                  }}
+                >
+                  <Header />
+                  <AnimatedRoutes />
 
-                {/* <FeaturesAndQuestion /> */}
-                {/* <CommonUserInteractionsPopup /> */}
-                <Footer />
-                {/* <Cookies /> */}
-                {/* <WhatsAppBtn /> */}
+                  {/* <FeaturesAndQuestion /> */}
+                  {/* <CommonUserInteractionsPopup /> */}
+                  <Footer />
+                  {/* <Cookies /> */}
+                  {/* <WhatsAppBtn /> */}
 
-                {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
-                {/* <UserDetailsModal /> */}
-                {/* <Cart /> */}
-              </div>
-            </BrowserRouter>
-          </CartWishlistProvider>
-        </UserProvider>
-      </AppProvider>
+                  {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
+                  {/* <UserDetailsModal /> */}
+                  {/* <Cart /> */}
+                </div>
+              </BrowserRouter>
+            </CartWishlistProvider>
+          </UserProvider>
+        </AppProvider>
+      </Provider>
     </>
   );
 }

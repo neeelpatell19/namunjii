@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function FeaturedProducts({ HomeData }) {
   const featuredProducts = useMemo(() => {
-    console.log("HomeData in FeaturedProducts:", HomeData);
-
     // Handle different data structures
     if (!HomeData) return [];
 
@@ -30,8 +28,6 @@ export default function FeaturedProducts({ HomeData }) {
 
     return [];
   }, [HomeData]);
-
-  console.log("FeaturedProducts data:", featuredProducts);
 
   // Loading state
   if (!HomeData || (Array.isArray(HomeData) && HomeData.length === 0)) {

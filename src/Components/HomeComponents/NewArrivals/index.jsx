@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 
 export default function NewArrivals({ HomeData }) {
   const newArrivals = useMemo(() => {
-    console.log("HomeData in NewArrivals:", HomeData);
-
     // Handle different data structures
     if (!HomeData) return [];
 
@@ -31,8 +29,6 @@ export default function NewArrivals({ HomeData }) {
 
     return [];
   }, [HomeData]);
-
-  console.log("NewArrivals data:", newArrivals);
 
   // Loading state
   if (!HomeData || (Array.isArray(HomeData) && HomeData.length === 0)) {
