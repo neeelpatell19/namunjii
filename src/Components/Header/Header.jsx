@@ -150,6 +150,15 @@ const Header = () => {
     },
   ];
 
+  // Login/Signup menu dropdown items for logged out users
+  const loginMenuItems = [
+    {
+      key: "login",
+      label: "Login/Signup",
+      onClick: handleLoginSignup,
+    },
+  ];
+
   return (
     <div className="HeaderContainer">
       {/* Main Navigation Bar */}
@@ -183,25 +192,12 @@ const Header = () => {
             </Col>
             <Col>
               <div className="NavActions">
-                {isLoggedIn ? (
-                  <Dropdown
-                    menu={{ items: userMenuItems }}
-                    placement="bottomRight"
-                    trigger={["click"]}
-                  >
-                    <div
-                      className="UserIcon"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        gap: "8px",
-                      }}
-                    >
-                      <FiUser />
-                    </div>
-                  </Dropdown>
-                ) : (
+                <Dropdown
+                  menu={{ items: isLoggedIn ? userMenuItems : loginMenuItems }}
+                  placement="bottomCenter"
+                  trigger={["click"]}
+                  arrow={{ pointAtCenter: true }}
+                >
                   <div
                     className="UserIcon"
                     style={{
@@ -210,12 +206,10 @@ const Header = () => {
                       cursor: "pointer",
                       gap: "8px",
                     }}
-                    onClick={handleLoginSignup}
                   >
                     <FiUser />
-                    <span className="UserText">Login/Signup</span>
                   </div>
-                )}
+                </Dropdown>
                 <div
                   className="WishlistIcon"
                   style={{ display: "flex", alignItems: "center" }}
