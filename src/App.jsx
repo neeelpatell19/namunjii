@@ -24,6 +24,7 @@ import TermsAndConditions from "./Components/Policies/TermsAndConditions";
 import SellerPolicy from "./Components/Policies/SellerPolicy";
 import TermsOfUse from "./Components/Policies/TermsOfUse";
 import HomeComponents from "./Components/HomeComponents";
+import Login from "./Components/Auth/Login/Login";
 // import Maintenance from "./Components/Maintenance/Maintenance";
 import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
@@ -215,6 +216,14 @@ const AnimatedRoutes = () => {
           element={
             <PageTransition>
               <ProductsPage />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PageTransition>
+              <Login />
             </PageTransition>
           }
         />

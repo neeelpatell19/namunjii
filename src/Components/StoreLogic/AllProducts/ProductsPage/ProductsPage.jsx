@@ -13,17 +13,21 @@ import {
   Card,
   Badge,
   Drawer,
+  Slider,
 } from "antd";
 import {
   SearchOutlined,
   FilterOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
+  UpOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import ProductCard from "../../../Common/ProductCard/ProductCard";
 import productApi from "../../../../apis/product";
 import categoryApi from "../../../../apis/category";
 import subcategoryApi from "../../../../apis/subcategory";
+import brandApi from "../../../../apis/brand";
 import "./ProductsPage.css";
 
 const { Search } = Input;
@@ -44,6 +48,8 @@ const ProductsPage = () => {
   const [sizesLoading, setSizesLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [colorsLoading, setColorsLoading] = useState(false);
+  const [brands, setBrands] = useState([]);
+  const [brandsLoading, setBrandsLoading] = useState(false);
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -64,6 +70,8 @@ const ProductsPage = () => {
     maxPrice: "",
     size: "",
     color: "",
+    brand: "",
+    availability: "",
     sortBy: "createdAt",
     sortOrder: "desc",
     isNewArrival: false,
@@ -82,6 +90,24 @@ const ProductsPage = () => {
 
   // Filter drawer state for mobile/tablet
   const [filterDrawerVisible, setFilterDrawerVisible] = useState(false);
+  
+  // Collapsible filter sections state
+  const [expandedFilters, setExpandedFilters] = useState({
+    size: true,
+    brand: true,
+    gender: true,
+    priceRange: false,
+    productType: false,
+    colour: false,
+    availability: false,
+  });
+  
+  const toggleFilterSection = (section) => {
+    setExpandedFilters((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   // Ref to track if we're in initial load
   const isInitialLoad = useRef(true);
@@ -91,6 +117,7 @@ const ProductsPage = () => {
   const filtersRef = useRef(filters);
   const priceRangeRef = useRef(priceRange);
   const fetchProductsRef = useRef();
+  const priceSliderTimerRef = useRef(null);
 
   // Update refs when state changes
   useEffect(() => {
@@ -121,8 +148,8 @@ const ProductsPage = () => {
       ];
 
       // Only update if values actually changed
-      if (
-        !Array.isArray(priceInput) ||
+    if (
+      !Array.isArray(priceInput) ||
         normalizedInput[0] !==
           (priceInput[0] === "" || priceInput[0] === 0 ? "" : priceInput[0]) ||
         normalizedInput[1] !==
@@ -260,36 +287,28 @@ const ProductsPage = () => {
     fetchCategories();
   }, []);
 
-  // Fetch subcategories for selection when category is selected
+  // Fetch brands for selection
   useEffect(() => {
-    const fetchSubCategories = async () => {
-      // Only fetch if a category is selected
-      if (!filters.category) {
-        setSubcategories([]);
-        return;
-      }
-
+    const fetchBrands = async () => {
       try {
-        setSubcategoriesLoading(true);
-        const response = await subcategoryApi.getSubCategoriesForSelection({
-          category: filters.category,
-        });
+        setBrandsLoading(true);
+        const response = await brandApi.getBrandsForSelection();
         if (response.success) {
-          setSubcategories(response.data || []);
+          setBrands(response.data || []);
         } else {
-          console.error("Failed to fetch subcategories:", response.msg);
-          setSubcategories([]);
+          console.error("Failed to fetch brands:", response.message);
+          setBrands([]);
         }
       } catch (err) {
-        console.error("Error fetching subcategories:", err);
-        setSubcategories([]);
+        console.error("Error fetching brands:", err);
+        setBrands([]);
       } finally {
-        setSubcategoriesLoading(false);
+        setBrandsLoading(false);
       }
     };
 
-    fetchSubCategories();
-  }, [filters.category]);
+    fetchBrands();
+  }, []);
 
   // Fetch sizes for selection
   useEffect(() => {
@@ -396,7 +415,7 @@ const ProductsPage = () => {
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value !== "" && value !== false && value !== 0) {
           if (key === "minPrice" && value > 0) params.set(key, value);
-          else if (key === "maxPrice" && value < 50000) params.set(key, value);
+          else if (key === "maxPrice" && value > 0) params.set(key, value);
           else if (key !== "minPrice" && key !== "maxPrice")
             params.set(key, value);
         }
@@ -485,8 +504,8 @@ const ProductsPage = () => {
         if (
           normalizedInput[0] !== priceRange[0] ||
           normalizedInput[1] !== priceRange[1]
-        ) {
-          handlePriceRangeChange(priceInput);
+      ) {
+        handlePriceRangeChange(priceInput);
         }
       }
     }, 400);
@@ -536,6 +555,8 @@ const ProductsPage = () => {
       maxPrice: "",
       size: "",
       color: "",
+      brand: "",
+      availability: "",
       sortBy: "createdAt",
       sortOrder: "desc",
       isNewArrival: false,
@@ -559,241 +580,177 @@ const ProductsPage = () => {
     <>
       <div className="filters-header">
         <h3>Filters</h3>
-        <Button type="link" onClick={clearFilters} size="small">
-          Clear All
-        </Button>
       </div>
 
-      {/* Search */}
+
+      {/* Size */}
       <div className="filter-section">
-        <h4 style={{ paddingBottom: 6 }}>Search</h4>
-        <Input
-          placeholder="Search products..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          allowClear
-        />
+        <div className="filter-section-header" onClick={() => toggleFilterSection("size")}>
+          <h4>SIZE</h4>
+          {expandedFilters.size ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.size && (
+          <div className="size-buttons">
+            {sizes.map((size) => (
+              <button
+                key={size}
+                className={`size-button ${filters.size === size ? "active" : ""}`}
+                onClick={() => handleFilterChange("size", filters.size === size ? "" : size)}
+                disabled={sizesLoading}
+              >
+              {size}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Brand */}
+      <div className="filter-section">
+        <div className="filter-section-header" onClick={() => toggleFilterSection("brand")}>
+          <h4>BRAND</h4>
+          {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.brand && (
+          <div className="checkbox-group">
+            {brandsLoading ? (
+              <div style={{ padding: "10px 0" }}>
+                <Spin size="small" />
+              </div>
+            ) : brands.length > 0 ? (
+              brands.map((brand, index) => (
+                <Checkbox
+                  key={index}
+                  checked={filters.brand === brand}
+                  onChange={(e) =>
+                    handleFilterChange("brand", e.target.checked ? brand : "")
+                  }
+                >
+                  {brand}
+                </Checkbox>
+              ))
+            ) : (
+              <span style={{ fontSize: "14px", color: "#999" }}>No brands available</span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Gender */}
+      <div className="filter-section">
+        <div className="filter-section-header" onClick={() => toggleFilterSection("gender")}>
+          <h4>GENDER</h4>
+          {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.gender && (
+          <div className="checkbox-group">
+            <Checkbox
+              checked={filters.gender === "Men"}
+              onChange={(e) =>
+                handleFilterChange("gender", e.target.checked ? "Men" : "")
+              }
+            >
+              Men
+            </Checkbox>
+            <Checkbox
+              checked={filters.gender === "Women"}
+              onChange={(e) =>
+                handleFilterChange("gender", e.target.checked ? "Women" : "")
+              }
+            >
+              Women
+            </Checkbox>
+          </div>
+        )}
       </div>
 
       {/* Price Range */}
       <div className="filter-section">
-        <div className="price-range-header">
-          <h4 style={{ margin: 0 }}>Price Range</h4>
-          <span
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: "var(--brand-primary)",
-            }}
-          >
-            ₹
-            {(priceInput[0] === "" || priceInput[0] === 0
-              ? 0
-              : priceInput[0]
-            ).toLocaleString()}{" "}
-            - ₹
-            {(priceInput[1] === "" || priceInput[1] === 0
-              ? 0
-              : priceInput[1]
-            ).toLocaleString()}
-          </span>
+        <div className="filter-section-header" onClick={() => toggleFilterSection("priceRange")}>
+          <h4>PRICE RANGE</h4>
+          {expandedFilters.priceRange ? <UpOutlined /> : <DownOutlined />}
         </div>
-        <div className="price-inputs">
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={priceInput[0] === 0 ? "" : priceInput[0]}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Allow empty string
-              if (value === "") {
-                setPriceInput(["", priceInput[1]]);
-                return;
-              }
-
-              // Remove leading zeros and non-numeric characters
-              const cleaned =
-                value.replace(/[^0-9]/g, "").replace(/^0+/, "") || "0";
-              const numValue = parseInt(cleaned, 10);
-
-              if (!isNaN(numValue)) {
-                const clamped = Math.max(0, Math.min(50000, numValue));
-                const maxValue =
-                  priceInput[1] === "" || priceInput[1] === 0
-                    ? 50000
-                    : priceInput[1];
-                const newMin = Math.min(clamped, maxValue);
-                setPriceInput([newMin, priceInput[1]]);
-              }
-            }}
-            onBlur={(e) => {
-              // On blur, ensure min doesn't exceed max
-              const currentValue =
-                e.target.value === "" ? 0 : parseInt(e.target.value, 10);
-              if (!isNaN(currentValue)) {
-                const maxValue =
-                  priceInput[1] === "" || priceInput[1] === 0
-                    ? 50000
-                    : priceInput[1];
-                const clamped = Math.min(currentValue, maxValue);
-                if (clamped !== currentValue) {
-                  setPriceInput([clamped === 0 ? "" : clamped, priceInput[1]]);
+        {expandedFilters.priceRange && (
+          <>
+            <div className="price-range-display">
+              <span className="price-range-value">
+                ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
+              </span>
+            </div>
+            <Slider
+              range
+              min={0}
+              max={50000}
+              step={100}
+              marks={{
+                0: '₹0',
+                50000: '₹50,000'
+              }}
+              value={priceRange}
+              onChange={(value) => {
+                // Ensure we can select exactly 50000
+                const clampedValue = [
+                  Math.max(0, Math.min(50000, value[0])),
+                  Math.max(value[0], Math.min(50000, value[1]))
+                ];
+                setPriceRange(clampedValue);
+                // Clear previous timer
+                if (priceSliderTimerRef.current) {
+                  clearTimeout(priceSliderTimerRef.current);
                 }
-              }
-            }}
-            placeholder="0"
-            className="price-input min"
-          />
-          <span className="price-input-separator">to</span>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={priceInput[1] === 0 ? "" : priceInput[1]}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Allow empty string
-              if (value === "") {
-                setPriceInput([priceInput[0], ""]);
-                return;
-              }
-
-              // Remove leading zeros and non-numeric characters
-              const cleaned =
-                value.replace(/[^0-9]/g, "").replace(/^0+/, "") || "0";
-              const numValue = parseInt(cleaned, 10);
-
-              if (!isNaN(numValue)) {
-                const clamped = Math.max(0, Math.min(50000, numValue));
-                const minValue =
-                  priceInput[0] === "" || priceInput[0] === 0
-                    ? 0
-                    : priceInput[0];
-                const newMax = Math.max(clamped, minValue);
-                setPriceInput([priceInput[0], newMax]);
-              }
-            }}
-            onBlur={(e) => {
-              // On blur, ensure max is not less than min
-              const currentValue =
-                e.target.value === "" ? 50000 : parseInt(e.target.value, 10);
-              if (!isNaN(currentValue)) {
-                const minValue =
-                  priceInput[0] === "" || priceInput[0] === 0
-                    ? 0
-                    : priceInput[0];
-                const clamped = Math.max(currentValue, minValue);
-                if (clamped !== currentValue) {
-                  setPriceInput([priceInput[0], clamped === 0 ? "" : clamped]);
-                }
-              }
-            }}
-            placeholder="0"
-            className="price-input max"
-          />
-        </div>
-      </div>
-
-      {/* Category */}
-      <div className="filter-section">
-        <h4 style={{ paddingBottom: 6 }}>Category</h4>
-        <Select
-          placeholder="Select Category"
-          value={filters.category || null}
-          onChange={(value) => handleFilterChange("category", value)}
-          allowClear
-          loading={categoriesLoading}
-          style={{ width: "100%" }}
-        >
-          {categories.map((category) => (
-            <Option key={category._id} value={category._id}>
-              {category.name}
-            </Option>
-          ))}
-        </Select>
-      </div>
-
-      {/* Subcategory */}
-      {filters.category && (
-        <div className="filter-section">
-          <h4 style={{ paddingBottom: 6 }}>Subcategory</h4>
-          <Select
-            placeholder="Select Subcategory"
-            value={filters.subcategory || null}
-            onChange={(value) => handleFilterChange("subcategory", value)}
-            allowClear
-            loading={subcategoriesLoading}
-            style={{ width: "100%" }}
-          >
-            {subcategories.map((subcategory) => (
-              <Option key={subcategory._id} value={subcategory._id}>
-                {subcategory.name}
-              </Option>
-            ))}
-          </Select>
-        </div>
-      )}
-
-      {/* Gender */}
-      <div className="filter-section">
-        <h4 style={{ paddingBottom: 6 }}>Gender</h4>
-        <Select
-          placeholder="Select Gender"
-          value={filters.gender || null}
-          onChange={(value) => handleFilterChange("gender", value)}
-          allowClear
-          style={{ width: "100%" }}
-        >
-          <Option value="Men">Men</Option>
-          <Option value="Women">Women</Option>
-          <Option value="Unisex">Unisex</Option>
-        </Select>
-      </div>
-
-      {/* Size */}
-      <div className="filter-section">
-        <h4 style={{ paddingBottom: 6 }}>Size</h4>
-        <Select
-          placeholder="Select Size"
-          value={filters.size || null}
-          onChange={(value) => handleFilterChange("size", value)}
-          allowClear
-          loading={sizesLoading}
-          style={{ width: "100%" }}
-        >
-          {sizes.map((size) => (
-            <Option key={size} value={size}>
-              {size}
-            </Option>
-          ))}
-        </Select>
+                // Debounce the filter update
+                priceSliderTimerRef.current = setTimeout(() => {
+                  const newFilters = {
+                    ...filtersRef.current,
+                    minPrice: clampedValue[0] > 0 ? clampedValue[0] : "",
+                    maxPrice: clampedValue[1] >= 50000 ? "" : clampedValue[1],
+                    page: 1,
+                  };
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                  setProducts([]);
+                  if (fetchProductsRef.current) {
+                    fetchProductsRef.current(newFilters, clampedValue);
+                  }
+                }, 300);
+              }}
+              className="price-range-slider"
+            />
+          </>
+        )}
       </div>
 
       {/* Color */}
       <div className="filter-section">
-        <h4 style={{ paddingBottom: 6 }}>Color</h4>
+        <div className="filter-section-header" onClick={() => toggleFilterSection("colour")}>
+          <h4>COLOUR</h4>
+          {expandedFilters.colour ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.colour && (
         <Select
           placeholder="Select Color"
-          value={filters.color || null}
+            value={filters.color || null}
           onChange={(value) => handleFilterChange("color", value)}
           allowClear
-          loading={colorsLoading}
+            loading={colorsLoading}
           style={{ width: "100%" }}
         >
-          {colors.map((color) => (
+            {colors.map((color) => (
             <Option key={color} value={color}>
               {color}
             </Option>
           ))}
         </Select>
+        )}
       </div>
 
-      {/* Product Flags */}
+      {/* Product Type */}
       <div className="filter-section">
-        <h4>Product Type</h4>
+        <div className="filter-section-header" onClick={() => toggleFilterSection("productType")}>
+          <h4>PRODUCT TYPE</h4>
+          {expandedFilters.productType ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.productType && (
         <div className="checkbox-group">
           <Checkbox
             checked={filters.isNewArrival}
@@ -818,6 +775,35 @@ const ProductsPage = () => {
             Featured
           </Checkbox>
         </div>
+        )}
+      </div>
+
+      {/* Availability */}
+      <div className="filter-section">
+        <div className="filter-section-header" onClick={() => toggleFilterSection("availability")}>
+          <h4>AVAILABILITY</h4>
+          {expandedFilters.availability ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.availability && (
+          <div className="checkbox-group">
+            <Checkbox
+              checked={filters.availability === "in_stock"}
+              onChange={(e) =>
+                handleFilterChange("availability", e.target.checked ? "in_stock" : "")
+              }
+            >
+              In Stock
+            </Checkbox>
+            <Checkbox
+              checked={filters.availability === "out_of_stock"}
+              onChange={(e) =>
+                handleFilterChange("availability", e.target.checked ? "out_of_stock" : "")
+              }
+            >
+              Out of Stock
+            </Checkbox>
+          </div>
+        )}
       </div>
     </>
   );
@@ -920,46 +906,45 @@ const ProductsPage = () => {
 
           {/* Products Content */}
           <div className="products-content">
+            {/* Page Title */}
+            <div className="page-title-section">
+              <h1 className="page-title">Products</h1>
+              <p className="page-subtitle">{pagination.total} Items</p>
+            </div>
+
             {/* Products Header */}
             <div className="products-header">
-              <div className="products-info">
-                <h2>
-                  {pagination.total > 0
-                    ? `${pagination.total} Products Found`
-                    : "No Products Found"}
-                </h2>
-                {filters.search && <p>Search results for "{filters.search}"</p>}
+              {/* Search Bar */}
+              <div className="search-section">
+                <Input
+                  size="middle"
+                  prefix={<SearchOutlined style={{ color: '#333' }} />}
+                  placeholder="Search for products..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  allowClear
+                  className="products-search-input"
+                />
               </div>
 
               {/* Sort Options */}
               <div className="sort-options">
+                <span className="sort-label">Sort by:</span>
                 <Select
+                  size="middle"
                   value={`${filters.sortBy}-${filters.sortOrder}`}
                   onChange={(value) => {
                     const [sortBy, sortOrder] = value.split("-");
                     handleFilterChange("sortBy", sortBy);
                     handleFilterChange("sortOrder", sortOrder);
                   }}
-                  style={{ width: 200 }}
+                  className="sort-select"
                 >
-                  <Option value="createdAt-desc">
-                    <SortDescendingOutlined /> Newest First
-                  </Option>
-                  <Option value="createdAt-asc">
-                    <SortAscendingOutlined /> Oldest First
-                  </Option>
-                  <Option value="basePricing-asc">
-                    <SortAscendingOutlined /> Price: Low to High
-                  </Option>
-                  <Option value="basePricing-desc">
-                    <SortDescendingOutlined /> Price: High to Low
-                  </Option>
-                  <Option value="productName-asc">
-                    <SortAscendingOutlined /> Name: A to Z
-                  </Option>
-                  <Option value="productName-desc">
-                    <SortDescendingOutlined /> Name: Z to A
-                  </Option>
+                  <Option value="createdAt-desc">Most Popular</Option>
+                  <Option value="basePricing-asc">Price: Low to High</Option>
+                  <Option value="basePricing-desc">Price: High to Low</Option>
+                  <Option value="productName-asc">Name: A to Z</Option>
+                  <Option value="productName-desc">Name: Z to A</Option>
                 </Select>
 
                 {/* Mobile Filter Button */}

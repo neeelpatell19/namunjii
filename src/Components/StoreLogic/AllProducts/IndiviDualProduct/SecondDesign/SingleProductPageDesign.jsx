@@ -26,7 +26,14 @@ const SingleProductPageDesign = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
-  const { triggerCartDrawer, triggerWishlistDrawer, isInCart: ctxIsInCart, isInWishlist: ctxIsInWishlist, refreshCart, refreshWishlist } = useCartWishlist();
+  const {
+    triggerCartDrawer,
+    triggerWishlistDrawer,
+    isInCart: ctxIsInCart,
+    isInWishlist: ctxIsInWishlist,
+    refreshCart,
+    refreshWishlist,
+  } = useCartWishlist();
   const { state } = useAppContext();
 
   const [product, setProduct] = useState(null);
@@ -375,7 +382,7 @@ const SingleProductPageDesign = () => {
             </div>
             <div className="feature-item">
               <div className="feature-icon">✓</div>
-              <span>Easy 14 days returns and exchanges</span>
+              <span>Exchange within 7 days of delivery</span>
             </div>
           </div>
         </div>
