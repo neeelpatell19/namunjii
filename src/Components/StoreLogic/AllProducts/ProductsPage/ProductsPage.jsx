@@ -87,6 +87,12 @@ const ProductsPage = () => {
   const [priceInput, setPriceInput] = useState(["", 15000]);
   // Search input local debounced state
   const [searchInput, setSearchInput] = useState("");
+  
+  // Search suggestions state
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef(null);
 
   // Filter drawer state for mobile/tablet
   const [filterDrawerVisible, setFilterDrawerVisible] = useState(false);
@@ -495,6 +501,48 @@ const ProductsPage = () => {
     },
     [filters, updateURL]
   );
+
+  // Fetch search suggestions with debouncing
+  useEffect(() => {
+    // Clear suggestions if query is empty
+    if (!searchInput || searchInput.trim().length === 0) {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    // Debounce the API call
+    const timeoutId = setTimeout(async () => {
+      setSuggestionsLoading(true);
+      try {
+        const response = await productApi.getSearchSuggestions(searchInput.trim(), 10);
+        if (response.success) {
+          setSearchSuggestions(response.data || []);
+        } else {
+          setSearchSuggestions([]);
+        }
+      } catch (err) {
+        console.error("Error fetching search suggestions:", err);
+        setSearchSuggestions([]);
+      } finally {
+        setSuggestionsLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchInput]);
+
+  // Handle click outside to close suggestions
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Debounce search input -> updates filters.search
   useEffect(() => {
@@ -932,16 +980,104 @@ const ProductsPage = () => {
             {/* Products Header */}
             <div className="products-header">
               {/* Search Bar */}
-              <div className="search-section">
+              <div className="search-section" ref={searchRef}>
                 <Input
                   size="middle"
                   prefix={<SearchOutlined style={{ color: '#333' }} />}
                   placeholder="Search for products..."
                   value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
+                  onChange={(e) => {
+                    setSearchInput(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => {
+                    if (searchSuggestions.length > 0) {
+                      setShowSuggestions(true);
+                    }
+                  }}
+                  onPressEnter={() => {
+                    if (searchInput.trim()) {
+                      handleFilterChange("search", searchInput.trim());
+                      setShowSuggestions(false);
+                    }
+                  }}
                   allowClear
+                  onClear={() => {
+                    setSearchInput("");
+                    setShowSuggestions(false);
+                    handleFilterChange("search", "");
+                  }}
                   className="products-search-input"
                 />
+                
+                {/* Autocomplete Dropdown */}
+                {showSuggestions && searchInput.trim() && (
+                  <div className="search-suggestions-dropdown">
+                    {suggestionsLoading ? (
+                      <div className="search-suggestion-item">
+                        <Spin size="small" /> <span style={{ marginLeft: '8px' }}>Searching...</span>
+                      </div>
+                    ) : searchSuggestions.length > 0 ? (
+                      <ul className="search-suggestions-list">
+                        {searchSuggestions.map((suggestion) => {
+                          const discountedPrice = suggestion.basePricing - (suggestion.basePricing * (suggestion.discount || 0)) / 100;
+                          const coverImage = Array.isArray(suggestion.coverImage) && suggestion.coverImage.length > 0
+                            ? suggestion.coverImage[0]
+                            : suggestion.coverImage || "";
+                          
+                          return (
+                            <li
+                              key={suggestion._id}
+                              onClick={() => {
+                                setSearchInput(suggestion.productName);
+                                handleFilterChange("search", suggestion.productName);
+                                setShowSuggestions(false);
+                              }}
+                              className="search-suggestion-item"
+                            >
+                              {coverImage && (
+                                <img
+                                  src={coverImage}
+                                  alt={suggestion.productName}
+                                  className="search-suggestion-image"
+                                />
+                              )}
+                              <div className="search-suggestion-content">
+                                <p className="search-suggestion-name">
+                                  {suggestion.productName}
+                                </p>
+                                <div className="search-suggestion-price">
+                                  <span className="search-suggestion-price-current">
+                                    ₹{discountedPrice.toFixed(0)}
+                                  </span>
+                                  {suggestion.discount > 0 && (
+                                    <>
+                                      <span className="search-suggestion-price-original">
+                                        ₹{suggestion.basePricing.toFixed(0)}
+                                      </span>
+                                      <span className="search-suggestion-discount">
+                                        {suggestion.discount}% off
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                                <p className="search-suggestion-meta">
+                                  {suggestion.category?.name || ""}
+                                  {suggestion.category?.name && suggestion.vendorId?.brandName && " • "}
+                                  {suggestion.vendorId?.brandName || ""}
+                                </p>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : (
+                      <div className="search-suggestion-item">
+                        No products found for "{searchInput}"
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Sort Options */}
