@@ -72,7 +72,7 @@ const ProductsPage = () => {
     color: "",
     brand: "",
     availability: "",
-    sortBy: "createdAt",
+    sortBy: "most_popular",
     sortOrder: "desc",
     isNewArrival: false,
     isBestSeller: false,
@@ -393,6 +393,23 @@ const ProductsPage = () => {
 
     // Update filters
     const newFilters = { ...filtersRef.current, ...urlFilters };
+    
+    // Normalize sortBy values
+    if (newFilters.sortBy) {
+      // Handle "popular" as alias for "most_popular"
+      if (newFilters.sortBy === "popular") {
+        newFilters.sortBy = "most_popular";
+      }
+      // Normalize createdAt-asc to createdAt-desc (we only support desc for createdAt)
+      if (newFilters.sortBy === "createdAt" && newFilters.sortOrder === "asc") {
+        newFilters.sortOrder = "desc";
+      }
+    } else {
+      // Set default sortBy if not in URL
+      newFilters.sortBy = "most_popular";
+      newFilters.sortOrder = "desc";
+    }
+    
     setFilters(newFilters);
 
     // Fetch products immediately with the new filters
@@ -557,7 +574,7 @@ const ProductsPage = () => {
       color: "",
       brand: "",
       availability: "",
-      sortBy: "createdAt",
+      sortBy: "most_popular",
       sortOrder: "desc",
       isNewArrival: false,
       isBestSeller: false,
@@ -932,19 +949,35 @@ const ProductsPage = () => {
                 <span className="sort-label">Sort by:</span>
                 <Select
                   size="middle"
-                  value={`${filters.sortBy}-${filters.sortOrder}`}
+                  value={
+                    filters.sortBy === "most_popular" || filters.sortBy === "popular"
+                      ? "most_popular-desc"
+                      : filters.sortBy === "createdAt" && filters.sortOrder === "asc"
+                      ? "createdAt-desc" // Map createdAt-asc to createdAt-desc (Newest First)
+                      : `${filters.sortBy}-${filters.sortOrder}`
+                  }
                   onChange={(value) => {
                     const [sortBy, sortOrder] = value.split("-");
-                    handleFilterChange("sortBy", sortBy);
-                    handleFilterChange("sortOrder", sortOrder);
+                    // Update both sortBy and sortOrder in a single filter update
+                    const newFilters = { ...filters, sortBy, sortOrder, page: 1 };
+                    setFilters(newFilters);
+                    updateURL(newFilters);
+                    
+                    // Reset products when sort changes (don't append)
+                    setProducts([]);
+                    // Fetch products with new sort
+                    if (fetchProductsRef.current) {
+                      fetchProductsRef.current(newFilters, priceRangeRef.current);
+                    }
                   }}
                   className="sort-select"
                 >
-                  <Option value="createdAt-desc">Most Popular</Option>
+                  <Option value="most_popular-desc">Most Popular</Option>
                   <Option value="basePricing-asc">Price: Low to High</Option>
                   <Option value="basePricing-desc">Price: High to Low</Option>
                   <Option value="productName-asc">Name: A to Z</Option>
                   <Option value="productName-desc">Name: Z to A</Option>
+                  <Option value="createdAt-desc">Newest First</Option>
                 </Select>
 
                 {/* Mobile Filter Button */}
@@ -967,13 +1000,41 @@ const ProductsPage = () => {
             ) : products.length > 0 ? (
               <>
                 <div className="products-grid">
-                  {products.map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      product={product}
-                      showViewProduct={true}
-                    />
-                  ))}
+                  {products.map((product) => {
+                    // Use first product from products array if available, otherwise use the main product
+                    // Merge main product data with first variant to ensure all fields are available
+                    let displayProduct = product;
+                    
+                    if (product.products && product.products.length > 0) {
+                      const firstVariant = product.products[0];
+                      // Merge variant data with main product data (variant takes precedence for size/color/image)
+                      displayProduct = {
+                        ...product,
+                        ...firstVariant,
+                        // Keep important main product fields
+                        category: product.category,
+                        subcategory: product.subcategory,
+                        vendorId: product.vendorId,
+                        details: product.details,
+                        productDescription: product.productDescription,
+                        status: product.status,
+                        isArchived: product.isArchived,
+                        isNewArrival: product.isNewArrival,
+                        isBestSeller: product.isBestSeller,
+                        isFeatured: product.isFeatured,
+                        createdAt: product.createdAt,
+                        updatedAt: product.updatedAt,
+                      };
+                    }
+                    
+                    return (
+                      <ProductCard
+                        key={displayProduct._id || product._id}
+                        product={displayProduct}
+                        showViewProduct={true}
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* Loading More Indicator */}
