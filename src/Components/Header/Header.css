@@ -130,6 +130,32 @@
   font-weight: 600;
 }
 
+.UserIcon {
+  font-size: 20px;
+  color: var(--brand-primary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.UserIcon:hover {
+  color: var(--brand-500);
+}
+
+.UserText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-primary);
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.UserIcon:hover .UserText {
+  color: var(--brand-500);
+}
+
 /* Brand Separator Line */
 .SeparatorLine {
   height: 2px;

@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Row, Col } from "antd";
-import { Link } from "react-router-dom";
-import { FiSearch, FiHeart, FiMenu, FiX } from "react-icons/fi";
+import { Row, Col, Dropdown } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { FiSearch, FiHeart, FiMenu, FiX, FiUser } from "react-icons/fi";
+import {
+  LogoutOutlined,
+  ProfileOutlined,
+  ShoppingOutlined,
+} from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { updateUserData } from "../../store/actions/ApiActions";
 import CartDrawer from "../StoreLogic/Cart/CartDrawer";
 import WishlistDrawer from "../StoreLogic/Wishlist/WishlistDrawer";
 import { useCartWishlist } from "../StoreLogic/Context/CartWishlistContext";
@@ -11,6 +18,10 @@ import wishlistApi from "../../apis/wishlist";
 import "./Header.css";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.api.userData);
+  const isLoggedIn = !!userData;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [, setWishlistCount] = useState(0);
@@ -93,6 +104,52 @@ const Header = () => {
     fetchCounts();
   };
 
+  // Handle user menu actions
+  const handleLoginSignup = () => {
+    // Navigate to login/signup page
+    navigate("/login");
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
+  const handleMyOrders = () => {
+    navigate("/orders");
+  };
+
+  const handleLogout = () => {
+    dispatch(updateUserData(null));
+    // Optionally navigate to home or login page
+    navigate("/");
+  };
+
+  // User menu dropdown items for logged in users
+  const userMenuItems = [
+    {
+      key: "profile",
+      icon: <ProfileOutlined />,
+      label: "Profile",
+      onClick: handleProfile,
+    },
+    {
+      key: "orders",
+      icon: <ShoppingOutlined />,
+      label: "My Orders",
+      onClick: handleMyOrders,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: handleLogout,
+      danger: true,
+    },
+  ];
+
   return (
     <div className="HeaderContainer">
       {/* Main Navigation Bar */}
@@ -126,6 +183,39 @@ const Header = () => {
             </Col>
             <Col>
               <div className="NavActions">
+                {isLoggedIn ? (
+                  <Dropdown
+                    menu={{ items: userMenuItems }}
+                    placement="bottomRight"
+                    trigger={["click"]}
+                  >
+                    <div
+                      className="UserIcon"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        gap: "8px",
+                      }}
+                    >
+                      <FiUser />
+                    </div>
+                  </Dropdown>
+                ) : (
+                  <div
+                    className="UserIcon"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                      gap: "8px",
+                    }}
+                    onClick={handleLoginSignup}
+                  >
+                    <FiUser />
+                    <span className="UserText">Login/Signup</span>
+                  </div>
+                )}
                 <div
                   className="WishlistIcon"
                   style={{ display: "flex", alignItems: "center" }}
