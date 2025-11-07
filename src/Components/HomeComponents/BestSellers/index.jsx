@@ -1,10 +1,23 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { Row, Col } from "antd";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./BestSellers.css";
 import { Link } from "react-router-dom";
 import NewArrivalCard from "../NewArrivals/NewArrivalCard";
 
 export default function BestSellers({ HomeData }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const bestsellers = useMemo(() => {
     // Handle different data structures
     if (!HomeData) return [];
@@ -55,32 +68,52 @@ export default function BestSellers({ HomeData }) {
         {/* <p className="bestsellers-subtitle">Discover our most loved products</p> */}
         <Link
           to="/products?isBestSeller=true"
-
-          className="view-all-link"
+          className="view-all-btn"
         >
-          View All
-          <span className="arrow-icon">→</span>
+          View All <span className="arrow-icon">→</span>
         </Link>
       </div>
 
-      <div className="bestsellers-grid">
-        {bestsellers.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            showQuickView={true}
-            showAddToCart={true}
-            onQuickView={(product) => {
-              console.log("Quick view:", product);
-              // Add your quick view logic here
-            }}
-            onAddToCart={(product) => {
-              console.log("Add to cart:", product);
-              // Add your add to cart logic here
-            }}
-          />
-        ))}
-      </div>
+      {isMobile ? (
+        <Row gutter={[12, 12]} className="bestsellers-row-mobile">
+          {bestsellers.map((product) => (
+            <Col xs={12} sm={12} key={product.id || product._id}>
+              <ProductCard
+                product={product}
+                showQuickView={true}
+                showAddToCart={true}
+                onQuickView={(product) => {
+                  console.log("Quick view:", product);
+                  // Add your quick view logic here
+                }}
+                onAddToCart={(product) => {
+                  console.log("Add to cart:", product);
+                  // Add your add to cart logic here
+                }}
+              />
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <div className="bestsellers-grid">
+          {bestsellers.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              showQuickView={true}
+              showAddToCart={true}
+              onQuickView={(product) => {
+                console.log("Quick view:", product);
+                // Add your quick view logic here
+              }}
+              onAddToCart={(product) => {
+                console.log("Add to cart:", product);
+                // Add your add to cart logic here
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

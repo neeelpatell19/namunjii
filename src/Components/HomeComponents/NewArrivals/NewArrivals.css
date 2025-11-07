@@ -14,7 +14,7 @@
 }
 
 .new-arrivals-title {
-  font-family:var(--playfair-display);
+  font-family: var(--playfair-display);
   text-transform: uppercase;
   font-size: 40px;
   color: #775242;
@@ -46,7 +46,7 @@
 }
 
 .arrow-icon {
-  font-size: 18px;
+  font-size: 26.25px; /* 1.25x of previous size (21px * 1.25) */
   transition: transform 0.3s ease;
 }
 
@@ -54,12 +54,17 @@
   transform: translateX(3px);
 }
 
-/* Grid with Staggered Effect */
+/* Desktop Grid with Staggered Effect */
 .new-arrivals-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 0 1rem;
+}
+
+/* Mobile Row - Simple Ant Design Grid */
+.new-arrivals-row-mobile {
+  padding: 0 0.5rem;
 }
 
 /* Stagger effect: products at index 1 and 3 (2nd and 4th cards) are offset down */
@@ -105,12 +110,10 @@
   text-transform: uppercase;
   order: -1;
   white-space: nowrap;
- 
 }
- .new-arrivals-buy-link{
-    color:#242424;
-  }
-
+.new-arrivals-buy-link {
+  color: #242424;
+}
 
 /* Footer Section - Simple Text Below Image */
 .new-collections-footer {
@@ -132,7 +135,7 @@
   cursor: pointer;
   font-style: playfair display;
   font-size: 18px;
-  color: #2E1D0B;
+  color: #2e1d0b;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   font-weight: 500;
@@ -141,10 +144,17 @@
 }
 
 .new-collections-shop-arrow {
-  font-size: 14px;
+  font-size: 27px; /* 50% more than button font-size (18px * 1.5) */
   color: #999999;
   transition: all 0.3s ease;
   text-align: right;
+  display: flex;
+  align-items: center;
+}
+
+.new-collections-shop-arrow img {
+  width: 27px;
+  height: 27px;
 }
 
 .new-collections-card:hover .new-collections-shop-arrow {
@@ -225,18 +235,18 @@
   }
 
   .new-arrivals-title {
-    font-size:3rem;
+    font-size: 3rem;
     letter-spacing: 6px;
   }
-  .view-all-btn{
+  .view-all-btn {
     display: flex;
     gap: 30px;
     align-items: center;
     font-size: 2rem;
   }
-  .view-all-btn span{
+  .view-all-btn span {
     font-size: 2rem;
-  };
+  }
 }
 
 /* Tablet (768px and below) */
@@ -251,15 +261,14 @@
     gap: 1.5rem;
     margin-bottom: 2rem;
     white-space: nowrap;
-   
   }
 
-  .view-all-btn{
+  .view-all-btn {
     font-size: 15px;
     padding: 12px 25px;
-   display: flex;
-   gap: 4px;
-   white-space: nowrap;
+    display: flex;
+    gap: 4px;
+    white-space: nowrap;
   }
   .new-arrivals-title {
     font-size: 1.7rem;
@@ -303,94 +312,60 @@
   }
 }
 
-/* Mobile (480px and below) */
-@media (max-width: 480px) {
+/* Mobile card styles - Simple and clean */
+.new-collections-card-mobile {
+  margin-top: 0 !important;
+}
+
+.new-collections-card-mobile:nth-child(n) {
+  margin-top: 0 !important;
+}
+
+/* Mobile responsive adjustments for header */
+@media (max-width: 768px) {
   .new-arrivals-container {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
   }
 
   .new-arrivals-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     padding: 0 0.5rem;
   }
 
-.new-arrivals-title {
-    font-size: 1.5rem;
-  }
-
   .new-arrivals-title {
-    font-size:1.5rem;
-    letter-spacing: 3px;
+    font-size: 1.5rem;
+    letter-spacing: 0px;
   }
 
-  .view-all-btn{
+  .view-all-btn {
     display: flex;
     gap: 3px;
+    font-size: 12px;
+    padding: 2px 16px !important;
   }
 
-  .view-all-btn span{
-    font-size: 1rem !important;
-  }
-
-  .new-arrivals-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .new-collections-image-container {
-    aspect-ratio: 3 / 4;
-    margin-bottom: 10px;
-  }
-
-  
-
-  .new-collections-brand {
-    font-size: 11px;
-    margin-bottom: 8px;
-  }
-
-  .new-collections-footer {
-    padding: 8px 0;
-    margin-top: 8px;
-  }
-
-  .new-collections-shop {
-    font-size: 10px;
-  }
-
-  .new-collections-shop-arrow {
-    font-size: 3px;
+  .view-all-btn .arrow-icon {
+    font-size: 22.5px !important; /* 1.25x of previous size (18px * 1.25) */
   }
 }
 
-/* Small Mobile (360px and below) */
-@media (max-width: 380px) {
+@media (max-width: 480px) {
+  .new-arrivals-container {
+    padding: 1rem 0;
+  }
+
   .new-arrivals-title {
     font-size: 1.2rem;
-    letter-spacing: 2px !important;
+    letter-spacing: 0px;
   }
 
-  /* .view-all-btn {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    padding: 2px 16px;
-  } */
-      .view-all-btn span {
-        font-size: 1rem;
-    }
-
-  .new-arrivals-grid {
-    gap: 12px;
-    padding: 0 0.5rem;
+  .view-all-btn {
+    font-size: 11px;
+    padding: 2px 12px !important;
   }
 
-  .new-collections-brand {
-    font-size: 10px;
-  }
-
-  .new-collections-shop {
-    font-size: 9px;
+  .view-all-btn .arrow-icon {
+    font-size: 20.625px !important; /* 1.25x of previous size (16.5px * 1.25) */
   }
 }
 

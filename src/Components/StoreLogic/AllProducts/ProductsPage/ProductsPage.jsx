@@ -160,9 +160,9 @@ const ProductsPage = () => {
           (priceInput[0] === "" || priceInput[0] === 0 ? "" : priceInput[0]) ||
         normalizedInput[1] !==
           (priceInput[1] === "" || priceInput[1] === 0 ? "" : priceInput[1])
-      ) {
+    ) {
         setPriceInput(normalizedInput);
-      }
+    }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceRange]);
@@ -666,7 +666,7 @@ const ProductsPage = () => {
               {size}
               </button>
             ))}
-          </div>
+        </div>
         )}
       </div>
 
@@ -675,7 +675,7 @@ const ProductsPage = () => {
         <div className="filter-section-header" onClick={() => toggleFilterSection("brand")}>
           <h4>BRAND</h4>
           {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
-        </div>
+      </div>
         {expandedFilters.brand && (
           <div className="checkbox-group">
             {brandsLoading ? (
@@ -690,15 +690,15 @@ const ProductsPage = () => {
                   onChange={(e) =>
                     handleFilterChange("brand", e.target.checked ? brand : "")
                   }
-                >
+          >
                   {brand}
                 </Checkbox>
               ))
             ) : (
               <span style={{ fontSize: "14px", color: "#999" }}>No brands available</span>
             )}
-          </div>
-        )}
+        </div>
+      )}
       </div>
 
       {/* Gender */}
@@ -714,7 +714,7 @@ const ProductsPage = () => {
               onChange={(e) =>
                 handleFilterChange("gender", e.target.checked ? "Men" : "")
               }
-            >
+        >
               Men
             </Checkbox>
             <Checkbox
@@ -1164,11 +1164,11 @@ const ProductsPage = () => {
                     }
                     
                     return (
-                      <ProductCard
+                    <ProductCard
                         key={displayProduct._id || product._id}
                         product={displayProduct}
-                        showViewProduct={true}
-                      />
+                      showViewProduct={true}
+                    />
                     );
                   })}
                 </div>

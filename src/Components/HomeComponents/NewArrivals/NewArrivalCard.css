@@ -76,13 +76,6 @@
   text-align: left;
 }
 
-.new-collections-shop-arrow {
-  font-size: 14px;
-  color: #999999;
-  transition: all 0.3s ease;
-  text-align: right;
-}
-
 .new-collections-card:hover .new-collections-shop-arrow {
   color: #333;
   transform: translateX(3px);
@@ -145,43 +138,32 @@
   .new-collections-shop {
     font-size: 11px;
   }
-}
-
-/* Mobile (480px and below) */
-@media (max-width: 480px) {
-  .new-collections-image-container {
-    aspect-ratio: 3 / 4;
-    margin-bottom: 10px;
-  }
-
-  .new-collections-brand {
-    font-size: 11px;
-    margin-bottom: 8px;
-  }
-
-  .new-collections-footer {
-    padding: 8px 0;
-    margin-top: 8px;
-  }
-
-  .new-collections-shop {
-    font-size: 10px;
-  }
 
   .new-collections-shop-arrow {
-    font-size: 12px;
+    font-size: 16.5px !important; /* 50% more than button font-size (11px * 1.5) */
+  }
+
+  .new-collections-shop-arrow img {
+    width: 16.5px !important;
+    height: 16.5px !important;
   }
 }
 
-/* Small Mobile (360px and below) */
-@media (max-width: 360px) {
-  .new-collections-brand {
-    font-size: 0.9rem;
-  }
+/* Mobile card styles - Simple, no complex sizing */
+.new-collections-card-mobile {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
-  .new-collections-shop {
-    font-size: 9px;
-  }
+.new-collections-card-mobile:nth-child(n) {
+  margin-top: 5px;
+}
+
+.new-collections-card-mobile .new-collections-brand {
+  font-size: 12px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Reduced Motion Support */

@@ -4,7 +4,7 @@ import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import cartApi from "../../../apis/cart";
 import "./NewArrivalCard.css";
 
-export default function NewArrivalCard({ product }) {
+export default function NewArrivalCard({ product, isMobile = false }) {
   const { deviceId } = useDevice();
   const { triggerCartDrawer, refreshCart } = useCartWishlist();
 
@@ -31,7 +31,7 @@ export default function NewArrivalCard({ product }) {
   };
 
   return (
-    <div className="new-collections-card">
+    <div className={`new-collections-card ${isMobile ? 'new-collections-card-mobile' : ''}`}>
       <p className="new-collections-brand">{product.productName}</p>
       <div className="new-collections-image-container">
         <img 

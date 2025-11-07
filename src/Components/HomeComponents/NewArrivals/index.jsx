@@ -1,10 +1,23 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { Row, Col } from "antd";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import NewArrivalCard from "./NewArrivalCard";
 import "./NewArrivals.css";
 import { Link } from "react-router-dom";
 
 export default function NewArrivals({ HomeData }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const newArrivals = useMemo(() => {
     // Handle different data structures
     if (!HomeData) return [];
@@ -66,11 +79,21 @@ export default function NewArrivals({ HomeData }) {
         </Link>
       </div>
 
-      <div className="new-arrivals-grid">
-        {newArrivals.map((product) => (
-          <NewArrivalCard key={product._id || product.id} product={product} />
-        ))}
-      </div>
+      {isMobile ? (
+        <Row gutter={[12, 12]} className="new-arrivals-row-mobile">
+          {newArrivals.map((product) => (
+            <Col xs={12} sm={12} key={product._id || product.id}>
+              <NewArrivalCard product={product} isMobile={true} />
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <div className="new-arrivals-grid">
+          {newArrivals.map((product) => (
+            <NewArrivalCard key={product._id || product.id} product={product} isMobile={false} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

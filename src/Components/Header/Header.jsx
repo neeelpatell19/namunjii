@@ -363,6 +363,9 @@ const Header = () => {
           <Row justify="space-between" align="middle">
             <Col>
               <div className="NavLeft">
+                <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
+                  {mobileMenuOpen ? <FiX /> : <FiMenu />}
+                </div>
                 {!isProductsPage && (
                   <>
                     {!isMobile && showSearchInput ? (
@@ -410,9 +413,6 @@ const Header = () => {
                     )}
                   </>
                 )}
-                <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
-                  {mobileMenuOpen ? <FiX /> : <FiMenu />}
-                </div>
               </div>
             </Col>
             <Col>

@@ -38,7 +38,7 @@ const Footer = () => {
           <Row gutter={[32, 32]}>
             {/* Column 1: NAMUNJII Brand Information */}
             <Col xs={24} sm={12} md={6}>
-              <div className="FooterColumn">
+              <div className="FooterColumn FooterColumnBrand">
                 <div className="FooterLogo">
                   <div className="FooterLogoIcon">
                     <img
@@ -115,7 +115,7 @@ const Footer = () => {
 
             {/* Column 4: LET'S STAY IN TOUCH */}
             <Col xs={24} sm={12} md={6}>
-              <div className="FooterColumn">
+              <div className="FooterColumn FooterColumnNewsletter">
                 <h3 className="FooterHeading">LET'S STAY IN TOUCH</h3>
                 <p className="FooterDescription">
                   Discover trends, get early access to collections, and never
