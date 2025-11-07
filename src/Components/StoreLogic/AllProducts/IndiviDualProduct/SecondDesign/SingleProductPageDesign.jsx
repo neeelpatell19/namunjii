@@ -327,9 +327,7 @@ const SingleProductPageDesign = () => {
   };
 
   return (
-    
     <div className="modern-product-page">
-      <img src="/icons/next-btn.svg" alt="" />
       {/* Breadcrumbs */}
       <div className="product-breadcrumbs">
         <Link to="/">HOME</Link>

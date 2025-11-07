@@ -29,26 +29,33 @@
 .FooterLogo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
+.FooterLogoIcon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .FooterLogoIcon img {
-  height: 30px;
-  width: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .FooterLogoText {
-  font-family: var(--Poppins-font);
-  font-size: 20px;
+  font-size: 40.5px;
   font-weight: 400;
   color: var(--bg-white);
-  letter-spacing: 1px;
 }
 
 /* Footer Description */
 .FooterDescription {
-  font-family: var(--fira-sans);
+  font-family: var(--fira-sans) !important;
   font-size: 16px !important;
   line-height: 1.6;
   color: var(--neutral-800);
@@ -68,7 +75,7 @@
 
 /* Contact Details */
 .ContactDetails p {
-  font-family: var(--fira-sans);
+  font-family: var(--fira-sans) !important;
   font-size: 16px !important;
   color: var(--neutral-800);
   margin: 8px 0;
@@ -193,8 +200,30 @@
     margin-bottom: 20px;
   }
 
+  /* Center the first column (Logo, Tagline, Contact Details) on mobile */
+  .FooterColumnBrand {
+    text-align: center;
+    align-items: center;
+  }
+
+  .FooterColumnBrand .FooterLogo {
+    justify-content: center;
+    display: flex !important;
+  }
+
+  .FooterLogoIcon {
+    width: 48px;
+    height: 48px;
+    display: flex !important;
+  }
+
+  .FooterLogoIcon img {
+    display: block !important;
+  }
+
   .FooterLogoText {
-    font-size: 18px;
+    font-size: 29.7px;
+    display: inline-block !important;
   }
 
   .FooterHeading {
@@ -210,6 +239,11 @@
 
   .FooterLinks {
     gap: 10px;
+  }
+
+  /* Add horizontal padding to LET'S STAY IN TOUCH section on mobile */
+  .FooterColumnNewsletter {
+    padding: 0 20px;
   }
 }
 
@@ -227,8 +261,30 @@
     margin-bottom: 15px;
   }
 
+  /* Center the first column (Logo, Tagline, Contact Details) on mobile */
+  .FooterColumnBrand {
+    text-align: center;
+    align-items: center;
+  }
+
+  .FooterColumnBrand .FooterLogo {
+    justify-content: center;
+    display: flex !important;
+  }
+
+  .FooterLogoIcon {
+    width: 42px;
+    height: 42px;
+    display: flex !important;
+  }
+
+  .FooterLogoIcon img {
+    display: block !important;
+  }
+
   .FooterLogoText {
-    font-size: 16px;
+    font-size: 27px;
+    display: inline-block !important;
   }
 
   .FooterHeading {
@@ -244,6 +300,11 @@
 
   .FooterLinks {
     gap: 6px;
+  }
+
+  /* Add horizontal padding to LET'S STAY IN TOUCH section on mobile */
+  .FooterColumnNewsletter {
+    padding: 0 20px;
   }
 
   .FooterCopyright {
