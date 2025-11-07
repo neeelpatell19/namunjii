@@ -18,7 +18,7 @@ const Partnerus = () => {
   return (
     <div className="partnerus-container MainContainer Container">
       <div className="partnerus-img">
-        <img src="./Images/PartnerUsImage.svg" alt="img" />
+        <img src="./Images/PartnerUsImage.webp" alt="img" />
       </div>
       <div className="partnerus-content">
         {isMobile ? (

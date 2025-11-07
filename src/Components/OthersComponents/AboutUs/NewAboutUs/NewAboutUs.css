@@ -73,6 +73,10 @@
     overflow-x: hidden !important;
   }
 
+  .marginBottom50 {
+    margin-bottom: 30px !important; /* Reduced from 50px */
+  }
+
   .MainContainer,
   .Container {
     padding-left: 0 !important;

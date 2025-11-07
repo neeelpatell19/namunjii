@@ -14,6 +14,7 @@
   background: var(--bg-white);
   padding: 16px 0;
   border-bottom: 1px solid var(--neutral-950);
+  width: 100%;
 }
 
 .NavLeft {
@@ -303,6 +304,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  padding-right: 8px;
 }
 
 .WishlistIcon {
@@ -317,37 +319,46 @@
 }
 
 .CartContainer {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
-.CartContainer:hover .CartText {
+.CartContainer:hover .CartIcon {
   color: var(--brand-500);
 }
 
-.CartText {
-  font-size: 14px;
-  font-weight: 600;
+.CartIcon {
+  font-size: 20px;
   color: var(--brand-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: color 0.3s ease;
 }
 
 .CartBadge {
+  position: absolute;
+  top: -6px;
+  right: -4px;
   background: var(--brand-primary);
   color: var(--bg-white);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
+  aspect-ratio: 1;
+  padding: 2px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.CartBadge span {
+  display: block;
+  line-height: 1;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
 .UserIcon {
@@ -435,13 +446,44 @@
   }
 }
 
+@media (width: 768px) {
+  .MainNavBar .Container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 768px) {
   .MainNavBar {
-    padding: 12px 0;
+    padding: 12px 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .MainNavBar .Container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100%;
+  }
+
+  .MainNavBar .Container .ant-row {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .NavLeft {
+    gap: 12px;
+  }
+
+  .NavActions {
+    gap: 14px;
+    padding-right: 10px;
   }
 
   .MobileMenuToggle {
     display: block;
+    font-size: 22px;
   }
 
   .LogoText {
@@ -449,21 +491,28 @@
   }
 
   .SearchIcon {
-    font-size: 18px;
+    font-size: 20px;
+  }
+
+  .UserIcon {
+    font-size: 20px;
   }
 
   .WishlistIcon {
-    font-size: 18px;
+    font-size: 20px;
   }
 
-  .CartText {
-    font-size: 12px;
+  .CartIcon {
+    font-size: 20px;
   }
 
   .CartBadge {
-    width: 18px;
-    height: 18px;
-    font-size: 10px;
+    font-size: 12px;
+    top: -5px;
+    right: -5px;
+    padding: 1.5px;
+    aspect-ratio: 1;
+    box-sizing: content-box;
   }
 
   .CategoryNavBar {
@@ -508,29 +557,63 @@
 
 @media (max-width: 480px) {
   .MainNavBar {
-    padding: 10px 0;
+    padding: 10px 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .MainNavBar .Container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100%;
+  }
+
+  .MainNavBar .Container .ant-row {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .NavLeft {
+    gap: 10px;
+  }
+
+  .NavActions {
+    gap: 12px;
+    padding-right: 12px;
   }
 
   .LogoText {
     font-size: 16px;
   }
 
+  .MobileMenuToggle {
+    font-size: 20px;
+  }
+
   .SearchIcon {
-    font-size: 16px;
+    font-size: 18px;
+  }
+
+  .UserIcon {
+    font-size: 18px;
   }
 
   .WishlistIcon {
-    font-size: 16px;
+    font-size: 18px;
   }
 
-  .CartText {
-    font-size: 10px;
+  .CartIcon {
+    font-size: 18px;
   }
 
   .CartBadge {
-    width: 16px;
-    height: 16px;
-    font-size: 9px;
+    font-size: 12px;
+    top: -6px;
+    right: -10px;
+    padding: 1px;
+    aspect-ratio: 1;
+    box-sizing: content-box;
   }
 
   .CategoryLinks {

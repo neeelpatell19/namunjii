@@ -34,7 +34,6 @@
   object-fit: cover;
   padding: 0;
   box-sizing: border-box;
-  border-radius: 18px;
   aspect-ratio: 4 / 3;
 }
 

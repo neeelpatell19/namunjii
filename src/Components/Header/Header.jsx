@@ -6,6 +6,7 @@ import {
   LogoutOutlined,
   ProfileOutlined,
   ShoppingOutlined,
+  ShoppingCartOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -361,7 +362,7 @@ const Header = () => {
       <div className="MainNavBar">
         <div className="Container">
           <Row justify="space-between" align="middle">
-            <Col>
+            <Col style={{ display: "flex", alignItems: "center" }}>
               <div className="NavLeft">
                 <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
                   {mobileMenuOpen ? <FiX /> : <FiMenu />}
@@ -458,10 +459,12 @@ const Header = () => {
                   <FiHeart />
                 </div>
                 <div className="CartContainer" onClick={handleCartClick}>
-                  <span className="CartText">CART</span>
-                  <div className="CartBadge">
-                    <span>{cartCount}</span>
-                  </div>
+                  <ShoppingCartOutlined className="CartIcon" />
+                  {cartCount > 0 && (
+                    <div className="CartBadge">
+                      <span>{cartCount}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </Col>

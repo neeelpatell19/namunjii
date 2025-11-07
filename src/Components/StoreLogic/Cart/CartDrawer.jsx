@@ -199,12 +199,14 @@ const CartDrawer = ({ isOpen, onClose }) => {
           ) : (
             <>
               <div className="cart-items">
-                {cartItems.map((item) => (
-                  <div key={item.productId._id} className="cart-item">
+                {cartItems
+                  .filter((item) => item.productId && item.productId._id)
+                  .map((item) => (
+                  <div key={item.productId?._id || item._id || Math.random()} className="cart-item">
                     <div className="cart-item-image">
                       <img
-                        src={item.productId.coverImage?.[0] || ""}
-                        alt={item.productId.productName}
+                        src={item.productId?.coverImage?.[0] || ""}
+                        alt={item.productId?.productName || "Product"}
                         onError={(e) => {
                           e.target.style.display = "none";
                           e.target.nextSibling.style.display = "flex";
@@ -215,13 +217,13 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
                     <div className="cart-item-details">
                       <h3 className="cart-item-name">
-                        {item.productId.productName}
+                        {item.productId?.productName || "Product"}
                       </h3>
                       <p className="cart-item-price">
                         ₹
                         {(() => {
-                          const basePrice = item.productId.basePricing || 0;
-                          const discount = item.productId.discount || 0;
+                          const basePrice = item.productId?.basePricing || 0;
+                          const discount = item.productId?.discount || 0;
                           const finalPrice =
                             discount > 0
                               ? Math.round(basePrice * (1 - discount / 100))
@@ -230,11 +232,11 @@ const CartDrawer = ({ isOpen, onClose }) => {
                         })()}
                       </p>
                       <p className="cart-item-size">
-                        Size: {item.size || item.productId.size || "One Size"}
+                        Size: {item.size || item.productId?.size || "One Size"}
                       </p>
-                      {(item.color || item.productId.color) && (
+                      {(item.color || item.productId?.color) && (
                         <p className="cart-item-color">
-                          Color: {item.color || item.productId.color}
+                          Color: {item.color || item.productId?.color}
                         </p>
                       )}
                     </div>
@@ -289,10 +291,18 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 <div className="cart-total">
                   <p>
                     Total: ₹
-                    {cartItems
+                        {cartItems
+                      .filter((item) => item.productId)
                       .reduce(
-                        (total, item) =>
-                          total + item.productId.finalPrice * item.quantity,
+                        (total, item) => {
+                          const basePrice = item.productId?.basePricing || 0;
+                          const discount = item.productId?.discount || 0;
+                          const finalPrice =
+                            discount > 0
+                              ? Math.round(basePrice * (1 - discount / 100))
+                              : basePrice;
+                          return total + finalPrice * item.quantity;
+                        },
                         0
                       )
                       .toLocaleString()}
