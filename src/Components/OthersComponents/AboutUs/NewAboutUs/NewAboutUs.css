@@ -66,12 +66,116 @@
     width: 50%;
     object-fit: cover;
 }
+
 @media (max-width: 768px) {
-  .grid-two--cols {
-    grid-template-columns: 1fr; /* stack */
-  }
-  
-  .left, .right {
-    width: 100%;
-  }
+    /* Force proper container width */
+    * {
+        box-sizing: border-box !important;
+    }
+    
+    body {
+        overflow-x: hidden !important;
+    }
+    
+    .MainContainer,
+    .Container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Reset grid positioning */
+    .grid {
+        position: relative;
+        left: 0 !important;
+        right: 0 !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        padding-bottom: 50px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+    }
+    
+    /* Force single column */
+    .grid-two--cols {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+        width: calc(100% - 40px) !important; /* CHANGED - Account for padding */
+        margin: 0 auto !important;
+    }
+    
+    /* Left column fixes */
+    .left {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Title responsive */
+    .about-title {
+        font-size: 1.75rem !important;
+        margin-top: 20px;
+        line-height: 1.3;
+        word-wrap: break-word;
+    }
+    
+    /* Description responsive */
+    .about-description {
+        font-size: 14px !important;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        line-height: 1.6;
+        word-wrap: break-word;
+        white-space: normal !important;
+    }
+    
+    /* Button responsive */
+    .about-btn {
+        font-size: 15px;
+        padding: 10px 24px;
+        min-height: 44px;
+        width: auto;
+    }
+    
+    /* Right column fixes */
+    .right {
+        width: 100% !important;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    /* Image responsive */
+    .right img {
+        width: 95% !important; /* CHANGED from 100% to 95% */
+        max-width: 95% !important;
+        height: auto;
+        object-fit: cover;
+    }
+}
+
+/* Small mobile specific */
+@media (max-width: 480px) {
+    .grid {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+    
+    .about-title {
+        font-size: 1.5rem !important;
+    }
+    
+    .about-btn {
+        width: 100% !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
