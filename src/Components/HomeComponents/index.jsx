@@ -12,6 +12,7 @@ import SectionHeading from "./HeroText";
 import HeroHome from "../OthersComponents/AboutUs/HeroHome/HeroHome";
 import AnimatedSection from "./AnimatedSection";
 import Partnerus from "../PartnerUs/Partnerus";
+import NewAboutUs from "../OthersComponents/AboutUs/NewAboutUs/NewAboutUs";
 
 // Loading Component with Skeleton Animation
 const LoadingState = () => {
@@ -166,9 +167,10 @@ export default function HomeComponents() {
       <HeroHome />
       {/* <Carousel HomeData={HomeData} /> */}
       <BrandMarquee />
-      <AnimatedSection>
+      {/* <AnimatedSection>
         <SectionHeading />
-      </AnimatedSection>
+      </AnimatedSection> */}
+      <NewAboutUs />
       {/* <Categories HomeData={HomeData} /> */}
       <NewArrivals HomeData={HomeData} />
       <BestSellers HomeData={HomeData} />
