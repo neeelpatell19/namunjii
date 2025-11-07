@@ -45,7 +45,7 @@
     min-width: 200px;
     max-width: 100%;
   }
-  
+
   .header-search-suggestions-dropdown {
     max-height: 300px;
   }
@@ -374,13 +374,6 @@
 
 .UserIcon:hover .UserText {
   color: var(--brand-500);
-}
-
-/* Brand Separator Line */
-.SeparatorLine {
-  height: 2px;
-  background: var(--brand-primary);
-  width: 100%;
 }
 
 /* Secondary Navigation Bar */

@@ -454,6 +454,9 @@ const Header = () => {
           <Row justify="space-between" align="middle">
             <Col>
               <div className="NavLeft">
+                <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
+                  {mobileMenuOpen ? <FiX /> : <FiMenu />}
+                </div>
                 {!isProductsPage && (
                   <>
                     {!isMobile && showSearchInput ? (
@@ -501,9 +504,6 @@ const Header = () => {
                     )}
                   </>
                 )}
-                <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
-                  {mobileMenuOpen ? <FiX /> : <FiMenu />}
-                </div>
               </div>
             </Col>
             <Col>
@@ -559,9 +559,6 @@ const Header = () => {
           </Row>
         </div>
       </div>
-
-      {/* Brand Separator Line */}
-      <div className="SeparatorLine"></div>
 
       {/* Secondary Navigation Bar */}
       <div 

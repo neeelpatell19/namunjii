@@ -169,6 +169,23 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .HeroHomeContainerWithoutPadding {
+    height: 50vh;
+  }
+
+  .HeroHomeContainer {
+    height: 50vh;
+  }
+
+  .HeroHomeContainerLeftImages,
+  .HeroHomeContainerRightImages {
+    height: 50vh;
+  }
+
+  .CarousalImages {
+    height: 50vh;
+  }
+
   .carousel-content {
     bottom: 40px;
     left: 20px;
@@ -183,8 +200,12 @@
   }
 
   .text-item {
-    font-size: 2rem;
+    font-size: 1.6rem;
     width: 100%;
+  }
+
+  .text-item h2 {
+    font-size: 1.6rem !important;
   }
 }
 
