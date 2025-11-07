@@ -48,6 +48,12 @@ const Header = () => {
   const [isMobile, setIsMobile] = useState(false);
   const searchRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const [showWomenMegaMenu, setShowWomenMegaMenu] = useState(false);
+  const [showMenMegaMenu, setShowMenMegaMenu] = useState(false);
+  const womenMegaMenuRef = useRef(null);
+  const menMegaMenuRef = useRef(null);
+  const categoryNavBarRef = useRef(null);
+  const hideTimeoutRef = useRef(null);
 
   // Check if we're on products page
   const isProductsPage = location.pathname === "/products";
@@ -62,9 +68,57 @@ const Header = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Mega dropdown data for Women - 2 columns only
+  const womenMegaMenuData = {
+    category: [
+      { label: "Shop All", link: "/products?gender=Women" },
+      { label: "Blouses & Top", link: "/products?gender=Women&category=Tops" },
+      { label: "Pants", link: "/products?gender=Women&category=Pants" },
+      { label: "Dresses & Jumpsuits", link: "/products?gender=Women&category=Dresses" },
+      { label: "Outwear & Jackets", link: "/products?gender=Women&category=Outerwear" },
+      { label: "Pullovers", link: "/products?gender=Women&category=Pullovers" },
+      { label: "Tees", link: "/products?gender=Women&category=Tees" },
+      { label: "Shorts & Skirts", link: "/products?gender=Women&category=Shorts" },
+    ],
+    featured: [
+      { label: "Deewan-E-Khaas", link: "/products?gender=Women&brand=Deewan-E-Khaas" },
+      { label: "Kaaya Collective", link: "/products?gender=Women&brand=Kaaya-Collective" },
+      { label: "Pehnava Studio", link: "/products?gender=Women&brand=Pehnava-Studio" },
+      { label: "Vastra By Design", link: "/products?gender=Women&brand=Vastra-By-Design" },
+    ],
+  };
+
+  // Mega dropdown data for Men - 2 columns only
+  const menMegaMenuData = {
+    category: [
+      { label: "Shop All", link: "/products?gender=Men" },
+      { label: "Shirts", link: "/products?gender=Men&category=Shirts" },
+      { label: "T-Shirts", link: "/products?gender=Men&category=T-Shirts" },
+      { label: "Pants", link: "/products?gender=Men&category=Pants" },
+      { label: "Jackets", link: "/products?gender=Men&category=Jackets" },
+      { label: "Sweaters", link: "/products?gender=Men&category=Sweaters" },
+      { label: "Shorts", link: "/products?gender=Men&category=Shorts" },
+      { label: "Accessories", link: "/products?gender=Men&category=Accessories" },
+         { label: "Shop All", link: "/products?gender=Men" },
+      { label: "Shirts", link: "/products?gender=Men&category=Shirts" },
+      { label: "T-Shirts", link: "/products?gender=Men&category=T-Shirts" },
+      { label: "Pants", link: "/products?gender=Men&category=Pants" },
+      { label: "Jackets", link: "/products?gender=Men&category=Jackets" },
+      { label: "Sweaters", link: "/products?gender=Men&category=Sweaters" },
+      { label: "Shorts", link: "/products?gender=Men&category=Shorts" },
+      { label: "Accessories", link: "/products?gender=Men&category=Accessories" }
+    ],
+    featured: [
+      { label: "Deewan-E-Khaas", link: "/products?gender=Men&brand=Deewan-E-Khaas" },
+      { label: "Kaaya Collective", link: "/products?gender=Men&brand=Kaaya-Collective" },
+      { label: "Pehnava Studio", link: "/products?gender=Men&brand=Pehnava-Studio" },
+      { label: "Vastra By Design", link: "/products?gender=Men&brand=Vastra-By-Design" },
+    ],
+  };
+
   const categories = [
-    { name: "Women", hasDropdown: false, path: "/products?gender=Women" },
-    { name: "Men", hasDropdown: false, path: "/products?gender=Men" },
+    { name: "Women", hasDropdown: true, path: "/products?gender=Women" },
+    { name: "Men", hasDropdown: true, path: "/products?gender=Men" },
     {
       name: "Namunjii Exclusive",
       hasDropdown: false,
@@ -182,6 +236,43 @@ const Header = () => {
     setShowSuggestions(false);
     setSearchInput("");
   }, [location.pathname]);
+
+  // Calculate mega menu top position
+  useEffect(() => {
+    const updateMegaMenuPosition = () => {
+      if (categoryNavBarRef.current) {
+        const navBarRect = categoryNavBarRef.current.getBoundingClientRect();
+        const topPosition = navBarRect.bottom;
+        
+        if (womenMegaMenuRef.current) {
+          womenMegaMenuRef.current.style.top = `${topPosition}px`;
+        }
+        if (menMegaMenuRef.current) {
+          menMegaMenuRef.current.style.top = `${topPosition}px`;
+        }
+      }
+    };
+
+    if (showWomenMegaMenu || showMenMegaMenu) {
+      updateMegaMenuPosition();
+      window.addEventListener("scroll", updateMegaMenuPosition);
+      window.addEventListener("resize", updateMegaMenuPosition);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", updateMegaMenuPosition);
+      window.removeEventListener("resize", updateMegaMenuPosition);
+    };
+  }, [showWomenMegaMenu, showMenMegaMenu]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Handle suggestion click - navigate to product page
   const handleSuggestionClick = (productId) => {
@@ -473,22 +564,182 @@ const Header = () => {
       <div className="SeparatorLine"></div>
 
       {/* Secondary Navigation Bar */}
-      <div className={`CategoryNavBar ${mobileMenuOpen ? "mobile-open" : ""}`}>
+      <div 
+        ref={categoryNavBarRef}
+        className={`CategoryNavBar ${mobileMenuOpen ? "mobile-open" : ""}`}
+      >
         <div className="Container">
           <Row justify="center">
             <Col>
               <div className="CategoryLinks">
                 {categories.map((category, index) => (
-                  <div key={index} className="CategoryItem">
+                  <div
+                    key={index}
+                    className="CategoryItem"
+                  >
                     <Link
                       to={category.path}
                       className={`CategoryLink ${
                         category.isSpecial ? "special" : ""
                       }`}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setShowWomenMegaMenu(false);
+                        setShowMenMegaMenu(false);
+                      }}
+                      onMouseEnter={() => {
+                        // Clear any pending hide timeout
+                        if (hideTimeoutRef.current) {
+                          clearTimeout(hideTimeoutRef.current);
+                          hideTimeoutRef.current = null;
+                        }
+                        
+                        if (category.name === "Women") {
+                          setShowWomenMegaMenu(true);
+                          setShowMenMegaMenu(false);
+                        } else if (category.name === "Men") {
+                          setShowMenMegaMenu(true);
+                          setShowWomenMegaMenu(false);
+                        } else {
+                          setShowWomenMegaMenu(false);
+                          setShowMenMegaMenu(false);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (category.name === "Women" || category.name === "Men") {
+                          hideTimeoutRef.current = setTimeout(() => {
+                            setShowWomenMegaMenu(false);
+                            setShowMenMegaMenu(false);
+                          }, 300);
+                        }
+                      }}
                     >
                       {category.name}
                     </Link>
+                    {/* Women Mega Menu */}
+                    {category.name === "Women" && showWomenMegaMenu && (
+                      <div
+                        ref={womenMegaMenuRef}
+                        className="MegaMenuContainer fade-in"
+                        onMouseEnter={() => {
+                          if (hideTimeoutRef.current) {
+                            clearTimeout(hideTimeoutRef.current);
+                            hideTimeoutRef.current = null;
+                          }
+                          setShowWomenMegaMenu(true);
+                        }}
+                        onMouseLeave={() => {
+                          hideTimeoutRef.current = setTimeout(() => {
+                            setShowWomenMegaMenu(false);
+                          }, 300);
+                        }}
+                      >
+                        <div className="MegaMenuContent">
+                          {/* Category Column */}
+                          <div className="MegaMenuColumn">
+                            <h4 className="MegaMenuColumnTitle">CATEGORY</h4>
+                            <ul className="MegaMenuList">
+                              {womenMegaMenuData.category.map((item, idx) => (
+                                <li key={idx}>
+                                  <Link
+                                    to={item.link}
+                                    className="MegaMenuLink"
+                                    onClick={() => {
+                                      setShowWomenMegaMenu(false);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          {/* Featured Column */}
+                          <div className="MegaMenuColumn">
+                            <h4 className="MegaMenuColumnTitle">BRAND NAME</h4>
+                            <ul className="MegaMenuList">
+                              {womenMegaMenuData.featured.map((item, idx) => (
+                                <li key={idx}>
+                                  <Link
+                                    to={item.link}
+                                    className="MegaMenuLink"
+                                    onClick={() => {
+                                      setShowWomenMegaMenu(false);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {/* Men Mega Menu */}
+                    {category.name === "Men" && showMenMegaMenu && (
+                      <div
+                        ref={menMegaMenuRef}
+                        className="MegaMenuContainer fade-in"
+                        onMouseEnter={() => {
+                          if (hideTimeoutRef.current) {
+                            clearTimeout(hideTimeoutRef.current);
+                            hideTimeoutRef.current = null;
+                          }
+                          setShowMenMegaMenu(true);
+                        }}
+                        onMouseLeave={() => {
+                          hideTimeoutRef.current = setTimeout(() => {
+                            setShowMenMegaMenu(false);
+                          }, 300);
+                        }}
+                      >
+                        <div className="MegaMenuContent">
+                          {/* Category Column */}
+                          <div className="MegaMenuColumn">
+                            <h4 className="MegaMenuColumnTitle">CATEGORY</h4>
+                            <ul className="MegaMenuList">
+                              {menMegaMenuData.category.map((item, idx) => (
+                                <li key={idx}>
+                                  <Link
+                                    to={item.link}
+                                    className="MegaMenuLink"
+                                    onClick={() => {
+                                      setShowMenMegaMenu(false);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          {/* Featured Column */}
+                          <div className="MegaMenuColumn">
+                            <h4 className="MegaMenuColumnTitle">BRAND NAME</h4>
+                            <ul className="MegaMenuList">
+                              {menMegaMenuData.featured.map((item, idx) => (
+                                <li key={idx}>
+                                  <Link
+                                    to={item.link}
+                                    className="MegaMenuLink"
+                                    onClick={() => {
+                                      setShowMenMegaMenu(false);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
