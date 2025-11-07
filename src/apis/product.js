@@ -52,6 +52,14 @@ const createProductApi = () => {
 
     // Get all unique colors from products
     getColors: () => api.get("/products/colors").then((res) => res.data),
+
+    // Get search suggestions (autocomplete)
+    getSearchSuggestions: (query, limit = 10) =>
+      api
+        .get("/products/search-suggestions", {
+          params: { q: query, limit },
+        })
+        .then((res) => res.data),
   };
 };
 

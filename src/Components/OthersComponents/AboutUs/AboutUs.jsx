@@ -121,7 +121,7 @@ const AboutUs = () => {
                 </motion.div> */}
 
           <motion.div
-            className="Container"
+            className="Container fontstyle"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -132,9 +132,7 @@ const AboutUs = () => {
               variants={itemVariants}
             >
               <h2 style={{ textAlign: "start", textTransform: "uppercase" }}>
-               <span className="img-logo-resize"><img src="/LogoImages/BrandColorIconLogo.svg" alt="" /></span>
-                
-               Namunjii
+               <img className="AboutusLogo" src="/LogoImages/WithNamebrandLogo.svg" alt="" />
               </h2>
               <p style={{ textAlign: "start" }}>
                 <b>
@@ -151,7 +149,7 @@ const AboutUs = () => {
                     variants={itemVariants}
                   >
                     <div>
-                      <p>
+                      <p className="fontstyle">
                         In a world where visibility is everything, even the most
                         promising brands can struggle to break through. Hundreds
                         of independent brands are building beautiful
@@ -160,7 +158,7 @@ const AboutUs = () => {
                       </p>
                       <br />
                       <p>
-                        <b>That's where the idea of Namunjii was born.</b>
+                        <b className="fontstyle">That's where the idea of Namunjii was born.</b>
                       </p>
                     </div>
                   </motion.div>

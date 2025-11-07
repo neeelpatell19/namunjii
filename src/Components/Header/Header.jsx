@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Row, Col, Dropdown } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { Row, Col, Dropdown, Input, Spin, Drawer } from "antd";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiSearch, FiHeart, FiMenu, FiX, FiUser } from "react-icons/fi";
 import {
   LogoutOutlined,
   ProfileOutlined,
   ShoppingOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserData } from "../../store/actions/ApiActions";
@@ -15,10 +16,12 @@ import { useCartWishlist } from "../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../hooks/useDevice";
 import cartApi from "../../apis/cart";
 import wishlistApi from "../../apis/wishlist";
+import productApi from "../../apis/product";
 import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.api.userData);
   const isLoggedIn = !!userData;
@@ -35,6 +38,30 @@ const Header = () => {
     triggerWishlistDrawer,
   } = useCartWishlist();
 
+  // Search state
+  const [searchInput, setSearchInput] = useState("");
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSearchInput, setShowSearchInput] = useState(false);
+  const [showSearchDrawer, setShowSearchDrawer] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
+
+  // Check if we're on products page
+  const isProductsPage = location.pathname === "/products";
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const categories = [
     { name: "Women", hasDropdown: false, path: "/products?gender=Women" },
     { name: "Men", hasDropdown: false, path: "/products?gender=Men" },
@@ -44,6 +71,8 @@ const Header = () => {
       isSpecial: true,
       path: "/products",
     },
+    { name: "About Us", hasDropdown: false, path: "/about-us" },
+    { name: "Join Us", hasDropdown: false, path: "/vendor-verification" },
   ];
 
   // Fetch cart and wishlist counts
@@ -69,7 +98,174 @@ const Header = () => {
   }, [deviceId]);
 
   const handleSearchClick = () => {
-    // Add search functionality here
+    if (isMobile) {
+      setShowSearchDrawer(true);
+    } else {
+      setShowSearchInput(true);
+    }
+  };
+
+  // Fetch search suggestions with debouncing
+  useEffect(() => {
+    // Clear suggestions if query is empty
+    if (!searchInput || searchInput.trim().length === 0) {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    // Debounce the API call
+    const timeoutId = setTimeout(async () => {
+      setSuggestionsLoading(true);
+      try {
+        const response = await productApi.getSearchSuggestions(
+          searchInput.trim(),
+          10
+        );
+        if (response.success) {
+          setSearchSuggestions(response.data || []);
+        } else {
+          setSearchSuggestions([]);
+        }
+      } catch (err) {
+        console.error("Error fetching search suggestions:", err);
+        setSearchSuggestions([]);
+      } finally {
+        setSuggestionsLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchInput]);
+
+  // Handle click outside to close suggestions and search input
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const desktopRef = searchRef.current;
+      const mobileRef = mobileSearchRef.current;
+
+      // Check if click is outside desktop search (if it exists)
+      const outsideDesktop = !desktopRef || !desktopRef.contains(event.target);
+      // Check if click is outside mobile search (if it exists)
+      const outsideMobile = !mobileRef || !mobileRef.contains(event.target);
+
+      // Close if click is outside both search containers
+      if (outsideDesktop && outsideMobile) {
+        setShowSuggestions(false);
+        if (!isMobile) {
+          setShowSearchInput(false);
+        }
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setShowSuggestions(false);
+        setShowSearchInput(false);
+        setShowSearchDrawer(false);
+        setSearchInput("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isMobile]);
+
+  // Close search when navigating away
+  useEffect(() => {
+    setShowSearchInput(false);
+    setShowSearchDrawer(false);
+    setShowSuggestions(false);
+    setSearchInput("");
+  }, [location.pathname]);
+
+  // Handle suggestion click - navigate to product page
+  const handleSuggestionClick = (productId) => {
+    navigate(`/product/${productId}`);
+    setShowSuggestions(false);
+    setShowSearchInput(false);
+    setShowSearchDrawer(false);
+    setSearchInput("");
+  };
+
+  // Render search suggestions dropdown
+  const renderSearchSuggestions = () => {
+    if (!showSuggestions || !searchInput.trim()) return null;
+
+    return (
+      <div className="header-search-suggestions-dropdown">
+        {suggestionsLoading ? (
+          <div className="header-search-suggestion-item">
+            <Spin size="small" />{" "}
+            <span style={{ marginLeft: "8px" }}>Searching...</span>
+          </div>
+        ) : searchSuggestions.length > 0 ? (
+          <ul className="header-search-suggestions-list">
+            {searchSuggestions.map((suggestion) => {
+              const discountedPrice =
+                suggestion.basePricing -
+                (suggestion.basePricing * (suggestion.discount || 0)) / 100;
+              const coverImage =
+                Array.isArray(suggestion.coverImage) &&
+                suggestion.coverImage.length > 0
+                  ? suggestion.coverImage[0]
+                  : suggestion.coverImage || "";
+
+              return (
+                <li
+                  key={suggestion._id}
+                  onClick={() => handleSuggestionClick(suggestion._id)}
+                  className="header-search-suggestion-item"
+                >
+                  {coverImage && (
+                    <img
+                      src={coverImage}
+                      alt={suggestion.productName}
+                      className="header-search-suggestion-image"
+                    />
+                  )}
+                  <div className="header-search-suggestion-content">
+                    <p className="header-search-suggestion-name">
+                      {suggestion.productName}
+                    </p>
+                    <div className="header-search-suggestion-price">
+                      <span className="header-search-suggestion-price-current">
+                        ₹{discountedPrice.toFixed(0)}
+                      </span>
+                      {suggestion.discount > 0 && (
+                        <>
+                          <span className="header-search-suggestion-price-original">
+                            ₹{suggestion.basePricing.toFixed(0)}
+                          </span>
+                          <span className="header-search-suggestion-discount">
+                            {suggestion.discount}% off
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <p className="header-search-suggestion-meta">
+                      {suggestion.category?.name || ""}
+                      {suggestion.category?.name &&
+                        suggestion.vendorId?.brandName &&
+                        " • "}
+                      {suggestion.vendorId?.brandName || ""}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div className="header-search-suggestion-item">
+            No products found for "{searchInput}"
+          </div>
+        )}
+      </div>
+    );
   };
 
   const handleWishlistClick = () => {
@@ -167,9 +363,53 @@ const Header = () => {
           <Row justify="space-between" align="middle">
             <Col>
               <div className="NavLeft">
-                <div className="SearchIcon" onClick={handleSearchClick}>
-                  <FiSearch />
-                </div>
+                {!isProductsPage && (
+                  <>
+                    {!isMobile && showSearchInput ? (
+                      <div className="HeaderSearchContainer" ref={searchRef}>
+                        <Input
+                          size="small"
+                          prefix={<SearchOutlined style={{ color: "#333" }} />}
+                          placeholder="Search for products..."
+                          value={searchInput}
+                          onChange={(e) => {
+                            setSearchInput(e.target.value);
+                            setShowSuggestions(true);
+                          }}
+                          onFocus={() => {
+                            if (searchSuggestions.length > 0) {
+                              setShowSuggestions(true);
+                            }
+                          }}
+                          onPressEnter={() => {
+                            if (searchInput.trim()) {
+                              navigate(
+                                `/products?search=${encodeURIComponent(
+                                  searchInput.trim()
+                                )}`
+                              );
+                              setShowSuggestions(false);
+                              setShowSearchInput(false);
+                              setSearchInput("");
+                            }
+                          }}
+                          allowClear
+                          onClear={() => {
+                            setSearchInput("");
+                            setShowSuggestions(false);
+                          }}
+                          autoFocus
+                          className="header-search-input"
+                        />
+                        {renderSearchSuggestions()}
+                      </div>
+                    ) : (
+                      <div className="SearchIcon" onClick={handleSearchClick}>
+                        <FiSearch />
+                      </div>
+                    )}
+                  </>
+                )}
                 <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
                   {mobileMenuOpen ? <FiX /> : <FiMenu />}
                 </div>
@@ -263,6 +503,59 @@ const Header = () => {
         isOpen={openWishlistDrawer}
         onClose={handleWishlistClose}
       />
+
+      {/* Mobile Search Drawer */}
+      <Drawer
+        title="Search Products"
+        placement="top"
+        onClose={() => {
+          setShowSearchDrawer(false);
+          setShowSuggestions(false);
+          setSearchInput("");
+        }}
+        open={showSearchDrawer}
+        height="auto"
+        className="mobile-search-drawer"
+        styles={{
+          body: { padding: "16px" },
+        }}
+      >
+        <div className="mobile-search-container" ref={mobileSearchRef}>
+          <Input
+            size="large"
+            prefix={<SearchOutlined style={{ color: "#333" }} />}
+            placeholder="Search for products..."
+            value={searchInput}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => {
+              if (searchSuggestions.length > 0) {
+                setShowSuggestions(true);
+              }
+            }}
+            onPressEnter={() => {
+              if (searchInput.trim()) {
+                navigate(
+                  `/products?search=${encodeURIComponent(searchInput.trim())}`
+                );
+                setShowSearchDrawer(false);
+                setShowSuggestions(false);
+                setSearchInput("");
+              }
+            }}
+            allowClear
+            onClear={() => {
+              setSearchInput("");
+              setShowSuggestions(false);
+            }}
+            autoFocus
+            className="mobile-search-input"
+          />
+          {renderSearchSuggestions()}
+        </div>
+      </Drawer>
     </div>
   );
 };

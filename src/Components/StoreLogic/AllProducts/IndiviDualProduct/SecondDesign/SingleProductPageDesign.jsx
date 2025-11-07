@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Spin, Alert, Button, Badge } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   HeartOutlined,
   HeartFilled,
@@ -10,6 +10,8 @@ import {
   TruckOutlined,
   SafetyOutlined,
   UndoOutlined,
+  LeftOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Thumbs } from "swiper/modules";
@@ -26,7 +28,14 @@ const SingleProductPageDesign = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
-  const { triggerCartDrawer, triggerWishlistDrawer, isInCart: ctxIsInCart, isInWishlist: ctxIsInWishlist, refreshCart, refreshWishlist } = useCartWishlist();
+  const {
+    triggerCartDrawer,
+    triggerWishlistDrawer,
+    isInCart: ctxIsInCart,
+    isInWishlist: ctxIsInWishlist,
+    refreshCart,
+    refreshWishlist,
+  } = useCartWishlist();
   const { state } = useAppContext();
 
   const [product, setProduct] = useState(null);
@@ -38,8 +47,31 @@ const SingleProductPageDesign = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
+
+  // Helper function to get color value
+  const getColorValue = (colorName) => {
+    const colorMap = {
+      gold: "#D4AF37",
+      silver: "#C0C0C0",
+      black: "#000000",
+      white: "#FFFFFF",
+      red: "#FF0000",
+      blue: "#0000FF",
+      green: "#008000",
+    };
+    return colorMap[colorName?.toLowerCase()] || "#D4AF37";
+  };
+
+  // Available sizes and colors
+  const availableSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
+  const availableColors = product?.color
+    ? Array.isArray(product.color)
+      ? product.color
+      : [product.color]
+    : ["#D4AF37", "#C0C0C0", "#FFD700"]; // Default colors: Gold, Silver, Bright Gold
 
   // Fetch product data (primary method - try API first, fallback to context)
   const fetchProduct = async () => {
@@ -187,6 +219,14 @@ const SingleProductPageDesign = () => {
     fetchProduct();
   }, [productId, state.products]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Status derived from provider; no local checking
 
   // Calculate final price
@@ -273,18 +313,68 @@ const SingleProductPageDesign = () => {
     );
   }
 
+  // Navigate images
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev > 0 ? prev - 1 : displayImages.length - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev < displayImages.length - 1 ? prev + 1 : 0
+    );
+  };
+
   return (
+    
     <div className="modern-product-page">
+      <img src="/icons/next-btn.svg" alt="" />
+      {/* Breadcrumbs */}
+      <div className="product-breadcrumbs">
+        <Link to="/">HOME</Link>
+        <span className="breadcrumb-separator">|</span>
+        <Link to="/products">SHOP</Link>
+        <span className="breadcrumb-separator">|</span>
+        <span className="breadcrumb-current">{product.productName}</span>
+      </div>
+
       <div className="product-page-container">
         {/* Product Images Section */}
         <div className="product-images-section">
+          {/* Designer Name */}
+          <div className="designer-name">
+            {product.vendorId?.name || "Namunjii"}
+          </div>
+
           <div className="main-image-container">
             {displayImages.length > 0 ? (
-              <img
-                src={displayImages[currentImageIndex]}
-                alt={product.productName}
-                className="main-product-image"
-              />
+              <>
+                {displayImages.length > 1 && (
+                  <>
+                    <button
+                      className="image-nav-btn prev-btn"
+                      onClick={handlePrevImage}
+                    >
+                   <img className="left-btn" src="/icons/next-btn.svg" alt="" />
+                    </button>
+                    <button
+                      className="image-nav-btn next-btn"
+                      onClick={handleNextImage}
+                    >
+                    <img className="right-btn" src="/icons/next-btn.svg" alt="" />
+                    </button>
+                    <div className="image-counter">
+                      {currentImageIndex + 1}/{displayImages.length}
+                    </div>
+                  </>
+                )}
+                <img
+                  src={displayImages[currentImageIndex]}
+                  alt={product.productName}
+                  className="main-product-image"
+                />
+              </>
             ) : (
               <div className="no-image-placeholder">
                 <div className="placeholder-icon">📷</div>
@@ -317,9 +407,7 @@ const SingleProductPageDesign = () => {
         <div className="product-details-section">
           {/* Brand and Product Name */}
           <div className="product-header">
-            <div className="brand-name">
-              {product.vendorId?.name || "Namunjii"}
-            </div>
+           
             <h1 className="product-title">{product.productName}</h1>
           </div>
 
@@ -327,7 +415,7 @@ const SingleProductPageDesign = () => {
           <div className="pricing-section">
             <div className="price-row">
               <span className="current-price">
-                ₹{finalPrice.toLocaleString("en-IN")}
+                ₹ {finalPrice.toLocaleString("en-IN")}
               </span>
               {product.discount > 0 && (
                 <>
@@ -340,101 +428,184 @@ const SingleProductPageDesign = () => {
                 </>
               )}
             </div>
-            <p className="tax-note">inclusive of all taxes</p>
+            <p className="tax-note">incl. local Tax & Shipping</p>
+          </div>
+
+          {/* Short Description */}
+          {product.productDescription && (
+            <div className="short-description">
+              <p>{product.productDescription.split(".")[0]}.</p>
+            </div>
+          )}
+
+          {/* Size Selection */}
+          <div className="size-selection-section">
+            <div className="size-selection-header">
+              <label className="selection-label">
+                Select Size {selectedSize}
+              </label>
+              <Link to="#" className="size-guide-link">
+                Size guide
+              </Link>
+            </div>
+            <div className="size-options">
+              {availableSizes.map((size) => (
+                <button
+                  key={size}
+                  className={`size-btn ${
+                    selectedSize === size ? "selected" : ""
+                  }`}
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Color Selection */}
+          <div className="color-selection-section">
+            <label className="selection-label">
+              Select Color {selectedColor || "Gold"}
+            </label>
+            <div className="color-options">
+              {availableColors.map((color, index) => {
+                const colorValue =
+                  typeof color === "string" && color.startsWith("#")
+                    ? color
+                    : typeof color === "string"
+                    ? getColorValue(color)
+                    : "#D4AF37";
+                const isSelected =
+                  selectedColor === color || (!selectedColor && index === 0);
+
+                return (
+                  <button
+                    key={index}
+                    className={`color-swatch ${isSelected ? "selected" : ""}`}
+                    onClick={() => setSelectedColor(color)}
+                    style={{ backgroundColor: colorValue }}
+                    title={
+                      typeof color === "string" && !color.startsWith("#")
+                        ? color
+                        : `Color ${index + 1}`
+                    }
+                  />
+                );
+              })}
+            </div>
           </div>
 
           {/* Action Buttons */}
           <div className="action-buttons">
+            <button className="wishlist-btn" onClick={handleAddToWishlist}>
+              {/* {isInWishlist ? (
+                <HeartFilled style={{ color: "#000" }} />
+              ) : (
+                <HeartOutlined />
+              )} */}
+              Wishlist
+            </button>
             <button
               className="add-to-bag-btn"
               onClick={handleAddToCart}
               disabled={isInCart}
             >
-              <ShoppingCartOutlined />
-              {isInCart ? "ADDED TO BAG" : "ADD TO BAG"}
-            </button>
-            <button className="wishlist-btn" onClick={handleAddToWishlist}>
-              {isInWishlist ? (
-                <HeartFilled style={{ color: "#dc2626" }} />
-              ) : (
-                <HeartOutlined />
-              )}
-              WISHLIST
+              {/* <ShoppingCartOutlined /> */}
+              {isInCart ? "ADDED TO BAG" : "Add to Bag"}
             </button>
           </div>
 
           {/* Product Features */}
-          <div className="features-section">
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <span>100% Original Products</span>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <span>Pay on delivery might be available</span>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <span>Easy 14 days returns and exchanges</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Product Details Tabs */}
-      <div className="product-details-tabs">
-        <div className="tabs-container">
-          <Tabs
-            defaultActiveKey="details"
-            items={[
-              {
-                key: "details",
-                label: "PRODUCT DETAILS",
-                children: (
-                  <div className="tab-content">
-                    <div className="product-description">
-                      {product.productDescription ||
-                        "Premium quality product crafted with attention to detail."}
-                    </div>
-                    <div className="specifications">
-                      <div className="spec-row">
-                        <span className="spec-label">Sleeve Length:</span>
-                        <span className="spec-value">Short Sleeves</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Collar:</span>
-                        <span className="spec-value">Spread Collar</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Fit:</span>
-                        <span className="spec-value">Regular Fit</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Brand Fit Name:</span>
-                        <span className="spec-value">Comfort</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Length:</span>
-                        <span className="spec-value">Regular</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Hemline:</span>
-                        <span className="spec-value">Curved</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Placket:</span>
-                        <span className="spec-value">Button Placket</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Placket Length:</span>
-                        <span className="spec-value">Full</span>
+          {/* Product Details Tabs */}
+          <div className="product-details-tabs">
+            <Tabs
+              defaultActiveKey="description"
+              items={[
+                {
+                  key: "description",
+                  label: isMobile ? "Description" : "Product Description",
+                  children: (
+                    <div className="tab-content">
+                      <div className="product-description-full">
+                        {product.productDescription ||
+                          "A timeless checkered shirt with button-down front and cuffed sleeves. The muted palette and fine checks make it a wardrobe staple for casual as well as office wear."}
                       </div>
                     </div>
-                  </div>
-                ),
-              },
-            ]}
-          />
+                  ),
+                },
+                {
+                  key: "details",
+                  label: isMobile ? "Details" : "Product Details",
+                  children: (
+                    <div className="tab-content">
+                      <div className="product-description">
+                        {product.productDescription ||
+                          "Premium quality product crafted with attention to detail."}
+                      </div>
+                      <div className="specifications">
+                        <div className="spec-row">
+                          <span className="spec-label">Sleeve Length:</span>
+                          <span className="spec-value">Short Sleeves</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Fit:</span>
+                          <span className="spec-value">Regular Fit</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Length:</span>
+                          <span className="spec-value">Regular</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Placket:</span>
+                          <span className="spec-value">Button Placket</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Collar:</span>
+                          <span className="spec-value">Spread Collar</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Brand Fit Name:</span>
+                          <span className="spec-value">Comfort</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Hemline:</span>
+                          <span className="spec-value">Curved</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Placket Length:</span>
+                          <span className="spec-value">Full</span>
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "sizeguide",
+                  label: isMobile ? "Delivery" : "Delivery & Return",
+                  children: (
+                    <div className="tab-content">
+                      <div className="features-section">
+                        <div className="feature-item">
+                          <div className="feature-icon">✓</div>
+                          <span>100% Original Products</span>
+                        </div>
+                        <div className="feature-item">
+                          <div className="feature-icon">✓</div>
+                          <span>Pay on delivery might be available</span>
+                        </div>
+                        <div className="feature-item">
+                          <div className="feature-icon">✓</div>
+                          <span>Exchange available within 7 days of delivery.</span>
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
         </div>
       </div>
     </div>

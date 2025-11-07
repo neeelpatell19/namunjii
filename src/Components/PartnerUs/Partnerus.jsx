@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Partner.css";
 
 const Partnerus = () => {
@@ -20,12 +21,11 @@ const Partnerus = () => {
         </div>
         <div className="partnerus-cta">
           <div className="partnerus-input-button">
-            <input
-              type="email"
-              placeholder="Enter Your Email Here"
-              className="input-field"
-            />
-            <button>Connect with us</button>
+            <Link to={"/vendor-verification"}>
+              <button>
+                Join us <span><img src="/icons/TiltedArrow.svg" alt="arrow" /></span>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
