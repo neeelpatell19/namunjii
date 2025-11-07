@@ -24,7 +24,7 @@ import TermsAndConditions from "./Components/Policies/TermsAndConditions";
 import SellerPolicy from "./Components/Policies/SellerPolicy";
 import TermsOfUse from "./Components/Policies/TermsOfUse";
 import HomeComponents from "./Components/HomeComponents";
-import Maintenance from "./Components/Maintenance/Maintenance";
+import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
 import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
 import { Provider } from "react-redux";
@@ -223,6 +223,7 @@ const AnimatedRoutes = () => {
 };
 
 function App() {
+  const { lg } = Grid.useBreakpoint();
   return (
     <>
       <Provider store={store}>
@@ -234,16 +235,15 @@ function App() {
                   style={{
                     width: "100vw",
                     overflowX: "hidden",
-                    paddingTop: 0,
+                    paddingTop: lg ? "120px" : "60px",
                   }}
                 >
-                  {/* <Header /> */}
-                  <Maintenance />
-                  {/* <AnimatedRoutes /> */}
+                  <Header />
+                  <AnimatedRoutes />
 
                   {/* <FeaturesAndQuestion /> */}
                   {/* <CommonUserInteractionsPopup /> */}
-                  {/* <Footer /> */}
+                  <Footer />
                   {/* <Cookies /> */}
                   {/* <WhatsAppBtn /> */}
 
