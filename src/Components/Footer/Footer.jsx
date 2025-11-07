@@ -37,7 +37,7 @@ const Footer = () => {
         <div className="Container">
           <Row gutter={[32, 32]}>
             {/* Column 1: NAMUNJII Brand Information */}
-            <Col xs={24} sm={12} md={5}>
+            <Col xs={24} sm={12} md={6}>
               <div className="FooterColumn">
                 <div className="FooterLogo">
                   <div className="FooterLogoIcon">
@@ -52,15 +52,29 @@ const Footer = () => {
                   A HOME FOR EMERGING BRANDS
                 </p>
                 <div className="ContactDetails">
-                  <p> <span> Phone number:</span>
-                    +91 98789 11223</p>
-                  <p> <span> Email:</span> design@namunjii.com</p>
+                  <p>
+                    {" "}
+                    <span> Phone number:</span>
+                    +91 98789 11223
+                  </p>
+                  <p>
+                    {" "}
+                    <span> Email:</span> design@namunjii.com
+                  </p>
                 </div>
               </div>
             </Col>
 
             {/* Column 2: QUICK LINKS */}
-            <Col xs={12} sm={12} md={6}>
+            <Col
+              xs={12}
+              sm={12}
+              md={6}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <div className="FooterColumn">
                 <h3 className="FooterHeading">QUICK LINKS</h3>
                 <ul className="FooterLinks">
@@ -76,7 +90,15 @@ const Footer = () => {
             </Col>
 
             {/* Column 3: POLICIES */}
-            <Col xs={12} sm={12} md={6}>
+            <Col
+              xs={12}
+              sm={12}
+              md={6}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <div className="FooterColumn">
                 <h3 className="FooterHeading">POLICIES</h3>
                 <ul className="FooterLinks">
@@ -92,7 +114,7 @@ const Footer = () => {
             </Col>
 
             {/* Column 4: LET'S STAY IN TOUCH */}
-            <Col xs={24} sm={12} md={7}>
+            <Col xs={24} sm={12} md={6}>
               <div className="FooterColumn">
                 <h3 className="FooterHeading">LET'S STAY IN TOUCH</h3>
                 <p className="FooterDescription">
@@ -121,7 +143,9 @@ const Footer = () => {
       {/* Copyright Section */}
       <div className="FooterCopyright">
         <div className="Container FooterCopyrightContent">
-          <p>Copyright @ 2025  <span>Namunjii</span></p>
+          <p>
+            Copyright @ 2025 <span>Namunjii</span>
+          </p>
         </div>
       </div>
     </div>
