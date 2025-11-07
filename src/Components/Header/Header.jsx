@@ -469,9 +469,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Brand Separator Line */}
-      <div className="SeparatorLine"></div>
-
       {/* Secondary Navigation Bar */}
       <div className={`CategoryNavBar ${mobileMenuOpen ? "mobile-open" : ""}`}>
         <div className="Container">

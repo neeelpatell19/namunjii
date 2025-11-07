@@ -51,9 +51,6 @@
 
 /* Tablets Landscape (769px - 995px) */
 @media screen and (max-width: 995px) {
-  .brand-marquee-container {
-    margin-top: 50px;
-  }
   .brand-marquee-item {
     font-size: 27px;
     padding: 0.9rem;
