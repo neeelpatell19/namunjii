@@ -22,7 +22,7 @@
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
-  padding: 0;
+  padding-left: 40px;
   position: relative;
   align-self: stretch;
 }
@@ -65,15 +65,16 @@
 .partnerus-title p {
   font-family: var(--playfair-display);
   font-weight: 500;
-  font-size: 40px !important;
+  font-size: 32px !important;
   line-height: 100%;
 }
 
 .partnerus-text p {
   font-family: var(--fira-sans);
-  font-weight: 500;
-  font-size: 20px !important;
+  font-weight: 400;
+  font-size: 16px !important;
   line-height: 165%;
+  margin: 0;
 }
 
 .partnerus-cta {
@@ -134,11 +135,11 @@
   }
 
   .partnerus-title p {
-    font-size: 38px !important;
+    font-size: 30px !important;
   }
 
   .partnerus-text p {
-    font-size: 19px !important;
+    font-size: 15px !important;
   }
 }
 
@@ -154,11 +155,11 @@
   }
 
   .partnerus-title p {
-    font-size: 34px !important;
+    font-size: 27px !important;
   }
 
   .partnerus-text p {
-    font-size: 18px !important;
+    font-size: 14px !important;
   }
 }
 
@@ -189,11 +190,11 @@
   }
 
   .partnerus-title p {
-    font-size: 32px !important;
+    font-size: 26px !important;
   }
 
   .partnerus-text p {
-    font-size: 17px !important;
+    font-size: 14px !important;
   }
 
   /* Stack input and button vertically */
@@ -257,7 +258,7 @@
   }
 
   .partnerus-text p {
-    font-size: 14px !important;
+    font-size: 12px !important;
     line-height: 150%;
     font-weight: 400
   }
@@ -305,11 +306,11 @@
   }
 
   .partnerus-title p {
-    font-size: 24px !important;
+    font-size: 19px !important;
   }
 
   .partnerus-text p {
-    font-size: 14px !important;
+    font-size: 11px !important;
   }
 
   .input-field,
