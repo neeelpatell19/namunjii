@@ -54,12 +54,13 @@ const Footer = () => {
                 <div className="ContactDetails">
                   <p>
                     {" "}
-                    <span> Phone number:</span>
-                    +91 98789 11223
+                    <span className="contact-label">Phone number:</span>
+                    <span className="contact-value"> +91 98789 11223</span>
                   </p>
                   <p>
                     {" "}
-                    <span> Email:</span> design@namunjii.com
+                    <span className="contact-label">Email:</span>
+                    <span className="contact-value"> design@namunjii.com</span>
                   </p>
                 </div>
               </div>

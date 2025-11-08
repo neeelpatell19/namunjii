@@ -173,8 +173,8 @@ export default function HomeComponents() {
       <NewAboutUs />
       {/* <Categories HomeData={HomeData} /> */}
       <NewArrivals HomeData={HomeData} />
-      <BestSellers HomeData={HomeData} />
-      <FeaturedProducts HomeData={HomeData} />
+      {/* <BestSellers HomeData={HomeData} />
+      <FeaturedProducts HomeData={HomeData} /> */}
       {/* <FeaturedDeals HomeData={HomeData} /> */}
       <Partnerus />
     </div>

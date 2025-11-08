@@ -291,7 +291,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 <div className="cart-total">
                   <p>
                     Total: ₹
-                        {cartItems
+                    {cartItems
                       .filter((item) => item.productId)
                       .reduce(
                         (total, item) => {

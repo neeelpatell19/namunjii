@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { HeartOutlined, HeartFilled, EyeOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, EyeOutlined, ThunderboltFilled, ClockCircleFilled } from "@ant-design/icons";
+import { Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
@@ -139,20 +140,39 @@ export default function ProductCard({
             <p>Image not available</p>
           </div>
 
-          {/* Quick view button */}
-          {showQuickView && (
-            <div className="product-card-overlay">
+          {/* Order Type Tag - Ready to Ship */}
+          <div className="product-card-order-tag product-card-order-tag-ready">
+            <ThunderboltFilled className="product-card-order-tag-icon" />
+            <span className="product-card-order-tag-text">Ready to ship</span>
+          </div>
+
+          {/* Order Type Tag - Made to Order */}
+          <div className="product-card-order-tag product-card-order-tag-made">
+            <ClockCircleFilled className="product-card-order-tag-icon" />
+            <span className="product-card-order-tag-text">Made to order</span>
+          </div>
+
+          {/* Wishlist and Quick View buttons on image */}
+          <div className="product-card-image-actions">
+            <button
+              className="product-card-wishlist-btn product-card-wishlist-btn-image"
+              onClick={(e) => handleAddToWishlist(e)}
+            >
+              {isInWishlist ? (
+                <HeartFilled style={{ color: "#000" }} />
+              ) : (
+                <HeartOutlined />
+              )}
+            </button>
+            {showQuickView && (
               <button
-                className="product-card-quick-view-btn"
-                onClick={handleQuickView}
+                className="product-card-quick-view-btn-image"
+                onClick={(e) => handleQuickView(e)}
               >
-                <span>
-                  <img src="/icons/mingcute_eye-line.svg" alt="eye" />
-                </span>
-                Quick View
+                <EyeOutlined />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="product-card-content" onClick={handleViewProduct}>
@@ -160,20 +180,30 @@ export default function ProductCard({
             <h3 className="product-card-brandname">{product.brandname} brand name</h3>
             <div className="product-card-header">
               
-              <h3 className="product-card-name">{product.productName}</h3>
-              <button
-                className="product-card-wishlist-btn"
-                onClick={(e) => handleAddToWishlist(e)}
+              <Tooltip 
+                title={product.productName} 
+                placement="top"
+                overlayInnerStyle={{ 
+                  fontSize: '10px',
+                  fontFamily: 'var(--fira-sans)',
+                  padding: '4px 8px',
+                  height: 'auto'
+                }}
               >
-                {isInWishlist ? (
-                  <HeartFilled style={{ color: "#000" }} />
-                ) : (
-                  <HeartOutlined />
-                )}
-              </button>
-            </div>
-            <div className="product-card-details">
-              <span className="product-card-size">Size: {product.size}</span>
+                <h3 className="product-card-name">{product.productName}</h3>
+              </Tooltip>
+              {showAddToCart && (
+                <button
+                  className="product-card-cart-btn"
+                  onClick={(e) => handleAddToCart(e)}
+                >
+                  <img 
+                    src="/shopping-cart.svg" 
+                    alt="Add to cart" 
+                    className="product-card-cart-icon"
+                  />
+                </button>
+              )}
             </div>
           </div>
 
@@ -200,24 +230,6 @@ export default function ProductCard({
               )}
             </div>
 
-            <div className="product-card-action-buttons">
-              {showAddToCart && (
-                <div
-                  className="product-card-add-to-cart-container"
-                  onClick={handleAddToCart}
-                >
-                  <span className="product-card-add-to-cart-btn">
-                    Add to Cart
-                  </span>
-                  <span
-                    className="product-card-add-to-cart-arrow"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img src="/icons/Arrow.svg" alt="arrow" />
-                  </span>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>

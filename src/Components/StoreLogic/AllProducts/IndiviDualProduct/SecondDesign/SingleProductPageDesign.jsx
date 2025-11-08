@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Tabs, Spin, Alert, Button, Badge } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
@@ -12,6 +12,7 @@ import {
   UndoOutlined,
   LeftOutlined,
   RightOutlined,
+  CloseCircleFilled,
 } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Thumbs } from "swiper/modules";
@@ -48,6 +49,13 @@ const SingleProductPageDesign = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewImageIndex, setPreviewImageIndex] = useState(0);
+  const [prevPreviewImageIndex, setPrevPreviewImageIndex] = useState(0);
+  const [isImageChanging, setIsImageChanging] = useState(false);
+  const previewRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
 
@@ -247,6 +255,40 @@ const SingleProductPageDesign = () => {
     "https://images.unsplash.com/photo-1523297467724-f6758d7124c5?q=80&w=1019&auto=format&fit=crop&ixlib=rb-4.1.0";
   const displayImages = allImages.length > 0 ? allImages : [fallbackImage];
 
+  // Keyboard navigation for preview - must be before conditional returns
+  useEffect(() => {
+    if (!isPreviewOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft") {
+        const newIndex = previewImageIndex > 0 ? previewImageIndex - 1 : displayImages.length - 1;
+        setPrevPreviewImageIndex(previewImageIndex);
+        setIsImageChanging(true);
+        setPreviewImageIndex(newIndex);
+        setTimeout(() => {
+          setIsImageChanging(false);
+        }, 300);
+      } else if (e.key === "ArrowRight") {
+        const newIndex = previewImageIndex < displayImages.length - 1 ? previewImageIndex + 1 : 0;
+        setPrevPreviewImageIndex(previewImageIndex);
+        setIsImageChanging(true);
+        setPreviewImageIndex(newIndex);
+        setTimeout(() => {
+          setIsImageChanging(false);
+        }, 300);
+      } else if (e.key === "Escape") {
+        setIsPreviewOpen(false);
+        document.body.style.overflow = '';
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isPreviewOpen, displayImages.length]);
+
   if (loading) {
     return (
       <div className="single-product-loading">
@@ -326,6 +368,81 @@ const SingleProductPageDesign = () => {
     );
   };
 
+  // Preview functions
+  const openPreview = (index) => {
+    setPreviewImageIndex(index);
+    setIsPreviewOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closePreview = () => {
+    setIsPreviewOpen(false);
+    document.body.style.overflow = '';
+  };
+
+  const handlePreviewPrev = (e) => {
+    e.stopPropagation();
+    const newIndex = previewImageIndex > 0 ? previewImageIndex - 1 : displayImages.length - 1;
+    setPrevPreviewImageIndex(previewImageIndex);
+    setIsImageChanging(true);
+    setPreviewImageIndex(newIndex);
+    setTimeout(() => {
+      setIsImageChanging(false);
+    }, 300);
+  };
+
+  const handlePreviewNext = (e) => {
+    e.stopPropagation();
+    const newIndex = previewImageIndex < displayImages.length - 1 ? previewImageIndex + 1 : 0;
+    setPrevPreviewImageIndex(previewImageIndex);
+    setIsImageChanging(true);
+    setPreviewImageIndex(newIndex);
+    setTimeout(() => {
+      setIsImageChanging(false);
+    }, 300);
+  };
+
+  // Swipe handlers for mobile
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance) {
+      // Swipe left - next image
+      const newIndex = previewImageIndex < displayImages.length - 1 ? previewImageIndex + 1 : 0;
+      setPrevPreviewImageIndex(previewImageIndex);
+      setIsImageChanging(true);
+      setPreviewImageIndex(newIndex);
+      setTimeout(() => {
+        setIsImageChanging(false);
+      }, 300);
+    } else if (distance < -minSwipeDistance) {
+      // Swipe right - previous image
+      const newIndex = previewImageIndex > 0 ? previewImageIndex - 1 : displayImages.length - 1;
+      setPrevPreviewImageIndex(previewImageIndex);
+      setIsImageChanging(true);
+      setPreviewImageIndex(newIndex);
+      setTimeout(() => {
+        setIsImageChanging(false);
+      }, 300);
+    }
+
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+
+
   return (
     <div className="modern-product-page">
       {/* Breadcrumbs */}
@@ -367,11 +484,13 @@ const SingleProductPageDesign = () => {
                     </div>
                   </>
                 )}
-                <img
-                  src={displayImages[currentImageIndex]}
-                  alt={product.productName}
-                  className="main-product-image"
-                />
+              <img
+                src={displayImages[currentImageIndex]}
+                alt={product.productName}
+                className="main-product-image"
+                onClick={() => openPreview(currentImageIndex)}
+                style={{ cursor: "pointer" }}
+              />
               </>
             ) : (
               <div className="no-image-placeholder">
@@ -516,11 +635,11 @@ const SingleProductPageDesign = () => {
 
           {/* Product Features */}
 
-          {/* Product Details Tabs */}
-          <div className="product-details-tabs">
-            <Tabs
+      {/* Product Details Tabs */}
+      <div className="product-details-tabs">
+          <Tabs
               defaultActiveKey="description"
-              items={[
+            items={[
                 {
                   key: "description",
                   label: isMobile ? "Description" : "Product Description",
@@ -533,20 +652,20 @@ const SingleProductPageDesign = () => {
                     </div>
                   ),
                 },
-                {
-                  key: "details",
+              {
+                key: "details",
                   label: isMobile ? "Details" : "Product Details",
-                  children: (
-                    <div className="tab-content">
-                      <div className="product-description">
-                        {product.productDescription ||
-                          "Premium quality product crafted with attention to detail."}
+                children: (
+                  <div className="tab-content">
+                    <div className="product-description">
+                      {product.productDescription ||
+                        "Premium quality product crafted with attention to detail."}
+                    </div>
+                    <div className="specifications">
+                      <div className="spec-row">
+                        <span className="spec-label">Sleeve Length:</span>
+                        <span className="spec-value">Short Sleeves</span>
                       </div>
-                      <div className="specifications">
-                        <div className="spec-row">
-                          <span className="spec-label">Sleeve Length:</span>
-                          <span className="spec-value">Short Sleeves</span>
-                        </div>
                         <div className="spec-row">
                           <span className="spec-label">Fit:</span>
                           <span className="spec-value">Regular Fit</span>
@@ -559,26 +678,26 @@ const SingleProductPageDesign = () => {
                           <span className="spec-label">Placket:</span>
                           <span className="spec-value">Button Placket</span>
                         </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Collar:</span>
-                          <span className="spec-value">Spread Collar</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Brand Fit Name:</span>
-                          <span className="spec-value">Comfort</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Hemline:</span>
-                          <span className="spec-value">Curved</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Placket Length:</span>
-                          <span className="spec-value">Full</span>
-                        </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Collar:</span>
+                        <span className="spec-value">Spread Collar</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Brand Fit Name:</span>
+                        <span className="spec-value">Comfort</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Hemline:</span>
+                        <span className="spec-value">Curved</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Placket Length:</span>
+                        <span className="spec-value">Full</span>
                       </div>
                     </div>
-                  ),
-                },
+                  </div>
+                ),
+              },
                 {
                   key: "sizeguide",
                   label: isMobile ? "Delivery" : "Delivery & Return",
@@ -601,11 +720,80 @@ const SingleProductPageDesign = () => {
                     </div>
                   ),
                 },
-              ]}
-            />
+            ]}
+          />
           </div>
         </div>
       </div>
+
+      {/* Custom Image Preview Modal */}
+      {isPreviewOpen && (
+        <div 
+          className="custom-image-preview" 
+          onClick={closePreview}
+          ref={previewRef}
+        >
+          <div 
+            className="preview-content"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Top bar with close and counter */}
+            <div className="preview-top-bar">
+              {displayImages.length > 1 && (
+                <div className="preview-counter">
+                  {previewImageIndex + 1} / {displayImages.length}
+                </div>
+              )}
+              <button 
+                className="preview-close" 
+                onClick={closePreview}
+                aria-label="Close preview"
+              >
+                <CloseCircleFilled />
+              </button>
+            </div>
+
+            {/* Navigation arrows */}
+            {displayImages.length > 1 && (
+              <>
+                <button
+                  className="preview-nav preview-prev"
+                  onClick={handlePreviewPrev}
+                  aria-label="Previous image"
+                >
+                  <LeftOutlined />
+                </button>
+                <button
+                  className="preview-nav preview-next"
+                  onClick={handlePreviewNext}
+                  aria-label="Next image"
+                >
+                  <RightOutlined />
+                </button>
+              </>
+            )}
+
+            {/* Centered image */}
+            <div className="preview-image-container">
+              {isImageChanging && (
+                <img
+                  src={displayImages[prevPreviewImageIndex]}
+                  alt={`${product.productName} - ${prevPreviewImageIndex + 1}`}
+                  className="preview-image preview-image-old"
+                />
+              )}
+              <img
+                src={displayImages[previewImageIndex]}
+                alt={`${product.productName} - ${previewImageIndex + 1}`}
+                className={`preview-image preview-image-new ${isImageChanging ? 'fading-in' : ''}`}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -14,6 +14,8 @@ import {
   Badge,
   Drawer,
   Slider,
+  Dropdown,
+  Menu,
 } from "antd";
 import {
   SearchOutlined,
@@ -72,6 +74,7 @@ const ProductsPage = () => {
     color: "",
     brand: "",
     availability: "",
+    orderType: "",
     sortBy: "most_popular",
     sortOrder: "desc",
     isNewArrival: false,
@@ -93,9 +96,110 @@ const ProductsPage = () => {
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
+  const searchDesktopRef = useRef(null);
 
   // Filter drawer state for mobile/tablet
   const [filterDrawerVisible, setFilterDrawerVisible] = useState(false);
+  
+  // Mobile detection state
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Sort select ref
+  const sortSelectRef = useRef(null);
+  
+  // Grid layout state (mobile, tablet, desktop)
+  const [gridLayout, setGridLayout] = useState({
+    mobile: 2,    // default: 2 per row
+    tablet: 2,    // default: 2 per row
+    desktop: 3,  // default: 3 per row
+  });
+  
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Grid layout icons component - shows double the boxes (2x columns) - outlined style
+  const GridIcon = ({ columns }) => {
+    const size = 16;
+    const gap = 2; // Increased gap between boxes
+    const strokeWidth = 1;
+    const totalBoxes = columns * 2; // Double the number of boxes
+    
+    // Determine grid arrangement based on number of boxes
+    let rows, cols;
+    if (totalBoxes === 2) {
+      // 1 per row → 2 horizontal bars stacked vertically (one after the other)
+      rows = 2;
+      cols = 1;
+    } else if (totalBoxes === 4) {
+      // 2 per row → 4 boxes total
+      rows = 2;
+      cols = 2;
+    } else if (totalBoxes === 6) {
+      // 3 per row → 6 boxes total
+      rows = 2;
+      cols = 3;
+    } else { // 8 boxes (4 per row)
+      rows = 2;
+      cols = 4;
+    }
+    
+    // Calculate box dimensions accounting for stroke width
+    let boxWidth, boxHeight;
+    if (totalBoxes === 2) {
+      // 1 per row → 2 horizontal bars (wider than tall, stacked vertically)
+      boxWidth = size * 0.8; // Make boxes horizontal (wider than tall)
+      boxHeight = (size - gap) / 2; // Two bars with gap between them
+    } else {
+      boxWidth = (size - gap * (cols - 1)) / cols;
+      boxHeight = (size - gap * (rows - 1)) / rows;
+    }
+    
+    const strokeOffset = strokeWidth / 2; // Half stroke width to prevent overlap
+    
+    return (
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" xmlns="http://www.w3.org/2000/svg">
+        {Array.from({ length: totalBoxes }).map((_, index) => {
+          const rowIndex = Math.floor(index / cols);
+          const colIndex = index % cols;
+          
+          // For 1 per row (2 boxes), center them horizontally
+          let x, y;
+          if (totalBoxes === 2) {
+            x = (size - boxWidth) / 2 + strokeOffset; // Center horizontally
+            y = rowIndex * (boxHeight + gap) + strokeOffset;
+          } else {
+            x = colIndex * (boxWidth + gap) + strokeOffset;
+            y = rowIndex * (boxHeight + gap) + strokeOffset;
+          }
+          
+          const width = boxWidth - strokeWidth;
+          const height = boxHeight - strokeWidth;
+          
+          return (
+            <rect
+              key={index}
+              x={x}
+              y={y}
+              width={width}
+              height={height}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={strokeWidth}
+              strokeLinejoin="miter"
+              rx="0.5"
+            />
+          );
+        })}
+      </svg>
+    );
+  };
   
   // Collapsible filter sections state
   const [expandedFilters, setExpandedFilters] = useState({
@@ -103,9 +207,9 @@ const ProductsPage = () => {
     brand: true,
     gender: true,
     priceRange: false,
-    productType: false,
     colour: false,
     availability: false,
+    orderType: false,
   });
   
   const toggleFilterSection = (section) => {
@@ -535,7 +639,9 @@ const ProductsPage = () => {
   // Handle click outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+      const isMobileSearch = searchRef.current && searchRef.current.contains(event.target);
+      const isDesktopSearch = searchDesktopRef.current && searchDesktopRef.current.contains(event.target);
+      if (!isMobileSearch && !isDesktopSearch) {
         setShowSuggestions(false);
       }
     };
@@ -622,6 +728,7 @@ const ProductsPage = () => {
       color: "",
       brand: "",
       availability: "",
+      orderType: "",
       sortBy: "most_popular",
       sortOrder: "desc",
       isNewArrival: false,
@@ -809,40 +916,6 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* Product Type */}
-      <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("productType")}>
-          <h4>PRODUCT TYPE</h4>
-          {expandedFilters.productType ? <UpOutlined /> : <DownOutlined />}
-        </div>
-        {expandedFilters.productType && (
-        <div className="checkbox-group">
-          <Checkbox
-            checked={filters.isNewArrival}
-            onChange={(e) =>
-              handleFilterChange("isNewArrival", e.target.checked)
-            }
-          >
-            New Arrivals
-          </Checkbox>
-          <Checkbox
-            checked={filters.isBestSeller}
-            onChange={(e) =>
-              handleFilterChange("isBestSeller", e.target.checked)
-            }
-          >
-            Best Sellers
-          </Checkbox>
-          <Checkbox
-            checked={filters.isFeatured}
-            onChange={(e) => handleFilterChange("isFeatured", e.target.checked)}
-          >
-            Featured
-          </Checkbox>
-        </div>
-        )}
-      </div>
-
       {/* Availability */}
       <div className="filter-section">
         <div className="filter-section-header" onClick={() => toggleFilterSection("availability")}>
@@ -850,28 +923,75 @@ const ProductsPage = () => {
           {expandedFilters.availability ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.availability && (
-          <div className="checkbox-group">
-            <Checkbox
+        <div className="checkbox-group">
+          <Checkbox
               checked={filters.availability === "in_stock"}
-              onChange={(e) =>
+            onChange={(e) =>
                 handleFilterChange("availability", e.target.checked ? "in_stock" : "")
+            }
+          >
+              In Stock
+          </Checkbox>
+          <Checkbox
+              checked={filters.availability === "out_of_stock"}
+            onChange={(e) =>
+                handleFilterChange("availability", e.target.checked ? "out_of_stock" : "")
+            }
+          >
+              Out of Stock
+          </Checkbox>
+          </div>
+        )}
+      </div>
+
+      {/* Order Type */}
+      <div className="filter-section">
+        <div className="filter-section-header" onClick={() => toggleFilterSection("orderType")}>
+          <h4>ORDER TYPE</h4>
+          {expandedFilters.orderType ? <UpOutlined /> : <DownOutlined />}
+        </div>
+        {expandedFilters.orderType && (
+          <div className="checkbox-group">
+          <Checkbox
+              checked={filters.orderType === "made_to_order"}
+              onChange={(e) =>
+                handleFilterChange("orderType", e.target.checked ? "made_to_order" : "")
               }
             >
-              In Stock
+              Made to Order
             </Checkbox>
             <Checkbox
-              checked={filters.availability === "out_of_stock"}
+              checked={filters.orderType === "ready_to_ship"}
               onChange={(e) =>
-                handleFilterChange("availability", e.target.checked ? "out_of_stock" : "")
+                handleFilterChange("orderType", e.target.checked ? "ready_to_ship" : "")
               }
             >
-              Out of Stock
-            </Checkbox>
-          </div>
+              Ready to Ship
+          </Checkbox>
+        </div>
         )}
       </div>
     </>
   );
+
+  // Count active filters
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (filters.search) count++;
+    if (filters.category) count++;
+    if (filters.subcategory) count++;
+    if (filters.gender) count++;
+    if (filters.minPrice || filters.maxPrice) count++;
+    if (filters.size) count++;
+    if (filters.color) count++;
+    if (filters.brand) count++;
+    if (filters.availability) count++;
+    if (filters.orderType) count++;
+    if (filters.isNewArrival) count++;
+    if (filters.isBestSeller) count++;
+    if (filters.isFeatured) count++;
+    return count;
+  };
 
   // Render skeleton product cards
   const renderSkeletonProducts = (count = 12) => {
@@ -975,12 +1095,113 @@ const ProductsPage = () => {
             <div className="page-title-section">
               <h1 className="page-title">Products</h1>
               <p className="page-subtitle">{pagination.total} Items</p>
+              </div>
+
+            {/* Search Bar - Mobile Only (above controls) */}
+            <div className="search-section-mobile" ref={searchRef}>
+              <Input
+                size="middle"
+                prefix={<SearchOutlined style={{ color: '#333' }} />}
+                placeholder="Search for products..."
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => {
+                  if (searchSuggestions.length > 0) {
+                    setShowSuggestions(true);
+                  }
+                }}
+                onPressEnter={() => {
+                  if (searchInput.trim()) {
+                    handleFilterChange("search", searchInput.trim());
+                    setShowSuggestions(false);
+                  }
+                }}
+                allowClear
+                onClear={() => {
+                  setSearchInput("");
+                  setShowSuggestions(false);
+                  handleFilterChange("search", "");
+                }}
+                className="products-search-input"
+              />
+              
+              {/* Autocomplete Dropdown */}
+              {showSuggestions && searchInput.trim() && (
+                <div className="search-suggestions-dropdown">
+                  {suggestionsLoading ? (
+                    <div className="search-suggestion-item">
+                      <Spin size="small" /> <span style={{ marginLeft: '8px' }}>Searching...</span>
+                    </div>
+                  ) : searchSuggestions.length > 0 ? (
+                    <ul className="search-suggestions-list">
+                      {searchSuggestions.map((suggestion) => {
+                        const discountedPrice = suggestion.basePricing - (suggestion.basePricing * (suggestion.discount || 0)) / 100;
+                        const coverImage = Array.isArray(suggestion.coverImage) && suggestion.coverImage.length > 0
+                          ? suggestion.coverImage[0]
+                          : suggestion.coverImage || "";
+                        
+                        return (
+                          <li
+                            key={suggestion._id}
+                            onClick={() => {
+                              setSearchInput(suggestion.productName);
+                              handleFilterChange("search", suggestion.productName);
+                              setShowSuggestions(false);
+                            }}
+                            className="search-suggestion-item"
+                          >
+                            {coverImage && (
+                              <img
+                                src={coverImage}
+                                alt={suggestion.productName}
+                                className="search-suggestion-image"
+                              />
+                            )}
+                            <div className="search-suggestion-content">
+                              <p className="search-suggestion-name">
+                                {suggestion.productName}
+                              </p>
+                              <div className="search-suggestion-price">
+                                <span className="search-suggestion-price-current">
+                                  ₹{discountedPrice.toFixed(0)}
+                                </span>
+                                {suggestion.discount > 0 && (
+                                  <>
+                                    <span className="search-suggestion-price-original">
+                                      ₹{suggestion.basePricing.toFixed(0)}
+                                    </span>
+                                    <span className="search-suggestion-discount">
+                                      {suggestion.discount}% off
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                              <p className="search-suggestion-meta">
+                                {suggestion.category?.name || ""}
+                                {suggestion.category?.name && suggestion.vendorId?.brandName && " • "}
+                                {suggestion.vendorId?.brandName || ""}
+                              </p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <div className="search-suggestion-item">
+                      No products found for "{searchInput}"
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* Products Header */}
+              {/* Products Header - Controls Bar */}
             <div className="products-header">
-              {/* Search Bar */}
-              <div className="search-section" ref={searchRef}>
+              {/* Search Bar - Desktop (in grid) */}
+              <div className="search-section-desktop" ref={searchDesktopRef}>
                 <Input
                   size="middle"
                   prefix={<SearchOutlined style={{ color: '#333' }} />}
@@ -1079,53 +1300,148 @@ const ProductsPage = () => {
                   </div>
                 )}
               </div>
-
-              {/* Sort Options */}
-              <div className="sort-options">
-                <span className="sort-label">Sort by:</span>
-                <Select
-                  size="middle"
-                  value={
-                    filters.sortBy === "most_popular" || filters.sortBy === "popular"
-                      ? "most_popular-desc"
-                      : filters.sortBy === "createdAt" && filters.sortOrder === "asc"
-                      ? "createdAt-desc" // Map createdAt-asc to createdAt-desc (Newest First)
-                      : `${filters.sortBy}-${filters.sortOrder}`
-                  }
-                  onChange={(value) => {
-                    const [sortBy, sortOrder] = value.split("-");
-                    // Update both sortBy and sortOrder in a single filter update
-                    const newFilters = { ...filters, sortBy, sortOrder, page: 1 };
-                    setFilters(newFilters);
-                    updateURL(newFilters);
-                    
-                    // Reset products when sort changes (don't append)
-                    setProducts([]);
-                    // Fetch products with new sort
-                    if (fetchProductsRef.current) {
-                      fetchProductsRef.current(newFilters, priceRangeRef.current);
-                    }
-                  }}
-                  className="sort-select"
+              {/* Filters Button with Badge */}
+              <div className="filters-button-wrapper">
+                <Button
+                  type="text"
+                  icon={<FilterOutlined />}
+                  onClick={() => setFilterDrawerVisible(true)}
+                  className="filters-button"
                 >
-                  <Option value="most_popular-desc">Most Popular</Option>
-                  <Option value="basePricing-asc">Price: Low to High</Option>
-                  <Option value="basePricing-desc">Price: High to Low</Option>
-                  <Option value="productName-asc">Name: A to Z</Option>
-                  <Option value="productName-desc">Name: Z to A</Option>
-                  <Option value="createdAt-desc">Newest First</Option>
-                </Select>
+                  Filters
+                  {getActiveFilterCount() > 0 && (
+                    <Badge count={getActiveFilterCount()} className="filter-badge" />
+                  )}
+                </Button>
+              </div>
 
-                {/* Mobile Filter Button */}
-                <div className="mobile-filter-button">
-                  <Button
-                    type="primary"
-                    icon={<FilterOutlined />}
-                    onClick={() => setFilterDrawerVisible(true)}
-                    size="large"
+              {/* Sort Dropdown */}
+              <div className="sort-wrapper">
+                {isMobile ? (
+                  <Dropdown
+                    overlay={
+                      <Menu
+                        selectedKeys={[
+                          filters.sortBy === "most_popular" || filters.sortBy === "popular"
+                            ? "most_popular-desc"
+                            : filters.sortBy === "createdAt" && filters.sortOrder === "asc"
+                            ? "createdAt-desc"
+                            : `${filters.sortBy}-${filters.sortOrder}`
+                        ]}
+                        onClick={({ key }) => {
+                          const [sortBy, sortOrder] = key.split("-");
+                          const newFilters = { ...filters, sortBy, sortOrder, page: 1 };
+                          setFilters(newFilters);
+                          updateURL(newFilters);
+                          setProducts([]);
+                          if (fetchProductsRef.current) {
+                            fetchProductsRef.current(newFilters, priceRangeRef.current);
+                          }
+                        }}
+                      >
+                        <Menu.Item key="most_popular-desc">Most Popular</Menu.Item>
+                        <Menu.Item key="basePricing-asc">Price: Low to High</Menu.Item>
+                        <Menu.Item key="basePricing-desc">Price: High to Low</Menu.Item>
+                        <Menu.Item key="productName-asc">Name: A to Z</Menu.Item>
+                        <Menu.Item key="productName-desc">Name: Z to A</Menu.Item>
+                        <Menu.Item key="createdAt-desc">Newest First</Menu.Item>
+                      </Menu>
+                    }
+                    trigger={['click']}
+                    placement="bottomLeft"
                   >
-                    Filters
-                  </Button>
+                    <span className="sort-label" style={{ cursor: 'pointer' }}>
+                      Sort <span className="sort-arrows"><UpOutlined /><DownOutlined /></span>
+                    </span>
+                  </Dropdown>
+                ) : (
+                  <>
+                    <span className="sort-label">Sort</span>
+                    <Select
+                      ref={sortSelectRef}
+                      size="middle"
+                      value={
+                        (filters.sortBy === "most_popular" || filters.sortBy === "popular")
+                          ? "most_popular-desc"
+                          : (filters.sortBy === "createdAt" && filters.sortOrder === "asc")
+                          ? "createdAt-desc"
+                          : `${filters.sortBy}-${filters.sortOrder}`
+                      }
+                      onChange={(value) => {
+                        const [sortBy, sortOrder] = value.split("-");
+                        const newFilters = { ...filters, sortBy, sortOrder, page: 1 };
+                        setFilters(newFilters);
+                        updateURL(newFilters);
+                        setProducts([]);
+                        if (fetchProductsRef.current) {
+                          fetchProductsRef.current(newFilters, priceRangeRef.current);
+                        }
+                      }}
+                      className="sort-select"
+                    >
+                      <Option value="most_popular-desc">Most Popular</Option>
+                      <Option value="basePricing-asc">Price: Low to High</Option>
+                      <Option value="basePricing-desc">Price: High to Low</Option>
+                      <Option value="productName-asc">Name: A to Z</Option>
+                      <Option value="productName-desc">Name: Z to A</Option>
+                      <Option value="createdAt-desc">Newest First</Option>
+                    </Select>
+                  </>
+                )}
+              </div>
+
+              {/* Grid Layout Controls */}
+              <div className="grid-layout-controls">
+                {/* Desktop Grid Controls */}
+                <div className="grid-layout-desktop">
+                  <button
+                    className={`grid-layout-btn ${gridLayout.desktop === 3 ? 'active' : ''}`}
+                    onClick={() => setGridLayout({ ...gridLayout, desktop: 3 })}
+                    title="3 per row"
+                  >
+                    <GridIcon columns={3} />
+                  </button>
+                  <button
+                    className={`grid-layout-btn ${gridLayout.desktop === 4 ? 'active' : ''}`}
+                    onClick={() => setGridLayout({ ...gridLayout, desktop: 4 })}
+                    title="4 per row"
+                  >
+                    <GridIcon columns={4} />
+                  </button>
+                </div>
+                {/* Tablet Grid Controls */}
+                <div className="grid-layout-tablet">
+                  <button
+                    className={`grid-layout-btn ${gridLayout.tablet === 2 ? 'active' : ''}`}
+                    onClick={() => setGridLayout({ ...gridLayout, tablet: 2 })}
+                    title="2 per row"
+                  >
+                    <GridIcon columns={2} />
+                  </button>
+                  <button
+                    className={`grid-layout-btn ${gridLayout.tablet === 3 ? 'active' : ''}`}
+                    onClick={() => setGridLayout({ ...gridLayout, tablet: 3 })}
+                    title="3 per row"
+                  >
+                    <GridIcon columns={3} />
+                  </button>
+                </div>
+                {/* Mobile Grid Controls */}
+                <div className="grid-layout-mobile">
+                  <button
+                    className={`grid-layout-btn ${gridLayout.mobile === 1 ? 'active' : ''}`}
+                    onClick={() => setGridLayout({ ...gridLayout, mobile: 1 })}
+                    title="1 per row"
+                  >
+                    <GridIcon columns={1} />
+                  </button>
+                  <button
+                    className={`grid-layout-btn ${gridLayout.mobile === 2 ? 'active' : ''}`}
+                    onClick={() => setGridLayout({ ...gridLayout, mobile: 2 })}
+                    title="2 per row"
+                  >
+                    <GridIcon columns={2} />
+                  </button>
                 </div>
               </div>
             </div>
@@ -1135,7 +1451,12 @@ const ProductsPage = () => {
               renderSkeletonProducts()
             ) : products.length > 0 ? (
               <>
-                <div className="products-grid">
+                <div 
+                  className="products-grid"
+                  data-grid-mobile={gridLayout.mobile}
+                  data-grid-tablet={gridLayout.tablet}
+                  data-grid-desktop={gridLayout.desktop}
+                >
                   {products.map((product) => {
                     // Use first product from products array if available, otherwise use the main product
                     // Merge main product data with first variant to ensure all fields are available

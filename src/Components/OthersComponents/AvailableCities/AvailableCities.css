@@ -31,8 +31,8 @@
   margin-bottom: 12px;
   object-fit: contain;
 }
-.About-heading{
-  color:#775242;
+.About-heading {
+  color: #775242;
   text-transform: uppercase;
   font-family: var(--playfair-display) !important;
   font-weight: 600;
@@ -48,7 +48,6 @@
   justify-content: center;
   text-align: center;
 }
-
 
 .CitiesGridContainer {
   display: grid;
@@ -257,7 +256,7 @@
   color: var(--OrangeColor);
   font-weight: 600;
 }
-.CityName{
+.CityName {
   font-family: var(--fira-sans) !important;
 }
 
@@ -325,10 +324,10 @@
   .ContactDetails p {
     font-size: 14px;
   }
-  .CityNameCardMobile{
+  .CityNameCardMobile {
     padding: 10px 0px;
   }
-  .About-heading{
+  .About-heading {
     font-size: 22px !important;
   }
 }

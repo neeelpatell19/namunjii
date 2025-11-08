@@ -97,24 +97,24 @@ export default function FeaturedProducts({ HomeData }) {
           ))}
         </Row>
       ) : (
-        <div className="featured-products-grid">
-          {featuredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              showQuickView={true}
-              showAddToCart={true}
-              onQuickView={(product) => {
-                console.log("Quick view:", product);
-                // Add your quick view logic here
-              }}
-              onAddToCart={(product) => {
-                console.log("Add to cart:", product);
-                // Add your add to cart logic here
-              }}
-            />
-          ))}
-        </div>
+      <div className="featured-products-grid">
+        {featuredProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            showQuickView={true}
+            showAddToCart={true}
+            onQuickView={(product) => {
+              console.log("Quick view:", product);
+              // Add your quick view logic here
+            }}
+            onAddToCart={(product) => {
+              console.log("Add to cart:", product);
+              // Add your add to cart logic here
+            }}
+          />
+        ))}
+      </div>
       )}
     </div>
   );

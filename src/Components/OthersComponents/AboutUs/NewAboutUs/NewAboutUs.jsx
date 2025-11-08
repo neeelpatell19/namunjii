@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./NewAboutUs.css";
 
 const NewAboutUs = () => {
@@ -39,10 +40,15 @@ const NewAboutUs = () => {
             purposeful, and distinctly yours.
           </p>
           <button className="about-btn">
-            About Us
-            <span>
-              <img src="/icons/Vector.svg" alt="" />
-            </span>{" "}
+            <Link
+              to="/about-us"
+              style={{ textDecoration: "inherit", color: "inherit" }}
+            >
+              About Us
+              <span>
+                <img src="/icons/Vector.svg" alt="" />
+              </span>{" "}
+            </Link>
           </button>
         </div>
         <div className="right about-image-container">
