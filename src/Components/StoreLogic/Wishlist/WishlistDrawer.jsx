@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useDevice } from "../../../hooks/useDevice";
 import { useCartWishlist } from "../Context/CartWishlistContext";
 import wishlistApi from "../../../apis/wishlist";
@@ -99,7 +99,15 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
     <div className="wishlist-drawer-overlay" onClick={onClose}>
       <div className="wishlist-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="wishlist-drawer-header">
-          <h2 className="wishlist-drawer-title">Wishlist</h2>
+          <div className="wishlist-drawer-title-wrapper">
+            <h2 className="wishlist-drawer-title">Wishlist</h2>
+            {!loading && !error && wishlistItems.length > 0 && (
+              <span className="wishlist-item-count">
+                ({wishlistItems.length}{" "}
+                {wishlistItems.length !== 1 ? "items" : "item"})
+              </span>
+            )}
+          </div>
           <button className="wishlist-drawer-close" onClick={onClose}>
             ✕
           </button>
@@ -157,17 +165,15 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
                           return finalPrice.toLocaleString();
                         })()}
                       </p>
-                      <p className="wishlist-item-size">
-                        Size: {item.productId.size || "One Size"}
-                      </p>
                     </div>
 
                     <div className="wishlist-item-actions">
                       <button
                         className="add-to-cart-btn"
                         onClick={() => handleAddToCart(item.productId)}
+                        title="Add to cart"
                       >
-                        Add to Cart
+                        <ShoppingCartOutlined />
                       </button>
                       <button
                         className="remove-from-wishlist-btn"
@@ -182,13 +188,6 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
               </div>
 
               <div className="wishlist-footer">
-                <div className="wishlist-summary">
-                  <p>
-                    {wishlistItems.length} item
-                    {wishlistItems.length !== 1 ? "s" : ""} in wishlist
-                  </p>
-                </div>
-
                 <div className="wishlist-actions">
                   <button
                     className="clear-wishlist-btn"

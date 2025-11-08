@@ -164,6 +164,12 @@
   width: 44%;
 }
 
+/* Max width for About Us container */
+.MainContainer.marginTop50.paddingBottom50 .Container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
 @media (max-width: 900px) {
   .RightsideAboutContainer > div {
     height: 100% !important;

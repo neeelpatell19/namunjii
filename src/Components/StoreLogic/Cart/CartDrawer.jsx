@@ -171,7 +171,23 @@ const CartDrawer = ({ isOpen, onClose }) => {
     <div className="cart-drawer-overlay" onClick={onClose}>
       <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="cart-drawer-header">
-          <h2 className="cart-drawer-title">Shopping Cart</h2>
+          <div className="cart-drawer-title-wrapper">
+            <h2 className="cart-drawer-title">Shopping Cart</h2>
+            {!loading &&
+              !error &&
+              cartItems.length > 0 &&
+              (() => {
+                const validItems = cartItems.filter(
+                  (item) => item.productId && item.productId._id
+                );
+                return (
+                  <span className="cart-item-count">
+                    ({validItems.length}{" "}
+                    {validItems.length !== 1 ? "items" : "item"})
+                  </span>
+                );
+              })()}
+          </div>
           <button className="cart-drawer-close" onClick={onClose}>
             ✕
           </button>
@@ -202,89 +218,93 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 {cartItems
                   .filter((item) => item.productId && item.productId._id)
                   .map((item) => (
-                  <div key={item.productId?._id || item._id || Math.random()} className="cart-item">
-                    <div className="cart-item-image">
-                      <img
-                        src={item.productId?.coverImage?.[0] || ""}
-                        alt={item.productId?.productName || "Product"}
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.nextSibling.style.display = "flex";
-                        }}
-                      />
-                      <div className="cart-item-fallback">👕</div>
-                    </div>
-
-                    <div className="cart-item-details">
-                      <h3 className="cart-item-name">
-                        {item.productId?.productName || "Product"}
-                      </h3>
-                      <p className="cart-item-price">
-                        ₹
-                        {(() => {
-                          const basePrice = item.productId?.basePricing || 0;
-                          const discount = item.productId?.discount || 0;
-                          const finalPrice =
-                            discount > 0
-                              ? Math.round(basePrice * (1 - discount / 100))
-                              : basePrice;
-                          return finalPrice.toLocaleString();
-                        })()}
-                      </p>
-                      <p className="cart-item-size">
-                        Size: {item.size || item.productId?.size || "One Size"}
-                      </p>
-                      {(item.color || item.productId?.color) && (
-                        <p className="cart-item-color">
-                          Color: {item.color || item.productId?.color}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="cart-item-controls">
-                      <div className="quantity-controls">
-                        <button
-                          onClick={() =>
-                            handleUpdateQuantity(
-                              item.productId._id,
-                              item.quantity - 1
-                            )
-                          }
-                          disabled={item.quantity <= 1}
-                        >
-                          -
-                        </button>
-                        <span className="quantity">{item.quantity}</span>
-                        <button
-                          onClick={() =>
-                            handleUpdateQuantity(
-                              item.productId._id,
-                              item.quantity + 1
-                            )
-                          }
-                          disabled={!canIncreaseQuantity(item)}
-                          title={
-                            !isInStock(item)
-                              ? "Product is out of stock"
-                              : !canIncreaseQuantity(item)
-                              ? "Maximum stock limit reached"
-                              : "Increase quantity"
-                          }
-                        >
-                          +
-                        </button>
+                    <div
+                      key={item.productId?._id || item._id || Math.random()}
+                      className="cart-item"
+                    >
+                      <div className="cart-item-image">
+                        <img
+                          src={item.productId?.coverImage?.[0] || ""}
+                          alt={item.productId?.productName || "Product"}
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            e.target.nextSibling.style.display = "flex";
+                          }}
+                        />
+                        <div className="cart-item-fallback">👕</div>
                       </div>
 
-                      <button
-                        className="remove-item-btn"
-                        onClick={() => handleRemoveItem(item.productId._id)}
-                        title="Remove item"
-                      >
-                        <DeleteOutlined />
-                      </button>
+                      <div className="cart-item-details">
+                        <h3 className="cart-item-name">
+                          {item.productId?.productName || "Product"}
+                        </h3>
+                        <p className="cart-item-price">
+                          ₹
+                          {(() => {
+                            const basePrice = item.productId?.basePricing || 0;
+                            const discount = item.productId?.discount || 0;
+                            const finalPrice =
+                              discount > 0
+                                ? Math.round(basePrice * (1 - discount / 100))
+                                : basePrice;
+                            return finalPrice.toLocaleString();
+                          })()}
+                        </p>
+                        <p className="cart-item-size">
+                          Size:{" "}
+                          {item.size || item.productId?.size || "One Size"}
+                        </p>
+                        {(item.color || item.productId?.color) && (
+                          <p className="cart-item-color">
+                            Color: {item.color || item.productId?.color}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="cart-item-controls">
+                        <div className="quantity-controls">
+                          <button
+                            onClick={() =>
+                              handleUpdateQuantity(
+                                item.productId._id,
+                                item.quantity - 1
+                              )
+                            }
+                            disabled={item.quantity <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="quantity">{item.quantity}</span>
+                          <button
+                            onClick={() =>
+                              handleUpdateQuantity(
+                                item.productId._id,
+                                item.quantity + 1
+                              )
+                            }
+                            disabled={!canIncreaseQuantity(item)}
+                            title={
+                              !isInStock(item)
+                                ? "Product is out of stock"
+                                : !canIncreaseQuantity(item)
+                                ? "Maximum stock limit reached"
+                                : "Increase quantity"
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <button
+                          className="remove-item-btn"
+                          onClick={() => handleRemoveItem(item.productId._id)}
+                          title="Remove item"
+                        >
+                          <DeleteOutlined />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               <div className="cart-footer">
@@ -293,18 +313,15 @@ const CartDrawer = ({ isOpen, onClose }) => {
                     Total: ₹
                     {cartItems
                       .filter((item) => item.productId)
-                      .reduce(
-                        (total, item) => {
-                          const basePrice = item.productId?.basePricing || 0;
-                          const discount = item.productId?.discount || 0;
-                          const finalPrice =
-                            discount > 0
-                              ? Math.round(basePrice * (1 - discount / 100))
-                              : basePrice;
-                          return total + finalPrice * item.quantity;
-                        },
-                        0
-                      )
+                      .reduce((total, item) => {
+                        const basePrice = item.productId?.basePricing || 0;
+                        const discount = item.productId?.discount || 0;
+                        const finalPrice =
+                          discount > 0
+                            ? Math.round(basePrice * (1 - discount / 100))
+                            : basePrice;
+                        return total + finalPrice * item.quantity;
+                      }, 0)
                       .toLocaleString()}
                   </p>
                 </div>
