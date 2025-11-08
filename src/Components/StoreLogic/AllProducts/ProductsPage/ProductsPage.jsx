@@ -965,7 +965,7 @@ const ProductsPage = () => {
               onChange={(e) =>
                 handleFilterChange("orderType", e.target.checked ? "ready_to_ship" : "")
               }
-            >
+          >
               Ready to Ship
           </Checkbox>
         </div>
@@ -1302,18 +1302,18 @@ const ProductsPage = () => {
               </div>
               {/* Filters Button with Badge */}
               <div className="filters-button-wrapper">
-                <Button
+                  <Button
                   type="text"
-                  icon={<FilterOutlined />}
-                  onClick={() => setFilterDrawerVisible(true)}
+                    icon={<FilterOutlined />}
+                    onClick={() => setFilterDrawerVisible(true)}
                   className="filters-button"
-                >
-                  Filters
+                  >
+                    Filters
                   {getActiveFilterCount() > 0 && (
                     <Badge count={getActiveFilterCount()} className="filter-badge" />
                   )}
-                </Button>
-              </div>
+                  </Button>
+                </div>
 
               {/* Sort Dropdown */}
               <div className="sort-wrapper">

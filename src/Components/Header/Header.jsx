@@ -118,16 +118,17 @@ const Header = () => {
   };
 
   const categories = [
-    { name: "Women", hasDropdown: true, path: "/products?gender=Women" },
+    { name: "About Us", hasDropdown: false, path: "/about-us" },
+    { name: "Shop All", hasDropdown: false, path: "/products" },
     { name: "Men", hasDropdown: true, path: "/products?gender=Men" },
+    { name: "Women", hasDropdown: true, path: "/products?gender=Women" },
     {
       name: "Namunjii Exclusive",
       hasDropdown: false,
       isSpecial: true,
       path: "/products",
     },
-    { name: "About Us", hasDropdown: false, path: "/about-us" },
-    { name: "Join Us", hasDropdown: false, path: "/vendor-verification" },
+    { name: "Join Us", hasDropdown: false, path: "/vendor-verification", isJoinUs: true },
   ];
 
   // Fetch cart and wishlist counts
@@ -581,7 +582,7 @@ const Header = () => {
                       to={category.path}
                       className={`CategoryLink ${
                         category.isSpecial ? "special" : ""
-                      }`}
+                      } ${category.isJoinUs ? "join-us" : ""}`}
                       onClick={() => {
                         setMobileMenuOpen(false);
                         setShowWomenMegaMenu(false);

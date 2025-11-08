@@ -25,6 +25,7 @@ import SellerPolicy from "./Components/Policies/SellerPolicy";
 import TermsOfUse from "./Components/Policies/TermsOfUse";
 import HomeComponents from "./Components/HomeComponents";
 import Login from "./Components/Auth/Login/Login";
+import WhatsAppBtn from "./Components/WhatsAppBtn/WhatsAppBtn";
 // import Maintenance from "./Components/Maintenance/Maintenance";
 import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
@@ -256,7 +257,7 @@ function App() {
                   {/* <CommonUserInteractionsPopup /> */}
                   <Footer />
                   {/* <Cookies /> */}
-                  {/* <WhatsAppBtn /> */}
+                  <WhatsAppBtn />
 
                   {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
                   {/* <UserDetailsModal /> */}

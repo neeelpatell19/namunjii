@@ -98,8 +98,8 @@ export default function NewArrivals({ HomeData }) {
           ))}
         </Row>
       ) : (
-        <div className="new-arrivals-grid">
-          {newArrivals.map((product) => (
+      <div className="new-arrivals-grid">
+        {newArrivals.map((product) => (
             <ProductCard
               key={product._id || product.id}
               product={product}
@@ -114,8 +114,8 @@ export default function NewArrivals({ HomeData }) {
                 // Add your add to cart logic here
               }}
             />
-          ))}
-        </div>
+        ))}
+      </div>
       )}
     </div>
   );

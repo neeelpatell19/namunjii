@@ -84,23 +84,23 @@ export default function ProductCard({
     if (!deviceId) return;
 
     try {
-      if (isInWishlist) {
+    if (isInWishlist) {
         // Remove from wishlist if already in wishlist
         const response = await wishlistApi.removeFromWishlist(product._id);
         if (response.success) {
           refreshWishlist();
-        }
+    }
       } else {
         // Add to wishlist if not in wishlist
-        const response = await wishlistApi.addToWishlist({
-          deviceId,
-          productId: product._id,
-        });
+      const response = await wishlistApi.addToWishlist({
+        deviceId,
+        productId: product._id,
+      });
 
-        if (response.success) {
-          // Trigger wishlist drawer to open
-          triggerWishlistDrawer();
-          refreshWishlist();
+      if (response.success) {
+        // Trigger wishlist drawer to open
+        triggerWishlistDrawer();
+        refreshWishlist();
         }
       }
     } catch (error) {
@@ -164,7 +164,7 @@ export default function ProductCard({
                 <HeartOutlined />
               )}
             </button>
-            {showQuickView && (
+          {showQuickView && (
               <button
                 className="product-card-quick-view-btn-image"
                 onClick={(e) => handleQuickView(e)}
@@ -172,7 +172,7 @@ export default function ProductCard({
                 <EyeOutlined />
               </button>
             )}
-          </div>
+            </div>
         </div>
 
         <div className="product-card-content" onClick={handleViewProduct}>
@@ -190,13 +190,13 @@ export default function ProductCard({
                   height: 'auto'
                 }}
               >
-                <h3 className="product-card-name">{product.productName}</h3>
+              <h3 className="product-card-name">{product.productName}</h3>
               </Tooltip>
               {showAddToCart && (
-                <button
+              <button
                   className="product-card-cart-btn"
                   onClick={(e) => handleAddToCart(e)}
-                >
+              >
                   <img 
                     src="/shopping-cart.svg" 
                     alt="Add to cart" 
@@ -251,11 +251,11 @@ export default function ProductCard({
             <div className="product-card-modal-wrapper">
               {/* Image Section - LEFT with Gradient */}
               <div className="product-card-modal-image-section">
-                <img
-                  src={product.coverImage[0]}
-                  alt={product.productName}
-                  className="product-card-modal-image"
-                />
+            <img
+              src={product.coverImage[0]}
+              alt={product.productName}
+              className="product-card-modal-image"
+            />
                 
                 {/* Image Carousel Dots */}
                 {product.coverImage && product.coverImage.length > 1 && (

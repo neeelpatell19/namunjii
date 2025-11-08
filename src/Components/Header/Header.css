@@ -597,12 +597,12 @@
 }
 
 .CategoryLink.special {
-  color: var(--brand-100);
+  color: #E40E0B;
   font-weight: 600;
 }
 
 .CategoryLink.special:hover {
-  color: var(--neutral-100);
+  color: #E40E0B;
 }
 
 /* Mobile Menu Styles */

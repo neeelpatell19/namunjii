@@ -15,8 +15,8 @@ const Footer = () => {
 
   const quickLinks = [
     { name: "Home", path: "/" },
-    { name: "Shop", path: "/products" },
-    { name: "Designers", path: "/designers" },
+    { name: "Shop All", path: "/products" },
+    { name: "Namunjii Exclusive", path: "/products" },
     { name: "About Us", path: "/about-us" },
     { name: "Join Us", path: "/vendor-verification" },
   ];
