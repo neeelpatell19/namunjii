@@ -3,7 +3,7 @@
   width: 100%;
   max-width: 1150px;
   margin: 0 auto;
-  padding: 4rem 0;
+  padding: 2rem 0;
 }
 
 /* Header Section */
@@ -158,7 +158,7 @@
 /* Mobile responsive adjustments for header */
 @media (max-width: 768px) {
   .featured-products-container {
-    padding: 1.5rem 0;
+    padding: 1rem 0;
   }
 
   .featured-products-header {

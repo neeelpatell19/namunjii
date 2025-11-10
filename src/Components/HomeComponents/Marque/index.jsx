@@ -1,19 +1,43 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./Marque.css";
 
-const brands = [
-  "Kara by Ishita",
-  "Kaiva Designs",
-  "Saanvi Threads",
-  "Rooh & Raag",
-  "Avira Studio",
-  "Tavisha",
-  // add more brands here
-];
+export default function BrandMarquee({ HomeData }) {
+  // Extract brand names from HomeData
+  const brands = useMemo(() => {
+    if (!HomeData) return [];
 
-export default function BrandMarquee() {
-  // To create a seamless effect, repeat the brand list twice
-  const displayBrands = [...brands, ...brands];
+    // If HomeData is an array, look for brands
+    if (Array.isArray(HomeData)) {
+      const brandsSection = HomeData.find(
+        (item) => item.key === "brands"
+      );
+      if (brandsSection?.data && Array.isArray(brandsSection.data)) {
+        return brandsSection.data
+          .map((brand) => brand.brandName)
+          .filter((name) => name && name.trim() !== "");
+      }
+    }
+
+    // If HomeData is an object, check for brands property
+    if (typeof HomeData === "object" && HomeData.brands) {
+      if (Array.isArray(HomeData.brands)) {
+        return HomeData.brands
+          .map((brand) => brand.brandName)
+          .filter((name) => name && name.trim() !== "");
+      }
+    }
+
+    return [];
+  }, [HomeData]);
+
+  // If no brands from API, don't show marquee
+  if (!brands || brands.length === 0) {
+    return null;
+  }
+
+  // To create a seamless effect, repeat the brand list multiple times
+  // Repeat enough times to ensure smooth scrolling
+  const displayBrands = [...brands, ...brands, ...brands];
 
   return (
     <div className="brand-marquee-container">

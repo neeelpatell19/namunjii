@@ -1,19 +1,19 @@
-.new-arrivals-container {
+.brands-container {
   width: 100%;
   max-width: 1150px;
   margin: 0 auto;
   padding: 2rem 0;
 }
 
-.new-arrivals-header {
+.brands-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 3rem;
   padding: 0 1rem;
 }
 
-.new-arrivals-title {
+.brands-title {
   font-family: var(--playfair-display);
   text-transform: uppercase;
   font-size: 40px;
@@ -46,7 +46,7 @@
 }
 
 .arrow-icon {
-  font-size: 26.25px; /* 1.25x of previous size (21px * 1.25) */
+  font-size: 26.25px;
   transition: transform 0.3s ease;
 }
 
@@ -54,69 +54,104 @@
   transform: translateX(3px);
 }
 
-/* Desktop Grid with Staggered Effect */
-.new-arrivals-grid {
+/* Desktop Grid */
+.brands-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 0 1rem;
 }
 
-/* Mobile Row - Simple Ant Design Grid */
-.new-arrivals-row-mobile {
+/* Mobile Row */
+.brands-row-mobile {
   padding: 0 0.5rem;
 }
 
-/* Stagger effect: products at index 1 and 3 (2nd and 4th cards) are offset down */
-.new-collections-card {
-  text-align: center;
+.brand-card {
+  background: transparent;
+  border: none;
+  padding: 0;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  cursor: pointer;
+  height: 100%;
 }
 
-.new-collections-card:nth-child(2),
-.new-collections-card:nth-child(4) {
-  margin-top: 60px;
+.brand-card:hover {
+  transform: translateY(-2px);
 }
 
-/* Image Container - NO PADDING, FILLS SPACE */
-.new-collections-image-container {
+/* Stagger effect: even index cards (2nd and 4th) are offset down */
+.brand-card:nth-child(2),
+.brand-card:nth-child(4) {
+  margin-top: 40px;
+}
+
+.brand-image-container {
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
   background: #f5f5f5;
-  margin-bottom: 16px;
+  margin-top: 0;
+  margin-bottom: 8px;
   border: 1px solid #e0e0e0;
 }
 
-.new-collections-image {
+.brand-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.new-collections-card:hover .new-collections-image {
+.brand-card:hover .brand-image {
   transform: scale(1.02);
 }
 
-/* Brand Section - Centered Above Image */
-.new-collections-brand {
-  font-size: 20px !important;
+.brand-image-fallback {
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+}
+
+.brand-image-fallback-icon {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.brand-name {
+  font-family: var(--fira-sans);
+  font-size: 16px;
   color: #775242;
   letter-spacing: 0.5px;
-  text-align: end;
-  margin: 0 0 12px 0;
+  text-align: right;
+  margin: 0 0 8px 0;
   font-weight: 400;
-  text-transform: uppercase;
-  order: -1;
+  text-transform: capitalize;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
-.new-arrivals-buy-link {
-  color: #242424;
-  }
 
-/* Footer Section - Simple Text Below Image */
-.new-collections-footer {
+.brand-card:hover .brand-name {
+  color: #5a3d2e;
+}
+
+.brand-description {
+  font-family: var(--fira-sans);
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.brand-footer {
   padding: 0;
   background: transparent;
   color: #333333;
@@ -128,23 +163,31 @@
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
   padding: 12px 0;
-  margin-top: 12px;
+  margin-top: 0;
 }
 
-.new-collections-shop {
+.brand-shop-now-btn {
   cursor: pointer;
-  font-style: playfair display;
-  font-size: 18px;
+  font-family: var(--playfair-display);
+  font-size: 14px;
   color: #2e1d0b;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   font-weight: 500;
   transition: color 0.3s ease;
   text-align: left;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
-.new-collections-shop-arrow {
-  font-size: 27px; /* 50% more than button font-size (18px * 1.5) */
+.brand-shop-now-btn:hover {
+  color: #775242;
+}
+
+.brand-shop-arrow {
+  font-size: 21px;
   color: #999999;
   transition: all 0.3s ease;
   text-align: right;
@@ -152,18 +195,18 @@
   align-items: center;
 }
 
-.new-collections-shop-arrow img {
-  width: 27px;
-  height: 27px;
+.brand-shop-arrow img {
+  width: 21px;
+  height: 21px;
 }
 
-.new-collections-card:hover .new-collections-shop-arrow {
+.brand-card:hover .brand-shop-arrow {
   color: #333;
   transform: translateX(3px);
 }
 
 /* Loading State */
-.new-arrivals-loading {
+.brands-loading {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,16 +219,16 @@
   border-radius: 20px;
 }
 
-.new-arrivals-loading-spinner {
+.brands-loading-spinner {
   width: 50px;
   height: 50px;
   border: 4px solid var(--brand-975);
   border-top: 4px solid #10b981;
   border-radius: 50%;
-  animation: new-arrivals-spin 1s linear infinite;
+  animation: brands-spin 1s linear infinite;
 }
 
-@keyframes new-arrivals-spin {
+@keyframes brands-spin {
   0% {
     transform: rotate(0deg);
   }
@@ -194,56 +237,27 @@
   }
 }
 
-/* Empty State */
-.new-arrivals-empty {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  background: var(--bg-off-white);
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-}
-
-.new-arrivals-empty-icon {
-  font-size: 4rem;
-  color: var(--brand-600);
-  margin-bottom: 1rem;
-}
-
-.new-arrivals-empty-text {
-  font-family: var(--Poppins-font);
-  font-size: 1.1rem;
-  color: var(--BodyTextColor);
-  margin: 0;
-}
-
 /* Responsive Design */
 
 /* Tablet (1024px and below) */
 @media (max-width: 1024px) {
-  .new-arrivals-grid {
+  .brands-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
   }
 
-  .new-collections-card:nth-child(2),
-  .new-collections-card:nth-child(4) {
-    margin-top: 40px;
-  }
-
-  .new-arrivals-title {
+  .brands-title {
     font-size: 3rem;
     letter-spacing: 6px;
   }
+
   .view-all-btn {
     display: flex;
     gap: 30px;
     align-items: center;
     font-size: 2rem;
   }
+
   .view-all-btn span {
     font-size: 2rem;
   }
@@ -251,13 +265,11 @@
 
 /* Tablet (768px and below) */
 @media (max-width: 768px) {
-  .new-arrivals-container {
-    padding: 3rem 0;
+  .brands-container {
+    padding: 1.5rem 0;
   }
 
-  .new-arrivals-header {
-    /* flex-direction: column;
-    align-items: flex-start; */
+  .brands-header {
     gap: 1.5rem;
     margin-bottom: 2rem;
     white-space: nowrap;
@@ -266,73 +278,63 @@
   .view-all-btn {
     font-size: 15px;
     padding: 12px 25px;
-   display: flex;
-   gap: 4px;
-   white-space: nowrap;
+    display: flex;
+    gap: 4px;
+    white-space: nowrap;
   }
-  .new-arrivals-title {
+
+  .brands-title {
     font-size: 1.7rem;
   }
 
-  .new-arrivals-subtitle {
-    font-size: 1rem;
-  }
-
-  .new-arrivals-grid {
+  .brands-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     padding: 0 1rem;
   }
 
-  /* Remove stagger on tablet for better layout */
-  .new-collections-card:nth-child(2),
-  .new-collections-card:nth-child(3),
-  .new-collections-card:nth-child(4) {
-    margin-top: 0;
+  /* Reduce stagger on tablet for better layout */
+  .brand-card:nth-child(2),
+  .brand-card:nth-child(4) {
+    margin-top: 30px;
   }
 
-  .new-collections-image-container {
+  .brand-image-container {
     aspect-ratio: 3 / 4;
     margin-bottom: 12px;
   }
 
-  .new-collections-brand {
-    text-align: left;
-    font-size: 12px;
-    margin-bottom: 10px;
+  .brand-name {
+    font-size: 18px;
+    text-align: right;
   }
 
-  .new-collections-footer {
+  .brand-description {
+    font-size: 13px;
+  }
+
+  .brand-footer {
     padding: 10px 0;
     margin-top: 10px;
   }
 
-  .new-collections-shop {
+  .brand-shop-now-btn {
     font-size: 11px;
   }
 }
 
-/* Mobile card styles - Simple and clean */
-.new-collections-card-mobile {
-  margin-top: 0 !important;
-}
-
-.new-collections-card-mobile:nth-child(n) {
-  margin-top: 0 !important;
-}
-
-/* Mobile responsive adjustments for header */
+/* Mobile responsive adjustments */
 @media (max-width: 768px) {
-  .new-arrivals-container {
+  .brands-container {
     padding: 1rem 0;
   }
 
-  .new-arrivals-header {
+  .brands-header {
     margin-bottom: 1rem;
     padding: 0 0.5rem;
   }
 
-.new-arrivals-title {
+  .brands-title {
     font-size: 1.5rem;
     letter-spacing: 0px;
   }
@@ -345,16 +347,52 @@
   }
 
   .view-all-btn .arrow-icon {
-    font-size: 22.5px !important; /* 1.25x of previous size (18px * 1.25) */
+    font-size: 22.5px !important;
+  }
+
+  .brand-name {
+    font-size: 16px;
+    text-align: right;
+    margin-bottom: 8px;
+  }
+
+  .brand-description {
+    font-size: 12px;
+  }
+
+  .brand-image-container {
+    aspect-ratio: 3 / 4;
+    margin-bottom: 12px;
+  }
+
+  /* Remove stagger on mobile for better layout */
+  .brand-card:nth-child(2),
+  .brand-card:nth-child(3),
+  .brand-card:nth-child(4) {
+    margin-top: 0;
+  }
+
+  .brand-footer {
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  .brand-shop-now-btn {
+    font-size: 11px;
+  }
+
+  .brand-shop-arrow img {
+    width: 22px;
+    height: 22px;
   }
 }
 
 @media (max-width: 480px) {
-  .new-arrivals-container {
+  .brands-container {
     padding: 1rem 0;
   }
 
-  .new-arrivals-title {
+  .brands-title {
     font-size: 1.2rem;
     letter-spacing: 0px;
   }
@@ -365,13 +403,39 @@
   }
 
   .view-all-btn .arrow-icon {
-    font-size: 20.625px !important; /* 1.25x of previous size (16.5px * 1.25) */
+    font-size: 20.625px !important;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+
+  .brand-description {
+    font-size: 11px;
+  }
+
+  .brand-shop-now-btn {
+    font-size: 10px;
+  }
+
+  .brand-shop-arrow img {
+    width: 20px;
+    height: 20px;
   }
 }
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-  .new-arrivals-loading-spinner {
+  .brands-loading-spinner {
     animation: none;
   }
+
+  .brand-card {
+    transition: none;
+  }
+
+  .brand-card:hover {
+    transform: none;
+  }
 }
+

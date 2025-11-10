@@ -7,6 +7,7 @@ import BestSellers from "./BestSellers";
 import FeaturedProducts from "./FeaturedProducts";
 import NewArrivals from "./NewArrivals";
 import FeaturedDeals from "./FeaturedDeals";
+import Brands from "./Brands";
 import BrandMarquee from "./Marque";
 import SectionHeading from "./HeroText";
 import HeroHome from "../OthersComponents/AboutUs/HeroHome/HeroHome";
@@ -166,13 +167,14 @@ export default function HomeComponents() {
     <div>
       <HeroHome />
       {/* <Carousel HomeData={HomeData} /> */}
-      <BrandMarquee />
+      <BrandMarquee HomeData={HomeData} />
       {/* <AnimatedSection>
         <SectionHeading />
       </AnimatedSection> */}
       <NewAboutUs />
       {/* <Categories HomeData={HomeData} /> */}
       <NewArrivals HomeData={HomeData} />
+      <Brands HomeData={HomeData} />
       {/* <BestSellers HomeData={HomeData} />
       <FeaturedProducts HomeData={HomeData} /> */}
       {/* <FeaturedDeals HomeData={HomeData} /> */}
