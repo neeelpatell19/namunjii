@@ -13,6 +13,9 @@ import {
   LeftOutlined,
   RightOutlined,
   CloseCircleFilled,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Thumbs } from "swiper/modules";
@@ -55,8 +58,18 @@ const SingleProductPageDesign = () => {
   const [prevPreviewImageIndex, setPrevPreviewImageIndex] = useState(0);
   const [isImageChanging, setIsImageChanging] = useState(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [previewZoom, setPreviewZoom] = useState(1);
+  const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
+  const [isPreviewDragging, setIsPreviewDragging] = useState(false);
+  const [previewDragStart, setPreviewDragStart] = useState({ x: 0, y: 0 });
+  const [mainImageZoom, setMainImageZoom] = useState(1);
+  const [mainImagePosition, setMainImagePosition] = useState({ x: 0, y: 0 });
+  const [isMainImageDragging, setIsMainImageDragging] = useState(false);
+  const [mainImageDragStart, setMainImageDragStart] = useState({ x: 0, y: 0 });
   const previewRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
+  const previewImageRef = useRef(null);
+  const mainImageRef = useRef(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const mouseStartX = useRef(0);
@@ -121,7 +134,7 @@ const SingleProductPageDesign = () => {
         setSelectedColor(foundProduct.color || "");
 
         // Set page title
-        document.title = `${foundProduct.productName} | Namunjii`;
+        document.title = `${foundProduct.productName}${foundProduct.vendorId?.name ? ` | ${foundProduct.vendorId.name}` : ' | Namunjii'}`;
 
         // Get related products from the same context
         const related = apiProducts
@@ -144,7 +157,7 @@ const SingleProductPageDesign = () => {
         setSelectedColor(productData.color || "");
 
         // Set page title
-        document.title = `${productData.productName} | Namunjii`;
+        document.title = `${productData.productName}${productData.vendorId?.name ? ` | ${productData.vendorId.name}` : ' | Namunjii'}`;
 
         // Get related products from context
         const related = apiProducts
@@ -175,7 +188,7 @@ const SingleProductPageDesign = () => {
         setSelectedColor(productData.color || "");
 
         // Set page title
-        document.title = `${productData.productName} | Namunjii`;
+        document.title = `${productData.productName}${productData.vendorId?.name ? ` | ${productData.vendorId.name}` : ' | Namunjii'}`;
 
         // Get related products from context
         const apiProducts = Array.isArray(state?.products)
@@ -358,6 +371,20 @@ const SingleProductPageDesign = () => {
     }
   }, [currentImageIndex, displayImages.length]);
 
+  // Reset zoom when image changes - must be before conditional returns
+  useEffect(() => {
+    setMainImageZoom(1);
+    setMainImagePosition({ x: 0, y: 0 });
+  }, [currentImageIndex]);
+
+  // Reset preview zoom when image changes - must be before conditional returns
+  useEffect(() => {
+    if (isPreviewOpen) {
+      setPreviewZoom(1);
+      setPreviewPosition({ x: 0, y: 0 });
+    }
+  }, [previewImageIndex, isPreviewOpen]);
+
   if (loading) {
     return (
       <div className="single-product-loading">
@@ -429,12 +456,16 @@ const SingleProductPageDesign = () => {
     setCurrentImageIndex((prev) =>
       prev > 0 ? prev - 1 : displayImages.length - 1
     );
+    setMainImageZoom(1);
+    setMainImagePosition({ x: 0, y: 0 });
   };
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) =>
       prev < displayImages.length - 1 ? prev + 1 : 0
     );
+    setMainImageZoom(1);
+    setMainImagePosition({ x: 0, y: 0 });
   };
 
   // Preview functions
@@ -446,7 +477,129 @@ const SingleProductPageDesign = () => {
 
   const closePreview = () => {
     setIsPreviewOpen(false);
+    setPreviewZoom(1);
+    setPreviewPosition({ x: 0, y: 0 });
     document.body.style.overflow = "";
+  };
+
+  // Preview zoom handlers
+  const handlePreviewZoomIn = (e) => {
+    e.stopPropagation();
+    setPreviewZoom((prev) => Math.min(prev + 0.5, 3));
+  };
+
+  const handlePreviewZoomOut = (e) => {
+    e.stopPropagation();
+    setPreviewZoom((prev) => {
+      const newZoom = Math.max(prev - 0.5, 1);
+      if (newZoom === 1) {
+        setPreviewPosition({ x: 0, y: 0 });
+      }
+      return newZoom;
+    });
+  };
+
+  const handlePreviewZoomReset = (e) => {
+    e.stopPropagation();
+    setPreviewZoom(1);
+    setPreviewPosition({ x: 0, y: 0 });
+  };
+
+  const handlePreviewImageMouseDown = (e) => {
+    if (previewZoom > 1) {
+      setIsPreviewDragging(true);
+      setPreviewDragStart({
+        x: e.clientX - previewPosition.x,
+        y: e.clientY - previewPosition.y,
+      });
+      e.preventDefault();
+    }
+  };
+
+  const handlePreviewImageMouseMove = (e) => {
+    if (isPreviewDragging && previewZoom > 1) {
+      setPreviewPosition({
+        x: e.clientX - previewDragStart.x,
+        y: e.clientY - previewDragStart.y,
+      });
+    }
+  };
+
+  const handlePreviewImageMouseUp = () => {
+    setIsPreviewDragging(false);
+  };
+
+  const handlePreviewImageWheel = (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      setPreviewZoom((prev) => {
+        const newZoom = Math.max(1, Math.min(3, prev + delta));
+        if (newZoom === 1) {
+          setPreviewPosition({ x: 0, y: 0 });
+        }
+        return newZoom;
+      });
+    }
+  };
+
+  // Main image zoom handlers
+  const handleMainImageZoomIn = () => {
+    setMainImageZoom((prev) => Math.min(prev + 0.5, 3));
+  };
+
+  const handleMainImageZoomOut = () => {
+    setMainImageZoom((prev) => {
+      const newZoom = Math.max(prev - 0.5, 1);
+      if (newZoom === 1) {
+        setMainImagePosition({ x: 0, y: 0 });
+      }
+      return newZoom;
+    });
+  };
+
+  const handleMainImageZoomReset = () => {
+    setMainImageZoom(1);
+    setMainImagePosition({ x: 0, y: 0 });
+  };
+
+  const handleMainImageMouseDown = (e) => {
+    if (mainImageZoom > 1) {
+      setIsMainImageDragging(true);
+      setMainImageDragStart({
+        x: e.clientX - mainImagePosition.x,
+        y: e.clientY - mainImagePosition.y,
+      });
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  const handleMainImageMouseMove = (e) => {
+    if (isMainImageDragging && mainImageZoom > 1) {
+      setMainImagePosition({
+        x: e.clientX - mainImageDragStart.x,
+        y: e.clientY - mainImageDragStart.y,
+      });
+    }
+  };
+
+  const handleMainImageMouseUp = () => {
+    setIsMainImageDragging(false);
+  };
+
+  const handleMainImageWheel = (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      setMainImageZoom((prev) => {
+        const newZoom = Math.max(1, Math.min(3, prev + delta));
+        if (newZoom === 1) {
+          setMainImagePosition({ x: 0, y: 0 });
+        }
+        return newZoom;
+      });
+    }
   };
 
   const handlePreviewPrev = (e) => {
@@ -456,6 +609,8 @@ const SingleProductPageDesign = () => {
     setPrevPreviewImageIndex(previewImageIndex);
     setIsImageChanging(true);
     setPreviewImageIndex(newIndex);
+    setPreviewZoom(1);
+    setPreviewPosition({ x: 0, y: 0 });
     setTimeout(() => {
       setIsImageChanging(false);
     }, 300);
@@ -468,6 +623,8 @@ const SingleProductPageDesign = () => {
     setPrevPreviewImageIndex(previewImageIndex);
     setIsImageChanging(true);
     setPreviewImageIndex(newIndex);
+    setPreviewZoom(1);
+    setPreviewPosition({ x: 0, y: 0 });
     setTimeout(() => {
       setIsImageChanging(false);
     }, 300);
@@ -518,20 +675,22 @@ const SingleProductPageDesign = () => {
     touchEndX.current = 0;
   };
 
-  // Swipe handlers for preview (mouse)
+  // Swipe handlers for preview (mouse) - only when not zoomed
   const handleMouseDown = (e) => {
-    isMouseDown.current = true;
-    mouseStartX.current = e.clientX;
-    e.preventDefault();
+    if (previewZoom <= 1) {
+      isMouseDown.current = true;
+      mouseStartX.current = e.clientX;
+      e.preventDefault();
+    }
   };
 
   const handleMouseMove = (e) => {
-    if (!isMouseDown.current) return;
+    if (!isMouseDown.current || previewZoom > 1) return;
     mouseEndX.current = e.clientX;
   };
 
   const handleMouseUp = () => {
-    if (!isMouseDown.current) return;
+    if (!isMouseDown.current || previewZoom > 1) return;
 
     const distance = mouseStartX.current - mouseEndX.current;
     const minSwipeDistance = 50;
@@ -809,22 +968,88 @@ const SingleProductPageDesign = () => {
                     </div>
                   </>
                 )}
-                <img
-                  src={displayImages[currentImageIndex]}
-                  alt={product.productName}
-                  className="main-product-image"
-                  draggable="false"
-                  onDragStart={(e) => e.preventDefault()}
-                  onClick={handleProductImageClick}
-                  onTouchStart={handleProductImageTouchStart}
-                  onTouchMove={handleProductImageTouchMove}
-                  onTouchEnd={handleProductImageTouchEnd}
-                  onMouseDown={handleProductImageMouseDown}
-                  onMouseMove={handleProductImageMouseMove}
-                  onMouseUp={handleProductImageMouseUp}
-                  onMouseLeave={handleProductImageMouseUp}
-                  style={{ cursor: "grab", touchAction: "none" }}
-                />
+                {/* Zoom Controls */}
+                <div className="main-image-zoom-controls">
+                  <button
+                    className="zoom-btn"
+                    onClick={handleMainImageZoomIn}
+                    title="Zoom In"
+                  >
+                    <ZoomInOutlined />
+                  </button>
+                  <button
+                    className="zoom-btn"
+                    onClick={handleMainImageZoomOut}
+                    title="Zoom Out"
+                    disabled={mainImageZoom <= 1}
+                  >
+                    <ZoomOutOutlined />
+                  </button>
+                  {mainImageZoom > 1 && (
+                    <button
+                      className="zoom-btn"
+                      onClick={handleMainImageZoomReset}
+                      title="Reset Zoom"
+                    >
+                      <ReloadOutlined />
+                    </button>
+                  )}
+                </div>
+                <div
+                  className="main-image-wrapper"
+                  style={{
+                    overflow: mainImageZoom > 1 ? "hidden" : "visible",
+                    cursor: mainImageZoom > 1 ? "move" : "grab",
+                  }}
+                  onMouseDown={(e) => {
+                    handleMainImageMouseDown(e);
+                    if (mainImageZoom <= 1) {
+                      handleProductImageMouseDown(e);
+                    }
+                  }}
+                  onMouseMove={(e) => {
+                    handleMainImageMouseMove(e);
+                    if (mainImageZoom <= 1) {
+                      handleProductImageMouseMove(e);
+                    }
+                  }}
+                  onMouseUp={(e) => {
+                    handleMainImageMouseUp();
+                    if (mainImageZoom <= 1) {
+                      handleProductImageMouseUp(e);
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    handleMainImageMouseUp();
+                    if (mainImageZoom <= 1) {
+                      handleProductImageMouseUp(e);
+                    }
+                  }}
+                  onWheel={handleMainImageWheel}
+                >
+                  <img
+                    ref={mainImageRef}
+                src={displayImages[currentImageIndex]}
+                alt={product.productName}
+                className="main-product-image"
+                    draggable="false"
+                    onDragStart={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      if (mainImageZoom <= 1) {
+                        handleProductImageClick(e);
+                      }
+                    }}
+                    onTouchStart={handleProductImageTouchStart}
+                    onTouchMove={handleProductImageTouchMove}
+                    onTouchEnd={handleProductImageTouchEnd}
+                    style={{
+                      transform: `scale(${mainImageZoom}) translate(${mainImagePosition.x / mainImageZoom}px, ${mainImagePosition.y / mainImageZoom}px)`,
+                      transformOrigin: "center center",
+                      transition: mainImageZoom === 1 ? "transform 0.3s ease" : "none",
+                      touchAction: "none",
+                    }}
+                  />
+                </div>
               </>
             ) : (
               <div className="no-image-placeholder">
@@ -878,9 +1103,11 @@ const SingleProductPageDesign = () => {
         <div className="product-details-section">
           {/* Brand and Product Name */}
           <div className="product-header">
+            {product.vendorId?.name && (
             <div className="brand-name">
-              {product.vendorId?.name || "Namunjii"}
+                {product.vendorId.name}
             </div>
+            )}
             <h1 className="product-title">{product.productName}</h1>
           </div>
 
@@ -1014,36 +1241,36 @@ const SingleProductPageDesign = () => {
                 Made to order are delivered within{" "}
                 <strong>10 business days</strong>.
               </span>
-            </div>
-          </div>
+        </div>
+      </div>
 
-          {/* Product Details Tabs */}
-          <div className="product-details-tabs">
-            <Tabs
-              defaultActiveKey="details"
-              items={[
-                {
-                  key: "details",
+      {/* Product Details Tabs */}
+      <div className="product-details-tabs">
+          <Tabs
+            defaultActiveKey="details"
+            items={[
+              {
+                key: "details",
                   label: "Product Details",
-                  children: (
-                    <div className="tab-content">
-                      <div className="specifications">
-                        <div className="spec-row">
-                          <span className="spec-label">Sleeve Length:</span>
-                          <span className="spec-value">Short Sleeves</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Fit:</span>
-                          <span className="spec-value">Regular Fit</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Length:</span>
-                          <span className="spec-value">Regular</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Placket:</span>
-                          <span className="spec-value">Button Placket</span>
-                        </div>
+                children: (
+                  <div className="tab-content">
+                    <div className="specifications">
+                      <div className="spec-row">
+                        <span className="spec-label">Sleeve Length:</span>
+                        <span className="spec-value">Short Sleeves</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Fit:</span>
+                        <span className="spec-value">Regular Fit</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Length:</span>
+                        <span className="spec-value">Regular</span>
+                      </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Placket:</span>
+                        <span className="spec-value">Button Placket</span>
+                      </div>
                         <div className="spec-row">
                           <span className="spec-label">Collar:</span>
                           <span className="spec-value">Spread Collar</span>
@@ -1056,14 +1283,14 @@ const SingleProductPageDesign = () => {
                           <span className="spec-label">Hemline:</span>
                           <span className="spec-value">Curved</span>
                         </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Placket Length:</span>
-                          <span className="spec-value">Full</span>
-                        </div>
+                      <div className="spec-row">
+                        <span className="spec-label">Placket Length:</span>
+                        <span className="spec-value">Full</span>
                       </div>
                     </div>
-                  ),
-                },
+                  </div>
+                ),
+              },
                 {
                   key: "sizeguide",
                   label: "Delivery & Return",
@@ -1102,10 +1329,10 @@ const SingleProductPageDesign = () => {
                     </div>
                   ),
                 },
-              ]}
-            />
-          </div>
+            ]}
+          />
         </div>
+      </div>
       </div>
 
       {/* Custom Image Preview Modal */}
@@ -1133,6 +1360,33 @@ const SingleProductPageDesign = () => {
                   {previewImageIndex + 1} / {displayImages.length}
                 </div>
               )}
+              {/* Zoom Controls */}
+              <div className="preview-zoom-controls">
+                <button
+                  className="preview-zoom-btn"
+                  onClick={handlePreviewZoomIn}
+                  title="Zoom In"
+                >
+                  <ZoomInOutlined />
+                </button>
+                <button
+                  className="preview-zoom-btn"
+                  onClick={handlePreviewZoomOut}
+                  title="Zoom Out"
+                  disabled={previewZoom <= 1}
+                >
+                  <ZoomOutOutlined />
+                </button>
+                {previewZoom > 1 && (
+                  <button
+                    className="preview-zoom-btn"
+                    onClick={handlePreviewZoomReset}
+                    title="Reset Zoom"
+                  >
+                    <ReloadOutlined />
+                  </button>
+                )}
+              </div>
               <button
                 className="preview-close"
                 onClick={closePreview}
@@ -1163,7 +1417,18 @@ const SingleProductPageDesign = () => {
             )}
 
             {/* Centered image */}
-            <div className="preview-image-container">
+            <div
+              className="preview-image-container"
+              style={{
+                overflow: previewZoom > 1 ? "hidden" : "visible",
+                cursor: previewZoom > 1 ? "move" : "default",
+              }}
+              onMouseDown={handlePreviewImageMouseDown}
+              onMouseMove={handlePreviewImageMouseMove}
+              onMouseUp={handlePreviewImageMouseUp}
+              onMouseLeave={handlePreviewImageMouseUp}
+              onWheel={handlePreviewImageWheel}
+            >
               {isImageChanging && (
                 <img
                   src={displayImages[prevPreviewImageIndex]}
@@ -1172,11 +1437,17 @@ const SingleProductPageDesign = () => {
                 />
               )}
               <img
+                ref={previewImageRef}
                 src={displayImages[previewImageIndex]}
                 alt={`${product.productName} - ${previewImageIndex + 1}`}
                 className={`preview-image preview-image-new ${
                   isImageChanging ? "fading-in" : ""
                 }`}
+                style={{
+                  transform: `scale(${previewZoom}) translate(${previewPosition.x / previewZoom}px, ${previewPosition.y / previewZoom}px)`,
+                  transformOrigin: "center center",
+                  transition: previewZoom === 1 ? "transform 0.3s ease" : "none",
+                }}
               />
             </div>
           </div>

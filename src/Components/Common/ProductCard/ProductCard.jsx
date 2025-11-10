@@ -177,7 +177,9 @@ export default function ProductCard({
 
         <div className="product-card-content" onClick={handleViewProduct}>
           <div className="product-card-info">
-            <h3 className="product-card-brandname">{product.brandname} brand name</h3>
+            {product.vendorId?.name && (
+              <h3 className="product-card-brandname">{product.vendorId.name}</h3>
+            )}
             <div className="product-card-header">
               
               <Tooltip 
