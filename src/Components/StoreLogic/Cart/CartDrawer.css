@@ -283,8 +283,8 @@
 
 .cart-item-name {
   font-family: var(--fira-sans);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 400;
   color: var(--brandColor);
   margin: 0;
   line-height: 1.3;
@@ -292,8 +292,8 @@
 
 .cart-item-price {
   font-family: var(--fira-sans);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 400;
   color: var(--brand-700);
   margin: 0;
 }
@@ -467,11 +467,13 @@
   }
 
   .cart-item-name {
-    font-size: 1rem;
+    font-size: 0.85rem;
+    font-weight: 400;
   }
 
   .cart-item-price {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 400;
   }
 }
 
@@ -507,7 +509,8 @@
   }
 
   .cart-item-name {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    font-weight: 400;
   }
 
   .cart-footer {
@@ -557,11 +560,13 @@
   }
 
   .cart-item-name {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    font-weight: 400;
   }
 
   .cart-item-price {
     font-size: 0.9rem;
+    font-weight: 400;
   }
 
   .cart-footer {
@@ -627,10 +632,12 @@
 
   .cart-item-name {
     font-size: 0.8rem;
+    font-weight: 400;
   }
 
   .cart-item-price {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    font-weight: 400;
   }
 
   .cart-item-size,
