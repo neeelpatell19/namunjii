@@ -120,8 +120,9 @@ const Header = () => {
   const categories = [
     { name: "About Us", hasDropdown: false, path: "/about-us" },
     { name: "Shop All", hasDropdown: false, path: "/products" },
-    { name: "Men", hasDropdown: true, path: "/products?gender=Men" },
-    { name: "Women", hasDropdown: true, path: "/products?gender=Women" },
+    // Dropdown disabled for Men and Women
+    { name: "Men", hasDropdown: false, path: "/products?gender=Men" },
+    { name: "Women", hasDropdown: false, path: "/products?gender=Women" },
     {
       name: "Namunjii Exclusive",
       hasDropdown: false,
@@ -578,6 +579,7 @@ const Header = () => {
                     key={index}
                     className="CategoryItem"
                   >
+                    {/* Dropdown functionality disabled for Men and Women - onMouseEnter and onMouseLeave handlers commented out */}
                     <Link
                       to={category.path}
                       className={`CategoryLink ${
@@ -588,37 +590,39 @@ const Header = () => {
                         setShowWomenMegaMenu(false);
                         setShowMenMegaMenu(false);
                       }}
-                      onMouseEnter={() => {
-                        // Clear any pending hide timeout
-                        if (hideTimeoutRef.current) {
-                          clearTimeout(hideTimeoutRef.current);
-                          hideTimeoutRef.current = null;
-                        }
-                        
-                        if (category.name === "Women") {
-                          setShowWomenMegaMenu(true);
-                          setShowMenMegaMenu(false);
-                        } else if (category.name === "Men") {
-                          setShowMenMegaMenu(true);
-                          setShowWomenMegaMenu(false);
-                        } else {
-                          setShowWomenMegaMenu(false);
-                          setShowMenMegaMenu(false);
-                        }
-                      }}
-                      onMouseLeave={() => {
-                        if (category.name === "Women" || category.name === "Men") {
-                          hideTimeoutRef.current = setTimeout(() => {
-                            setShowWomenMegaMenu(false);
-                            setShowMenMegaMenu(false);
-                          }, 300);
-                        }
-                      }}
+                      // onMouseEnter and onMouseLeave handlers commented out - dropdown disabled for Men and Women
+                      // onMouseEnter={() => {
+                      //   // Clear any pending hide timeout
+                      //   if (hideTimeoutRef.current) {
+                      //     clearTimeout(hideTimeoutRef.current);
+                      //     hideTimeoutRef.current = null;
+                      //   }
+                      //   
+                      //   if (category.name === "Women") {
+                      //     setShowWomenMegaMenu(true);
+                      //     setShowMenMegaMenu(false);
+                      //   } else if (category.name === "Men") {
+                      //     setShowMenMegaMenu(true);
+                      //     setShowWomenMegaMenu(false);
+                      //   } else {
+                      //     setShowWomenMegaMenu(false);
+                      //     setShowMenMegaMenu(false);
+                      //   }
+                      // }}
+                      // onMouseLeave={() => {
+                      //   if (category.name === "Women" || category.name === "Men") {
+                      //     hideTimeoutRef.current = setTimeout(() => {
+                      //       setShowWomenMegaMenu(false);
+                      //       setShowMenMegaMenu(false);
+                      //     }, 300);
+                      //   }
+                      // }}
                     >
                       {category.name}
                     </Link>
+                    {/* Dropdown functionality disabled for Men and Women */}
                     {/* Women Mega Menu */}
-                    {category.name === "Women" && showWomenMegaMenu && (
+                    {/* {category.name === "Women" && showWomenMegaMenu && (
                       <div
                         ref={womenMegaMenuRef}
                         className="MegaMenuContainer fade-in"
@@ -636,7 +640,6 @@ const Header = () => {
                         }}
                       >
                         <div className="MegaMenuContent">
-                          {/* Category Column */}
                           <div className="MegaMenuColumn">
                             <h4 className="MegaMenuColumnTitle">CATEGORY</h4>
                             <ul className="MegaMenuList">
@@ -656,7 +659,6 @@ const Header = () => {
                               ))}
                             </ul>
                           </div>
-                          {/* Featured Column */}
                           <div className="MegaMenuColumn">
                             <h4 className="MegaMenuColumnTitle">BRAND NAME</h4>
                             <ul className="MegaMenuList">
@@ -678,9 +680,9 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    )}
+                    )} */}
                     {/* Men Mega Menu */}
-                    {category.name === "Men" && showMenMegaMenu && (
+                    {/* {category.name === "Men" && showMenMegaMenu && (
                       <div
                         ref={menMegaMenuRef}
                         className="MegaMenuContainer fade-in"
@@ -698,7 +700,6 @@ const Header = () => {
                         }}
                       >
                         <div className="MegaMenuContent">
-                          {/* Category Column */}
                           <div className="MegaMenuColumn">
                             <h4 className="MegaMenuColumnTitle">CATEGORY</h4>
                             <ul className="MegaMenuList">
@@ -718,7 +719,6 @@ const Header = () => {
                               ))}
                             </ul>
                           </div>
-                          {/* Featured Column */}
                           <div className="MegaMenuColumn">
                             <h4 className="MegaMenuColumnTitle">BRAND NAME</h4>
                             <ul className="MegaMenuList">
@@ -740,7 +740,7 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 ))}
               </div>

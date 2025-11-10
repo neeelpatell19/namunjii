@@ -288,15 +288,25 @@ const ProductsPage = () => {
         // Prepare query parameters
         const queryParams = { ...currentFilters };
 
+        // Ensure gender filter is properly included if set (Men or Women)
+        // Gender filter should be passed to API to filter products by gender
+        if (currentFilters.gender && (currentFilters.gender === "Men" || currentFilters.gender === "Women")) {
+          queryParams.gender = currentFilters.gender;
+        }
+
         // Add price range
         if (currentPriceRange[0] > 0)
           queryParams.minPrice = currentPriceRange[0];
         if (currentPriceRange[1] < 100000)
           queryParams.maxPrice = currentPriceRange[1];
 
-        // Remove empty values
+        // Remove empty values (but keep gender if it's Men or Women)
         Object.keys(queryParams).forEach((key) => {
           if (queryParams[key] === "" || queryParams[key] === false) {
+            // Don't remove gender if it's a valid value
+            if (key === "gender" && (queryParams[key] === "Men" || queryParams[key] === "Women")) {
+              return;
+            }
             delete queryParams[key];
           }
         });
@@ -321,6 +331,7 @@ const ProductsPage = () => {
   );
 
   // Load more products for infinite scroll
+  // This respects all active filters including gender (Men or Women)
   const loadMoreProducts = useCallback(async () => {
     // Don't load if already loading, no more pages, or already loading more
     if (
@@ -338,7 +349,7 @@ const ProductsPage = () => {
       const currentFilters = filtersRef.current;
       const currentPriceRange = priceRangeRef.current;
 
-      // Prepare query parameters
+      // Prepare query parameters (includes gender filter if set)
       const queryParams = { ...currentFilters, page: nextPage };
 
       // Add price range
@@ -346,9 +357,13 @@ const ProductsPage = () => {
       if (currentPriceRange[1] < 100000)
         queryParams.maxPrice = currentPriceRange[1];
 
-      // Remove empty values
+      // Remove empty values (but keep gender if it's Men or Women)
       Object.keys(queryParams).forEach((key) => {
         if (queryParams[key] === "" || queryParams[key] === false) {
+          // Don't remove gender if it's a valid value
+          if (key === "gender" && (queryParams[key] === "Men" || queryParams[key] === "Women")) {
+            return;
+          }
           delete queryParams[key];
         }
       });
@@ -467,6 +482,8 @@ const ProductsPage = () => {
   }, []);
 
   // Initialize filters from URL params and fetch products
+  // This ensures that when navigating to /products?gender=Men or /products?gender=Women,
+  // the gender filter is properly applied and only products of that gender are shown
   useEffect(() => {
     const urlFilters = {};
     for (const [key, value] of searchParams.entries()) {
@@ -485,6 +502,8 @@ const ProductsPage = () => {
       ) {
         urlFilters[key] = value === "true";
       } else {
+        // Handle all other filters including gender (Men or Women)
+        // Gender filter from URL will be set here and used to filter products
         urlFilters[key] = value;
       }
     }
@@ -504,6 +523,12 @@ const ProductsPage = () => {
     // Update filters
     const newFilters = { ...filtersRef.current, ...urlFilters };
     
+    // Ensure gender filter is properly set from URL (Men or Women)
+    // This ensures products are filtered by gender when navigating from header links
+    if (urlFilters.gender && (urlFilters.gender === "Men" || urlFilters.gender === "Women")) {
+      newFilters.gender = urlFilters.gender;
+    }
+    
     // Normalize sortBy values
     if (newFilters.sortBy) {
       // Handle "popular" as alias for "most_popular"
@@ -522,7 +547,8 @@ const ProductsPage = () => {
     
     setFilters(newFilters);
 
-    // Fetch products immediately with the new filters
+    // Fetch products immediately with the new filters (including gender filter)
+    // This will show only Men's or Women's products based on the gender filter from URL
     if (fetchProductsRef.current) {
       fetchProductsRef.current(newFilters, newPriceRange);
     }
