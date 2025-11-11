@@ -2,6 +2,11 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Row, Col } from "antd";
 import "./Brands.css";
 import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export default function Brands({ HomeData }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -61,95 +66,100 @@ export default function Brands({ HomeData }) {
     return null;
   };
 
+  const renderBrandCard = (brand) => {
+    const brandImage = getBrandImage(brand);
+    return (
+      <div className="brand-card" key={brand._id}>
+        <h3 className="brand-name">{brand.brandName}</h3>
+        {brandImage && (
+          <div className="brand-image-container">
+            <img
+              src={brandImage}
+              alt={brand.brandName}
+              className="brand-image"
+              onError={(e) => {
+                e.target.style.display = "none";
+                e.target.nextSibling.style.display = "flex";
+              }}
+            />
+            <div className="brand-image-fallback">
+              <div className="brand-image-fallback-icon">🏷️</div>
+            </div>
+          </div>
+        )}
+        <div className="brand-footer">
+          <Link
+            to={`/products?brand=${encodeURIComponent(brand.brandName)}`}
+            className="brand-shop-now-btn"
+          >
+            Shop Now
+          </Link>
+          <span className="brand-shop-arrow">
+            <img src="/icons/Arrow.svg" alt="arrow" />
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="brands-container">
       <div className="brands-header">
         <h2 className="brands-title">Brands</h2>
       </div>
 
-      {isMobile ? (
-        <Row gutter={[12, 12]} className="brands-row-mobile">
-          {brands.slice(0, 4).map((brand) => {
-            const brandImage = getBrandImage(brand);
-            return (
-              <Col xs={12} sm={12} key={brand._id}>
-                <div className="brand-card">
-                  <h3 className="brand-name">{brand.brandName}</h3>
-                  {brandImage && (
-                    <div className="brand-image-container">
-                      <img
-                        src={brandImage}
-                        alt={brand.brandName}
-                        className="brand-image"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.nextSibling.style.display = "flex";
-                        }}
-                      />
-                      <div className="brand-image-fallback">
-                        <div className="brand-image-fallback-icon">🏷️</div>
-                      </div>
-                    </div>
-                  )}
-                  <div className="brand-footer">
-                    <Link
-                      to={`/products?brand=${encodeURIComponent(
-                        brand.brandName
-                      )}`}
-                      className="brand-shop-now-btn"
-                    >
-                      Shop Now
-                    </Link>
-                    <span className="brand-shop-arrow">
-                      <img src="/icons/Arrow.svg" alt="arrow" />
-                    </span>
-                  </div>
-                </div>
-              </Col>
-            );
-          })}
-        </Row>
-      ) : (
-        <div className="brands-grid">
-          {brands.slice(0, 4).map((brand) => {
-            const brandImage = getBrandImage(brand);
-            return (
-              <div className="brand-card" key={brand._id}>
-                <h3 className="brand-name">{brand.brandName}</h3>
-                {brandImage && (
-                  <div className="brand-image-container">
-                    <img
-                      src={brandImage}
-                      alt={brand.brandName}
-                      className="brand-image"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "flex";
-                      }}
-                    />
-                    <div className="brand-image-fallback">
-                      <div className="brand-image-fallback-icon">🏷️</div>
-                    </div>
-                  </div>
-                )}
-                <div className="brand-footer">
-                  <Link
-                    to={`/products?brand=${encodeURIComponent(
-                      brand.brandName
-                    )}`}
-                    className="brand-shop-now-btn"
-                  >
-                    Shop Now
-                  </Link>
-                  <span className="brand-shop-arrow">
-                    <img src="/icons/Arrow.svg" alt="arrow" />
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <div className="brands-slider-wrapper">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={isMobile ? 12 : 24}
+          slidesPerView={isMobile ? 2 : 4}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          loop={brands.length > (isMobile ? 2 : 4)}
+          grabCursor={true}
+          touchEventsTarget="container"
+          simulateTouch={true}
+          allowTouchMove={true}
+          touchRatio={1}
+          touchAngle={45}
+          longSwipes={true}
+          longSwipesRatio={0.5}
+          longSwipesMs={300}
+          followFinger={true}
+          threshold={5}
+          touchMoveStopPropagation={false}
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+              spaceBetween: 12,
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 24,
+            },
+            1200: {
+              slidesPerView: 4,
+              spaceBetween: 24,
+            },
+          }}
+          className="brands-swiper"
+        >
+          {brands.map((brand) => (
+            <SwiperSlide key={brand._id}>
+              {renderBrandCard(brand)}
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 }
