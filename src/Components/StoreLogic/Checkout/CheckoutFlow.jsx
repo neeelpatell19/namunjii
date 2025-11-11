@@ -132,10 +132,21 @@ const CheckoutFlow = () => {
               <div className="cart-summary">
                 <h3>Cart Summary</h3>
                 <div className="cart-items">
-                  {cartItems.map((item, index) => (
+                  {cartItems.map((item, index) => {
+                    // Helper function to normalize images (handle both string and array)
+                    const normalizeImage = (image) => {
+                      if (!image) return "";
+                      if (typeof image === 'string') return image;
+                      if (Array.isArray(image) && image.length > 0) return image[0];
+                      return "";
+                    };
+                    
+                    const coverImage = normalizeImage(item.productId?.coverImage);
+                    
+                    return (
                     <div key={index} className="cart-item">
                       <img
-                        src={item.productId?.coverImage?.[0]}
+                        src={coverImage}
                         alt={item.productId?.productName}
                         className="item-image"
                       />
@@ -160,7 +171,8 @@ const CheckoutFlow = () => {
                         </p>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="checkout-actions">

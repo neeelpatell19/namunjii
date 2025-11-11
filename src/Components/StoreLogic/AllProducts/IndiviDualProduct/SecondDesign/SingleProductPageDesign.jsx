@@ -275,8 +275,17 @@ const SingleProductPageDesign = () => {
   };
 
   const finalPrice = calculateFinalPrice();
-  const images = product?.coverImage || [];
-  const otherImages = product?.otherImages || [];
+  
+  // Helper function to normalize images (handle both string and array)
+  const normalizeImages = (images) => {
+    if (!images) return [];
+    if (typeof images === 'string') return [images];
+    if (Array.isArray(images)) return images;
+    return [];
+  };
+  
+  const images = normalizeImages(product?.coverImage);
+  const otherImages = normalizeImages(product?.otherImages);
   const allImages = [...images, ...otherImages];
 
   // Fallback image if no images are available

@@ -139,7 +139,13 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
                   <div key={item.productId._id} className="wishlist-item">
                     <div className="wishlist-item-image">
                       <img
-                        src={item.productId.coverImage?.[0] || ""}
+                        src={(() => {
+                          const coverImage = item.productId?.coverImage;
+                          if (!coverImage) return "";
+                          if (typeof coverImage === 'string') return coverImage;
+                          if (Array.isArray(coverImage) && coverImage.length > 0) return coverImage[0];
+                          return "";
+                        })()}
                         alt={item.productId.productName}
                         onError={(e) => {
                           e.target.style.display = "none";

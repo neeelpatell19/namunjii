@@ -72,11 +72,22 @@ const OrderConfirmationStep = ({
           <div className="Sticky-wrraper">
             <Card title="Order Items" className="order-items-card">
               <div className="order-items">
-                {orderData?.items?.map((item, index) => (
+                {orderData?.items?.map((item, index) => {
+                  // Helper function to normalize images (handle both string and array)
+                  const normalizeImage = (image) => {
+                    if (!image) return "";
+                    if (typeof image === 'string') return image;
+                    if (Array.isArray(image) && image.length > 0) return image[0];
+                    return "";
+                  };
+                  
+                  const coverImage = normalizeImage(item.coverImage);
+                  
+                  return (
                   <div key={index} className="order-item">
                     <div className="item-image">
                       <img
-                        src={item.coverImage}
+                        src={coverImage}
                         alt={item.productName}
                         className="product-image"
                       />
@@ -108,7 +119,8 @@ const OrderConfirmationStep = ({
                       </Text>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
       
             </Card>

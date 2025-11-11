@@ -116,6 +116,17 @@ export default function ProductCard({
     }
   };
 
+  // Helper function to normalize images (handle both string and array)
+  const normalizeImages = (images) => {
+    if (!images) return [];
+    if (typeof images === 'string') return [images];
+    if (Array.isArray(images)) return images;
+    return [];
+  };
+
+  const coverImages = normalizeImages(product?.coverImage);
+  const firstCoverImage = coverImages[0] || "";
+
   // membership derived from context; no local fetching here
 
   return (
@@ -123,7 +134,7 @@ export default function ProductCard({
       <div className={`product-card ${className}`}>
         <div className="product-card-image-container">
           <img
-            src={product.coverImage[0]}
+            src={firstCoverImage}
             alt={product.productName}
             className="product-card-image"
             loading="lazy"
@@ -254,15 +265,15 @@ export default function ProductCard({
               {/* Image Section - LEFT with Gradient */}
               <div className="product-card-modal-image-section">
             <img
-              src={product.coverImage[0]}
+              src={firstCoverImage}
               alt={product.productName}
               className="product-card-modal-image"
             />
                 
                 {/* Image Carousel Dots */}
-                {product.coverImage && product.coverImage.length > 1 && (
+                {coverImages.length > 1 && (
                   <div className="product-card-modal-carousel-dots">
-                    {product.coverImage.map((image, index) => (
+                    {coverImages.map((image, index) => (
                       <img
                         key={index}
                         src={image}
