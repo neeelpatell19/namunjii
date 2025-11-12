@@ -4,10 +4,9 @@ import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./NewArrivals.css";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 export default function NewArrivals({ HomeData }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -86,11 +85,10 @@ export default function NewArrivals({ HomeData }) {
 
       <div className="new-arrivals-slider-wrapper">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[Navigation, Autoplay]}
           spaceBetween={isMobile ? 12 : 24}
           slidesPerView={isMobile ? 2 : 4}
           navigation
-          pagination={{ clickable: true }}
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,

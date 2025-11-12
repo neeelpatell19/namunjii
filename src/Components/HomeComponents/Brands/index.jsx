@@ -3,10 +3,9 @@ import { Row, Col } from "antd";
 import "./Brands.css";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 export default function Brands({ HomeData }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -108,11 +107,10 @@ export default function Brands({ HomeData }) {
 
       <div className="brands-slider-wrapper">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[Navigation, Autoplay]}
           spaceBetween={isMobile ? 12 : 24}
           slidesPerView={isMobile ? 2 : 4}
           navigation
-          pagination={{ clickable: true }}
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,

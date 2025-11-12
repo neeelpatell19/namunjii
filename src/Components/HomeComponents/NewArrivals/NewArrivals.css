@@ -61,7 +61,7 @@
 }
 
 .new-arrivals-swiper {
-  padding: 0 0 60px 0;
+  padding: 0;
   cursor: grab;
 }
 
@@ -111,25 +111,6 @@
 .new-arrivals-swiper .swiper-button-disabled {
   opacity: 0.35;
   cursor: not-allowed;
-}
-
-/* Swiper Pagination */
-.new-arrivals-swiper .swiper-pagination {
-  bottom: 20px;
-}
-
-.new-arrivals-swiper .swiper-pagination-bullet {
-  width: 10px;
-  height: 10px;
-  background: #775242;
-  opacity: 0.3;
-  transition: all 0.3s ease;
-}
-
-.new-arrivals-swiper .swiper-pagination-bullet-active {
-  opacity: 1;
-  width: 24px;
-  border-radius: 5px;
 }
 
 /* Desktop Grid with Staggered Effect */
@@ -525,7 +506,7 @@
   }
 
   .new-arrivals-swiper {
-    padding: 0 0 50px 0;
+    padding: 0;
   }
 
   .new-arrivals-swiper .swiper-button-next,
@@ -568,15 +549,6 @@
   .new-arrivals-swiper .swiper-button-next:after,
   .new-arrivals-swiper .swiper-button-prev:after {
     font-size: 12px;
-  }
-
-  .new-arrivals-swiper .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-  }
-
-  .new-arrivals-swiper .swiper-pagination-bullet-active {
-    width: 20px;
   }
 }
 
