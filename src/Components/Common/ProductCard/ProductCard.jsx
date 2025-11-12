@@ -31,9 +31,20 @@ export default function ProductCard({
   const [showQuickViewModal, setShowQuickViewModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
   const autoPlayRef = useRef(null);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -171,9 +182,9 @@ export default function ProductCard({
     }
   };
   
-  // Auto-play effect - slide every 1 second when hovering
+  // Auto-play effect - slide every 1 second when hovering (desktop only)
   useEffect(() => {
-    if (isHovered && allImages.length > 1) {
+    if (isHovered && allImages.length > 1 && !isMobile) {
       autoPlayRef.current = setInterval(() => {
         setCurrentImageIndex((prevIndex) => 
           prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
@@ -187,7 +198,7 @@ export default function ProductCard({
         autoPlayRef.current = null;
       }
     };
-  }, [isHovered, allImages.length]);
+  }, [isHovered, allImages.length, isMobile]);
 
   // membership derived from context; no local fetching here
 
@@ -200,7 +211,7 @@ export default function ProductCard({
           onMouseLeave={handleMouseLeave}
         >
           <img
-            src={isHovered && allImages.length > 1 ? allImages[currentImageIndex] : firstCoverImage}
+            src={(isHovered || isMobile) && allImages.length > 1 ? allImages[currentImageIndex] : firstCoverImage}
             alt={product.productName}
             className="product-card-image"
             loading="lazy"
@@ -217,8 +228,8 @@ export default function ProductCard({
             <p>Image not available</p>
           </div>
           
-          {/* Left Arrow - Show only on hover and if there are multiple images */}
-          {isHovered && allImages.length > 1 && (
+          {/* Left Arrow - Show on hover (desktop) or always (mobile) if there are multiple images */}
+          {(isHovered || isMobile) && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-left"
               onClick={(e) => {
@@ -230,8 +241,8 @@ export default function ProductCard({
             </button>
           )}
           
-          {/* Right Arrow - Show only on hover and if there are multiple images */}
-          {isHovered && allImages.length > 1 && (
+          {/* Right Arrow - Show on hover (desktop) or always (mobile) if there are multiple images */}
+          {(isHovered || isMobile) && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-right"
               onClick={(e) => {
@@ -243,8 +254,8 @@ export default function ProductCard({
             </button>
           )}
           
-          {/* Image Slider Dots - Show only on hover and if there are multiple images */}
-          {isHovered && allImages.length > 1 && (
+          {/* Image Slider Dots - Show on hover (desktop) or always (mobile) if there are multiple images */}
+          {(isHovered || isMobile) && allImages.length > 1 && (
             <div className="product-card-image-dots">
               {allImages.map((_, index) => (
                 <button
@@ -254,7 +265,7 @@ export default function ProductCard({
                     e.stopPropagation();
                     goToImage(index);
                   }}
-                  onMouseEnter={() => goToImage(index)}
+                  onMouseEnter={() => !isMobile && goToImage(index)}
                 />
               ))}
             </div>
