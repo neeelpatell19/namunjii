@@ -1155,6 +1155,8 @@ const ProductsPage = () => {
     );
   }
 
+  console.log("Products:::", products);
+
   return (
     <div className="products-page">
       <div className="products-page-container">

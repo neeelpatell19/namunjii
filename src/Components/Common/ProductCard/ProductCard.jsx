@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { HeartOutlined, HeartFilled, EyeOutlined, ThunderboltFilled, ClockCircleFilled } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { HeartOutlined, HeartFilled, EyeOutlined, ThunderboltFilled, ClockCircleFilled, LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
@@ -29,8 +29,11 @@ export default function ProductCard({
     refreshWishlist,
   } = useCartWishlist();
   const [showQuickViewModal, setShowQuickViewModal] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
+  const autoPlayRef = useRef(null);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -125,16 +128,79 @@ export default function ProductCard({
   };
 
   const coverImages = normalizeImages(product?.coverImage);
+  const otherImages = normalizeImages(product?.otherImages);
+  
+  // Combine all images for the slider
+  const allImages = [...coverImages, ...otherImages];
   const firstCoverImage = coverImages[0] || "";
+  
+  // Navigate to next image
+  const goToNextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+  
+  // Navigate to previous image
+  const goToPrevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
+    );
+  };
+  
+  // Navigate to specific image
+  const goToImage = (index) => {
+    setCurrentImageIndex(index);
+  };
+  
+  // Handle mouse enter to start hovering and auto-play
+  const handleMouseEnter = () => {
+    if (allImages.length > 1) {
+      setIsHovered(true);
+      setCurrentImageIndex(0);
+    }
+  };
+  
+  // Handle mouse leave to stop hovering and auto-play
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setCurrentImageIndex(0);
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+  };
+  
+  // Auto-play effect - slide every 1 second when hovering
+  useEffect(() => {
+    if (isHovered && allImages.length > 1) {
+      autoPlayRef.current = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => 
+          prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+        );
+      }, 1000);
+    }
+    
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+        autoPlayRef.current = null;
+      }
+    };
+  }, [isHovered, allImages.length]);
 
   // membership derived from context; no local fetching here
 
   return (
     <>
       <div className={`product-card ${className}`}>
-        <div className="product-card-image-container">
+        <div 
+          className="product-card-image-container"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <img
-            src={firstCoverImage}
+            src={isHovered && allImages.length > 1 ? allImages[currentImageIndex] : firstCoverImage}
             alt={product.productName}
             className="product-card-image"
             loading="lazy"
@@ -150,6 +216,49 @@ export default function ProductCard({
             <div className="product-card-fallback-icon">👕</div>
             <p>Image not available</p>
           </div>
+          
+          {/* Left Arrow - Show only on hover and if there are multiple images */}
+          {isHovered && allImages.length > 1 && (
+            <button
+              className="product-card-arrow product-card-arrow-left"
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrevImage();
+              }}
+            >
+              <LeftOutlined />
+            </button>
+          )}
+          
+          {/* Right Arrow - Show only on hover and if there are multiple images */}
+          {isHovered && allImages.length > 1 && (
+            <button
+              className="product-card-arrow product-card-arrow-right"
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNextImage();
+              }}
+            >
+              <RightOutlined />
+            </button>
+          )}
+          
+          {/* Image Slider Dots - Show only on hover and if there are multiple images */}
+          {isHovered && allImages.length > 1 && (
+            <div className="product-card-image-dots">
+              {allImages.map((_, index) => (
+                <button
+                  key={index}
+                  className={`product-card-dot ${index === currentImageIndex ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goToImage(index);
+                  }}
+                  onMouseEnter={() => goToImage(index)}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Order Type Tag - Ready to Ship */}
           <div className="product-card-order-tag product-card-order-tag-ready">
