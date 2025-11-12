@@ -127,7 +127,7 @@ const Header = () => {
       name: "Namunjii Exclusive",
       hasDropdown: false,
       isSpecial: true,
-      path: "/products",
+      path: "/products?isNamunjiiExclusive=true",
     },
     { name: "Join Us", hasDropdown: false, path: "/vendor-verification", isJoinUs: true },
   ];

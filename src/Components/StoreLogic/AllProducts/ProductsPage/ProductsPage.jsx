@@ -80,6 +80,7 @@ const ProductsPage = () => {
     isNewArrival: false,
     isBestSeller: false,
     isFeatured: false,
+    isNamunjiiExclusive: false,
     page: 1,
     limit: 20,
   });
@@ -498,7 +499,8 @@ const ProductsPage = () => {
       } else if (
         key === "isNewArrival" ||
         key === "isBestSeller" ||
-        key === "isFeatured"
+        key === "isFeatured" ||
+        key === "isNamunjiiExclusive"
       ) {
         urlFilters[key] = value === "true";
       } else {
@@ -523,9 +525,30 @@ const ProductsPage = () => {
     // Update filters
     const newFilters = { ...filtersRef.current, ...urlFilters };
     
-    // Ensure gender filter is properly set from URL (Men or Women)
-    // This ensures products are filtered by gender when navigating from header links
-    if (urlFilters.gender && (urlFilters.gender === "Men" || urlFilters.gender === "Women")) {
+    // Reset boolean filters to false if they're not present in the URL
+    // This ensures that when navigating away from pages with these filters,
+    // they don't persist incorrectly
+    if (!searchParams.has('isNamunjiiExclusive')) {
+      newFilters.isNamunjiiExclusive = false;
+    }
+    if (!searchParams.has('isNewArrival')) {
+      newFilters.isNewArrival = false;
+    }
+    if (!searchParams.has('isBestSeller')) {
+      newFilters.isBestSeller = false;
+    }
+    if (!searchParams.has('isFeatured')) {
+      newFilters.isFeatured = false;
+    }
+    
+    // Reset gender filter if not present in URL
+    // This ensures that when navigating to pages without gender filter (like Namunjii Exclusive),
+    // the gender checkbox is not selected
+    if (!searchParams.has('gender')) {
+      newFilters.gender = "";
+    } else if (urlFilters.gender && (urlFilters.gender === "Men" || urlFilters.gender === "Women")) {
+      // Ensure gender filter is properly set from URL (Men or Women)
+      // This ensures products are filtered by gender when navigating from header links
       newFilters.gender = urlFilters.gender;
     }
     
@@ -760,6 +783,7 @@ const ProductsPage = () => {
       isNewArrival: false,
       isBestSeller: false,
       isFeatured: false,
+      isNamunjiiExclusive: false,
       page: 1,
       limit: 20,
     };
@@ -816,17 +840,40 @@ const ProductsPage = () => {
                 <Spin size="small" />
               </div>
             ) : brands.length > 0 ? (
-              brands.map((brand, index) => (
-                <Checkbox
-                  key={index}
-                  checked={filters.brand === brand}
-                  onChange={(e) =>
-                    handleFilterChange("brand", e.target.checked ? brand : "")
-                  }
-          >
-                  {brand}
-                </Checkbox>
-              ))
+              (() => {
+                // Filter brands based on isNamunjiiExclusive
+                // Only filter to exclusive brands when isNamunjiiExclusive is explicitly true
+                // Otherwise, show all brands
+                const namunjiiExclusiveBrands = [
+                  'Grey Horn',
+                  'The Branch',
+                  'The Drift Line',
+                  'The Pure Forms'
+                ];
+                const filteredBrands = filters.isNamunjiiExclusive === true
+                  ? brands.filter(brand => namunjiiExclusiveBrands.includes(brand))
+                  : brands;
+                
+                return filteredBrands.length > 0 ? (
+                  filteredBrands.map((brand, index) => (
+                    <Checkbox
+                      key={index}
+                      checked={filters.brand === brand}
+                      onChange={(e) =>
+                        handleFilterChange("brand", e.target.checked ? brand : "")
+                      }
+                    >
+                      {brand}
+                    </Checkbox>
+                  ))
+                ) : (
+                  <span style={{ fontSize: "14px", color: "#999" }}>
+                    {filters.isNamunjiiExclusive 
+                      ? "No Namunjii Exclusive brands available" 
+                      : "No brands available"}
+                  </span>
+                );
+              })()
             ) : (
               <span style={{ fontSize: "14px", color: "#999" }}>No brands available</span>
             )}
@@ -1017,6 +1064,7 @@ const ProductsPage = () => {
     if (filters.isNewArrival) count++;
     if (filters.isBestSeller) count++;
     if (filters.isFeatured) count++;
+    if (filters.isNamunjiiExclusive) count++;
     return count;
   };
 
