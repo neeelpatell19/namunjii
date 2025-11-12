@@ -3,6 +3,11 @@ import { Row, Col } from "antd";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./NewArrivals.css";
 import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export default function NewArrivals({ HomeData }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -65,6 +70,8 @@ export default function NewArrivals({ HomeData }) {
     );
   }
 
+  console.log("New Arrivals:", newArrivals);
+
   return (
     <div className="new-arrivals-container">
       <div className="new-arrivals-header">
@@ -77,10 +84,53 @@ export default function NewArrivals({ HomeData }) {
         </Link>
       </div>
 
-      {isMobile ? (
-        <Row gutter={[12, 12]} className="new-arrivals-row-mobile">
+      <div className="new-arrivals-slider-wrapper">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={isMobile ? 12 : 24}
+          slidesPerView={isMobile ? 2 : 4}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          loop={newArrivals.length > (isMobile ? 2 : 4)}
+          grabCursor={true}
+          touchEventsTarget="container"
+          simulateTouch={true}
+          allowTouchMove={true}
+          touchRatio={1}
+          touchAngle={45}
+          longSwipes={true}
+          longSwipesRatio={0.5}
+          longSwipesMs={300}
+          followFinger={true}
+          threshold={5}
+          touchMoveStopPropagation={false}
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+              spaceBetween: 12,
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 24,
+            },
+            1200: {
+              slidesPerView: 4,
+              spaceBetween: 24,
+            },
+          }}
+          className="new-arrivals-swiper"
+        >
           {newArrivals.map((product) => (
-            <Col xs={12} sm={12} key={product._id || product.id}>
+            <SwiperSlide key={product._id || product.id}>
               <ProductCard
                 product={product}
                 showQuickView={true}
@@ -94,29 +144,10 @@ export default function NewArrivals({ HomeData }) {
                   // Add your add to cart logic here
                 }}
               />
-            </Col>
+            </SwiperSlide>
           ))}
-        </Row>
-      ) : (
-      <div className="new-arrivals-grid">
-        {newArrivals.map((product) => (
-            <ProductCard
-              key={product._id || product.id}
-              product={product}
-              showQuickView={true}
-              showAddToCart={true}
-              onQuickView={(product) => {
-                console.log("Quick view:", product);
-                // Add your quick view logic here
-              }}
-              onAddToCart={(product) => {
-                console.log("Add to cart:", product);
-                // Add your add to cart logic here
-              }}
-            />
-        ))}
+        </Swiper>
       </div>
-      )}
     </div>
   );
 }

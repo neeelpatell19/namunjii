@@ -54,17 +54,169 @@
   transform: translateX(3px);
 }
 
+/* Slider Wrapper */
+.new-arrivals-slider-wrapper {
+  padding: 0 1rem;
+  position: relative;
+}
+
+.new-arrivals-swiper {
+  padding: 0 0 60px 0;
+  cursor: grab;
+}
+
+.new-arrivals-swiper:active {
+  cursor: grabbing;
+}
+
+.new-arrivals-swiper .swiper-slide {
+  height: auto;
+}
+
+/* Product Card Image Adjustments for New Arrivals Slider */
+.new-arrivals-swiper .product-card-image-container {
+  aspect-ratio: 3 / 4 !important;
+}
+
+.new-arrivals-swiper .product-card-image {
+  aspect-ratio: 3 / 4 !important;
+  object-fit: cover;
+}
+
+/* Swiper Navigation Buttons */
+.new-arrivals-swiper .swiper-button-next,
+.new-arrivals-swiper .swiper-button-prev {
+  color: #775242;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.new-arrivals-swiper .swiper-button-next:after,
+.new-arrivals-swiper .swiper-button-prev:after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.new-arrivals-swiper .swiper-button-next:hover,
+.new-arrivals-swiper .swiper-button-prev:hover {
+  background: #775242;
+  color: #fff;
+  border-color: #775242;
+}
+
+.new-arrivals-swiper .swiper-button-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Swiper Pagination */
+.new-arrivals-swiper .swiper-pagination {
+  bottom: 20px;
+}
+
+.new-arrivals-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #775242;
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.new-arrivals-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  width: 24px;
+  border-radius: 5px;
+}
+
 /* Desktop Grid with Staggered Effect */
 .new-arrivals-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 0 1rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Ensure all product cards in the grid have consistent sizing */
+.new-arrivals-grid > * {
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Force consistent card heights and image aspect ratios */
+.new-arrivals-grid .product-card {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.new-arrivals-grid .product-card-image-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  aspect-ratio: 3 / 4 !important;
+  overflow: hidden;
+}
+
+.new-arrivals-grid .product-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  aspect-ratio: 3 / 4 !important;
+}
+
+.new-arrivals-grid .product-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Mobile Row - Simple Ant Design Grid */
 .new-arrivals-row-mobile {
   padding: 0 0.5rem;
+}
+
+/* Ensure consistent sizing in mobile row */
+.new-arrivals-row-mobile .product-card {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.new-arrivals-row-mobile .product-card-image-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  aspect-ratio: 3 / 4 !important;
+  overflow: hidden;
+}
+
+.new-arrivals-row-mobile .product-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  aspect-ratio: 3 / 4 !important;
+}
+
+.new-arrivals-row-mobile .product-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Stagger effect: products at index 1 and 3 (2nd and 4th cards) are offset down */
@@ -247,6 +399,11 @@
   .view-all-btn span {
     font-size: 2rem;
   }
+
+  /* Ensure consistent sizing on tablet */
+  .new-arrivals-grid .product-card-image-container {
+    aspect-ratio: 3 / 4 !important;
+  }
 }
 
 /* Tablet (768px and below) */
@@ -276,6 +433,21 @@
 
   .new-arrivals-subtitle {
     font-size: 1rem;
+  }
+
+  .new-arrivals-slider-wrapper {
+    padding: 0 1rem;
+  }
+
+  .new-arrivals-swiper .swiper-button-next,
+  .new-arrivals-swiper .swiper-button-prev {
+    width: 36px;
+    height: 36px;
+  }
+
+  .new-arrivals-swiper .swiper-button-next:after,
+  .new-arrivals-swiper .swiper-button-prev:after {
+    font-size: 16px;
   }
 
   .new-arrivals-grid {
@@ -347,6 +519,25 @@
   .view-all-btn .arrow-icon {
     font-size: 22.5px !important; /* 1.25x of previous size (18px * 1.25) */
   }
+
+  .new-arrivals-slider-wrapper {
+    padding: 0 0.5rem;
+  }
+
+  .new-arrivals-swiper {
+    padding: 0 0 50px 0;
+  }
+
+  .new-arrivals-swiper .swiper-button-next,
+  .new-arrivals-swiper .swiper-button-prev {
+    width: 32px;
+    height: 32px;
+  }
+
+  .new-arrivals-swiper .swiper-button-next:after,
+  .new-arrivals-swiper .swiper-button-prev:after {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -367,11 +558,35 @@
   .view-all-btn .arrow-icon {
     font-size: 20.625px !important; /* 1.25x of previous size (16.5px * 1.25) */
   }
+
+  .new-arrivals-swiper .swiper-button-next,
+  .new-arrivals-swiper .swiper-button-prev {
+    width: 28px;
+    height: 28px;
+  }
+
+  .new-arrivals-swiper .swiper-button-next:after,
+  .new-arrivals-swiper .swiper-button-prev:after {
+    font-size: 12px;
+  }
+
+  .new-arrivals-swiper .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+  }
+
+  .new-arrivals-swiper .swiper-pagination-bullet-active {
+    width: 20px;
+  }
 }
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   .new-arrivals-loading-spinner {
     animation: none;
+  }
+
+  .new-arrivals-swiper {
+    transition: none;
   }
 }
