@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 
 export default function Brands({ HomeData }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [hoveredBrandId, setHoveredBrandId] = useState(null);
 
   // Detect mobile screen size
   useEffect(() => {
@@ -54,33 +55,58 @@ export default function Brands({ HomeData }) {
     return null; // Don't show anything if no brands
   }
 
-  // Get brand image from experimental data if available
-  const getBrandImage = (brand) => {
+  // Get brand images from experimental data if available
+  const getBrandImages = (brand) => {
     if (
       brand.experimental?.logo_images &&
       brand.experimental.logo_images.length > 0
     ) {
-      return brand.experimental.logo_images[0].s3_url;
+      return {
+        defaultImage: brand.experimental.logo_images[0]?.s3_url || null,
+        hoverImage:
+          brand.experimental.logo_images[1]?.s3_url ||
+          brand.experimental.logo_images[0]?.s3_url ||
+          null,
+      };
     }
-    return null;
+    return { defaultImage: null, hoverImage: null };
   };
 
+  console.log("Brands:::", brands);
+
   const renderBrandCard = (brand) => {
-    const brandImage = getBrandImage(brand);
+    const { defaultImage, hoverImage } = getBrandImages(brand);
+    const isHovered = hoveredBrandId === brand._id;
+    const displayImage = isHovered && hoverImage ? hoverImage : defaultImage;
+
     return (
-      <div className="brand-card" key={brand._id}>
+      <div
+        className="brand-card"
+        key={brand._id}
+        onMouseEnter={() => setHoveredBrandId(brand._id)}
+        onMouseLeave={() => setHoveredBrandId(null)}
+      >
         <h3 className="brand-name">{brand.brandName}</h3>
-        {brandImage && (
+        {displayImage && (
           <div className="brand-image-container">
             <img
-              src={brandImage}
+              src={displayImage}
               alt={brand.brandName}
-              className="brand-image"
+              className="brand-image brand-image-instant"
               onError={(e) => {
                 e.target.style.display = "none";
                 e.target.nextSibling.style.display = "flex";
               }}
             />
+            {/* Preload hover image for instant switching */}
+            {hoverImage && hoverImage !== defaultImage && (
+              <img
+                src={hoverImage}
+                alt=""
+                style={{ display: "none" }}
+                aria-hidden="true"
+              />
+            )}
             <div className="brand-image-fallback">
               <div className="brand-image-fallback-icon">🏷️</div>
             </div>

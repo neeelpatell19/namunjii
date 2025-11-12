@@ -159,6 +159,11 @@
   transition: transform 0.3s ease;
 }
 
+/* Keep scale animation but ensure image src changes instantly */
+.brand-image-instant {
+  /* Image src changes are already instant in React, this class is for potential future optimizations */
+}
+
 .brand-card:hover .brand-image {
   transform: scale(1.02);
 }
