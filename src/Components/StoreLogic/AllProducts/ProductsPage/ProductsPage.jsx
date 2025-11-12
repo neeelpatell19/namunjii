@@ -67,12 +67,12 @@ const ProductsPage = () => {
     search: "",
     category: "",
     subcategory: "",
-    gender: "",
+    gender: [], // Changed to array for multi-select
     minPrice: "",
     maxPrice: "",
-    size: "",
-    color: "",
-    brand: "",
+    size: [], // Changed to array for multi-select
+    color: [], // Changed to array for multi-select
+    brand: [], // Changed to array for multi-select
     availability: "",
     orderType: "",
     sortBy: "most_popular",
@@ -91,7 +91,7 @@ const ProductsPage = () => {
   const [priceInput, setPriceInput] = useState(["", 50000]);
   // Search input local debounced state
   const [searchInput, setSearchInput] = useState("");
-  
+
   // Search suggestions state
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
@@ -101,20 +101,20 @@ const ProductsPage = () => {
 
   // Filter drawer state for mobile/tablet
   const [filterDrawerVisible, setFilterDrawerVisible] = useState(false);
-  
+
   // Mobile detection state
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Sort select ref
   const sortSelectRef = useRef(null);
-  
+
   // Grid layout state (mobile, tablet, desktop)
   const [gridLayout, setGridLayout] = useState({
-    mobile: 2,    // default: 2 per row
-    tablet: 2,    // default: 2 per row
-    desktop: 3,  // default: 3 per row
+    mobile: 2, // default: 2 per row
+    tablet: 2, // default: 2 per row
+    desktop: 3, // default: 3 per row
   });
-  
+
   // Detect mobile on mount and resize
   useEffect(() => {
     const checkMobile = () => {
@@ -131,7 +131,7 @@ const ProductsPage = () => {
     const gap = 2; // Increased gap between boxes
     const strokeWidth = 1;
     const totalBoxes = columns * 2; // Double the number of boxes
-    
+
     // Determine grid arrangement based on number of boxes
     let rows, cols;
     if (totalBoxes === 2) {
@@ -146,11 +146,12 @@ const ProductsPage = () => {
       // 3 per row → 6 boxes total
       rows = 2;
       cols = 3;
-    } else { // 8 boxes (4 per row)
+    } else {
+      // 8 boxes (4 per row)
       rows = 2;
       cols = 4;
     }
-    
+
     // Calculate box dimensions accounting for stroke width
     let boxWidth, boxHeight;
     if (totalBoxes === 2) {
@@ -161,15 +162,21 @@ const ProductsPage = () => {
       boxWidth = (size - gap * (cols - 1)) / cols;
       boxHeight = (size - gap * (rows - 1)) / rows;
     }
-    
+
     const strokeOffset = strokeWidth / 2; // Half stroke width to prevent overlap
-    
+
     return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         {Array.from({ length: totalBoxes }).map((_, index) => {
           const rowIndex = Math.floor(index / cols);
           const colIndex = index % cols;
-          
+
           // For 1 per row (2 boxes), center them horizontally
           let x, y;
           if (totalBoxes === 2) {
@@ -179,10 +186,10 @@ const ProductsPage = () => {
             x = colIndex * (boxWidth + gap) + strokeOffset;
             y = rowIndex * (boxHeight + gap) + strokeOffset;
           }
-          
+
           const width = boxWidth - strokeWidth;
           const height = boxHeight - strokeWidth;
-          
+
           return (
             <rect
               key={index}
@@ -201,7 +208,7 @@ const ProductsPage = () => {
       </svg>
     );
   };
-  
+
   // Collapsible filter sections state
   const [expandedFilters, setExpandedFilters] = useState({
     size: true,
@@ -212,7 +219,7 @@ const ProductsPage = () => {
     availability: false,
     orderType: false,
   });
-  
+
   const toggleFilterSection = (section) => {
     setExpandedFilters((prev) => ({
       ...prev,
@@ -259,15 +266,15 @@ const ProductsPage = () => {
       ];
 
       // Only update if values actually changed
-    if (
-      !Array.isArray(priceInput) ||
+      if (
+        !Array.isArray(priceInput) ||
         normalizedInput[0] !==
           (priceInput[0] === "" || priceInput[0] === 0 ? "" : priceInput[0]) ||
         normalizedInput[1] !==
           (priceInput[1] === "" || priceInput[1] === 0 ? "" : priceInput[1])
-    ) {
+      ) {
         setPriceInput(normalizedInput);
-    }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceRange]);
@@ -289,25 +296,21 @@ const ProductsPage = () => {
         // Prepare query parameters
         const queryParams = { ...currentFilters };
 
-        // Ensure gender filter is properly included if set (Men or Women)
-        // Gender filter should be passed to API to filter products by gender
-        if (currentFilters.gender && (currentFilters.gender === "Men" || currentFilters.gender === "Women")) {
-          queryParams.gender = currentFilters.gender;
-        }
-
         // Add price range
         if (currentPriceRange[0] > 0)
           queryParams.minPrice = currentPriceRange[0];
         if (currentPriceRange[1] < 100000)
           queryParams.maxPrice = currentPriceRange[1];
 
-        // Remove empty values (but keep gender if it's Men or Women)
+        // Remove empty values (handle arrays and simple values)
         Object.keys(queryParams).forEach((key) => {
-          if (queryParams[key] === "" || queryParams[key] === false) {
-            // Don't remove gender if it's a valid value
-            if (key === "gender" && (queryParams[key] === "Men" || queryParams[key] === "Women")) {
-              return;
-            }
+          const value = queryParams[key];
+          // Remove if: empty string, false, empty array
+          if (
+            value === "" ||
+            value === false ||
+            (Array.isArray(value) && value.length === 0)
+          ) {
             delete queryParams[key];
           }
         });
@@ -332,7 +335,7 @@ const ProductsPage = () => {
   );
 
   // Load more products for infinite scroll
-  // This respects all active filters including gender (Men or Women)
+  // This respects all active filters including multi-select filters
   const loadMoreProducts = useCallback(async () => {
     // Don't load if already loading, no more pages, or already loading more
     if (
@@ -350,7 +353,7 @@ const ProductsPage = () => {
       const currentFilters = filtersRef.current;
       const currentPriceRange = priceRangeRef.current;
 
-      // Prepare query parameters (includes gender filter if set)
+      // Prepare query parameters
       const queryParams = { ...currentFilters, page: nextPage };
 
       // Add price range
@@ -358,13 +361,15 @@ const ProductsPage = () => {
       if (currentPriceRange[1] < 100000)
         queryParams.maxPrice = currentPriceRange[1];
 
-      // Remove empty values (but keep gender if it's Men or Women)
+      // Remove empty values (handle arrays and simple values)
       Object.keys(queryParams).forEach((key) => {
-        if (queryParams[key] === "" || queryParams[key] === false) {
-          // Don't remove gender if it's a valid value
-          if (key === "gender" && (queryParams[key] === "Men" || queryParams[key] === "Women")) {
-            return;
-          }
+        const value = queryParams[key];
+        // Remove if: empty string, false, empty array
+        if (
+          value === "" ||
+          value === false ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
           delete queryParams[key];
         }
       });
@@ -483,11 +488,26 @@ const ProductsPage = () => {
   }, []);
 
   // Initialize filters from URL params and fetch products
-  // This ensures that when navigating to /products?gender=Men or /products?gender=Women,
-  // the gender filter is properly applied and only products of that gender are shown
+  // This ensures filters are properly applied from URL, including multi-select filters
   useEffect(() => {
     const urlFilters = {};
+
+    // Handle multi-value params (size, brand, gender, color)
+    const multiSelectKeys = ["size", "brand", "gender", "color"];
+    multiSelectKeys.forEach((key) => {
+      const values = searchParams.getAll(key);
+      if (values.length > 0) {
+        urlFilters[key] = values;
+      }
+    });
+
+    // Handle all other single-value params
     for (const [key, value] of searchParams.entries()) {
+      // Skip if already handled in multi-select
+      if (multiSelectKeys.includes(key)) {
+        continue;
+      }
+
       if (
         key === "minPrice" ||
         key === "maxPrice" ||
@@ -504,8 +524,7 @@ const ProductsPage = () => {
       ) {
         urlFilters[key] = value === "true";
       } else {
-        // Handle all other filters including gender (Men or Women)
-        // Gender filter from URL will be set here and used to filter products
+        // Handle all other filters
         urlFilters[key] = value;
       }
     }
@@ -524,34 +543,37 @@ const ProductsPage = () => {
 
     // Update filters
     const newFilters = { ...filtersRef.current, ...urlFilters };
-    
+
     // Reset boolean filters to false if they're not present in the URL
     // This ensures that when navigating away from pages with these filters,
     // they don't persist incorrectly
-    if (!searchParams.has('isNamunjiiExclusive')) {
+    if (!searchParams.has("isNamunjiiExclusive")) {
       newFilters.isNamunjiiExclusive = false;
     }
-    if (!searchParams.has('isNewArrival')) {
+    if (!searchParams.has("isNewArrival")) {
       newFilters.isNewArrival = false;
     }
-    if (!searchParams.has('isBestSeller')) {
+    if (!searchParams.has("isBestSeller")) {
       newFilters.isBestSeller = false;
     }
-    if (!searchParams.has('isFeatured')) {
+    if (!searchParams.has("isFeatured")) {
       newFilters.isFeatured = false;
     }
-    
-    // Reset gender filter if not present in URL
-    // This ensures that when navigating to pages without gender filter (like Namunjii Exclusive),
-    // the gender checkbox is not selected
-    if (!searchParams.has('gender')) {
-      newFilters.gender = "";
-    } else if (urlFilters.gender && (urlFilters.gender === "Men" || urlFilters.gender === "Women")) {
-      // Ensure gender filter is properly set from URL (Men or Women)
-      // This ensures products are filtered by gender when navigating from header links
-      newFilters.gender = urlFilters.gender;
+
+    // Reset multi-select filters to empty arrays if not present in URL
+    if (!searchParams.has("gender")) {
+      newFilters.gender = [];
     }
-    
+    if (!searchParams.has("size")) {
+      newFilters.size = [];
+    }
+    if (!searchParams.has("brand")) {
+      newFilters.brand = [];
+    }
+    if (!searchParams.has("color")) {
+      newFilters.color = [];
+    }
+
     // Normalize sortBy values
     if (newFilters.sortBy) {
       // Handle "popular" as alias for "most_popular"
@@ -567,7 +589,7 @@ const ProductsPage = () => {
       newFilters.sortBy = "most_popular";
       newFilters.sortOrder = "desc";
     }
-    
+
     setFilters(newFilters);
 
     // Fetch products immediately with the new filters (including gender filter)
@@ -589,7 +611,14 @@ const ProductsPage = () => {
       const params = new URLSearchParams();
 
       Object.entries(newFilters).forEach(([key, value]) => {
-        if (value !== "" && value !== false && value !== 0) {
+        // Handle arrays (multi-select filters)
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            // Add each value as a separate param: ?size=XS&size=S&size=L
+            value.forEach((v) => params.append(key, v));
+          }
+        } else if (value !== "" && value !== false && value !== 0) {
+          // Handle single values
           if (key === "minPrice" && value > 0) params.set(key, value);
           else if (key === "maxPrice" && value > 0) params.set(key, value);
           else if (key !== "minPrice" && key !== "maxPrice")
@@ -614,6 +643,35 @@ const ProductsPage = () => {
       if (key === "category") {
         newFilters.subcategory = "";
       }
+
+      setFilters(newFilters);
+      updateURL(newFilters);
+
+      // Reset products when filters change (don't append)
+      setProducts([]);
+      // Fetch products with new filters
+      if (fetchProductsRef.current) {
+        fetchProductsRef.current(newFilters, priceRange);
+      }
+    },
+    [filters, updateURL, priceRange]
+  );
+
+  // Handle multi-select filter changes (for size, brand, gender, color)
+  const handleMultiSelectFilterChange = useCallback(
+    (key, value, checked) => {
+      let newValues;
+      const currentValues = Array.isArray(filters[key]) ? filters[key] : [];
+
+      if (checked) {
+        // Add value if checked
+        newValues = [...currentValues, value];
+      } else {
+        // Remove value if unchecked
+        newValues = currentValues.filter((v) => v !== value);
+      }
+
+      const newFilters = { ...filters, [key]: newValues, page: 1 }; // Reset to page 1 when filters change
 
       setFilters(newFilters);
       updateURL(newFilters);
@@ -668,7 +726,10 @@ const ProductsPage = () => {
     const timeoutId = setTimeout(async () => {
       setSuggestionsLoading(true);
       try {
-        const response = await productApi.getSearchSuggestions(searchInput.trim(), 10);
+        const response = await productApi.getSearchSuggestions(
+          searchInput.trim(),
+          10
+        );
         if (response.success) {
           setSearchSuggestions(response.data || []);
         } else {
@@ -688,8 +749,11 @@ const ProductsPage = () => {
   // Handle click outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const isMobileSearch = searchRef.current && searchRef.current.contains(event.target);
-      const isDesktopSearch = searchDesktopRef.current && searchDesktopRef.current.contains(event.target);
+      const isMobileSearch =
+        searchRef.current && searchRef.current.contains(event.target);
+      const isDesktopSearch =
+        searchDesktopRef.current &&
+        searchDesktopRef.current.contains(event.target);
       if (!isMobileSearch && !isDesktopSearch) {
         setShowSuggestions(false);
       }
@@ -724,8 +788,8 @@ const ProductsPage = () => {
         if (
           normalizedInput[0] !== priceRange[0] ||
           normalizedInput[1] !== priceRange[1]
-      ) {
-        handlePriceRangeChange(priceInput);
+        ) {
+          handlePriceRangeChange(priceInput);
         }
       }
     }, 400);
@@ -770,12 +834,12 @@ const ProductsPage = () => {
       search: "",
       category: "",
       subcategory: "",
-      gender: "",
+      gender: [],
       minPrice: "",
       maxPrice: "",
-      size: "",
-      color: "",
-      brand: "",
+      size: [],
+      color: [],
+      brand: [],
       availability: "",
       orderType: "",
       sortBy: "most_popular",
@@ -804,35 +868,56 @@ const ProductsPage = () => {
         <h3>Filters</h3>
       </div>
 
-
       {/* Size */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("size")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("size")}
+        >
           <h4>SIZE</h4>
           {expandedFilters.size ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.size && (
           <div className="size-buttons">
-            {sizes.map((size) => (
-              <button
-                key={size}
-                className={`size-button ${filters.size === size ? "active" : ""}`}
-                onClick={() => handleFilterChange("size", filters.size === size ? "" : size)}
-                disabled={sizesLoading}
-              >
-              {size}
-              </button>
-            ))}
-        </div>
+            {sizesLoading ? (
+              <div style={{ padding: "10px 0" }}>
+                <Spin size="small" />
+              </div>
+            ) : sizes.length > 0 ? (
+              sizes.map((size) => {
+                const isSelected =
+                  Array.isArray(filters.size) && filters.size.includes(size);
+                return (
+                  <button
+                    key={size}
+                    className={`size-button ${isSelected ? "active" : ""}`}
+                    onClick={() =>
+                      handleMultiSelectFilterChange("size", size, !isSelected)
+                    }
+                    disabled={sizesLoading}
+                  >
+                    {size}
+                  </button>
+                );
+              })
+            ) : (
+              <span style={{ fontSize: "14px", color: "#999" }}>
+                No sizes available
+              </span>
+            )}
+          </div>
         )}
       </div>
 
       {/* Brand */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("brand")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("brand")}
+        >
           <h4>BRAND</h4>
           {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
-      </div>
+        </div>
         {expandedFilters.brand && (
           <div className="checkbox-group">
             {brandsLoading ? (
@@ -845,62 +930,88 @@ const ProductsPage = () => {
                 // Only filter to exclusive brands when isNamunjiiExclusive is explicitly true
                 // Otherwise, show all brands
                 const namunjiiExclusiveBrands = [
-                  'Grey Horn',
-                  'The Branch',
-                  'The Drift Line',
-                  'The Pure Forms'
+                  "Grey Horn",
+                  "The Branch",
+                  "The Drift Line",
+                  "The Pure Forms",
                 ];
-                const filteredBrands = filters.isNamunjiiExclusive === true
-                  ? brands.filter(brand => namunjiiExclusiveBrands.includes(brand))
-                  : brands;
-                
+                const filteredBrands =
+                  filters.isNamunjiiExclusive === true
+                    ? brands.filter((brand) =>
+                        namunjiiExclusiveBrands.includes(brand)
+                      )
+                    : brands;
+
                 return filteredBrands.length > 0 ? (
-                  filteredBrands.map((brand, index) => (
-                    <Checkbox
-                      key={index}
-                      checked={filters.brand === brand}
-                      onChange={(e) =>
-                        handleFilterChange("brand", e.target.checked ? brand : "")
-                      }
-                    >
-                      {brand}
-                    </Checkbox>
-                  ))
+                  filteredBrands.map((brand, index) => {
+                    const isSelected =
+                      Array.isArray(filters.brand) &&
+                      filters.brand.includes(brand);
+                    return (
+                      <Checkbox
+                        key={index}
+                        checked={isSelected}
+                        onChange={(e) =>
+                          handleMultiSelectFilterChange(
+                            "brand",
+                            brand,
+                            e.target.checked
+                          )
+                        }
+                      >
+                        {brand}
+                      </Checkbox>
+                    );
+                  })
                 ) : (
                   <span style={{ fontSize: "14px", color: "#999" }}>
-                    {filters.isNamunjiiExclusive 
-                      ? "No Namunjii Exclusive brands available" 
+                    {filters.isNamunjiiExclusive
+                      ? "No Namunjii Exclusive brands available"
                       : "No brands available"}
                   </span>
                 );
               })()
             ) : (
-              <span style={{ fontSize: "14px", color: "#999" }}>No brands available</span>
+              <span style={{ fontSize: "14px", color: "#999" }}>
+                No brands available
+              </span>
             )}
-        </div>
-      )}
+          </div>
+        )}
       </div>
 
       {/* Gender */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("gender")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("gender")}
+        >
           <h4>GENDER</h4>
           {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.gender && (
           <div className="checkbox-group">
             <Checkbox
-              checked={filters.gender === "Men"}
-              onChange={(e) =>
-                handleFilterChange("gender", e.target.checked ? "Men" : "")
+              checked={
+                Array.isArray(filters.gender) && filters.gender.includes("Men")
               }
-        >
+              onChange={(e) =>
+                handleMultiSelectFilterChange("gender", "Men", e.target.checked)
+              }
+            >
               Men
             </Checkbox>
             <Checkbox
-              checked={filters.gender === "Women"}
+              checked={
+                Array.isArray(filters.gender) &&
+                filters.gender.includes("Women")
+              }
               onChange={(e) =>
-                handleFilterChange("gender", e.target.checked ? "Women" : "")
+                handleMultiSelectFilterChange(
+                  "gender",
+                  "Women",
+                  e.target.checked
+                )
               }
             >
               Women
@@ -911,7 +1022,10 @@ const ProductsPage = () => {
 
       {/* Price Range */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("priceRange")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("priceRange")}
+        >
           <h4>PRICE RANGE</h4>
           {expandedFilters.priceRange ? <UpOutlined /> : <DownOutlined />}
         </div>
@@ -919,7 +1033,8 @@ const ProductsPage = () => {
           <>
             <div className="price-range-display">
               <span className="price-range-value">
-                ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
+                ₹{priceRange[0].toLocaleString()} - ₹
+                {priceRange[1].toLocaleString()}
               </span>
             </div>
             <Slider
@@ -928,16 +1043,16 @@ const ProductsPage = () => {
               max={100000}
               step={100}
               marks={{
-                0: '₹0',
-                50000: '₹50,000',
-                100000: '₹1,00,000'
+                0: "₹0",
+                50000: "₹50,000",
+                100000: "₹1,00,000",
               }}
               value={priceRange}
               onChange={(value) => {
                 // Ensure we can select exactly 100000
                 const clampedValue = [
                   Math.max(0, Math.min(100000, value[0])),
-                  Math.max(value[0], Math.min(100000, value[1]))
+                  Math.max(value[0], Math.min(100000, value[1])),
                 ];
                 setPriceRange(clampedValue);
                 // Clear previous timer
@@ -968,68 +1083,103 @@ const ProductsPage = () => {
 
       {/* Color */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("colour")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("colour")}
+        >
           <h4>COLOUR</h4>
           {expandedFilters.colour ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.colour && (
-        <Select
-          placeholder="Select Color"
-            value={filters.color || null}
-          onChange={(value) => handleFilterChange("color", value)}
-          allowClear
-            loading={colorsLoading}
-          style={{ width: "100%" }}
-        >
-            {colors.map((color) => (
-            <Option key={color} value={color}>
-              {color}
-            </Option>
-          ))}
-        </Select>
+          <div className="checkbox-group">
+            {colorsLoading ? (
+              <div style={{ padding: "10px 0" }}>
+                <Spin size="small" />
+              </div>
+            ) : colors.length > 0 ? (
+              colors.map((color, index) => {
+                const isSelected =
+                  Array.isArray(filters.color) && filters.color.includes(color);
+                return (
+                  <Checkbox
+                    key={index}
+                    checked={isSelected}
+                    onChange={(e) =>
+                      handleMultiSelectFilterChange(
+                        "color",
+                        color,
+                        e.target.checked
+                      )
+                    }
+                  >
+                    {color}
+                  </Checkbox>
+                );
+              })
+            ) : (
+              <span style={{ fontSize: "14px", color: "#999" }}>
+                No colors available
+              </span>
+            )}
+          </div>
         )}
       </div>
 
       {/* Availability */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("availability")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("availability")}
+        >
           <h4>AVAILABILITY</h4>
           {expandedFilters.availability ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.availability && (
-        <div className="checkbox-group">
-          <Checkbox
+          <div className="checkbox-group">
+            <Checkbox
               checked={filters.availability === "in_stock"}
-            onChange={(e) =>
-                handleFilterChange("availability", e.target.checked ? "in_stock" : "")
-            }
-          >
+              onChange={(e) =>
+                handleFilterChange(
+                  "availability",
+                  e.target.checked ? "in_stock" : ""
+                )
+              }
+            >
               In Stock
-          </Checkbox>
-          <Checkbox
+            </Checkbox>
+            <Checkbox
               checked={filters.availability === "out_of_stock"}
-            onChange={(e) =>
-                handleFilterChange("availability", e.target.checked ? "out_of_stock" : "")
-            }
-          >
+              onChange={(e) =>
+                handleFilterChange(
+                  "availability",
+                  e.target.checked ? "out_of_stock" : ""
+                )
+              }
+            >
               Out of Stock
-          </Checkbox>
+            </Checkbox>
           </div>
         )}
       </div>
 
       {/* Order Type */}
       <div className="filter-section">
-        <div className="filter-section-header" onClick={() => toggleFilterSection("orderType")}>
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("orderType")}
+        >
           <h4>ORDER TYPE</h4>
           {expandedFilters.orderType ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.orderType && (
           <div className="checkbox-group">
-          <Checkbox
+            <Checkbox
               checked={filters.orderType === "made_to_order"}
               onChange={(e) =>
-                handleFilterChange("orderType", e.target.checked ? "made_to_order" : "")
+                handleFilterChange(
+                  "orderType",
+                  e.target.checked ? "made_to_order" : ""
+                )
               }
             >
               Made to Order
@@ -1037,12 +1187,15 @@ const ProductsPage = () => {
             <Checkbox
               checked={filters.orderType === "ready_to_ship"}
               onChange={(e) =>
-                handleFilterChange("orderType", e.target.checked ? "ready_to_ship" : "")
+                handleFilterChange(
+                  "orderType",
+                  e.target.checked ? "ready_to_ship" : ""
+                )
               }
-          >
+            >
               Ready to Ship
-          </Checkbox>
-        </div>
+            </Checkbox>
+          </div>
         )}
       </div>
     </>
@@ -1054,11 +1207,11 @@ const ProductsPage = () => {
     if (filters.search) count++;
     if (filters.category) count++;
     if (filters.subcategory) count++;
-    if (filters.gender) count++;
+    if (Array.isArray(filters.gender) && filters.gender.length > 0) count++;
     if (filters.minPrice || filters.maxPrice) count++;
-    if (filters.size) count++;
-    if (filters.color) count++;
-    if (filters.brand) count++;
+    if (Array.isArray(filters.size) && filters.size.length > 0) count++;
+    if (Array.isArray(filters.color) && filters.color.length > 0) count++;
+    if (Array.isArray(filters.brand) && filters.brand.length > 0) count++;
     if (filters.availability) count++;
     if (filters.orderType) count++;
     if (filters.isNewArrival) count++;
@@ -1170,13 +1323,13 @@ const ProductsPage = () => {
             <div className="page-title-section">
               <h1 className="page-title">Products</h1>
               <p className="page-subtitle">{pagination.total} Items</p>
-              </div>
+            </div>
 
             {/* Search Bar - Mobile Only (above controls) */}
             <div className="search-section-mobile" ref={searchRef}>
               <Input
                 size="middle"
-                prefix={<SearchOutlined style={{ color: '#333' }} />}
+                prefix={<SearchOutlined style={{ color: "#333" }} />}
                 placeholder="Search for products..."
                 value={searchInput}
                 onChange={(e) => {
@@ -1202,28 +1355,38 @@ const ProductsPage = () => {
                 }}
                 className="products-search-input"
               />
-              
+
               {/* Autocomplete Dropdown */}
               {showSuggestions && searchInput.trim() && (
                 <div className="search-suggestions-dropdown">
                   {suggestionsLoading ? (
                     <div className="search-suggestion-item">
-                      <Spin size="small" /> <span style={{ marginLeft: '8px' }}>Searching...</span>
+                      <Spin size="small" />{" "}
+                      <span style={{ marginLeft: "8px" }}>Searching...</span>
                     </div>
                   ) : searchSuggestions.length > 0 ? (
                     <ul className="search-suggestions-list">
                       {searchSuggestions.map((suggestion) => {
-                        const discountedPrice = suggestion.basePricing - (suggestion.basePricing * (suggestion.discount || 0)) / 100;
-                        const coverImage = Array.isArray(suggestion.coverImage) && suggestion.coverImage.length > 0
-                          ? suggestion.coverImage[0]
-                          : suggestion.coverImage || "";
-                        
+                        const discountedPrice =
+                          suggestion.basePricing -
+                          (suggestion.basePricing *
+                            (suggestion.discount || 0)) /
+                            100;
+                        const coverImage =
+                          Array.isArray(suggestion.coverImage) &&
+                          suggestion.coverImage.length > 0
+                            ? suggestion.coverImage[0]
+                            : suggestion.coverImage || "";
+
                         return (
                           <li
                             key={suggestion._id}
                             onClick={() => {
                               setSearchInput(suggestion.productName);
-                              handleFilterChange("search", suggestion.productName);
+                              handleFilterChange(
+                                "search",
+                                suggestion.productName
+                              );
                               setShowSuggestions(false);
                             }}
                             className="search-suggestion-item"
@@ -1256,7 +1419,9 @@ const ProductsPage = () => {
                               </div>
                               <p className="search-suggestion-meta">
                                 {suggestion.category?.name || ""}
-                                {suggestion.category?.name && suggestion.vendorId?.brandName && " • "}
+                                {suggestion.category?.name &&
+                                  suggestion.vendorId?.brandName &&
+                                  " • "}
                                 {suggestion.vendorId?.brandName || ""}
                               </p>
                             </div>
@@ -1273,13 +1438,13 @@ const ProductsPage = () => {
               )}
             </div>
 
-              {/* Products Header - Controls Bar */}
+            {/* Products Header - Controls Bar */}
             <div className="products-header">
               {/* Search Bar - Desktop (in grid) */}
               <div className="search-section-desktop" ref={searchDesktopRef}>
                 <Input
                   size="middle"
-                  prefix={<SearchOutlined style={{ color: '#333' }} />}
+                  prefix={<SearchOutlined style={{ color: "#333" }} />}
                   placeholder="Search for products..."
                   value={searchInput}
                   onChange={(e) => {
@@ -1305,28 +1470,38 @@ const ProductsPage = () => {
                   }}
                   className="products-search-input"
                 />
-                
+
                 {/* Autocomplete Dropdown */}
                 {showSuggestions && searchInput.trim() && (
                   <div className="search-suggestions-dropdown">
                     {suggestionsLoading ? (
                       <div className="search-suggestion-item">
-                        <Spin size="small" /> <span style={{ marginLeft: '8px' }}>Searching...</span>
+                        <Spin size="small" />{" "}
+                        <span style={{ marginLeft: "8px" }}>Searching...</span>
                       </div>
                     ) : searchSuggestions.length > 0 ? (
                       <ul className="search-suggestions-list">
                         {searchSuggestions.map((suggestion) => {
-                          const discountedPrice = suggestion.basePricing - (suggestion.basePricing * (suggestion.discount || 0)) / 100;
-                          const coverImage = Array.isArray(suggestion.coverImage) && suggestion.coverImage.length > 0
-                            ? suggestion.coverImage[0]
-                            : suggestion.coverImage || "";
-                          
+                          const discountedPrice =
+                            suggestion.basePricing -
+                            (suggestion.basePricing *
+                              (suggestion.discount || 0)) /
+                              100;
+                          const coverImage =
+                            Array.isArray(suggestion.coverImage) &&
+                            suggestion.coverImage.length > 0
+                              ? suggestion.coverImage[0]
+                              : suggestion.coverImage || "";
+
                           return (
                             <li
                               key={suggestion._id}
                               onClick={() => {
                                 setSearchInput(suggestion.productName);
-                                handleFilterChange("search", suggestion.productName);
+                                handleFilterChange(
+                                  "search",
+                                  suggestion.productName
+                                );
                                 setShowSuggestions(false);
                               }}
                               className="search-suggestion-item"
@@ -1359,7 +1534,9 @@ const ProductsPage = () => {
                                 </div>
                                 <p className="search-suggestion-meta">
                                   {suggestion.category?.name || ""}
-                                  {suggestion.category?.name && suggestion.vendorId?.brandName && " • "}
+                                  {suggestion.category?.name &&
+                                    suggestion.vendorId?.brandName &&
+                                    " • "}
                                   {suggestion.vendorId?.brandName || ""}
                                 </p>
                               </div>
@@ -1377,18 +1554,21 @@ const ProductsPage = () => {
               </div>
               {/* Filters Button with Badge */}
               <div className="filters-button-wrapper">
-                  <Button
+                <Button
                   type="text"
-                    icon={<FilterOutlined />}
-                    onClick={() => setFilterDrawerVisible(true)}
+                  icon={<FilterOutlined />}
+                  onClick={() => setFilterDrawerVisible(true)}
                   className="filters-button"
-                  >
-                    Filters
+                >
+                  Filters
                   {getActiveFilterCount() > 0 && (
-                    <Badge count={getActiveFilterCount()} className="filter-badge" />
+                    <Badge
+                      count={getActiveFilterCount()}
+                      className="filter-badge"
+                    />
                   )}
-                  </Button>
-                </div>
+                </Button>
+              </div>
 
               {/* Sort Dropdown */}
               <div className="sort-wrapper">
@@ -1397,36 +1577,60 @@ const ProductsPage = () => {
                     overlay={
                       <Menu
                         selectedKeys={[
-                          filters.sortBy === "most_popular" || filters.sortBy === "popular"
+                          filters.sortBy === "most_popular" ||
+                          filters.sortBy === "popular"
                             ? "most_popular-desc"
-                            : filters.sortBy === "createdAt" && filters.sortOrder === "asc"
+                            : filters.sortBy === "createdAt" &&
+                              filters.sortOrder === "asc"
                             ? "createdAt-desc"
-                            : `${filters.sortBy}-${filters.sortOrder}`
+                            : `${filters.sortBy}-${filters.sortOrder}`,
                         ]}
                         onClick={({ key }) => {
                           const [sortBy, sortOrder] = key.split("-");
-                          const newFilters = { ...filters, sortBy, sortOrder, page: 1 };
+                          const newFilters = {
+                            ...filters,
+                            sortBy,
+                            sortOrder,
+                            page: 1,
+                          };
                           setFilters(newFilters);
                           updateURL(newFilters);
                           setProducts([]);
                           if (fetchProductsRef.current) {
-                            fetchProductsRef.current(newFilters, priceRangeRef.current);
+                            fetchProductsRef.current(
+                              newFilters,
+                              priceRangeRef.current
+                            );
                           }
                         }}
                       >
-                        <Menu.Item key="most_popular-desc">Most Popular</Menu.Item>
-                        <Menu.Item key="basePricing-asc">Price: Low to High</Menu.Item>
-                        <Menu.Item key="basePricing-desc">Price: High to Low</Menu.Item>
-                        <Menu.Item key="productName-asc">Name: A to Z</Menu.Item>
-                        <Menu.Item key="productName-desc">Name: Z to A</Menu.Item>
+                        <Menu.Item key="most_popular-desc">
+                          Most Popular
+                        </Menu.Item>
+                        <Menu.Item key="basePricing-asc">
+                          Price: Low to High
+                        </Menu.Item>
+                        <Menu.Item key="basePricing-desc">
+                          Price: High to Low
+                        </Menu.Item>
+                        <Menu.Item key="productName-asc">
+                          Name: A to Z
+                        </Menu.Item>
+                        <Menu.Item key="productName-desc">
+                          Name: Z to A
+                        </Menu.Item>
                         <Menu.Item key="createdAt-desc">Newest First</Menu.Item>
                       </Menu>
                     }
-                    trigger={['click']}
+                    trigger={["click"]}
                     placement="bottomLeft"
                   >
-                    <span className="sort-label" style={{ cursor: 'pointer' }}>
-                      Sort <span className="sort-arrows"><UpOutlined /><DownOutlined /></span>
+                    <span className="sort-label" style={{ cursor: "pointer" }}>
+                      Sort{" "}
+                      <span className="sort-arrows">
+                        <UpOutlined />
+                        <DownOutlined />
+                      </span>
                     </span>
                   </Dropdown>
                 ) : (
@@ -1436,27 +1640,41 @@ const ProductsPage = () => {
                       ref={sortSelectRef}
                       size="middle"
                       value={
-                        (filters.sortBy === "most_popular" || filters.sortBy === "popular")
+                        filters.sortBy === "most_popular" ||
+                        filters.sortBy === "popular"
                           ? "most_popular-desc"
-                          : (filters.sortBy === "createdAt" && filters.sortOrder === "asc")
+                          : filters.sortBy === "createdAt" &&
+                            filters.sortOrder === "asc"
                           ? "createdAt-desc"
                           : `${filters.sortBy}-${filters.sortOrder}`
                       }
                       onChange={(value) => {
                         const [sortBy, sortOrder] = value.split("-");
-                        const newFilters = { ...filters, sortBy, sortOrder, page: 1 };
+                        const newFilters = {
+                          ...filters,
+                          sortBy,
+                          sortOrder,
+                          page: 1,
+                        };
                         setFilters(newFilters);
                         updateURL(newFilters);
                         setProducts([]);
                         if (fetchProductsRef.current) {
-                          fetchProductsRef.current(newFilters, priceRangeRef.current);
+                          fetchProductsRef.current(
+                            newFilters,
+                            priceRangeRef.current
+                          );
                         }
                       }}
                       className="sort-select"
                     >
                       <Option value="most_popular-desc">Most Popular</Option>
-                      <Option value="basePricing-asc">Price: Low to High</Option>
-                      <Option value="basePricing-desc">Price: High to Low</Option>
+                      <Option value="basePricing-asc">
+                        Price: Low to High
+                      </Option>
+                      <Option value="basePricing-desc">
+                        Price: High to Low
+                      </Option>
                       <Option value="productName-asc">Name: A to Z</Option>
                       <Option value="productName-desc">Name: Z to A</Option>
                       <Option value="createdAt-desc">Newest First</Option>
@@ -1470,14 +1688,18 @@ const ProductsPage = () => {
                 {/* Desktop Grid Controls */}
                 <div className="grid-layout-desktop">
                   <button
-                    className={`grid-layout-btn ${gridLayout.desktop === 3 ? 'active' : ''}`}
+                    className={`grid-layout-btn ${
+                      gridLayout.desktop === 3 ? "active" : ""
+                    }`}
                     onClick={() => setGridLayout({ ...gridLayout, desktop: 3 })}
                     title="3 per row"
                   >
                     <GridIcon columns={3} />
                   </button>
                   <button
-                    className={`grid-layout-btn ${gridLayout.desktop === 4 ? 'active' : ''}`}
+                    className={`grid-layout-btn ${
+                      gridLayout.desktop === 4 ? "active" : ""
+                    }`}
                     onClick={() => setGridLayout({ ...gridLayout, desktop: 4 })}
                     title="4 per row"
                   >
@@ -1487,14 +1709,18 @@ const ProductsPage = () => {
                 {/* Tablet Grid Controls */}
                 <div className="grid-layout-tablet">
                   <button
-                    className={`grid-layout-btn ${gridLayout.tablet === 2 ? 'active' : ''}`}
+                    className={`grid-layout-btn ${
+                      gridLayout.tablet === 2 ? "active" : ""
+                    }`}
                     onClick={() => setGridLayout({ ...gridLayout, tablet: 2 })}
                     title="2 per row"
                   >
                     <GridIcon columns={2} />
                   </button>
                   <button
-                    className={`grid-layout-btn ${gridLayout.tablet === 3 ? 'active' : ''}`}
+                    className={`grid-layout-btn ${
+                      gridLayout.tablet === 3 ? "active" : ""
+                    }`}
                     onClick={() => setGridLayout({ ...gridLayout, tablet: 3 })}
                     title="3 per row"
                   >
@@ -1504,14 +1730,18 @@ const ProductsPage = () => {
                 {/* Mobile Grid Controls */}
                 <div className="grid-layout-mobile">
                   <button
-                    className={`grid-layout-btn ${gridLayout.mobile === 1 ? 'active' : ''}`}
+                    className={`grid-layout-btn ${
+                      gridLayout.mobile === 1 ? "active" : ""
+                    }`}
                     onClick={() => setGridLayout({ ...gridLayout, mobile: 1 })}
                     title="1 per row"
                   >
                     <GridIcon columns={1} />
                   </button>
                   <button
-                    className={`grid-layout-btn ${gridLayout.mobile === 2 ? 'active' : ''}`}
+                    className={`grid-layout-btn ${
+                      gridLayout.mobile === 2 ? "active" : ""
+                    }`}
                     onClick={() => setGridLayout({ ...gridLayout, mobile: 2 })}
                     title="2 per row"
                   >
@@ -1526,7 +1756,7 @@ const ProductsPage = () => {
               renderSkeletonProducts()
             ) : products.length > 0 ? (
               <>
-                <div 
+                <div
                   className="products-grid"
                   data-grid-mobile={gridLayout.mobile}
                   data-grid-tablet={gridLayout.tablet}
@@ -1536,7 +1766,7 @@ const ProductsPage = () => {
                     // Use first product from products array if available, otherwise use the main product
                     // Merge main product data with first variant to ensure all fields are available
                     let displayProduct = product;
-                    
+
                     if (product.products && product.products.length > 0) {
                       const firstVariant = product.products[0];
                       // Merge variant data with main product data (variant takes precedence for size/color/image)
@@ -1558,13 +1788,13 @@ const ProductsPage = () => {
                         updatedAt: product.updatedAt,
                       };
                     }
-                    
+
                     return (
-                    <ProductCard
+                      <ProductCard
                         key={displayProduct._id || product._id}
                         product={displayProduct}
-                      showViewProduct={true}
-                    />
+                        showViewProduct={true}
+                      />
                     );
                   })}
                 </div>
