@@ -1,5 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { HeartOutlined, HeartFilled, EyeOutlined, ThunderboltFilled, ClockCircleFilled, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import {
+  HeartOutlined,
+  HeartFilled,
+  EyeOutlined,
+  ThunderboltFilled,
+  ClockCircleFilled,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
@@ -35,6 +43,38 @@ export default function ProductCard({
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
   const autoPlayRef = useRef(null);
+  const imageRef = useRef(null);
+  const allImagesRef = useRef([]);
+
+  // Helper function to normalize images (handle both string and array)
+  const normalizeImages = (images) => {
+    if (!images) return [];
+    if (typeof images === "string") return [images];
+    if (Array.isArray(images)) return images;
+    return [];
+  };
+
+  // Memoize image arrays to prevent recreation on every render
+  const coverImages = useMemo(
+    () => normalizeImages(product?.coverImage),
+    [product?.coverImage]
+  );
+  const otherImages = useMemo(
+    () => normalizeImages(product?.otherImages),
+    [product?.otherImages]
+  );
+
+  // Combine all images for the slider - memoized to ensure stable reference
+  const allImages = useMemo(
+    () => [...coverImages, ...otherImages],
+    [coverImages, otherImages]
+  );
+  const firstCoverImage = useMemo(() => coverImages[0] || "", [coverImages]);
+
+  // Keep ref updated with latest images
+  useEffect(() => {
+    allImagesRef.current = allImages;
+  }, [allImages]);
 
   // Detect mobile screen size
   useEffect(() => {
@@ -45,6 +85,37 @@ export default function ProductCard({
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  // Reset image index when product images change
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [product?._id]);
+
+  // Ensure currentImageIndex is always valid
+  useEffect(() => {
+    if (currentImageIndex >= allImages.length && allImages.length > 0) {
+      setCurrentImageIndex(0);
+    }
+  }, [currentImageIndex, allImages.length]);
+
+  // Update displayed image when index or hover state changes - using direct ref update for immediate effect
+  useEffect(() => {
+    if (imageRef.current) {
+      let targetSrc;
+
+      if ((isHovered || isMobile) && allImages.length > 1) {
+        targetSrc = allImages[currentImageIndex] || firstCoverImage;
+      } else {
+        targetSrc = firstCoverImage;
+      }
+
+      // Only update if the src has actually changed (compare the path, not full URL)
+      const currentSrc = imageRef.current.getAttribute("src");
+      if (currentSrc !== targetSrc && targetSrc) {
+        imageRef.current.src = targetSrc;
+      }
+    }
+  }, [currentImageIndex, isHovered, isMobile, allImages, firstCoverImage]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -98,23 +169,23 @@ export default function ProductCard({
     if (!deviceId) return;
 
     try {
-    if (isInWishlist) {
+      if (isInWishlist) {
         // Remove from wishlist if already in wishlist
         const response = await wishlistApi.removeFromWishlist(product._id);
         if (response.success) {
           refreshWishlist();
-    }
+        }
       } else {
         // Add to wishlist if not in wishlist
-      const response = await wishlistApi.addToWishlist({
-        deviceId,
-        productId: product._id,
-      });
+        const response = await wishlistApi.addToWishlist({
+          deviceId,
+          productId: product._id,
+        });
 
-      if (response.success) {
-        // Trigger wishlist drawer to open
-        triggerWishlistDrawer();
-        refreshWishlist();
+        if (response.success) {
+          // Trigger wishlist drawer to open
+          triggerWishlistDrawer();
+          refreshWishlist();
         }
       }
     } catch (error) {
@@ -130,48 +201,40 @@ export default function ProductCard({
     }
   };
 
-  // Helper function to normalize images (handle both string and array)
-  const normalizeImages = (images) => {
-    if (!images) return [];
-    if (typeof images === 'string') return [images];
-    if (Array.isArray(images)) return images;
-    return [];
-  };
-
-  const coverImages = normalizeImages(product?.coverImage);
-  const otherImages = normalizeImages(product?.otherImages);
-  
-  // Combine all images for the slider
-  const allImages = [...coverImages, ...otherImages];
-  const firstCoverImage = coverImages[0] || "";
-  
   // Navigate to next image
   const goToNextImage = () => {
-    setCurrentImageIndex((prevIndex) => 
+    setCurrentImageIndex((prevIndex) =>
       prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
     );
   };
-  
+
   // Navigate to previous image
   const goToPrevImage = () => {
-    setCurrentImageIndex((prevIndex) => 
+    setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
     );
   };
-  
+
   // Navigate to specific image
   const goToImage = (index) => {
     setCurrentImageIndex(index);
   };
-  
+
   // Handle mouse enter to start hovering and auto-play
   const handleMouseEnter = () => {
     if (allImages.length > 1) {
       setIsHovered(true);
-      setCurrentImageIndex(0);
+      // Show second image immediately on hover
+      setCurrentImageIndex(1);
+
+      // Preload all images for smooth transitions
+      allImages.forEach((imgSrc) => {
+        const img = new Image();
+        img.src = imgSrc;
+      });
     }
   };
-  
+
   // Handle mouse leave to stop hovering and auto-play
   const handleMouseLeave = () => {
     setIsHovered(false);
@@ -181,17 +244,25 @@ export default function ProductCard({
       autoPlayRef.current = null;
     }
   };
-  
-  // Auto-play effect - slide every 1 second when hovering (desktop only)
+
+  // Auto-play effect - slide every 1.5 seconds when hovering (desktop only)
   useEffect(() => {
+    // Clear any existing interval first to prevent multiple intervals
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+
+    // Only start auto-play if hovering, has multiple images, and not on mobile
     if (isHovered && allImages.length > 1 && !isMobile) {
       autoPlayRef.current = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => 
-          prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
-        );
-      }, 1000);
+        setCurrentImageIndex((prevIndex) => {
+          const images = allImagesRef.current;
+          return prevIndex === images.length - 1 ? 0 : prevIndex + 1;
+        });
+      }, 1500);
     }
-    
+
     return () => {
       if (autoPlayRef.current) {
         clearInterval(autoPlayRef.current);
@@ -205,20 +276,20 @@ export default function ProductCard({
   return (
     <>
       <div className={`product-card ${className}`}>
-        <div 
+        <div
           className="product-card-image-container"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           <img
-            src={(isHovered || isMobile) && allImages.length > 1 ? allImages[currentImageIndex] : firstCoverImage}
+            ref={imageRef}
+            src={firstCoverImage}
             alt={product.productName}
             className="product-card-image"
-            loading="lazy"
+            loading={!isHovered ? "lazy" : "eager"}
             onError={(e) => {
               e.target.style.display = "none";
               e.target.nextSibling.style.display = "flex";
-             
             }}
             onClick={handleViewProduct}
           />
@@ -227,7 +298,7 @@ export default function ProductCard({
             <div className="product-card-fallback-icon">👕</div>
             <p>Image not available</p>
           </div>
-          
+
           {/* Left Arrow - Show on hover (desktop) or always (mobile) if there are multiple images */}
           {(isHovered || isMobile) && allImages.length > 1 && (
             <button
@@ -240,7 +311,7 @@ export default function ProductCard({
               <LeftOutlined />
             </button>
           )}
-          
+
           {/* Right Arrow - Show on hover (desktop) or always (mobile) if there are multiple images */}
           {(isHovered || isMobile) && allImages.length > 1 && (
             <button
@@ -252,23 +323,6 @@ export default function ProductCard({
             >
               <RightOutlined />
             </button>
-          )}
-          
-          {/* Image Slider Dots - Show on hover (desktop) or always (mobile) if there are multiple images */}
-          {(isHovered || isMobile) && allImages.length > 1 && (
-            <div className="product-card-image-dots">
-              {allImages.map((_, index) => (
-                <button
-                  key={index}
-                  className={`product-card-dot ${index === currentImageIndex ? 'active' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goToImage(index);
-                  }}
-                  onMouseEnter={() => !isMobile && goToImage(index)}
-                />
-              ))}
-            </div>
           )}
 
           {/* Order Type Tag - Ready to Ship */}
@@ -295,7 +349,7 @@ export default function ProductCard({
                 <HeartOutlined />
               )}
             </button>
-          {showQuickView && (
+            {showQuickView && (
               <button
                 className="product-card-quick-view-btn-image"
                 onClick={(e) => handleQuickView(e)}
@@ -303,36 +357,37 @@ export default function ProductCard({
                 <EyeOutlined />
               </button>
             )}
-            </div>
+          </div>
         </div>
 
         <div className="product-card-content" onClick={handleViewProduct}>
           <div className="product-card-info">
             {product.vendorId?.name && (
-              <h3 className="product-card-brandname">{product.vendorId.name}</h3>
+              <h3 className="product-card-brandname">
+                {product.vendorId.name}
+              </h3>
             )}
             <div className="product-card-header">
-              
-              <Tooltip 
-                title={product.productName} 
+              <Tooltip
+                title={product.productName}
                 placement="top"
-                overlayInnerStyle={{ 
-                  fontSize: '10px',
-                  fontFamily: 'var(--fira-sans)',
-                  padding: '4px 8px',
-                  height: 'auto'
+                overlayInnerStyle={{
+                  fontSize: "10px",
+                  fontFamily: "var(--fira-sans)",
+                  padding: "4px 8px",
+                  height: "auto",
                 }}
               >
-              <h3 className="product-card-name">{product.productName}</h3>
+                <h3 className="product-card-name">{product.productName}</h3>
               </Tooltip>
               {showAddToCart && (
-              <button
+                <button
                   className="product-card-cart-btn"
                   onClick={(e) => handleAddToCart(e)}
-              >
-                  <img 
-                    src="/shopping-cart.svg" 
-                    alt="Add to cart" 
+                >
+                  <img
+                    src="/shopping-cart.svg"
+                    alt="Add to cart"
                     className="product-card-cart-icon"
                   />
                 </button>
@@ -362,7 +417,6 @@ export default function ProductCard({
                 </span>
               )}
             </div>
-
           </div>
         </div>
       </div>
@@ -373,23 +427,26 @@ export default function ProductCard({
           className="product-card-modal"
           onClick={() => setShowQuickViewModal(false)}
         >
-          <div className="product-card-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="product-card-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               className="product-card-modal-close"
               onClick={() => setShowQuickViewModal(false)}
             >
               ✕
             </button>
-            
+
             <div className="product-card-modal-wrapper">
               {/* Image Section - LEFT with Gradient */}
               <div className="product-card-modal-image-section">
-            <img
-              src={firstCoverImage}
-              alt={product.productName}
-              className="product-card-modal-image"
-            />
-                
+                <img
+                  src={firstCoverImage}
+                  alt={product.productName}
+                  className="product-card-modal-image"
+                />
+
                 {/* Image Carousel Dots */}
                 {coverImages.length > 1 && (
                   <div className="product-card-modal-carousel-dots">
@@ -398,57 +455,68 @@ export default function ProductCard({
                         key={index}
                         src={image}
                         alt={`${product.productName} ${index + 1}`}
-                        className={`carousel-dot ${index === 0 ? 'active' : ''}`}
+                        className={`carousel-dot ${
+                          index === 0 ? "active" : ""
+                        }`}
                         onClick={() => {
-                          const mainImage = document.querySelector('.product-card-modal-image');
+                          const mainImage = document.querySelector(
+                            ".product-card-modal-image"
+                          );
                           if (mainImage) mainImage.src = image;
                           // Update active dot
-                          document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-                            dot.classList.toggle('active', i === index);
-                          });
+                          document
+                            .querySelectorAll(".carousel-dot")
+                            .forEach((dot, i) => {
+                              dot.classList.toggle("active", i === index);
+                            });
                         }}
                       />
                     ))}
                   </div>
                 )}
               </div>
-              
+
               {/* Product Details - RIGHT (White Background) */}
               <div className="product-card-modal-details-white">
                 <h2>{product.productName}</h2>
-                
+
                 {/* Price and Rating */}
                 <div className="product-card-modal-price-rating">
                   <div className="product-card-modal-price">
                     {product.discount > 0 ? (
                       <>
                         <span className="discounted-price">
-                          {formatPrice(calculateFinalPrice(product.basePricing, product.discount))}
+                          {formatPrice(
+                            calculateFinalPrice(
+                              product.basePricing,
+                              product.discount
+                            )
+                          )}
                         </span>
-                        <span className="original-price">{formatPrice(product.basePricing)}</span>
+                        <span className="original-price">
+                          {formatPrice(product.basePricing)}
+                        </span>
                       </>
                     ) : (
-                      <span className="final-price">{formatPrice(product.basePricing)}</span>
+                      <span className="final-price">
+                        {formatPrice(product.basePricing)}
+                      </span>
                     )}
                   </div>
-                  
+
                   {/* Star Rating */}
-                 
                 </div>
-                
+
                 {/* Description */}
                 {product.productDescription && (
-                  <p className="product-card-modal-description-white">{product.productDescription}</p>
+                  <p className="product-card-modal-description-white">
+                    {product.productDescription}
+                  </p>
                 )}
-                
-               
-                
-              
-               
-                
+
                 {/* Action Buttons */}
                 <div className="product-card-modal-actions-white">
-                  <button 
+                  <button
                     className="product-card-modal-add-to-cart-outline"
                     onClick={() => {
                       handleAddToCart({ stopPropagation: () => {} });
@@ -457,16 +525,20 @@ export default function ProductCard({
                   >
                     Add to Cart
                   </button>
-                  <button 
+                  <button
                     className="product-card-modal-wishlist-icon-btn"
                     onClick={(e) => {
                       handleAddToWishlist(e);
                       setShowQuickViewModal(false);
                     }}
-                    title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                    title={
+                      isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+                    }
                   >
                     {isInWishlist ? (
-                      <HeartFilled style={{ color: "#dc2626", fontSize: "24px" }} />
+                      <HeartFilled
+                        style={{ color: "#dc2626", fontSize: "24px" }}
+                      />
                     ) : (
                       <HeartOutlined style={{ fontSize: "24px" }} />
                     )}
