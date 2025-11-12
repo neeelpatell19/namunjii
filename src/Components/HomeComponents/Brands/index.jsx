@@ -87,17 +87,15 @@ export default function Brands({ HomeData }) {
             </div>
           </div>
         )}
-        <div className="brand-footer">
-          <Link
-            to={`/products?brand=${encodeURIComponent(brand.brandName)}`}
-            className="brand-shop-now-btn"
-          >
-            Shop Now
-          </Link>
+        <Link
+          to={`/products?brand=${encodeURIComponent(brand.brandName)}`}
+          className="brand-footer"
+        >
+          <span className="brand-shop-now-btn">Shop Now</span>
           <span className="brand-shop-arrow">
             <img src="/icons/Arrow.svg" alt="arrow" />
           </span>
-        </div>
+        </Link>
       </div>
     );
   };
@@ -154,9 +152,7 @@ export default function Brands({ HomeData }) {
           className="brands-swiper"
         >
           {brands.map((brand) => (
-            <SwiperSlide key={brand._id}>
-              {renderBrandCard(brand)}
-            </SwiperSlide>
+            <SwiperSlide key={brand._id}>{renderBrandCard(brand)}</SwiperSlide>
           ))}
         </Swiper>
       </div>
