@@ -733,9 +733,7 @@ const Header = () => {
                               {womenCategories.map((cat) => (
                                 <li key={cat._id}>
                                   <Link
-                                    to={`/products?gender=Women&category=${encodeURIComponent(
-                                      cat.name
-                                    )}`}
+                                    to={`/products?gender=Women&category=${cat._id}`}
                                     className="MegaMenuLink"
                                     onClick={() => {
                                       setShowWomenMegaMenu(false);
@@ -788,9 +786,7 @@ const Header = () => {
                               {menCategories.map((cat) => (
                                 <li key={cat._id}>
                                   <Link
-                                    to={`/products?gender=Men&category=${encodeURIComponent(
-                                      cat.name
-                                    )}`}
+                                    to={`/products?gender=Men&category=${cat._id}`}
                                     className="MegaMenuLink"
                                     onClick={() => {
                                       setShowMenMegaMenu(false);
