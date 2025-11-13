@@ -247,7 +247,7 @@ function App() {
                   <div
                     style={{
                       width: "100vw",
-                      overflowX: "hidden",
+                      // overflowX: "hidden",
                       paddingTop: lg ? "120px" : "60px",
                     }}
                   >
