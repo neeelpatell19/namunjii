@@ -242,7 +242,7 @@ export default function ProductCard({
       // Transition to second image after 500ms
       setTimeout(() => {
         setCurrentImageIndex(1);
-      }, 500);
+      }, 100);
     }
   };
 
