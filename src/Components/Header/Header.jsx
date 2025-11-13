@@ -181,6 +181,44 @@ const Header = () => {
     },
   ];
 
+  // Function to check if a category is active
+  const isCategoryActive = (category) => {
+    const currentPath = location.pathname;
+    const searchParams = new URLSearchParams(location.search);
+
+    // For About Us page
+    if (category.path === "/about-us") {
+      return currentPath === "/about-us";
+    }
+
+    // For Join Us page
+    if (category.path === "/vendor-verification") {
+      return currentPath === "/vendor-verification";
+    }
+
+    // For products pages with query parameters
+    if (currentPath === "/products") {
+      // Men tab
+      if (category.name === "Men") {
+        return searchParams.get("gender") === "Men";
+      }
+      // Women tab
+      if (category.name === "Women") {
+        return searchParams.get("gender") === "Women";
+      }
+      // Accessories tab
+      if (category.name === "Accessories") {
+        return searchParams.get("productType") === "accessory";
+      }
+      // Namunjii Exclusive tab
+      if (category.name === "Namunjii Exclusive") {
+        return searchParams.get("isNamunjiiExclusive") === "true";
+      }
+    }
+
+    return false;
+  };
+
   // Fetch cart and wishlist counts
   const fetchCounts = useCallback(async () => {
     if (!deviceId) return;
@@ -630,7 +668,9 @@ const Header = () => {
                       to={category.path}
                       className={`CategoryLink ${
                         category.isSpecial ? "special" : ""
-                      } ${category.isJoinUs ? "join-us" : ""}`}
+                      } ${category.isJoinUs ? "join-us" : ""} ${
+                        isCategoryActive(category) ? "active" : ""
+                      }`}
                       onClick={() => {
                         setMobileMenuOpen(false);
                         setShowWomenMegaMenu(false);

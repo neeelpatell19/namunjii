@@ -12,7 +12,7 @@
 /* Main Navigation Bar */
 .MainNavBar {
   background: var(--bg-white);
-  padding: 16px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--neutral-950);
   width: 100%;
 }
@@ -390,7 +390,7 @@
 /* Secondary Navigation Bar */
 .CategoryNavBar {
   background: #fff;
-  padding: 12px 0;
+  padding: 12px 0 8px 0;
   position: relative;
   z-index: 1000;
   overflow: visible;
@@ -398,6 +398,7 @@
 
 .CategoryNavBar .Container {
   position: relative;
+  overflow: visible;
 }
 
 .CategoryLinks {
@@ -405,11 +406,13 @@
   gap: 40px;
   align-items: center;
   position: relative;
+  overflow: visible;
 }
 
 .CategoryItem {
-  position: static;
+  position: relative;
   z-index: 1;
+  overflow: visible;
 }
 
 /* Mega Menu Styles */
@@ -590,6 +593,8 @@
   letter-spacing: 0.5px;
   transition: color 0.3s ease;
   font-family: var(--Poppins-font);
+  position: relative;
+  padding-bottom: 4px;
 }
 
 .CategoryLink:hover {
@@ -603,6 +608,65 @@
 
 .CategoryLink.special:hover {
   color: #E40E0B;
+}
+
+/* Active tab styling */
+.CategoryLink.active {
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
+.CategoryLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background-color: var(--brand-primary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.CategoryLink.special.active {
+  color: #E40E0B;
+}
+
+.CategoryLink.special.active::after {
+  background-color: #E40E0B;
+}
+
+/* Hover effect for all links */
+.CategoryLink:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background-color: var(--brand-500);
+  border-radius: 2px;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.CategoryLink.special:hover::after {
+  background-color: #E40E0B;
+  opacity: 0.5;
+}
+
+/* Active state should override hover */
+.CategoryLink.active:hover::after {
+  width: 80%;
+  height: 3px;
+  opacity: 1;
+  background-color: var(--brand-primary);
+}
+
+.CategoryLink.special.active:hover::after {
+  background-color: #E40E0B;
 }
 
 /* Mobile Menu Styles */
@@ -727,6 +791,18 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+  }
+
+  /* Active state for mobile */
+  .CategoryLink.active::after {
+    bottom: 0;
+    height: 3px;
+    width: 70%;
+  }
+  
+  .CategoryLink:hover::after {
+    bottom: 0;
+    width: 50%;
   }
 
   /* Hide mega menu on tablets and mobile */
