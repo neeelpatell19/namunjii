@@ -75,17 +75,38 @@ const Header = () => {
       { label: "Shop All", link: "/products?gender=Women" },
       { label: "Blouses & Top", link: "/products?gender=Women&category=Tops" },
       { label: "Pants", link: "/products?gender=Women&category=Pants" },
-      { label: "Dresses & Jumpsuits", link: "/products?gender=Women&category=Dresses" },
-      { label: "Outwear & Jackets", link: "/products?gender=Women&category=Outerwear" },
+      {
+        label: "Dresses & Jumpsuits",
+        link: "/products?gender=Women&category=Dresses",
+      },
+      {
+        label: "Outwear & Jackets",
+        link: "/products?gender=Women&category=Outerwear",
+      },
       { label: "Pullovers", link: "/products?gender=Women&category=Pullovers" },
       { label: "Tees", link: "/products?gender=Women&category=Tees" },
-      { label: "Shorts & Skirts", link: "/products?gender=Women&category=Shorts" },
+      {
+        label: "Shorts & Skirts",
+        link: "/products?gender=Women&category=Shorts",
+      },
     ],
     featured: [
-      { label: "Deewan-E-Khaas", link: "/products?gender=Women&brand=Deewan-E-Khaas" },
-      { label: "Kaaya Collective", link: "/products?gender=Women&brand=Kaaya-Collective" },
-      { label: "Pehnava Studio", link: "/products?gender=Women&brand=Pehnava-Studio" },
-      { label: "Vastra By Design", link: "/products?gender=Women&brand=Vastra-By-Design" },
+      {
+        label: "Deewan-E-Khaas",
+        link: "/products?gender=Women&brand=Deewan-E-Khaas",
+      },
+      {
+        label: "Kaaya Collective",
+        link: "/products?gender=Women&brand=Kaaya-Collective",
+      },
+      {
+        label: "Pehnava Studio",
+        link: "/products?gender=Women&brand=Pehnava-Studio",
+      },
+      {
+        label: "Vastra By Design",
+        link: "/products?gender=Women&brand=Vastra-By-Design",
+      },
     ],
   };
 
@@ -99,37 +120,65 @@ const Header = () => {
       { label: "Jackets", link: "/products?gender=Men&category=Jackets" },
       { label: "Sweaters", link: "/products?gender=Men&category=Sweaters" },
       { label: "Shorts", link: "/products?gender=Men&category=Shorts" },
-      { label: "Accessories", link: "/products?gender=Men&category=Accessories" },
-         { label: "Shop All", link: "/products?gender=Men" },
+      {
+        label: "Accessories",
+        link: "/products?gender=Men&category=Accessories",
+      },
+      { label: "Shop All", link: "/products?gender=Men" },
       { label: "Shirts", link: "/products?gender=Men&category=Shirts" },
       { label: "T-Shirts", link: "/products?gender=Men&category=T-Shirts" },
       { label: "Pants", link: "/products?gender=Men&category=Pants" },
       { label: "Jackets", link: "/products?gender=Men&category=Jackets" },
       { label: "Sweaters", link: "/products?gender=Men&category=Sweaters" },
       { label: "Shorts", link: "/products?gender=Men&category=Shorts" },
-      { label: "Accessories", link: "/products?gender=Men&category=Accessories" }
+      {
+        label: "Accessories",
+        link: "/products?gender=Men&category=Accessories",
+      },
     ],
     featured: [
-      { label: "Deewan-E-Khaas", link: "/products?gender=Men&brand=Deewan-E-Khaas" },
-      { label: "Kaaya Collective", link: "/products?gender=Men&brand=Kaaya-Collective" },
-      { label: "Pehnava Studio", link: "/products?gender=Men&brand=Pehnava-Studio" },
-      { label: "Vastra By Design", link: "/products?gender=Men&brand=Vastra-By-Design" },
+      {
+        label: "Deewan-E-Khaas",
+        link: "/products?gender=Men&brand=Deewan-E-Khaas",
+      },
+      {
+        label: "Kaaya Collective",
+        link: "/products?gender=Men&brand=Kaaya-Collective",
+      },
+      {
+        label: "Pehnava Studio",
+        link: "/products?gender=Men&brand=Pehnava-Studio",
+      },
+      {
+        label: "Vastra By Design",
+        link: "/products?gender=Men&brand=Vastra-By-Design",
+      },
     ],
   };
 
   const categories = [
-    { name: "About Us", hasDropdown: false, path: "/about-us" },
-    { name: "Shop All", hasDropdown: false, path: "/products" },
+    // { name: "Shop All", hasDropdown: false, path: "/products" },
     // Dropdown disabled for Men and Women
     { name: "Men", hasDropdown: false, path: "/products?gender=Men" },
     { name: "Women", hasDropdown: false, path: "/products?gender=Women" },
+    {
+      name: "Accessories",
+      hasDropdown: false,
+      path: "/products?productType=accessory",
+    },
     {
       name: "Namunjii Exclusive",
       hasDropdown: false,
       isSpecial: true,
       path: "/products?isNamunjiiExclusive=true",
     },
-    { name: "Join Us", hasDropdown: false, path: "/vendor-verification", isJoinUs: true },
+    { name: "About Us", hasDropdown: false, path: "/about-us" },
+    {
+      name: "Join Us",
+      hasDropdown: false,
+      path: "/vendor-verification",
+      isJoinUs: true,
+    },
   ];
 
   // Fetch cart and wishlist counts
@@ -246,7 +295,7 @@ const Header = () => {
       if (categoryNavBarRef.current) {
         const navBarRect = categoryNavBarRef.current.getBoundingClientRect();
         const topPosition = navBarRect.bottom;
-        
+
         if (womenMegaMenuRef.current) {
           womenMegaMenuRef.current.style.top = `${topPosition}px`;
         }
@@ -566,7 +615,7 @@ const Header = () => {
       </div>
 
       {/* Secondary Navigation Bar */}
-      <div 
+      <div
         ref={categoryNavBarRef}
         className={`CategoryNavBar ${mobileMenuOpen ? "mobile-open" : ""}`}
       >
@@ -575,10 +624,7 @@ const Header = () => {
             <Col>
               <div className="CategoryLinks">
                 {categories.map((category, index) => (
-                  <div
-                    key={index}
-                    className="CategoryItem"
-                  >
+                  <div key={index} className="CategoryItem">
                     {/* Dropdown functionality disabled for Men and Women - onMouseEnter and onMouseLeave handlers commented out */}
                     <Link
                       to={category.path}
@@ -597,7 +643,7 @@ const Header = () => {
                       //     clearTimeout(hideTimeoutRef.current);
                       //     hideTimeoutRef.current = null;
                       //   }
-                      //   
+                      //
                       //   if (category.name === "Women") {
                       //     setShowWomenMegaMenu(true);
                       //     setShowMenMegaMenu(false);

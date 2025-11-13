@@ -67,6 +67,8 @@ const ProductsPage = () => {
     search: "",
     category: "",
     subcategory: "",
+    gender: "", // Added for Men/Women filtering
+    productType: "", // Added for Accessories filtering
     minPrice: "",
     maxPrice: "",
     size: [], // Changed to array for multi-select
@@ -567,6 +569,26 @@ const ProductsPage = () => {
       newFilters.color = [];
     }
 
+    // Reset string filters to empty if not present in URL - CRITICAL for tab switching
+    if (!searchParams.has("gender")) {
+      newFilters.gender = "";
+    }
+    if (!searchParams.has("productType")) {
+      newFilters.productType = "";
+    }
+    if (!searchParams.has("category")) {
+      newFilters.category = "";
+    }
+    if (!searchParams.has("subcategory")) {
+      newFilters.subcategory = "";
+    }
+    if (!searchParams.has("orderType")) {
+      newFilters.orderType = "";
+    }
+    if (!searchParams.has("search")) {
+      newFilters.search = "";
+    }
+
     // Normalize sortBy values
     if (newFilters.sortBy) {
       // Handle "popular" as alias for "most_popular"
@@ -826,6 +848,8 @@ const ProductsPage = () => {
       search: "",
       category: "",
       subcategory: "",
+      gender: "", // Added for Men/Women filtering
+      productType: "", // Added for Accessories filtering
       minPrice: "",
       maxPrice: "",
       size: [],
@@ -1120,6 +1144,8 @@ const ProductsPage = () => {
     if (filters.search) count++;
     if (filters.category) count++;
     if (filters.subcategory) count++;
+    if (filters.gender) count++; // Added for Men/Women filtering
+    if (filters.productType) count++; // Added for Accessories filtering
     if (filters.minPrice || filters.maxPrice) count++;
     if (Array.isArray(filters.size) && filters.size.length > 0) count++;
     if (Array.isArray(filters.color) && filters.color.length > 0) count++;
