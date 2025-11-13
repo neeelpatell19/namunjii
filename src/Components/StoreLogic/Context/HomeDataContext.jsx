@@ -82,6 +82,16 @@ export const HomeDataProvider = ({ children }) => {
     return productsSection?.data || [];
   };
 
+  const getMenCategories = () => {
+    const menCategoriesSection = getSectionData("menCategories");
+    return menCategoriesSection?.data || [];
+  };
+
+  const getWomenCategories = () => {
+    const womenCategoriesSection = getSectionData("womenCategories");
+    return womenCategoriesSection?.data || [];
+  };
+
   useEffect(() => {
     fetchHomeData();
   }, []);
@@ -100,6 +110,8 @@ export const HomeDataProvider = ({ children }) => {
     getBrands,
     getFeaturedDeals,
     getProducts,
+    getMenCategories,
+    getWomenCategories,
   };
 
   return (

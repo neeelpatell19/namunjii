@@ -431,18 +431,16 @@
   width: 100vw;
   transform: none;
   background: var(--bg-white) !important;
-  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   z-index: 1002;
   margin: 0;
   padding: 0 !important;
   animation: fadeInMegaMenu 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-top: 1px solid #e8e8e8;
-  height: 300px;
-  max-height: 300px;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  scrollbar-width: auto !important;
-  scrollbar-color: #1075e8 #f1f1f1 !important;
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .fade-in {
@@ -463,15 +461,15 @@
 .MegaMenuContent {
   display: flex;
   gap: 0px;
-  padding: 30px 20px;
+  padding: 24px 40px;
   justify-content: flex-start;
   align-items: flex-start;
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 1400px;
   background: #ffffff;
   width: 100%;
-  
-  
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Custom scrollbar for mega menu - positioned at the extreme right edge */
@@ -505,80 +503,76 @@
 .MegaMenuColumn {
   display: flex;
   flex-direction: column;
-  flex: 0 0 auto;
+  flex: 1;
   flex-shrink: 0;
-  min-width: 180px;
-  max-width: 250px;
+  width: 100%;
+  max-width: 100%;
   height: fit-content;
   background: #ffffff;
   padding: 0;
-  border-right: 1px solid #e8e8e8;
+  border-right: none;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .MegaMenuColumn:first-child {
-  padding-left:0;
-  padding-right: -5px !important;
+  padding-left: 0;
 }
 
 .MegaMenuColumn:last-child {
-  border-right: none;
   padding-right: 0;
-  padding-left: 50px;
 }
 
-.MegaMenuColumnTitle {
-  font-size: 16px;
-  font-weight: 400;
-  color: #000;
-  margin: 0 0 20px 0;
-  text-transform: uppercase;
-  /* letter-spacing: 1px; */
-  font-family: var(--fira-sans);
-  text-align: left;
-  line-height: 180%;
-  margin-bottom:5px !important;
-}
 
 .MegaMenuList {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 1px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px 12px;
   max-height: none;
-  overflow-y: visible;
-  overflow-x: hidden;
+  overflow: hidden;
   padding-right: 0;
   text-align: left;
-  align-items: flex-start;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .MegaMenuList li {
   margin: 0;
   padding: 0;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   text-align: left;
+  flex-shrink: 0;
 }
 
 .MegaMenuLink {
-  display: block;
+  display: inline-block;
   color: #666;
   text-decoration: none;
   font-size: 14px;
   font-weight: 300;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   font-family: var(--fira-sans);
-  /* line-height: 1.6; */
   text-align: left;
-  width: 100%;
-   line-height: 180%;
- 
-  
+  width: auto;
+  max-width: 100%;
+  line-height: 1.4;
+  padding: 5px 10px;
+  white-space: nowrap;
+  border-radius: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .MegaMenuLink:hover {
   color: #000;
+  background-color: #f5f5f5;
 }
 
 .CategoryLink {
@@ -599,6 +593,36 @@
 
 .CategoryLink:hover {
   color: var(--brand-500);
+}
+
+/* Dropdown link styling */
+.CategoryLink.dropdown-link {
+  cursor: pointer;
+}
+
+.category-text-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.category-text-link:hover {
+  color: var(--brand-500);
+}
+
+.dropdown-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 4px;
+  padding: 2px;
+  transition: all 0.3s ease;
+}
+
+.dropdown-icon:hover {
+  transform: scale(1.1);
 }
 
 .CategoryLink.special {
@@ -892,22 +916,17 @@
 
   .MegaMenuContent {
     max-width: 100%;
-    padding: 25px 15px;
+    padding: 20px 15px;
     gap: 0px;
+    box-sizing: border-box;
   }
 
   .MegaMenuColumn {
-    min-width: 150px;
-    max-width: 200px;
-    padding: 0 20px 0 15px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  .MegaMenuColumn:first-child {
-    padding-left: 0;
-  }
-
-  .MegaMenuColumn:last-child {
-    padding-right: 0;
-  }
 }
 

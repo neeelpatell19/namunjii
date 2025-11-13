@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Row, Col, Dropdown, Input, Spin, Drawer } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FiSearch, FiHeart, FiMenu, FiX, FiUser } from "react-icons/fi";
+import {
+  FiSearch,
+  FiHeart,
+  FiMenu,
+  FiX,
+  FiUser,
+  FiChevronDown,
+} from "react-icons/fi";
 import {
   LogoutOutlined,
   ProfileOutlined,
@@ -14,6 +21,7 @@ import { updateUserData } from "../../store/actions/ApiActions";
 import CartDrawer from "../StoreLogic/Cart/CartDrawer";
 import WishlistDrawer from "../StoreLogic/Wishlist/WishlistDrawer";
 import { useCartWishlist } from "../StoreLogic/Context/CartWishlistContext";
+import { useHomeData } from "../StoreLogic/Context/HomeDataContext";
 import { useDevice } from "../../hooks/useDevice";
 import cartApi from "../../apis/cart";
 import wishlistApi from "../../apis/wishlist";
@@ -38,6 +46,7 @@ const Header = () => {
     triggerCartDrawer,
     triggerWishlistDrawer,
   } = useCartWishlist();
+  const { getMenCategories, getWomenCategories } = useHomeData();
 
   // Search state
   const [searchInput, setSearchInput] = useState("");
@@ -69,98 +78,13 @@ const Header = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Mega dropdown data for Women - 2 columns only
-  const womenMegaMenuData = {
-    category: [
-      { label: "Shop All", link: "/products?gender=Women" },
-      { label: "Blouses & Top", link: "/products?gender=Women&category=Tops" },
-      { label: "Pants", link: "/products?gender=Women&category=Pants" },
-      {
-        label: "Dresses & Jumpsuits",
-        link: "/products?gender=Women&category=Dresses",
-      },
-      {
-        label: "Outwear & Jackets",
-        link: "/products?gender=Women&category=Outerwear",
-      },
-      { label: "Pullovers", link: "/products?gender=Women&category=Pullovers" },
-      { label: "Tees", link: "/products?gender=Women&category=Tees" },
-      {
-        label: "Shorts & Skirts",
-        link: "/products?gender=Women&category=Shorts",
-      },
-    ],
-    featured: [
-      {
-        label: "Deewan-E-Khaas",
-        link: "/products?gender=Women&brand=Deewan-E-Khaas",
-      },
-      {
-        label: "Kaaya Collective",
-        link: "/products?gender=Women&brand=Kaaya-Collective",
-      },
-      {
-        label: "Pehnava Studio",
-        link: "/products?gender=Women&brand=Pehnava-Studio",
-      },
-      {
-        label: "Vastra By Design",
-        link: "/products?gender=Women&brand=Vastra-By-Design",
-      },
-    ],
-  };
-
-  // Mega dropdown data for Men - 2 columns only
-  const menMegaMenuData = {
-    category: [
-      { label: "Shop All", link: "/products?gender=Men" },
-      { label: "Shirts", link: "/products?gender=Men&category=Shirts" },
-      { label: "T-Shirts", link: "/products?gender=Men&category=T-Shirts" },
-      { label: "Pants", link: "/products?gender=Men&category=Pants" },
-      { label: "Jackets", link: "/products?gender=Men&category=Jackets" },
-      { label: "Sweaters", link: "/products?gender=Men&category=Sweaters" },
-      { label: "Shorts", link: "/products?gender=Men&category=Shorts" },
-      {
-        label: "Accessories",
-        link: "/products?gender=Men&category=Accessories",
-      },
-      { label: "Shop All", link: "/products?gender=Men" },
-      { label: "Shirts", link: "/products?gender=Men&category=Shirts" },
-      { label: "T-Shirts", link: "/products?gender=Men&category=T-Shirts" },
-      { label: "Pants", link: "/products?gender=Men&category=Pants" },
-      { label: "Jackets", link: "/products?gender=Men&category=Jackets" },
-      { label: "Sweaters", link: "/products?gender=Men&category=Sweaters" },
-      { label: "Shorts", link: "/products?gender=Men&category=Shorts" },
-      {
-        label: "Accessories",
-        link: "/products?gender=Men&category=Accessories",
-      },
-    ],
-    featured: [
-      {
-        label: "Deewan-E-Khaas",
-        link: "/products?gender=Men&brand=Deewan-E-Khaas",
-      },
-      {
-        label: "Kaaya Collective",
-        link: "/products?gender=Men&brand=Kaaya-Collective",
-      },
-      {
-        label: "Pehnava Studio",
-        link: "/products?gender=Men&brand=Pehnava-Studio",
-      },
-      {
-        label: "Vastra By Design",
-        link: "/products?gender=Men&brand=Vastra-By-Design",
-      },
-    ],
-  };
+  // Get dynamic categories from home API
+  const menCategories = getMenCategories();
+  const womenCategories = getWomenCategories();
 
   const categories = [
-    // { name: "Shop All", hasDropdown: false, path: "/products" },
-    // Dropdown disabled for Men and Women
-    { name: "Men", hasDropdown: false, path: "/products?gender=Men" },
-    { name: "Women", hasDropdown: false, path: "/products?gender=Women" },
+    { name: "Men", hasDropdown: true, path: "/products?gender=Men" },
+    { name: "Women", hasDropdown: true, path: "/products?gender=Women" },
     {
       name: "Accessories",
       hasDropdown: false,
@@ -363,6 +287,33 @@ const Header = () => {
       }
     };
   }, []);
+
+  // Close mega menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const menRef = menMegaMenuRef.current;
+      const womenRef = womenMegaMenuRef.current;
+      const navBarRef = categoryNavBarRef.current;
+
+      // Check if click is outside both mega menus and the nav bar
+      const outsideMen = !menRef || !menRef.contains(event.target);
+      const outsideWomen = !womenRef || !womenRef.contains(event.target);
+      const outsideNavBar = !navBarRef || !navBarRef.contains(event.target);
+
+      if (outsideMen && outsideWomen && outsideNavBar) {
+        setShowMenMegaMenu(false);
+        setShowWomenMegaMenu(false);
+      }
+    };
+
+    if (showMenMegaMenu || showWomenMegaMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMenMegaMenu, showWomenMegaMenu]);
 
   // Handle suggestion click - navigate to product page
   const handleSuggestionClick = (productId) => {
@@ -663,52 +614,91 @@ const Header = () => {
               <div className="CategoryLinks">
                 {categories.map((category, index) => (
                   <div key={index} className="CategoryItem">
-                    {/* Dropdown functionality disabled for Men and Women - onMouseEnter and onMouseLeave handlers commented out */}
-                    <Link
-                      to={category.path}
-                      className={`CategoryLink ${
-                        category.isSpecial ? "special" : ""
-                      } ${category.isJoinUs ? "join-us" : ""} ${
-                        isCategoryActive(category) ? "active" : ""
-                      }`}
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        setShowWomenMegaMenu(false);
-                        setShowMenMegaMenu(false);
-                      }}
-                      // onMouseEnter and onMouseLeave handlers commented out - dropdown disabled for Men and Women
-                      // onMouseEnter={() => {
-                      //   // Clear any pending hide timeout
-                      //   if (hideTimeoutRef.current) {
-                      //     clearTimeout(hideTimeoutRef.current);
-                      //     hideTimeoutRef.current = null;
-                      //   }
-                      //
-                      //   if (category.name === "Women") {
-                      //     setShowWomenMegaMenu(true);
-                      //     setShowMenMegaMenu(false);
-                      //   } else if (category.name === "Men") {
-                      //     setShowMenMegaMenu(true);
-                      //     setShowWomenMegaMenu(false);
-                      //   } else {
-                      //     setShowWomenMegaMenu(false);
-                      //     setShowMenMegaMenu(false);
-                      //   }
-                      // }}
-                      // onMouseLeave={() => {
-                      //   if (category.name === "Women" || category.name === "Men") {
-                      //     hideTimeoutRef.current = setTimeout(() => {
-                      //       setShowWomenMegaMenu(false);
-                      //       setShowMenMegaMenu(false);
-                      //     }, 300);
-                      //   }
-                      // }}
-                    >
-                      {category.name}
-                    </Link>
-                    {/* Dropdown functionality disabled for Men and Women */}
+                    {category.hasDropdown ? (
+                      <div
+                        className={`CategoryLink ${
+                          category.isSpecial ? "special" : ""
+                        } ${category.isJoinUs ? "join-us" : ""} ${
+                          isCategoryActive(category) ? "active" : ""
+                        } dropdown-link`}
+                        onMouseEnter={() => {
+                          if (hideTimeoutRef.current) {
+                            clearTimeout(hideTimeoutRef.current);
+                            hideTimeoutRef.current = null;
+                          }
+                          if (category.name === "Women") {
+                            setShowWomenMegaMenu(true);
+                            setShowMenMegaMenu(false);
+                          } else if (category.name === "Men") {
+                            setShowMenMegaMenu(true);
+                            setShowWomenMegaMenu(false);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          hideTimeoutRef.current = setTimeout(() => {
+                            setShowWomenMegaMenu(false);
+                            setShowMenMegaMenu(false);
+                          }, 300);
+                        }}
+                      >
+                        <Link
+                          to={category.path}
+                          className="category-text-link"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            setShowWomenMegaMenu(false);
+                            setShowMenMegaMenu(false);
+                          }}
+                        >
+                          {category.name}
+                        </Link>
+                        <span
+                          className="dropdown-icon"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (category.name === "Women") {
+                              setShowWomenMegaMenu(!showWomenMegaMenu);
+                              setShowMenMegaMenu(false);
+                            } else if (category.name === "Men") {
+                              setShowMenMegaMenu(!showMenMegaMenu);
+                              setShowWomenMegaMenu(false);
+                            }
+                          }}
+                        >
+                          <FiChevronDown
+                            style={{
+                              fontSize: "14px",
+                              transition: "transform 0.3s ease",
+                              transform:
+                                (category.name === "Men" && showMenMegaMenu) ||
+                                (category.name === "Women" && showWomenMegaMenu)
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                            }}
+                          />
+                        </span>
+                      </div>
+                    ) : (
+                      <Link
+                        to={category.path}
+                        className={`CategoryLink ${
+                          category.isSpecial ? "special" : ""
+                        } ${category.isJoinUs ? "join-us" : ""} ${
+                          isCategoryActive(category) ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          setShowWomenMegaMenu(false);
+                          setShowMenMegaMenu(false);
+                        }}
+                      >
+                        {category.name}
+                      </Link>
+                    )}
+
                     {/* Women Mega Menu */}
-                    {/* {category.name === "Women" && showWomenMegaMenu && (
+                    {category.name === "Women" && showWomenMegaMenu && (
                       <div
                         ref={womenMegaMenuRef}
                         className="MegaMenuContainer fade-in"
@@ -727,38 +717,32 @@ const Header = () => {
                       >
                         <div className="MegaMenuContent">
                           <div className="MegaMenuColumn">
-                            <h4 className="MegaMenuColumnTitle">CATEGORY</h4>
                             <ul className="MegaMenuList">
-                              {womenMegaMenuData.category.map((item, idx) => (
-                                <li key={idx}>
+                              <li>
+                                <Link
+                                  to="/products?gender=Women"
+                                  className="MegaMenuLink"
+                                  onClick={() => {
+                                    setShowWomenMegaMenu(false);
+                                    setMobileMenuOpen(false);
+                                  }}
+                                >
+                                  Shop All
+                                </Link>
+                              </li>
+                              {womenCategories.map((cat) => (
+                                <li key={cat._id}>
                                   <Link
-                                    to={item.link}
+                                    to={`/products?gender=Women&category=${encodeURIComponent(
+                                      cat.name
+                                    )}`}
                                     className="MegaMenuLink"
                                     onClick={() => {
                                       setShowWomenMegaMenu(false);
                                       setMobileMenuOpen(false);
                                     }}
                                   >
-                                    {item.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="MegaMenuColumn">
-                            <h4 className="MegaMenuColumnTitle">BRAND NAME</h4>
-                            <ul className="MegaMenuList">
-                              {womenMegaMenuData.featured.map((item, idx) => (
-                                <li key={idx}>
-                                  <Link
-                                    to={item.link}
-                                    className="MegaMenuLink"
-                                    onClick={() => {
-                                      setShowWomenMegaMenu(false);
-                                      setMobileMenuOpen(false);
-                                    }}
-                                  >
-                                    {item.label}
+                                    {cat.name}
                                   </Link>
                                 </li>
                               ))}
@@ -766,9 +750,10 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    )} */}
+                    )}
+
                     {/* Men Mega Menu */}
-                    {/* {category.name === "Men" && showMenMegaMenu && (
+                    {category.name === "Men" && showMenMegaMenu && (
                       <div
                         ref={menMegaMenuRef}
                         className="MegaMenuContainer fade-in"
@@ -787,38 +772,32 @@ const Header = () => {
                       >
                         <div className="MegaMenuContent">
                           <div className="MegaMenuColumn">
-                            <h4 className="MegaMenuColumnTitle">CATEGORY</h4>
                             <ul className="MegaMenuList">
-                              {menMegaMenuData.category.map((item, idx) => (
-                                <li key={idx}>
+                              <li>
+                                <Link
+                                  to="/products?gender=Men"
+                                  className="MegaMenuLink"
+                                  onClick={() => {
+                                    setShowMenMegaMenu(false);
+                                    setMobileMenuOpen(false);
+                                  }}
+                                >
+                                  Shop All
+                                </Link>
+                              </li>
+                              {menCategories.map((cat) => (
+                                <li key={cat._id}>
                                   <Link
-                                    to={item.link}
+                                    to={`/products?gender=Men&category=${encodeURIComponent(
+                                      cat.name
+                                    )}`}
                                     className="MegaMenuLink"
                                     onClick={() => {
                                       setShowMenMegaMenu(false);
                                       setMobileMenuOpen(false);
                                     }}
                                   >
-                                    {item.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="MegaMenuColumn">
-                            <h4 className="MegaMenuColumnTitle">BRAND NAME</h4>
-                            <ul className="MegaMenuList">
-                              {menMegaMenuData.featured.map((item, idx) => (
-                                <li key={idx}>
-                                  <Link
-                                    to={item.link}
-                                    className="MegaMenuLink"
-                                    onClick={() => {
-                                      setShowMenMegaMenu(false);
-                                      setMobileMenuOpen(false);
-                                    }}
-                                  >
-                                    {item.label}
+                                    {cat.name}
                                   </Link>
                                 </li>
                               ))}
@@ -826,7 +805,7 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    )} */}
+                    )}
                   </div>
                 ))}
               </div>
