@@ -67,13 +67,11 @@ const ProductsPage = () => {
     search: "",
     category: "",
     subcategory: "",
-    gender: [], // Changed to array for multi-select
     minPrice: "",
     maxPrice: "",
     size: [], // Changed to array for multi-select
     color: [], // Changed to array for multi-select
     brand: [], // Changed to array for multi-select
-    availability: "",
     orderType: "",
     sortBy: "most_popular",
     sortOrder: "desc",
@@ -213,10 +211,8 @@ const ProductsPage = () => {
   const [expandedFilters, setExpandedFilters] = useState({
     size: true,
     brand: true,
-    gender: true,
     priceRange: false,
     colour: false,
-    availability: false,
     orderType: false,
   });
 
@@ -492,8 +488,8 @@ const ProductsPage = () => {
   useEffect(() => {
     const urlFilters = {};
 
-    // Handle multi-value params (size, brand, gender, color)
-    const multiSelectKeys = ["size", "brand", "gender", "color"];
+    // Handle multi-value params (size, brand, color)
+    const multiSelectKeys = ["size", "brand", "color"];
     multiSelectKeys.forEach((key) => {
       const values = searchParams.getAll(key);
       if (values.length > 0) {
@@ -561,9 +557,6 @@ const ProductsPage = () => {
     }
 
     // Reset multi-select filters to empty arrays if not present in URL
-    if (!searchParams.has("gender")) {
-      newFilters.gender = [];
-    }
     if (!searchParams.has("size")) {
       newFilters.size = [];
     }
@@ -592,8 +585,7 @@ const ProductsPage = () => {
 
     setFilters(newFilters);
 
-    // Fetch products immediately with the new filters (including gender filter)
-    // This will show only Men's or Women's products based on the gender filter from URL
+    // Fetch products immediately with the new filters
     if (fetchProductsRef.current) {
       fetchProductsRef.current(newFilters, newPriceRange);
     }
@@ -657,7 +649,7 @@ const ProductsPage = () => {
     [filters, updateURL, priceRange]
   );
 
-  // Handle multi-select filter changes (for size, brand, gender, color)
+  // Handle multi-select filter changes (for size, brand, color)
   const handleMultiSelectFilterChange = useCallback(
     (key, value, checked) => {
       let newValues;
@@ -834,13 +826,11 @@ const ProductsPage = () => {
       search: "",
       category: "",
       subcategory: "",
-      gender: [],
       minPrice: "",
       maxPrice: "",
       size: [],
       color: [],
       brand: [],
-      availability: "",
       orderType: "",
       sortBy: "most_popular",
       sortOrder: "desc",
@@ -980,46 +970,6 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* Gender */}
-      <div className="filter-section">
-        <div
-          className="filter-section-header"
-          onClick={() => toggleFilterSection("gender")}
-        >
-          <h4>GENDER</h4>
-          {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
-        </div>
-        {expandedFilters.gender && (
-          <div className="checkbox-group">
-            <Checkbox
-              checked={
-                Array.isArray(filters.gender) && filters.gender.includes("Men")
-              }
-              onChange={(e) =>
-                handleMultiSelectFilterChange("gender", "Men", e.target.checked)
-              }
-            >
-              Men
-            </Checkbox>
-            <Checkbox
-              checked={
-                Array.isArray(filters.gender) &&
-                filters.gender.includes("Women")
-              }
-              onChange={(e) =>
-                handleMultiSelectFilterChange(
-                  "gender",
-                  "Women",
-                  e.target.checked
-                )
-              }
-            >
-              Women
-            </Checkbox>
-          </div>
-        )}
-      </div>
-
       {/* Price Range */}
       <div className="filter-section">
         <div
@@ -1125,43 +1075,6 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* Availability */}
-      <div className="filter-section">
-        <div
-          className="filter-section-header"
-          onClick={() => toggleFilterSection("availability")}
-        >
-          <h4>AVAILABILITY</h4>
-          {expandedFilters.availability ? <UpOutlined /> : <DownOutlined />}
-        </div>
-        {expandedFilters.availability && (
-          <div className="checkbox-group">
-            <Checkbox
-              checked={filters.availability === "in_stock"}
-              onChange={(e) =>
-                handleFilterChange(
-                  "availability",
-                  e.target.checked ? "in_stock" : ""
-                )
-              }
-            >
-              In Stock
-            </Checkbox>
-            <Checkbox
-              checked={filters.availability === "out_of_stock"}
-              onChange={(e) =>
-                handleFilterChange(
-                  "availability",
-                  e.target.checked ? "out_of_stock" : ""
-                )
-              }
-            >
-              Out of Stock
-            </Checkbox>
-          </div>
-        )}
-      </div>
-
       {/* Order Type */}
       <div className="filter-section">
         <div
@@ -1207,12 +1120,10 @@ const ProductsPage = () => {
     if (filters.search) count++;
     if (filters.category) count++;
     if (filters.subcategory) count++;
-    if (Array.isArray(filters.gender) && filters.gender.length > 0) count++;
     if (filters.minPrice || filters.maxPrice) count++;
     if (Array.isArray(filters.size) && filters.size.length > 0) count++;
     if (Array.isArray(filters.color) && filters.color.length > 0) count++;
     if (Array.isArray(filters.brand) && filters.brand.length > 0) count++;
-    if (filters.availability) count++;
     if (filters.orderType) count++;
     if (filters.isNewArrival) count++;
     if (filters.isBestSeller) count++;
