@@ -254,6 +254,11 @@ const Header = () => {
   // Calculate mega menu top position and arrow position
   useEffect(() => {
     const updateMegaMenuPosition = () => {
+      // Skip positioning on mobile - CSS handles it
+      if (isMobile || mobileMenuOpen) {
+        return;
+      }
+
       if (categoryNavBarRef.current) {
         const navBarRect = categoryNavBarRef.current.getBoundingClientRect();
         const topPosition = navBarRect.bottom;
@@ -333,7 +338,7 @@ const Header = () => {
       window.removeEventListener("scroll", updateMegaMenuPosition);
       window.removeEventListener("resize", updateMegaMenuPosition);
     };
-  }, [showWomenMegaMenu, showMenMegaMenu]);
+  }, [showWomenMegaMenu, showMenMegaMenu, isMobile, mobileMenuOpen]);
 
   // Cleanup timeout on unmount
   useEffect(() => {

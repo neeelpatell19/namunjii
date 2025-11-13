@@ -7,6 +7,9 @@
   z-index: 1000;
   background: var(--bg-white);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Main Navigation Bar */
@@ -305,6 +308,8 @@
   align-items: center;
   gap: 20px;
   padding-right: 8px;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .WishlistIcon {
@@ -745,10 +750,20 @@
 }
 
 @media (max-width: 768px) {
+  /* Prevent horizontal scroll on mobile */
+  body,
+  html {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
   .MainNavBar {
     padding: 12px 10px;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   .MainNavBar .Container {
@@ -756,11 +771,16 @@
     max-width: 100% !important;
     margin: 0 !important;
     width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .MainNavBar .Container .ant-row {
     width: 100%;
+    max-width: 100%;
     margin: 0 !important;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .NavLeft {
@@ -770,6 +790,9 @@
   .NavActions {
     gap: 14px;
     padding-right: 10px;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .MobileMenuToggle {
@@ -804,6 +827,9 @@
     padding: 1.5px;
     aspect-ratio: 1;
     box-sizing: content-box;
+    /* Ensure badge doesn't cause horizontal scroll */
+    max-width: 20px;
+    overflow: hidden;
   }
 
   .CategoryNavBar {
@@ -815,21 +841,53 @@
     background: var(--bg-light-beige);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 999;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
   }
 
   .CategoryNavBar.mobile-open {
     display: block;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .CategoryNavBar .Container {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .CategoryNavBar .Container .ant-row {
+    justify-content: flex-start !important;
   }
 
   .CategoryLinks {
     flex-direction: column;
     gap: 0;
     padding: 16px;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .CategoryItem {
     width: 100%;
+    max-width: 100%;
     border-bottom: 1px solid var(--neutral-950);
+    position: relative;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .CategoryItem:last-child {
@@ -843,6 +901,9 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   /* Active state for mobile */
@@ -857,9 +918,40 @@
     width: 50%;
   }
 
-  /* Hide mega menu on tablets and mobile */
-  .MegaMenuContainer {
+  /* Show mega menu on mobile - positioned to the right */
+  .CategoryNavBar.mobile-open .MegaMenuContainer {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    width: 60% !important;
+    min-width: 200px !important;
+    max-width: 300px !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 12px 0 !important;
+    z-index: 1004 !important;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    border-left: 1px solid #e8e8e8;
+    border-radius: 0;
+    background: var(--bg-white) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    transform: translateX(0) !important;
+    transition: transform 0.3s ease;
+    box-sizing: border-box !important;
+  }
+
+  /* Hide arrow on mobile */
+  .CategoryNavBar.mobile-open .MegaMenuContainer .MegaMenuArrow {
     display: none;
+  }
+
+  /* Adjust mega menu content for mobile */
+  .MegaMenuContainer .MegaMenuContent {
+    padding: 12px 16px;
   }
 }
 
@@ -889,6 +981,9 @@
   .NavActions {
     gap: 12px;
     padding-right: 12px;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .LogoText {
@@ -922,15 +1017,27 @@
     padding: 1px;
     aspect-ratio: 1;
     box-sizing: content-box;
+    /* Ensure badge doesn't cause horizontal scroll */
+    max-width: 20px;
+    overflow: hidden;
   }
 
   .CategoryLinks {
     padding: 12px;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .CategoryLink {
     font-size: 13px;
     padding: 10px 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 }
 
@@ -939,7 +1046,9 @@
   .MegaMenuContainer {
     left: 0;
     right: 0;
-    width: 100vw !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
   }
 
   .MegaMenuContent {
