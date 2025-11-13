@@ -1139,3 +1139,113 @@
     gap: 6px;
   }
 }
+
+/* Size Selection Modal Styles */
+.product-card-size-modal .ant-modal-content {
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.product-card-size-modal .ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.product-card-size-modal .ant-modal-title {
+  font-family: var(--fira-sans);
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.product-card-size-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-card-size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.product-card-size-btn {
+  min-width: 50px;
+  height: 40px;
+  padding: 8px 16px;
+  border: 1px solid #d9d9d9;
+  background: white;
+  border-radius: 4px;
+  font-family: var(--fira-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card-size-btn:hover {
+  border-color: #8b4513;
+  color: #8b4513;
+}
+
+.product-card-size-btn.selected {
+  background: #8b4513;
+  border-color: #8b4513;
+  color: white;
+}
+
+.product-card-size-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.product-card-size-modal-cancel {
+  padding: 10px 20px;
+  border: 1px solid #d9d9d9;
+  background: white;
+  border-radius: 4px;
+  font-family: var(--fira-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card-size-modal-cancel:hover {
+  border-color: #8b4513;
+  color: #8b4513;
+}
+
+.product-card-size-modal-add {
+  padding: 10px 20px;
+  border: none;
+  background: #8b4513;
+  border-radius: 4px;
+  font-family: var(--fira-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card-size-modal-add:hover:not(:disabled) {
+  background: #6b3410;
+}
+
+.product-card-size-modal-add:disabled {
+  background: #d9d9d9;
+  color: #999;
+  cursor: not-allowed;
+}

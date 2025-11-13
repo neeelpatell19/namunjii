@@ -8,7 +8,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import { Tooltip } from "antd";
+import { Tooltip, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
@@ -37,6 +37,8 @@ export default function ProductCard({
     refreshWishlist,
   } = useCartWishlist();
   const [showQuickViewModal, setShowQuickViewModal] = useState(false);
+  const [showSizeModal, setShowSizeModal] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -131,6 +133,42 @@ export default function ProductCard({
     return Math.round(basePricing - discountAmount);
   };
 
+  // Extract available sizes from products array
+  const getAvailableSizes = useMemo(() => {
+    if (!product?.products || !Array.isArray(product.products)) {
+      return [];
+    }
+
+    const sizesSet = new Set();
+    product.products.forEach((p) => {
+      if (p.size) {
+        sizesSet.add(p.size);
+      }
+    });
+
+    // Filter sizes based on isExpressShipping
+    let availableSizes = Array.from(sizesSet);
+    if (product.isExpressShipping) {
+      // If express shipping is enabled, exclude "Free Size"
+      availableSizes = availableSizes.filter((size) => size !== "Free Size");
+    }
+
+    // Sort sizes in a logical order
+    const sizeOrder = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL", "4XL", "Free Size"];
+    availableSizes.sort((a, b) => {
+      const indexA = sizeOrder.indexOf(a);
+      const indexB = sizeOrder.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+
+    return availableSizes;
+  }, [product?.products, product?.isExpressShipping]);
+
+  const availableSizes = getAvailableSizes;
+
   const handleQuickView = () => {
     setShowQuickViewModal(true);
     if (onQuickView) {
@@ -142,14 +180,47 @@ export default function ProductCard({
     e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
 
+    // If product has multiple sizes, show size selection modal
+    if (availableSizes.length > 1) {
+      setShowSizeModal(true);
+      return;
+    }
+
+    // If only one size or no sizes, add directly to cart
+    const sizeToAdd = availableSizes.length === 1 ? availableSizes[0] : product.size || "";
+    await addToCartWithSize(sizeToAdd);
+  };
+
+  const addToCartWithSize = async (size) => {
+    if (!deviceId) return;
+
     try {
+      // Find the product variant with the selected size
+      let productIdToAdd = product._id;
+      let colorToAdd = product.color || "";
+
+      if (product?.products && Array.isArray(product.products) && size) {
+        // Try to find exact match with size
+        const variant = product.products.find((p) => p.size === size);
+        if (variant) {
+          productIdToAdd = variant._id;
+          colorToAdd = variant.color || colorToAdd;
+        }
+      }
+
       const response = await cartApi.addToCart({
         deviceId,
-        productId: product._id,
+        productId: productIdToAdd,
         quantity: 1,
+        size: size,
+        color: colorToAdd,
       });
 
       if (response.success) {
+        // Close modal if open
+        setShowSizeModal(false);
+        setSelectedSize("");
+
         // Trigger cart drawer to open
         triggerCartDrawer();
         refreshCart();
@@ -523,8 +594,15 @@ export default function ProductCard({
                   <button
                     className="product-card-modal-add-to-cart-outline"
                     onClick={() => {
-                      handleAddToCart({ stopPropagation: () => {} });
                       setShowQuickViewModal(false);
+                      // If product has multiple sizes, show size selection modal
+                      if (availableSizes.length > 1) {
+                        setShowSizeModal(true);
+                      } else {
+                        // If only one size or no sizes, add directly to cart
+                        const sizeToAdd = availableSizes.length === 1 ? availableSizes[0] : product.size || "";
+                        addToCartWithSize(sizeToAdd);
+                      }
                     }}
                   >
                     Add to Cart
@@ -553,6 +631,58 @@ export default function ProductCard({
           </div>
         </div>
       )}
+
+      {/* Size Selection Modal */}
+      <Modal
+        open={showSizeModal}
+        onCancel={() => {
+          setShowSizeModal(false);
+          setSelectedSize("");
+        }}
+        footer={null}
+        title="Select Size"
+        centered
+        width={400}
+        className="product-card-size-modal"
+      >
+        <div className="product-card-size-modal-content">
+          <div className="product-card-size-options">
+            {availableSizes.map((size) => (
+              <button
+                key={size}
+                className={`product-card-size-btn ${
+                  selectedSize === size ? "selected" : ""
+                }`}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+          <div className="product-card-size-modal-actions">
+            <button
+              className="product-card-size-modal-cancel"
+              onClick={() => {
+                setShowSizeModal(false);
+                setSelectedSize("");
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="product-card-size-modal-add"
+              onClick={() => {
+                if (selectedSize) {
+                  addToCartWithSize(selectedSize);
+                }
+              }}
+              disabled={!selectedSize}
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Tabs, Spin, Alert, Button, Badge, Modal } from "antd";
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import { Tabs, Alert, Button, Badge, Modal } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   HeartOutlined,
@@ -102,13 +102,69 @@ const SingleProductPageDesign = () => {
     return colorMap[colorName?.toLowerCase()] || "#D4AF37";
   };
 
-  // Available sizes and colors
-  const availableSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-  const availableColors = product?.color
-    ? Array.isArray(product.color)
-      ? product.color
-      : [product.color]
-    : ["#D4AF37", "#C0C0C0", "#FFD700"]; // Default colors: Gold, Silver, Bright Gold
+  // Extract unique colors and sizes from products array
+  const getAvailableOptions = useMemo(() => {
+    if (!product?.products || !Array.isArray(product.products)) {
+      return { sizes: [], colors: [], colorCodeMap: new Map() };
+    }
+
+    const sizesSet = new Set();
+    const colorsSet = new Set();
+    const colorCodeMap = new Map();
+
+    product.products.forEach((p) => {
+      if (p.size) {
+        sizesSet.add(p.size);
+      }
+      if (p.color) {
+        colorsSet.add(p.color);
+        // Store color code mapping
+        if (p.colorCode) {
+          colorCodeMap.set(p.color, p.colorCode);
+        }
+      }
+    });
+
+    // Filter sizes based on isExpressShipping
+    let availableSizes = Array.from(sizesSet);
+    if (product.isExpressShipping) {
+      // If express shipping is enabled, exclude "Free Size"
+      availableSizes = availableSizes.filter((size) => size !== "Free Size");
+    }
+
+    // Sort sizes in a logical order
+    const sizeOrder = [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "2XL",
+      "3XL",
+      "4XL",
+      "Free Size",
+    ];
+    availableSizes.sort((a, b) => {
+      const indexA = sizeOrder.indexOf(a);
+      const indexB = sizeOrder.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+
+    const availableColors = Array.from(colorsSet);
+
+    return { sizes: availableSizes, colors: availableColors, colorCodeMap };
+  }, [product?.products, product?.isExpressShipping]);
+
+  const {
+    sizes: availableSizes,
+    colors: availableColors,
+    colorCodeMap,
+  } = getAvailableOptions;
 
   // Fetch product data (primary method - try API first, fallback to context)
   const fetchProduct = async () => {
@@ -122,30 +178,13 @@ const SingleProductPageDesign = () => {
       setLoading(true);
       setError(null);
 
-      // First try to find product from app context (faster if available)
+      // Always fetch from API to get product with all variants
+      // The API response includes the products array with all size/color combinations
       const apiProducts = Array.isArray(state?.products) ? state.products : [];
       console.log("Looking for product ID:", productId);
       console.log("Available products:", apiProducts.length);
-      const foundProduct = apiProducts.find((p) => p._id === productId);
 
-      if (foundProduct) {
-        setProduct(foundProduct);
-        setSelectedSize(foundProduct.size || "");
-        setSelectedColor(foundProduct.color || "");
-
-        // Set page title
-        document.title = `${foundProduct.productName}${foundProduct.vendorId?.name ? ` | ${foundProduct.vendorId.name}` : ' | Namunjii'}`;
-
-        // Get related products from the same context
-        const related = apiProducts
-          .filter((p) => p._id !== productId)
-          .slice(0, 6);
-        setRelatedProducts(related);
-        setLoading(false);
-        return;
-      }
-
-      // If not found in context, try API call
+      // Fetch from API to get product with all variants
       const response = await productApi.getProductById(productId);
       console.log("API Response:", response);
 
@@ -153,11 +192,17 @@ const SingleProductPageDesign = () => {
       if (response && response.success && response.data) {
         const productData = response.data;
         setProduct(productData);
+
+        // Set initial selected size and color from the current product
         setSelectedSize(productData.size || "");
         setSelectedColor(productData.color || "");
 
         // Set page title
-        document.title = `${productData.productName}${productData.vendorId?.name ? ` | ${productData.vendorId.name}` : ' | Namunjii'}`;
+        document.title = `${productData.productName}${
+          productData.vendorId?.name
+            ? ` | ${productData.vendorId.name}`
+            : " | Namunjii"
+        }`;
 
         // Get related products from context
         const related = apiProducts
@@ -188,7 +233,11 @@ const SingleProductPageDesign = () => {
         setSelectedColor(productData.color || "");
 
         // Set page title
-        document.title = `${productData.productName}${productData.vendorId?.name ? ` | ${productData.vendorId.name}` : ' | Namunjii'}`;
+        document.title = `${productData.productName}${
+          productData.vendorId?.name
+            ? ` | ${productData.vendorId.name}`
+            : " | Namunjii"
+        }`;
 
         // Get related products from context
         const apiProducts = Array.isArray(state?.products)
@@ -251,6 +300,72 @@ const SingleProductPageDesign = () => {
     }
   };
 
+  // Find product variant by size and color
+  const findProductVariant = (size, color) => {
+    if (!product?.products || !Array.isArray(product.products)) {
+      return null;
+    }
+
+    // Try to find exact match first (both size and color match)
+    let variant = product.products.find(
+      (p) => p.size === size && p.color === color
+    );
+
+    // If no exact match and we have a size, try to find by size with any color
+    if (!variant && size) {
+      variant = product.products.find((p) => p.size === size);
+    }
+
+    // If still no match and we have a color, try to find by color with any size
+    if (!variant && color) {
+      variant = product.products.find((p) => p.color === color);
+    }
+
+    return variant;
+  };
+
+  // Handle size selection
+  const handleSizeSelect = (size) => {
+    if (!product) return;
+
+    // If we have products array, find the matching variant
+    if (product.products && Array.isArray(product.products)) {
+      // Use current selected color, or fallback to product color, or undefined
+      const colorToUse = selectedColor || product.color || undefined;
+      const variant = findProductVariant(size, colorToUse);
+
+      if (variant && variant._id !== productId) {
+        // Navigate to the variant's URL
+        navigate(`/product/${variant._id}`);
+        return;
+      }
+    }
+
+    // If no variant found or no products array, just update selection
+    setSelectedSize(size);
+  };
+
+  // Handle color selection
+  const handleColorSelect = (color) => {
+    if (!product) return;
+
+    // If we have products array, find the matching variant
+    if (product.products && Array.isArray(product.products)) {
+      // Use current selected size, or fallback to product size, or undefined
+      const sizeToUse = selectedSize || product.size || undefined;
+      const variant = findProductVariant(sizeToUse, color);
+
+      if (variant && variant._id !== productId) {
+        // Navigate to the variant's URL
+        navigate(`/product/${variant._id}`);
+        return;
+      }
+    }
+
+    // If no variant found or no products array, just update selection
+    setSelectedColor(color);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProduct();
@@ -275,15 +390,15 @@ const SingleProductPageDesign = () => {
   };
 
   const finalPrice = calculateFinalPrice();
-  
+
   // Helper function to normalize images (handle both string and array)
   const normalizeImages = (images) => {
     if (!images) return [];
-    if (typeof images === 'string') return [images];
+    if (typeof images === "string") return [images];
     if (Array.isArray(images)) return images;
     return [];
   };
-  
+
   const images = normalizeImages(product?.coverImage);
   const otherImages = normalizeImages(product?.otherImages);
   const allImages = [...images, ...otherImages];
@@ -394,13 +509,170 @@ const SingleProductPageDesign = () => {
     }
   }, [previewImageIndex, isPreviewOpen]);
 
-  if (loading) {
-    return (
-      <div className="single-product-loading">
-        <Spin size="large" />
-        <p>Loading product details...</p>
+  // Skeleton Loading Component
+  const ProductSkeleton = () => (
+    <div className="modern-product-page">
+      {/* Breadcrumbs Skeleton */}
+      <div className="product-breadcrumbs">
+        <div
+          className="skeleton-line"
+          style={{ width: "60px", height: "14px" }}
+        ></div>
+        <span className="breadcrumb-separator">|</span>
+        <div
+          className="skeleton-line"
+          style={{ width: "80px", height: "14px" }}
+        ></div>
+        <span className="breadcrumb-separator">|</span>
+        <div
+          className="skeleton-line"
+          style={{ width: "200px", height: "14px" }}
+        ></div>
       </div>
-    );
+
+      <div className="product-page-container">
+        {/* Product Images Section Skeleton */}
+        <div className="product-images-section">
+          <div className="main-image-container">
+            <div
+              className="skeleton-image"
+              style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+            ></div>
+          </div>
+          {/* Thumbnails Skeleton */}
+          <div
+            className="thumbnail-container"
+            style={{ display: "flex", gap: "10px", marginTop: "20px" }}
+          >
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="skeleton-image"
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "8px",
+                  flexShrink: 0,
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+
+        {/* Product Details Section Skeleton */}
+        <div className="product-details-section">
+          {/* Brand and Product Name Skeleton */}
+          <div className="product-header">
+            <div
+              className="skeleton-line"
+              style={{ width: "120px", height: "16px", marginBottom: "10px" }}
+            ></div>
+            <div
+              className="skeleton-line skeleton-title"
+              style={{ width: "80%", height: "32px", marginBottom: "20px" }}
+            ></div>
+          </div>
+
+          {/* Pricing Skeleton */}
+          <div className="pricing-section">
+            <div
+              className="skeleton-line"
+              style={{ width: "150px", height: "36px", marginBottom: "8px" }}
+            ></div>
+            <div
+              className="skeleton-line"
+              style={{ width: "120px", height: "14px" }}
+            ></div>
+          </div>
+
+          {/* Description Skeleton */}
+          <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+            <div
+              className="skeleton-line"
+              style={{ width: "100%", height: "16px", marginBottom: "8px" }}
+            ></div>
+            <div
+              className="skeleton-line"
+              style={{ width: "90%", height: "16px", marginBottom: "8px" }}
+            ></div>
+            <div
+              className="skeleton-line"
+              style={{ width: "70%", height: "16px" }}
+            ></div>
+          </div>
+
+          {/* Size Selection Skeleton */}
+          <div className="size-selection-section">
+            <div className="size-selection-header">
+              <div
+                className="skeleton-line"
+                style={{ width: "100px", height: "18px" }}
+              ></div>
+              <div
+                className="skeleton-line"
+                style={{ width: "80px", height: "14px" }}
+              ></div>
+            </div>
+            <div
+              className="size-options"
+              style={{
+                display: "flex",
+                gap: "10px",
+                marginTop: "12px",
+                flexWrap: "wrap",
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div
+                  key={i}
+                  className="skeleton-line"
+                  style={{ width: "50px", height: "40px", borderRadius: "4px" }}
+                ></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Color Selection Skeleton */}
+          <div
+            className="color-selection-section"
+            style={{ marginTop: "24px" }}
+          >
+            <div
+              className="skeleton-line"
+              style={{ width: "100px", height: "18px", marginBottom: "12px" }}
+            ></div>
+            <div style={{ display: "flex", gap: "12px" }}>
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="skeleton-line"
+                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+                ></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons Skeleton */}
+          <div
+            className="action-buttons"
+            style={{ marginTop: "30px", display: "flex", gap: "12px" }}
+          >
+            <div
+              className="skeleton-line"
+              style={{ width: "120px", height: "48px", borderRadius: "4px" }}
+            ></div>
+            <div
+              className="skeleton-line"
+              style={{ width: "150px", height: "48px", borderRadius: "4px" }}
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return <ProductSkeleton />;
   }
 
   if (error) {
@@ -1038,9 +1310,9 @@ const SingleProductPageDesign = () => {
                 >
                   <img
                     ref={mainImageRef}
-                src={displayImages[currentImageIndex]}
-                alt={product.productName}
-                className="main-product-image"
+                    src={displayImages[currentImageIndex]}
+                    alt={product.productName}
+                    className="main-product-image"
                     draggable="false"
                     onDragStart={(e) => e.preventDefault()}
                     onClick={(e) => {
@@ -1052,9 +1324,12 @@ const SingleProductPageDesign = () => {
                     onTouchMove={handleProductImageTouchMove}
                     onTouchEnd={handleProductImageTouchEnd}
                     style={{
-                      transform: `scale(${mainImageZoom}) translate(${mainImagePosition.x / mainImageZoom}px, ${mainImagePosition.y / mainImageZoom}px)`,
+                      transform: `scale(${mainImageZoom}) translate(${
+                        mainImagePosition.x / mainImageZoom
+                      }px, ${mainImagePosition.y / mainImageZoom}px)`,
                       transformOrigin: "center center",
-                      transition: mainImageZoom === 1 ? "transform 0.3s ease" : "none",
+                      transition:
+                        mainImageZoom === 1 ? "transform 0.3s ease" : "none",
                       touchAction: "none",
                     }}
                   />
@@ -1113,9 +1388,7 @@ const SingleProductPageDesign = () => {
           {/* Brand and Product Name */}
           <div className="product-header">
             {product.vendorId?.name && (
-            <div className="brand-name">
-                {product.vendorId.name}
-            </div>
+              <div className="brand-name">{product.vendorId.name}</div>
             )}
             <h1 className="product-title">{product.productName}</h1>
           </div>
@@ -1149,60 +1422,71 @@ const SingleProductPageDesign = () => {
 
           {/* Size Selection */}
           <div className="size-selection-section">
-            <div className="size-selection-header">
-              <label className="selection-label">Select Size</label>
-              <button
-                type="button"
-                className="size-guide-link"
-                onClick={() => setIsSizeGuideOpen(true)}
-              >
-                Size guide
-              </button>
-            </div>
-            <div className="size-options">
-              {availableSizes.map((size) => (
-                <button
-                  key={size}
-                  className={`size-btn ${
-                    selectedSize === size ? "selected" : ""
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+            {availableSizes.length > 0 && (
+              <>
+                <div className="size-selection-header">
+                  <label className="selection-label">Select Size</label>
+                  <button
+                    type="button"
+                    className="size-guide-link"
+                    onClick={() => setIsSizeGuideOpen(true)}
+                  >
+                    Size guide
+                  </button>
+                </div>
+                <div className="size-options">
+                  {availableSizes.map((size) => (
+                    <button
+                      key={size}
+                      className={`size-btn ${
+                        selectedSize === size ? "selected" : ""
+                      }`}
+                      onClick={() => handleSizeSelect(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Color Selection */}
+          {/* Color Selection - Only show if there are multiple colors */}
           <div className="color-selection-section">
-            <label className="selection-label">Select Color</label>
-            <div className="color-options">
-              {availableColors.map((color, index) => {
-                const colorValue =
-                  typeof color === "string" && color.startsWith("#")
-                    ? color
-                    : typeof color === "string"
-                    ? getColorValue(color)
-                    : "#D4AF37";
-                const isSelected =
-                  selectedColor === color || (!selectedColor && index === 0);
+            {availableColors.length > 1 && (
+              <>
+                <label className="selection-label">Select Color</label>
+                <div className="color-options">
+                  {availableColors.map((color, index) => {
+                    // Get color code from map or use default
+                    const colorCode = colorCodeMap?.get(color) || color;
+                    const colorValue =
+                      typeof colorCode === "string" && colorCode.startsWith("#")
+                        ? colorCode
+                        : typeof color === "string"
+                        ? getColorValue(color)
+                        : "#D4AF37";
+                    const isSelected = selectedColor === color;
 
-                return (
-                  <button
-                    key={index}
-                    className={`color-swatch ${isSelected ? "selected" : ""}`}
-                    onClick={() => setSelectedColor(color)}
-                    style={{ backgroundColor: colorValue }}
-                    title={
-                      typeof color === "string" && !color.startsWith("#")
-                        ? color
-                        : `Color ${index + 1}`
-                    }
-                  />
-                );
-              })}
-            </div>
+                    return (
+                      <button
+                        key={index}
+                        className={`color-swatch ${
+                          isSelected ? "selected" : ""
+                        }`}
+                        onClick={() => handleColorSelect(color)}
+                        style={{ backgroundColor: colorValue }}
+                        title={
+                          typeof color === "string" && !color.startsWith("#")
+                            ? color
+                            : `Color ${index + 1}`
+                        }
+                      />
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -1250,36 +1534,36 @@ const SingleProductPageDesign = () => {
                 Made to order are delivered within{" "}
                 <strong>10 business days</strong>.
               </span>
-        </div>
-      </div>
+            </div>
+          </div>
 
-      {/* Product Details Tabs */}
-      <div className="product-details-tabs">
-          <Tabs
-            defaultActiveKey="details"
-            items={[
-              {
-                key: "details",
+          {/* Product Details Tabs */}
+          <div className="product-details-tabs">
+            <Tabs
+              defaultActiveKey="details"
+              items={[
+                {
+                  key: "details",
                   label: "Product Details",
-                children: (
-                  <div className="tab-content">
-                    <div className="specifications">
-                      <div className="spec-row">
-                        <span className="spec-label">Sleeve Length:</span>
-                        <span className="spec-value">Short Sleeves</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Fit:</span>
-                        <span className="spec-value">Regular Fit</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Length:</span>
-                        <span className="spec-value">Regular</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Placket:</span>
-                        <span className="spec-value">Button Placket</span>
-                      </div>
+                  children: (
+                    <div className="tab-content">
+                      <div className="specifications">
+                        <div className="spec-row">
+                          <span className="spec-label">Sleeve Length:</span>
+                          <span className="spec-value">Short Sleeves</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Fit:</span>
+                          <span className="spec-value">Regular Fit</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Length:</span>
+                          <span className="spec-value">Regular</span>
+                        </div>
+                        <div className="spec-row">
+                          <span className="spec-label">Placket:</span>
+                          <span className="spec-value">Button Placket</span>
+                        </div>
                         <div className="spec-row">
                           <span className="spec-label">Collar:</span>
                           <span className="spec-value">Spread Collar</span>
@@ -1292,14 +1576,14 @@ const SingleProductPageDesign = () => {
                           <span className="spec-label">Hemline:</span>
                           <span className="spec-value">Curved</span>
                         </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Placket Length:</span>
-                        <span className="spec-value">Full</span>
+                        <div className="spec-row">
+                          <span className="spec-label">Placket Length:</span>
+                          <span className="spec-value">Full</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ),
-              },
+                  ),
+                },
                 {
                   key: "sizeguide",
                   label: "Delivery & Return",
@@ -1338,10 +1622,10 @@ const SingleProductPageDesign = () => {
                     </div>
                   ),
                 },
-            ]}
-          />
+              ]}
+            />
+          </div>
         </div>
-      </div>
       </div>
 
       {/* Custom Image Preview Modal */}
@@ -1453,9 +1737,12 @@ const SingleProductPageDesign = () => {
                   isImageChanging ? "fading-in" : ""
                 }`}
                 style={{
-                  transform: `scale(${previewZoom}) translate(${previewPosition.x / previewZoom}px, ${previewPosition.y / previewZoom}px)`,
+                  transform: `scale(${previewZoom}) translate(${
+                    previewPosition.x / previewZoom
+                  }px, ${previewPosition.y / previewZoom}px)`,
                   transformOrigin: "center center",
-                  transition: previewZoom === 1 ? "transform 0.3s ease" : "none",
+                  transition:
+                    previewZoom === 1 ? "transform 0.3s ease" : "none",
                 }}
               />
             </div>
