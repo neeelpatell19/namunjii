@@ -1161,35 +1161,25 @@ const ProductsPage = () => {
   // Render skeleton product cards
   const renderSkeletonProducts = (count = 12) => {
     return (
-      <div className="products-grid">
+      <div
+        className="products-grid"
+        data-grid-mobile={gridLayout.mobile}
+        data-grid-tablet={gridLayout.tablet}
+        data-grid-desktop={gridLayout.desktop}
+      >
         {Array.from({ length: count }).map((_, index) => (
-          <div key={index} className="product-card">
-            <div
-              className="product-card-image-container"
-              style={{ padding: 0 }}
-            >
-              <Skeleton.Image
-                active
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
+          <div key={index} className="product-card product-card-skeleton">
+            <div className="product-card-image-container">
+              <div className="skeleton-image"></div>
             </div>
-            <div className="product-card-content" style={{ padding: "12px" }}>
+            <div className="product-card-content">
               <div className="product-card-info">
-                <Skeleton
-                  active
-                  paragraph={{ rows: 1 }}
-                  title={{ width: "80%" }}
-                />
-                <Skeleton active paragraph={{ rows: 1, width: "50%" }} />
+                <div className="skeleton-line skeleton-brand" style={{ width: "80px", height: "14px", marginBottom: "8px" }}></div>
+                <div className="skeleton-line skeleton-title" style={{ width: "90%", height: "18px", marginBottom: "8px" }}></div>
+                <div className="skeleton-line skeleton-text" style={{ width: "60%", height: "14px" }}></div>
               </div>
               <div className="product-card-pricing">
-                <Skeleton active paragraph={{ rows: 1, width: "60%" }} />
+                <div className="skeleton-line skeleton-price" style={{ width: "100px", height: "20px" }}></div>
               </div>
             </div>
           </div>
