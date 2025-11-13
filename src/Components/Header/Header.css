@@ -427,20 +427,50 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  width: 100vw;
+  width: auto;
+  min-width: 200px;
+  max-width: 300px;
   transform: none;
   background: var(--bg-white) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   z-index: 1002;
   margin: 0;
-  padding: 0 !important;
+  padding: 12px 0 0 0 !important;
   animation: fadeInMegaMenu 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-top: 1px solid #e8e8e8;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
   height: auto;
   max-height: 400px;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+/* Arrow indicator pointing to category */
+.MegaMenuArrow {
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--bg-white);
+  z-index: 1003;
+  pointer-events: none;
+  transition: left 0.2s ease;
+}
+
+.MegaMenuArrow::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #e8e8e8;
+  z-index: -1;
 }
 
 .fade-in {
@@ -461,11 +491,10 @@
 .MegaMenuContent {
   display: flex;
   gap: 0px;
-  padding: 24px 40px;
+  padding: 16px 20px;
   justify-content: flex-start;
   align-items: flex-start;
-  margin: 0 auto;
-  max-width: 1400px;
+  margin: 0;
   background: #ffffff;
   width: 100%;
   box-sizing: border-box;
@@ -529,14 +558,13 @@
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 4px 12px;
+  flex-direction: column;
+  gap: 0;
   max-height: none;
   overflow: hidden;
   padding-right: 0;
   text-align: left;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   box-sizing: border-box;
 }
@@ -544,14 +572,14 @@
 .MegaMenuList li {
   margin: 0;
   padding: 0;
-  width: auto;
+  width: 100%;
   max-width: 100%;
   text-align: left;
   flex-shrink: 0;
 }
 
 .MegaMenuLink {
-  display: inline-block;
+  display: block;
   color: #666;
   text-decoration: none;
   font-size: 14px;
@@ -559,10 +587,10 @@
   transition: all 0.2s ease;
   font-family: var(--fira-sans);
   text-align: left;
-  width: auto;
+  width: 100%;
   max-width: 100%;
   line-height: 1.4;
-  padding: 5px 10px;
+  padding: 8px 12px;
   white-space: nowrap;
   border-radius: 4px;
   box-sizing: border-box;

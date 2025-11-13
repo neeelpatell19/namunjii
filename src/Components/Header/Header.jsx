@@ -251,24 +251,80 @@ const Header = () => {
     setSearchInput("");
   }, [location.pathname]);
 
-  // Calculate mega menu top position
+  // Calculate mega menu top position and arrow position
   useEffect(() => {
     const updateMegaMenuPosition = () => {
       if (categoryNavBarRef.current) {
         const navBarRect = categoryNavBarRef.current.getBoundingClientRect();
         const topPosition = navBarRect.bottom;
 
-        if (womenMegaMenuRef.current) {
+        // Update Women mega menu position and arrow
+        if (showWomenMegaMenu && womenMegaMenuRef.current) {
           womenMegaMenuRef.current.style.top = `${topPosition}px`;
+          // Find Women category link and position menu + arrow
+          const allCategoryItems = categoryNavBarRef.current.querySelectorAll('.CategoryItem');
+          let womenCategoryItem = null;
+          allCategoryItems.forEach((item) => {
+            const link = item.querySelector('.category-text-link[href*="gender=Women"]');
+            if (link) {
+              womenCategoryItem = item;
+            }
+          });
+          if (womenCategoryItem) {
+            const linkRect = womenCategoryItem.getBoundingClientRect();
+            // Force a reflow to ensure width is calculated
+            const menuWidth = womenMegaMenuRef.current.offsetWidth || 250;
+            const menuLeft = linkRect.left + linkRect.width / 2 - menuWidth / 2;
+            // Ensure menu doesn't go off screen
+            const adjustedLeft = Math.max(10, Math.min(menuLeft, window.innerWidth - menuWidth - 10));
+            womenMegaMenuRef.current.style.left = `${adjustedLeft}px`;
+            
+            const arrow = womenMegaMenuRef.current.querySelector('.women-arrow');
+            if (arrow) {
+              // Position arrow to point to center of category link
+              const arrowOffset = (linkRect.left + linkRect.width / 2) - adjustedLeft;
+              arrow.style.left = `${arrowOffset - 8}px`; // 8px is half of arrow width
+            }
+          }
         }
-        if (menMegaMenuRef.current) {
+
+        // Update Men mega menu position and arrow
+        if (showMenMegaMenu && menMegaMenuRef.current) {
           menMegaMenuRef.current.style.top = `${topPosition}px`;
+          // Find Men category link and position menu + arrow
+          const allCategoryItems = categoryNavBarRef.current.querySelectorAll('.CategoryItem');
+          let menCategoryItem = null;
+          allCategoryItems.forEach((item) => {
+            const link = item.querySelector('.category-text-link[href*="gender=Men"]');
+            if (link) {
+              menCategoryItem = item;
+            }
+          });
+          if (menCategoryItem) {
+            const linkRect = menCategoryItem.getBoundingClientRect();
+            // Force a reflow to ensure width is calculated
+            const menuWidth = menMegaMenuRef.current.offsetWidth || 250;
+            const menuLeft = linkRect.left + linkRect.width / 2 - menuWidth / 2;
+            // Ensure menu doesn't go off screen
+            const adjustedLeft = Math.max(10, Math.min(menuLeft, window.innerWidth - menuWidth - 10));
+            menMegaMenuRef.current.style.left = `${adjustedLeft}px`;
+            
+            const arrow = menMegaMenuRef.current.querySelector('.men-arrow');
+            if (arrow) {
+              // Position arrow to point to center of category link
+              const arrowOffset = (linkRect.left + linkRect.width / 2) - adjustedLeft;
+              arrow.style.left = `${arrowOffset - 8}px`; // 8px is half of arrow width
+            }
+          }
         }
       }
     };
 
     if (showWomenMegaMenu || showMenMegaMenu) {
-      updateMegaMenuPosition();
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        updateMegaMenuPosition();
+      }, 0);
       window.addEventListener("scroll", updateMegaMenuPosition);
       window.addEventListener("resize", updateMegaMenuPosition);
     }
@@ -701,7 +757,7 @@ const Header = () => {
                     {category.name === "Women" && showWomenMegaMenu && (
                       <div
                         ref={womenMegaMenuRef}
-                        className="MegaMenuContainer fade-in"
+                        className="MegaMenuContainer fade-in women-mega-menu"
                         onMouseEnter={() => {
                           if (hideTimeoutRef.current) {
                             clearTimeout(hideTimeoutRef.current);
@@ -715,6 +771,7 @@ const Header = () => {
                           }, 300);
                         }}
                       >
+                        <div className="MegaMenuArrow women-arrow"></div>
                         <div className="MegaMenuContent">
                           <div className="MegaMenuColumn">
                             <ul className="MegaMenuList">
@@ -754,7 +811,7 @@ const Header = () => {
                     {category.name === "Men" && showMenMegaMenu && (
                       <div
                         ref={menMegaMenuRef}
-                        className="MegaMenuContainer fade-in"
+                        className="MegaMenuContainer fade-in men-mega-menu"
                         onMouseEnter={() => {
                           if (hideTimeoutRef.current) {
                             clearTimeout(hideTimeoutRef.current);
@@ -768,6 +825,7 @@ const Header = () => {
                           }, 300);
                         }}
                       >
+                        <div className="MegaMenuArrow men-arrow"></div>
                         <div className="MegaMenuContent">
                           <div className="MegaMenuColumn">
                             <ul className="MegaMenuList">
