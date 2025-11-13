@@ -303,8 +303,8 @@ export default function ProductCard({
             <p>Image not available</p>
           </div>
 
-          {/* Left Arrow - Show on hover (desktop) or always (mobile) if there are multiple images */}
-          {(isHovered || isMobile) && allImages.length > 1 && (
+          {/* Left Arrow - Show on mobile only if there are multiple images */}
+          {isMobile && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-left"
               onClick={(e) => {
@@ -316,8 +316,8 @@ export default function ProductCard({
             </button>
           )}
 
-          {/* Right Arrow - Show on hover (desktop) or always (mobile) if there are multiple images */}
-          {(isHovered || isMobile) && allImages.length > 1 && (
+          {/* Right Arrow - Show on mobile only if there are multiple images */}
+          {isMobile && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-right"
               onClick={(e) => {
