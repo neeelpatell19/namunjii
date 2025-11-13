@@ -224,14 +224,18 @@ export default function ProductCard({
   const handleMouseEnter = () => {
     if (allImages.length > 1) {
       setIsHovered(true);
-      // Show second image immediately on hover
-      setCurrentImageIndex(1);
+      // Start from current image, let auto-play handle the transition
 
       // Preload all images for smooth transitions
       allImages.forEach((imgSrc) => {
         const img = new Image();
         img.src = imgSrc;
       });
+
+      // Start transitioning to next image after a short delay
+      setTimeout(() => {
+        setCurrentImageIndex(1);
+      }, 500);
     }
   };
 
@@ -245,7 +249,7 @@ export default function ProductCard({
     }
   };
 
-  // Auto-play effect - slide every 1.5 seconds when hovering (desktop only)
+  // Auto-play effect - slide every 2.5 seconds when hovering (desktop only)
   useEffect(() => {
     // Clear any existing interval first to prevent multiple intervals
     if (autoPlayRef.current) {
@@ -260,7 +264,7 @@ export default function ProductCard({
           const images = allImagesRef.current;
           return prevIndex === images.length - 1 ? 0 : prevIndex + 1;
         });
-      }, 1500);
+      }, 2000);
     }
 
     return () => {
