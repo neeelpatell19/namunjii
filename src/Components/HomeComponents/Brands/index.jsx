@@ -25,18 +25,50 @@ export default function Brands({ HomeData }) {
     // Handle different data structures
     if (!HomeData) return [];
 
+    let allBrands = [];
+
     // If HomeData is an array, look for brands
     if (Array.isArray(HomeData)) {
       const brandsSection = HomeData.find((item) => item.key === "brands");
-      return brandsSection?.data || [];
+      allBrands = brandsSection?.data || [];
     }
-
     // If HomeData is an object, check for brands property
-    if (typeof HomeData === "object") {
-      return HomeData.brands || HomeData.brands_data || [];
+    else if (typeof HomeData === "object") {
+      allBrands = HomeData.brands || HomeData.brands_data || [];
     }
 
-    return [];
+    if (!allBrands || allBrands.length === 0) return [];
+
+    // Define exclusive brands
+    const exclusiveBrands = [
+      "Grey Horn",
+      "The Branch",
+      "The Drift Line",
+      "The Pure Forms",
+    ];
+
+    // Separate brands into exclusive and normal
+    const exclusive = allBrands.filter((brand) =>
+      exclusiveBrands.includes(brand.brandName)
+    );
+    const normal = allBrands.filter(
+      (brand) => !exclusiveBrands.includes(brand.brandName)
+    );
+
+    // Interleave exclusive and normal brands
+    const reorderedBrands = [];
+    const maxLength = Math.max(exclusive.length, normal.length);
+
+    for (let i = 0; i < maxLength; i++) {
+      if (i < exclusive.length) {
+        reorderedBrands.push(exclusive[i]);
+      }
+      if (i < normal.length) {
+        reorderedBrands.push(normal[i]);
+      }
+    }
+
+    return reorderedBrands;
   }, [HomeData]);
 
   // Loading state
@@ -71,8 +103,6 @@ export default function Brands({ HomeData }) {
     }
     return { defaultImage: null, hoverImage: null };
   };
-
-  console.log("Brands:::", brands);
 
   const renderBrandCard = (brand) => {
     const { defaultImage, hoverImage } = getBrandImages(brand);
@@ -138,7 +168,7 @@ export default function Brands({ HomeData }) {
           slidesPerView={isMobile ? 2 : 4}
           navigation
           autoplay={{
-            delay: 3000,
+            delay: 2000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}
