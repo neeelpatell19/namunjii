@@ -100,20 +100,26 @@ export default function ProductCard({
 
   // Update displayed image when index or hover state changes - using direct ref update for immediate effect
   useEffect(() => {
-    if (imageRef.current) {
-      let targetSrc;
+    if (!imageRef.current) return;
 
-      if ((isHovered || isMobile) && allImages.length > 1) {
-        targetSrc = allImages[currentImageIndex] || firstCoverImage;
-      } else {
-        targetSrc = firstCoverImage;
-      }
+    let targetSrc;
 
-      // Only update if the src has actually changed (compare the path, not full URL)
-      const currentSrc = imageRef.current.getAttribute("src");
-      if (currentSrc !== targetSrc && targetSrc) {
-        imageRef.current.src = targetSrc;
-      }
+    if ((isHovered || isMobile) && allImages.length > 1) {
+      // Ensure currentImageIndex is within bounds
+      const validIndex = Math.max(
+        0,
+        Math.min(currentImageIndex, allImages.length - 1)
+      );
+      targetSrc = allImages[validIndex] || firstCoverImage;
+    } else {
+      targetSrc = firstCoverImage;
+    }
+
+    // Only update if the src has actually changed
+    const currentSrc = imageRef.current.getAttribute("src");
+    if (currentSrc !== targetSrc && targetSrc) {
+      // Use direct assignment for instant update without flicker
+      imageRef.current.src = targetSrc;
     }
   }, [currentImageIndex, isHovered, isMobile, allImages, firstCoverImage]);
 
@@ -224,7 +230,8 @@ export default function ProductCard({
   const handleMouseEnter = () => {
     if (allImages.length > 1) {
       setIsHovered(true);
-      // Start from current image, let auto-play handle the transition
+      // Reset to first image for consistent behavior
+      setCurrentImageIndex(0);
 
       // Preload all images for smooth transitions
       allImages.forEach((imgSrc) => {
@@ -232,7 +239,7 @@ export default function ProductCard({
         img.src = imgSrc;
       });
 
-      // Start transitioning to next image after a short delay
+      // Transition to second image after 500ms
       setTimeout(() => {
         setCurrentImageIndex(1);
       }, 500);
@@ -243,13 +250,14 @@ export default function ProductCard({
   const handleMouseLeave = () => {
     setIsHovered(false);
     setCurrentImageIndex(0);
+    // Clear interval immediately
     if (autoPlayRef.current) {
       clearInterval(autoPlayRef.current);
       autoPlayRef.current = null;
     }
   };
 
-  // Auto-play effect - slide every 2.5 seconds when hovering (desktop only)
+  // Auto-play effect - slide every 2 seconds when hovering (desktop only)
   useEffect(() => {
     // Clear any existing interval first to prevent multiple intervals
     if (autoPlayRef.current) {
@@ -259,14 +267,17 @@ export default function ProductCard({
 
     // Only start auto-play if hovering, has multiple images, and not on mobile
     if (isHovered && allImages.length > 1 && !isMobile) {
+      // Start interval immediately with consistent timing
       autoPlayRef.current = setInterval(() => {
         setCurrentImageIndex((prevIndex) => {
           const images = allImagesRef.current;
-          return prevIndex === images.length - 1 ? 0 : prevIndex + 1;
+          const nextIndex = prevIndex >= images.length - 1 ? 0 : prevIndex + 1;
+          return nextIndex;
         });
-      }, 2000);
+      }, 2000); // 2 seconds interval
     }
 
+    // Cleanup function
     return () => {
       if (autoPlayRef.current) {
         clearInterval(autoPlayRef.current);
