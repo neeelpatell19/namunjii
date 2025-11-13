@@ -31,8 +31,13 @@
   margin-bottom: 12px;
   object-fit: contain;
 }
-.About-heading{
-  color:#775242}
+.About-heading {
+  color: #775242;
+  text-transform: uppercase;
+  font-family: var(--playfair-display) !important;
+  font-weight: 600;
+  font-size: 40px;
+}
 
 /* Make sure cards are flex containers */
 .CityNameCard,
@@ -43,7 +48,6 @@
   justify-content: center;
   text-align: center;
 }
-
 
 .CitiesGridContainer {
   display: grid;
@@ -252,6 +256,9 @@
   color: var(--OrangeColor);
   font-weight: 600;
 }
+.CityName {
+  font-family: var(--fira-sans) !important;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -302,7 +309,7 @@
   }
 
   .CityName {
-    font-size: 14px;
+    font-size: 12px !important;
   }
 
   .ContactInfoCard {
@@ -316,6 +323,12 @@
 
   .ContactDetails p {
     font-size: 14px;
+  }
+  .CityNameCardMobile {
+    padding: 10px 0px;
+  }
+  .About-heading {
+    font-size: 22px !important;
   }
 }
 

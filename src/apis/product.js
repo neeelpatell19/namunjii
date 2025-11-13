@@ -40,7 +40,20 @@ const createProductApi = () => {
 
     // Get all products with filters (public endpoint)
     getProducts: (params = {}) => {
-      const queryString = new URLSearchParams(params).toString();
+      // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
+      const searchParams = new URLSearchParams();
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          // For arrays, append each value separately with the same key
+          value.forEach((v) => searchParams.append(key, v));
+        } else if (value !== null && value !== undefined && value !== "") {
+          // For non-array values, append normally
+          searchParams.append(key, value);
+        }
+      });
+
+      const queryString = searchParams.toString();
       const url = queryString
         ? `/products/public?${queryString}`
         : "/products/public";
@@ -52,6 +65,14 @@ const createProductApi = () => {
 
     // Get all unique colors from products
     getColors: () => api.get("/products/colors").then((res) => res.data),
+
+    // Get search suggestions (autocomplete)
+    getSearchSuggestions: (query, limit = 10) =>
+      api
+        .get("/products/search-suggestions", {
+          params: { q: query, limit },
+        })
+        .then((res) => res.data),
   };
 };
 
@@ -59,7 +80,20 @@ const productApi = createProductApi();
 
 // Additional API methods for products listing
 export const getProducts = async (params = {}) => {
-  const queryString = new URLSearchParams(params).toString();
+  // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      // For arrays, append each value separately with the same key
+      value.forEach((v) => searchParams.append(key, v));
+    } else if (value !== null && value !== undefined && value !== "") {
+      // For non-array values, append normally
+      searchParams.append(key, value);
+    }
+  });
+
+  const queryString = searchParams.toString();
   const url = queryString
     ? `/products/public?${queryString}`
     : "/products/public";

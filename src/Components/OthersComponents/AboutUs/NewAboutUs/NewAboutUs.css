@@ -1,0 +1,272 @@
+.grid {
+  position: relative;
+  left: 50px;
+  display: grid;
+  padding-bottom: 80px;
+}
+.grid-two--cols {
+  width: 100%;
+  grid-template-columns: 55% 45%;
+  align-items: start;
+  gap: 100px;
+  height: 100%;
+}
+
+.about-title {
+  margin-top: 30px;
+  line-height: 1;
+  color: #775242;
+  font-family: var(--playfair-display);
+}
+.about-description {
+  padding-top: 10px;
+  white-space: contain;
+  /* font-size: 16px; */
+  padding-bottom: 20px;
+  color: #1e1e1e;
+  font-family: var(--fira-sans);
+}
+.left .about-description p {
+  font-size: 14px !important;
+}
+.about-btn {
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px 22px;
+  color: #775242;
+  background-color: transparent;
+  border: 2px solid #775242;
+  border-radius: 45px;
+}
+.about-btn span {
+  position: relative;
+  margin-left: 10px;
+  top: 2px;
+}
+.about-btn span img {
+  /* margin-top: 10px; */
+  height: 15px;
+  width: 15px;
+}
+.left {
+  /* padding-left: 20px; */
+}
+.right {
+  position: relative;
+  bottom: 0;
+  right: 0;
+  align-items: end;
+  place-items: end;
+}
+
+.about-image-wrapper {
+  position: relative;
+  width: 50%;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.about-image-wrapper img {
+  width: 100%;
+  height: auto;
+  object-position: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: block;
+  transform: scale(1.5);
+  object-fit: cover;
+}
+
+.about-image-default {
+  opacity: 1;
+  position: relative;
+}
+
+.about-image-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.about-image-wrapper:hover .about-image-default {
+  opacity: 0;
+  transform: scale(1.2);
+}
+
+.about-image-wrapper:hover .about-image-hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Mobile auto-switch (no hover needed) */
+@media (max-width: 768px) {
+  .about-image-wrapper.mobile-show-hover .about-image-default {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+  .about-image-wrapper.mobile-show-hover .about-image-hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Force proper container width */
+  * {
+    box-sizing: border-box !important;
+  }
+
+  body {
+    overflow-x: hidden !important;
+  }
+
+  .marginBottom50 {
+    margin-bottom: 30px !important; /* Reduced from 50px */
+  }
+
+  .MainContainer,
+  .Container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Reset grid positioning */
+  .grid {
+    position: relative;
+    left: 0 !important;
+    right: 0 !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-bottom: 30px !important; /* Reduced from 50px */
+    padding-top: 20px !important; /* Added to control top spacing */
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+  }
+
+  /* Force single column with flexbox for ordering */
+  .grid-two--cols {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 7px !important; /* Reduced from 30px */
+    width: calc(100% - 40px) !important; /* CHANGED - Account for padding */
+    margin: 0 auto !important;
+  }
+
+  /* Left column fixes - split into separate orderable elements */
+  .left {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: contents !important; /* Makes children direct children of grid */
+  }
+
+  /* Title responsive - order 1 */
+  .about-title {
+    font-size: 1.75rem !important;
+    margin-top: 10px !important; /* Reduced from 20px */
+    margin-bottom: 0 !important;
+    line-height: 1.3;
+    word-wrap: break-word;
+    order: 1 !important;
+    width: 100% !important;
+  }
+
+  /* Description responsive - order 3 */
+  .about-description {
+    font-size: 14px !important;
+    padding-top: 10px !important; /* Reduced from 15px */
+    padding-bottom: 10px !important; /* Reduced from 15px */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: normal !important;
+    order: 3 !important;
+    width: 100% !important;
+  }
+
+  /* Button responsive - order 4 */
+  .about-btn {
+    font-size: 15px;
+    padding: 4px 24px;
+    width: auto;
+    margin-top: 0 !important;
+    order: 4 !important;
+  }
+
+  /* Right column fixes - order 2 (image comes after title) */
+  .right,
+  .about-image-container {
+    width: 100% !important;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    order: 2 !important;
+    margin: 0 !important;
+  }
+
+  /* Image responsive */
+  .about-image-wrapper {
+    width: 95% !important; /* CHANGED from 100% to 95% */
+    max-width: 95% !important;
+  }
+
+  .right img,
+  .about-image {
+    width: 100% !important;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
+/* Small mobile specific */
+@media (max-width: 480px) {
+  .marginBottom50 {
+    margin-bottom: 20px !important; /* Further reduced */
+  }
+
+  .grid {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 10px !important; /* Further reduced top padding */
+    padding-bottom: 15px !important; /* Further reduced bottom padding */
+  }
+
+  .grid-two--cols {
+    gap: 15px !important; /* Further reduced gap for smaller screens */
+  }
+
+  .about-title {
+    font-size: 1.5rem !important;
+    margin-top: 5px !important; /* Further reduced */
+    margin-bottom: 0 !important;
+  }
+
+  .about-description {
+    padding-top: 8px !important; /* Further reduced */
+    padding-bottom: 8px !important; /* Further reduced */
+  }
+
+  .about-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0 !important;
+  }
+
+  .right,
+  .about-image-container {
+    margin: 0 !important;
+  }
+}

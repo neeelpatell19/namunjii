@@ -12,13 +12,11 @@ export default function SectionHeading() {
 
   return (
     <div className="section-heading">
-      <h2 className="section-title">
-        THE DESIGNER COLLECTIVE FOR THE MODERN MUSE
-      </h2>
+      <h2 className="section-title">Independent by Design. United by Craft.</h2>
       <div className="section-description">
         <h2 className="jt">
-          <span className="section-brand">{brandLetters}</span>{" "}
-          connects you with curated designers across
+          <span className="section-brand">{brandLetters}</span> connects you
+          with curated designers across
         </h2>
         <h2 className="jt1">
           styles, price points, and categories — bringing you fashion

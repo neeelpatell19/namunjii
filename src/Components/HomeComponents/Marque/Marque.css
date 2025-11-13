@@ -15,7 +15,7 @@
   display: inline-block;
   padding: 1.2rem;
   font-family: var(--playfair-display) !important;
-  font-size: 33px;
+  font-size: 24px;
   white-space: nowrap;
   font-weight: 600;
   line-height: 100%;
@@ -36,7 +36,7 @@
 /* Large Desktops (1216px+) */
 @media screen and (min-width: 1216px) {
   .brand-marquee-item {
-    font-size: 33px;
+    font-size: 24px;
     padding: 1.2rem;
   }
 }
@@ -51,9 +51,6 @@
 
 /* Tablets Landscape (769px - 995px) */
 @media screen and (max-width: 995px) {
-  .brand-marquee-container {
-    margin-top: 50px;
-  }
   .brand-marquee-item {
     font-size: 27px;
     padding: 0.9rem;
@@ -63,7 +60,7 @@
 /* Tablets Portrait (601px - 768px) */
 @media screen and (max-width: 768px) {
   .brand-marquee-item {
-    font-size: 25px;
+    font-size: 20px;
     padding: 0.8rem;
   }
 }
@@ -71,7 +68,7 @@
 /* Large Phones / Small Tablets (481px - 600px) */
 @media screen and (max-width: 600px) {
   .brand-marquee-item {
-    font-size: 22px;
+    font-size: 18px;
     padding: 0.7rem 1rem;
   }
   .brand-marquee-container {
@@ -82,7 +79,7 @@
 /* Medium Phones (391px - 480px) */
 @media screen and (max-width: 480px) {
   .brand-marquee-item {
-    font-size: 20px;
+    font-size: 16px;
     padding: 0.6rem 0.9rem;
   }
 }
@@ -90,7 +87,7 @@
 /* Small Phones (361px - 390px) */
 @media screen and (max-width: 390px) {
   .brand-marquee-item {
-    font-size: 18px;
+    font-size: 14px;
     padding: 0.5rem 0.8rem;
   }
   .brand-marquee-track {
@@ -101,7 +98,7 @@
 /* Extra Small Phones (320px - 360px) */
 @media screen and (max-width: 360px) {
   .brand-marquee-item {
-    font-size: 16px;
+    font-size: 13px;
     padding: 0.4rem 0.7rem;
   }
 }
@@ -109,7 +106,7 @@
 /* Very Small Devices (below 320px) */
 @media screen and (max-width: 319px) {
   .brand-marquee-item {
-    font-size: 14px;
+    font-size: 12px;
     padding: 0.3rem 0.6rem;
   }
 }

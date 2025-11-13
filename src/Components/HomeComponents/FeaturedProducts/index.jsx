@@ -1,9 +1,22 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { Row, Col } from "antd";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./FeaturedProducts.css";
 import { Link } from "react-router-dom";
 
 export default function FeaturedProducts({ HomeData }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const featuredProducts = useMemo(() => {
     // Handle different data structures
     if (!HomeData) return [];
@@ -63,6 +76,27 @@ export default function FeaturedProducts({ HomeData }) {
         </Link>
       </div>
 
+      {isMobile ? (
+        <Row gutter={[12, 12]} className="featured-products-row-mobile">
+          {featuredProducts.map((product) => (
+            <Col xs={12} sm={12} key={product.id || product._id}>
+              <ProductCard
+                product={product}
+                showQuickView={true}
+                showAddToCart={true}
+                onQuickView={(product) => {
+                  console.log("Quick view:", product);
+                  // Add your quick view logic here
+                }}
+                onAddToCart={(product) => {
+                  console.log("Add to cart:", product);
+                  // Add your add to cart logic here
+                }}
+              />
+            </Col>
+          ))}
+        </Row>
+      ) : (
       <div className="featured-products-grid">
         {featuredProducts.map((product) => (
           <ProductCard
@@ -81,6 +115,7 @@ export default function FeaturedProducts({ HomeData }) {
           />
         ))}
       </div>
+      )}
     </div>
   );
 }

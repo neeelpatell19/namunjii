@@ -24,9 +24,13 @@ import TermsAndConditions from "./Components/Policies/TermsAndConditions";
 import SellerPolicy from "./Components/Policies/SellerPolicy";
 import TermsOfUse from "./Components/Policies/TermsOfUse";
 import HomeComponents from "./Components/HomeComponents";
-import Maintenance from "./Components/Maintenance/Maintenance";
+import Login from "./Components/Auth/Login/Login";
+import WhatsAppBtn from "./Components/WhatsAppBtn/WhatsAppBtn";
+// import Maintenance from "./Components/Maintenance/Maintenance";
+import { Grid } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
 import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
+import { HomeDataProvider } from "./Components/StoreLogic/Context/HomeDataContext";
 import { Provider } from "react-redux";
 import store from "./store";
 import { useEffect } from "react";
@@ -217,42 +221,53 @@ const AnimatedRoutes = () => {
             </PageTransition>
           }
         />
+        <Route
+          path="/login"
+          element={
+            <PageTransition>
+              <Login />
+            </PageTransition>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
 };
 
 function App() {
+  const { lg } = Grid.useBreakpoint();
   return (
     <>
       <Provider store={store}>
         <AppProvider>
           <UserProvider>
-            <CartWishlistProvider>
-              <BrowserRouter>
-                <div
-                  style={{
-                    width: "100vw",
-                    overflowX: "hidden",
-                    paddingTop: 0,
-                  }}
-                >
-                  {/* <Header /> */}
-                  <Maintenance />
-                  {/* <AnimatedRoutes /> */}
+            <HomeDataProvider>
+              <CartWishlistProvider>
+                <BrowserRouter>
+                  <div
+                    style={{
+                      width: "100vw",
+                      // overflowX: "hidden",
+                      paddingTop: lg ? "120px" : "60px",
+                    }}
+                  >
+                    <Header />
+                    {/* <Maintenance /> */}
+                    <AnimatedRoutes />
 
-                  {/* <FeaturesAndQuestion /> */}
-                  {/* <CommonUserInteractionsPopup /> */}
-                  {/* <Footer /> */}
-                  {/* <Cookies /> */}
-                  {/* <WhatsAppBtn /> */}
+                    {/* <FeaturesAndQuestion /> */}
+                    {/* <CommonUserInteractionsPopup /> */}
+                    <Footer />
+                    {/* <Cookies /> */}
+                    <WhatsAppBtn />
 
-                  {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
-                  {/* <UserDetailsModal /> */}
-                  {/* <Cart /> */}
-                </div>
-              </BrowserRouter>
-            </CartWishlistProvider>
+                    {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
+                    {/* <UserDetailsModal /> */}
+                    {/* <Cart /> */}
+                  </div>
+                </BrowserRouter>
+              </CartWishlistProvider>
+            </HomeDataProvider>
           </UserProvider>
         </AppProvider>
       </Provider>

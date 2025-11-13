@@ -3,7 +3,7 @@
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 4rem 0;
+  padding: 2rem 0;
 }
 
 /* Header Section */
@@ -149,7 +149,7 @@
 /* Tablet (768px and below) */
 @media (max-width: 768px) {
   .featured-deals-container {
-    padding: 3rem 0;
+    padding: 1rem 0;
   }
 
   .featured-deals-header {

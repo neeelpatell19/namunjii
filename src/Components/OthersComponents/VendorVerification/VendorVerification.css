@@ -3,7 +3,7 @@
   /* margin: 0 auto; */
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(54, 66, 78, 0.08);
+  /* box-shadow: 0 4px 24px rgba(54, 66, 78, 0.08); */
   padding: 40px 32px;
 }
 
@@ -40,19 +40,19 @@
 }
 
 .vendor-form label {
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
   font-weight: 500;
   color: var(--brandColor);
   margin-bottom: 8px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .vendor-form input[type="text"],
 .vendor-form input[type="email"],
 .vendor-form input[type="file"],
 .vendor-form textarea {
-  font-family: var(--Poppins-font);
-  font-size: 15px;
+  font-family: var(--fira-sans);
+  font-size: 13px;
   padding: 12px 14px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -107,6 +107,7 @@
 
 .checkbox-group {
   display: flex;
+  flex-direction: row !important;
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 8px;
@@ -147,7 +148,21 @@
   background: none;
   border: none;
 }
+.CommonFlexGap h2 {
+  font-family: var(--playfair-display);
+  font-size: 42px;
+}
+.CommonFlexGap h2 span {
+  font-family: var(--playfair-display) !important;
+  color: #36424e;
+  padding-left: 20px;
+  font-style: italic;
+}
 
+.CommonFlexGap p {
+  font-family: var(--fira-sans);
+  color: gray;
+}
 .social-links-input-row {
   display: flex;
   gap: 10px;
@@ -371,10 +386,214 @@
   margin-top: 4px;
   font-family: var(--Poppins-font);
 }
+/* Make Brand Description textarea and Upload area EXTRA SMALL - same size */
+.form-row .drag-drop-area {
+  min-height: 100px;
+  max-height: 100px;
+  padding: 0px 0px;
+}
 
+.form-row textarea {
+  min-height: 100px !important;
+  max-height: 100px !important;
+  height: 100px !important;
+  resize: none;
+}
+
+/* Adjust drag-drop content to fit extra small area */
+.form-row .drag-drop-prompt {
+  gap: 4px;
+}
+
+.form-row .drag-drop-text {
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.form-row .drag-drop-hint {
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.form-row .drag-drop-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* File selected view adjustment */
+.form-row .file-selected {
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.form-row .file-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.form-row .file-name {
+  font-size: 12px;
+}
+/* Group Product Categories and Price Range together */
+.category-price-group {
+  background: #fafbfc;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+.right-align {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-top: 0px !important;
+}
+.submit {
+  padding: 10px 10px;
+  min-width: 150px;
+}
+.form-sub-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-sub-group label {
+  font-family: var(--fira-sans);
+  font-weight: 500;
+  color: var(--brandColor);
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.form-sub-group input[type="text"] {
+  font-family: var(--Poppins-font);
+  font-size: 15px;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  transition: border 0.2s;
+}
+
+.form-sub-group input[type="text"]:focus {
+  border: 1.5px solid var(--brandColor);
+}
+
+/* Alternative - Without background box */
+.category-price-group-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+* Product Categories checkbox styling */ .form-row .checkbox-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.form-row .checkbox-label {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  font-size: 15px;
+  gap: 6px;
+}
+
+/* Custom category input in form-row */
+.form-row .custom-category-input input {
+  width: 100%;
+}
+
+/* Subcategories in Product Categories column */
+.form-row h5 {
+  font-size: 14px !important;
+  margin-top: 10px !important;
+  margin-bottom: 8px !important;
+}
+.sbmt-btn {
+  font-size: 14px !important;
+  font-weight: 300;
+}
+
+/* Smaller textareas in 2-column layout */
+.form-row textarea {
+  min-height: 80px !important;
+  height: 80px !important;
+  max-height: 120px;
+  font-size: 13px !important;
+  resize: vertical;
+}
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  /* Restore larger size on mobile */
+  .form-row .drag-drop-area {
+    min-height: 80px;
+    max-height: none;
+    padding: 14vbnm, px 10px;
+  }
+
+  .form-row textarea {
+    min-height: 120px !important;
+    max-height: none !important;
+    height: auto !important;
+    resize: vertical;
+  }
+
+  .form-row .drag-drop-text {
+    font-size: 14px;
+  }
+
+  .form-row .drag-drop-hint {
+    font-size: 13px;
+  }
+
+  .form-row .drag-drop-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  .category-price-group {
+    padding: 16px;
+  }
+
+  .form-sub-group {
+    margin-bottom: 0;
+  }
+  .form-row .checkbox-group {
+    flex-direction: column !important;
+    gap: 8px;
+  }
+
+  .form-row .checkbox-label {
+    font-size: 14px;
+  }
+
+  /* Restore normal textarea height on mobile */
+  .form-row textarea {
+    min-height: 80px !important;
+    /* height: 100px !important; */
+  }
+
+  .CommonFlexGap h2 {
+    white-space: nowrap;
+    font-size: 30px;
+  }
+  .form-row .drag-drop-icon svg {
+    width: 30px;
+    height: 30px;
+  }
+}
 @media (max-width: 600px) {
   .VendorVerificationFormContainer {
-    padding: 20px 5px;
+    padding: 22px 14px;
   }
 }
 

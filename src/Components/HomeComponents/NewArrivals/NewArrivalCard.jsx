@@ -4,7 +4,7 @@ import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import cartApi from "../../../apis/cart";
 import "./NewArrivalCard.css";
 
-export default function NewArrivalCard({ product }) {
+export default function NewArrivalCard({ product, isMobile = false }) {
   const { deviceId } = useDevice();
   const { triggerCartDrawer, refreshCart } = useCartWishlist();
 
@@ -30,12 +30,23 @@ export default function NewArrivalCard({ product }) {
     }
   };
 
+  // Helper function to normalize images (handle both string and array)
+  const normalizeImages = (images) => {
+    if (!images) return [];
+    if (typeof images === 'string') return [images];
+    if (Array.isArray(images)) return images;
+    return [];
+  };
+
+  const coverImages = normalizeImages(product?.coverImage);
+  const firstCoverImage = coverImages[0] || "";
+
   return (
-    <div className="new-collections-card">
+    <div className={`new-collections-card ${isMobile ? 'new-collections-card-mobile' : ''}`}>
       <p className="new-collections-brand">{product.productName}</p>
       <div className="new-collections-image-container">
         <img 
-          src={product.coverImage[0]} 
+          src={firstCoverImage} 
           alt={product.shopName} 
           className="new-collections-image"
           loading="lazy"

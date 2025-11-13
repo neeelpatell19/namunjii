@@ -7,13 +7,17 @@
   z-index: 1000;
   background: var(--bg-white);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Main Navigation Bar */
 .MainNavBar {
   background: var(--bg-white);
-  padding: 16px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--neutral-950);
+  width: 100%;
 }
 
 .NavLeft {
@@ -31,6 +35,226 @@
 
 .SearchIcon:hover {
   color: var(--brand-500);
+}
+
+/* Header Search Container */
+.HeaderSearchContainer {
+  position: relative;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+@media (max-width: 768px) {
+  .HeaderSearchContainer {
+    min-width: 200px;
+    max-width: 100%;
+  }
+
+  .header-search-suggestions-dropdown {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .HeaderSearchContainer {
+    min-width: 150px;
+  }
+}
+
+.header-search-input {
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  font-family: var(--Poppins-font);
+}
+
+.header-search-input .ant-input {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5715;
+  padding: 4px 11px;
+  height: 100%;
+  border: none;
+  box-shadow: none;
+}
+
+.header-search-input .ant-input:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.header-search-input .ant-input::placeholder {
+  color: #bfbfbf;
+  line-height: 1.5715;
+}
+
+.header-search-input .ant-input-prefix {
+  margin-right: 8px;
+  margin-left: 0;
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.header-search-input .ant-input-prefix .anticon {
+  font-size: 14px;
+}
+
+.header-search-input .ant-input-suffix {
+  margin-left: 8px;
+  margin-right: 0;
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.header-search-input .ant-input-suffix .anticon {
+  font-size: 14px;
+}
+
+.header-search-input:hover {
+  border-color: var(--brand-primary);
+}
+
+.header-search-input:focus,
+.header-search-input.ant-input-focused {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(54, 66, 78, 0.1);
+}
+
+/* Header Search Suggestions Dropdown */
+.header-search-suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1002;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.header-search-suggestions-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.header-search-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: var(--Poppins-font);
+}
+
+.header-search-suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+
+.header-search-suggestion-item:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.header-search-suggestion-image {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.header-search-suggestion-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.header-search-suggestion-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-search-suggestion-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.header-search-suggestion-price-current {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.header-search-suggestion-price-original {
+  font-size: 12px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.header-search-suggestion-discount {
+  font-size: 12px;
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.header-search-suggestion-meta {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile Search Drawer */
+.mobile-search-drawer .ant-drawer-header {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-search-drawer .ant-drawer-title {
+  font-family: var(--Poppins-font);
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mobile-search-container {
+  position: relative;
+  width: 100%;
+}
+
+.mobile-search-input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.mobile-search-input .ant-input {
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+.mobile-search-container .header-search-suggestions-dropdown {
+  position: relative;
+  margin-top: 0;
+  max-height: calc(100vh - 200px);
+  box-shadow: none;
+  border: 1px solid #e8e8e8;
 }
 
 .MobileMenuToggle {
@@ -83,6 +307,9 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  padding-right: 8px;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .WishlistIcon {
@@ -97,37 +324,46 @@
 }
 
 .CartContainer {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
-.CartContainer:hover .CartText {
+.CartContainer:hover .CartIcon {
   color: var(--brand-500);
 }
 
-.CartText {
-  font-size: 14px;
-  font-weight: 600;
+.CartIcon {
+  font-size: 20px;
   color: var(--brand-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: color 0.3s ease;
 }
 
 .CartBadge {
+  position: absolute;
+  top: -6px;
+  right: -4px;
   background: var(--brand-primary);
   color: var(--bg-white);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
+  aspect-ratio: 1;
+  padding: 2px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.CartBadge span {
+  display: block;
+  line-height: 1;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
 .UserIcon {
@@ -156,27 +392,220 @@
   color: var(--brand-500);
 }
 
-/* Brand Separator Line */
-.SeparatorLine {
-  height: 2px;
-  background: var(--brand-primary);
-  width: 100%;
-}
-
 /* Secondary Navigation Bar */
 .CategoryNavBar {
-  background: var(--bg-light-beige);
-  padding: 12px 0;
+  background: #fff;
+  padding: 12px 0 8px 0;
+  position: relative;
+  z-index: 1000;
+  overflow: visible;
+}
+
+.CategoryNavBar .Container {
+  position: relative;
+  overflow: visible;
 }
 
 .CategoryLinks {
   display: flex;
   gap: 40px;
   align-items: center;
+  position: relative;
+  overflow: visible;
 }
 
 .CategoryItem {
   position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* Mega Menu Styles */
+/* 
+  Responsive Breakpoints:
+  - Desktop (>1280px): Full mega menu (600-900px width)
+  - Large Tablets (1025px-1280px): Medium mega menu (550-800px width)
+  - Tablets (769px-1024px): Smaller mega menu (500-700px width)
+  - Mobile/Tablets (≤768px): Mega menu HIDDEN (mobile menu used instead)
+*/
+.MegaMenuContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  min-width: 200px;
+  max-width: 300px;
+  transform: none;
+  background: var(--bg-white) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 1002;
+  margin: 0;
+  padding: 12px 0 0 0 !important;
+  animation: fadeInMegaMenu 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: visible;
+}
+
+/* Arrow indicator pointing to category */
+.MegaMenuArrow {
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--bg-white);
+  z-index: 1003;
+  pointer-events: none;
+  transition: left 0.2s ease;
+}
+
+.MegaMenuArrow::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #e8e8e8;
+  z-index: -1;
+}
+
+.fade-in {
+  animation: fadeInMegaMenu 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInMegaMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.MegaMenuContent {
+  display: flex;
+  gap: 0px;
+  padding: 16px 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0;
+  background: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Custom scrollbar for mega menu - positioned at the extreme right edge */
+.MegaMenuContainer::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+  /* display: block !important; */
+  /* -webkit-appearance: none !important; */
+}
+
+.MegaMenuContainer::-webkit-scrollbar-track {
+  background: #e0e0e0 !important;
+  border-radius: 0px !important;
+}
+
+.MegaMenuContainer::-webkit-scrollbar-thumb {
+  background: #666 !important;
+  border-radius: 0px !important;
+  border: none !important;
+  min-height: 40px !important;
+}
+
+.MegaMenuContainer::-webkit-scrollbar-thumb:hover {
+  background: #333 !important;
+}
+
+.MegaMenuContainer::-webkit-scrollbar-button {
+  display: none !important;
+}
+
+.MegaMenuColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  height: fit-content;
+  background: #ffffff;
+  padding: 0;
+  border-right: none;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.MegaMenuColumn:first-child {
+  padding-left: 0;
+}
+
+.MegaMenuColumn:last-child {
+  padding-right: 0;
+}
+
+
+.MegaMenuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: none;
+  overflow: hidden;
+  padding-right: 0;
+  text-align: left;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.MegaMenuList li {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.MegaMenuLink {
+  display: block;
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 300;
+  transition: all 0.2s ease;
+  font-family: var(--fira-sans);
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.4;
+  padding: 8px 12px;
+  white-space: nowrap;
+  border-radius: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.MegaMenuLink:hover {
+  color: #000;
+  background-color: #f5f5f5;
 }
 
 .CategoryLink {
@@ -191,19 +620,110 @@
   letter-spacing: 0.5px;
   transition: color 0.3s ease;
   font-family: var(--Poppins-font);
+  position: relative;
+  padding-bottom: 4px;
 }
 
 .CategoryLink:hover {
   color: var(--brand-500);
 }
 
+/* Dropdown link styling */
+.CategoryLink.dropdown-link {
+  cursor: pointer;
+}
+
+.category-text-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.category-text-link:hover {
+  color: var(--brand-500);
+}
+
+.dropdown-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 4px;
+  padding: 2px;
+  transition: all 0.3s ease;
+}
+
+.dropdown-icon:hover {
+  transform: scale(1.1);
+}
+
 .CategoryLink.special {
-  color: var(--brand-100);
+  color: #E40E0B;
   font-weight: 600;
 }
 
 .CategoryLink.special:hover {
-  color: var(--neutral-100);
+  color: #E40E0B;
+}
+
+/* Active tab styling */
+.CategoryLink.active {
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
+.CategoryLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background-color: var(--brand-primary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.CategoryLink.special.active {
+  color: #E40E0B;
+}
+
+.CategoryLink.special.active::after {
+  background-color: #E40E0B;
+}
+
+/* Hover effect for all links */
+.CategoryLink:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background-color: var(--brand-500);
+  border-radius: 2px;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.CategoryLink.special:hover::after {
+  background-color: #E40E0B;
+  opacity: 0.5;
+}
+
+/* Active state should override hover */
+.CategoryLink.active:hover::after {
+  width: 80%;
+  height: 3px;
+  opacity: 1;
+  background-color: var(--brand-primary);
+}
+
+.CategoryLink.special.active:hover::after {
+  background-color: #E40E0B;
 }
 
 /* Mobile Menu Styles */
@@ -222,13 +742,62 @@
   }
 }
 
+@media (width: 768px) {
+  .MainNavBar .Container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 768px) {
+  /* Prevent horizontal scroll on mobile */
+  body,
+  html {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
   .MainNavBar {
-    padding: 12px 0;
+    padding: 12px 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .MainNavBar .Container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .MainNavBar .Container .ant-row {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 !important;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .NavLeft {
+    gap: 12px;
+  }
+
+  .NavActions {
+    gap: 14px;
+    padding-right: 10px;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .MobileMenuToggle {
     display: block;
+    font-size: 22px;
   }
 
   .LogoText {
@@ -236,21 +805,31 @@
   }
 
   .SearchIcon {
-    font-size: 18px;
+    font-size: 20px;
+  }
+
+  .UserIcon {
+    font-size: 20px;
   }
 
   .WishlistIcon {
-    font-size: 18px;
+    font-size: 20px;
   }
 
-  .CartText {
-    font-size: 12px;
+  .CartIcon {
+    font-size: 20px;
   }
 
   .CartBadge {
-    width: 18px;
-    height: 18px;
-    font-size: 10px;
+    font-size: 12px;
+    top: -5px;
+    right: -5px;
+    padding: 1.5px;
+    aspect-ratio: 1;
+    box-sizing: content-box;
+    /* Ensure badge doesn't cause horizontal scroll */
+    max-width: 20px;
+    overflow: hidden;
   }
 
   .CategoryNavBar {
@@ -262,21 +841,53 @@
     background: var(--bg-light-beige);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 999;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
   }
 
   .CategoryNavBar.mobile-open {
     display: block;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .CategoryNavBar .Container {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .CategoryNavBar .Container .ant-row {
+    justify-content: flex-start !important;
   }
 
   .CategoryLinks {
     flex-direction: column;
     gap: 0;
     padding: 16px;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .CategoryItem {
     width: 100%;
+    max-width: 100%;
     border-bottom: 1px solid var(--neutral-950);
+    position: relative;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .CategoryItem:last-child {
@@ -290,42 +901,169 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  /* Active state for mobile */
+  .CategoryLink.active::after {
+    bottom: 0;
+    height: 3px;
+    width: 70%;
+  }
+  
+  .CategoryLink:hover::after {
+    bottom: 0;
+    width: 50%;
+  }
+
+  /* Show mega menu on mobile - positioned to the right */
+  .CategoryNavBar.mobile-open .MegaMenuContainer {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    width: 60% !important;
+    min-width: 200px !important;
+    max-width: 300px !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 12px 0 !important;
+    z-index: 1004 !important;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    border-left: 1px solid #e8e8e8;
+    border-radius: 0;
+    background: var(--bg-white) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    transform: translateX(0) !important;
+    transition: transform 0.3s ease;
+    box-sizing: border-box !important;
+  }
+
+  /* Hide arrow on mobile */
+  .CategoryNavBar.mobile-open .MegaMenuContainer .MegaMenuArrow {
+    display: none;
+  }
+
+  /* Adjust mega menu content for mobile */
+  .MegaMenuContainer .MegaMenuContent {
+    padding: 12px 16px;
   }
 }
 
 @media (max-width: 480px) {
   .MainNavBar {
-    padding: 10px 0;
+    padding: 10px 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .MainNavBar .Container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100%;
+  }
+
+  .MainNavBar .Container .ant-row {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .NavLeft {
+    gap: 10px;
+  }
+
+  .NavActions {
+    gap: 12px;
+    padding-right: 12px;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .LogoText {
     font-size: 16px;
   }
 
+  .MobileMenuToggle {
+    font-size: 20px;
+  }
+
   .SearchIcon {
-    font-size: 16px;
+    font-size: 18px;
+  }
+
+  .UserIcon {
+    font-size: 18px;
   }
 
   .WishlistIcon {
-    font-size: 16px;
+    font-size: 18px;
   }
 
-  .CartText {
-    font-size: 10px;
+  .CartIcon {
+    font-size: 18px;
   }
 
   .CartBadge {
-    width: 16px;
-    height: 16px;
-    font-size: 9px;
+    font-size: 12px;
+    top: -6px;
+    right: -10px;
+    padding: 1px;
+    aspect-ratio: 1;
+    box-sizing: content-box;
+    /* Ensure badge doesn't cause horizontal scroll */
+    max-width: 20px;
+    overflow: hidden;
   }
 
   .CategoryLinks {
     padding: 12px;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .CategoryLink {
     font-size: 13px;
     padding: 10px 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 }
+
+/* Tablet responsive - Mega menu active only on larger tablets and desktops */
+@media (max-width: 1024px) {
+  .MegaMenuContainer {
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .MegaMenuContent {
+    max-width: 100%;
+    padding: 20px 15px;
+    gap: 0px;
+    box-sizing: border-box;
+  }
+
+  .MegaMenuColumn {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+}
+

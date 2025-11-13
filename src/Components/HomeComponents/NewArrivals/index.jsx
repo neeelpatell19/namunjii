@@ -1,10 +1,26 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { Row, Col } from "antd";
 import ProductCard from "../../Common/ProductCard/ProductCard";
-import NewArrivalCard from "./NewArrivalCard";
 import "./NewArrivals.css";
 import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 export default function NewArrivals({ HomeData }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const newArrivals = useMemo(() => {
     // Handle different data structures
     if (!HomeData) return [];
@@ -53,23 +69,82 @@ export default function NewArrivals({ HomeData }) {
     );
   }
 
+  console.log("New Arrivals:", newArrivals);
+
   return (
     <div className="new-arrivals-container">
       <div className="new-arrivals-header">
         <h2 className="new-arrivals-title">New Arrivals</h2>
         <Link
-          to="/products?isNewArrival=true
-"
+          to="/products?isNewArrival=true"
           className="view-all-btn"
         >
           View All <span className="arrow-icon">→</span>
         </Link>
       </div>
 
-      <div className="new-arrivals-grid">
-        {newArrivals.map((product) => (
-          <NewArrivalCard key={product._id || product.id} product={product} />
-        ))}
+      <div className="new-arrivals-slider-wrapper">
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          spaceBetween={isMobile ? 12 : 24}
+          slidesPerView={isMobile ? 2 : 4}
+          navigation
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          loop={newArrivals.length > (isMobile ? 2 : 4)}
+          grabCursor={true}
+          touchEventsTarget="container"
+          simulateTouch={true}
+          allowTouchMove={true}
+          touchRatio={1}
+          touchAngle={45}
+          longSwipes={true}
+          longSwipesRatio={0.5}
+          longSwipesMs={300}
+          followFinger={true}
+          threshold={5}
+          touchMoveStopPropagation={false}
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+              spaceBetween: 12,
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 24,
+            },
+            1200: {
+              slidesPerView: 4,
+              spaceBetween: 24,
+            },
+          }}
+          className="new-arrivals-swiper"
+        >
+          {newArrivals.map((product) => (
+            <SwiperSlide key={product._id || product.id}>
+              <ProductCard
+                product={product}
+                showQuickView={true}
+                showAddToCart={true}
+                onQuickView={(product) => {
+                  console.log("Quick view:", product);
+                  // Add your quick view logic here
+                }}
+                onAddToCart={(product) => {
+                  console.log("Add to cart:", product);
+                  // Add your add to cart logic here
+                }}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );

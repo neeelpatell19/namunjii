@@ -7,11 +7,13 @@ import BestSellers from "./BestSellers";
 import FeaturedProducts from "./FeaturedProducts";
 import NewArrivals from "./NewArrivals";
 import FeaturedDeals from "./FeaturedDeals";
+import Brands from "./Brands";
 import BrandMarquee from "./Marque";
 import SectionHeading from "./HeroText";
 import HeroHome from "../OthersComponents/AboutUs/HeroHome/HeroHome";
 import AnimatedSection from "./AnimatedSection";
 import Partnerus from "../PartnerUs/Partnerus";
+import NewAboutUs from "../OthersComponents/AboutUs/NewAboutUs/NewAboutUs";
 
 // Loading Component with Skeleton Animation
 const LoadingState = () => {
@@ -165,14 +167,16 @@ export default function HomeComponents() {
     <div>
       <HeroHome />
       {/* <Carousel HomeData={HomeData} /> */}
-      <BrandMarquee />
-      <AnimatedSection>
+      <BrandMarquee HomeData={HomeData} />
+      {/* <AnimatedSection>
         <SectionHeading />
-      </AnimatedSection>
+      </AnimatedSection> */}
+      <NewAboutUs />
       {/* <Categories HomeData={HomeData} /> */}
       <NewArrivals HomeData={HomeData} />
-      <BestSellers HomeData={HomeData} />
-      <FeaturedProducts HomeData={HomeData} />
+      <Brands HomeData={HomeData} />
+      {/* <BestSellers HomeData={HomeData} />
+      <FeaturedProducts HomeData={HomeData} /> */}
       {/* <FeaturedDeals HomeData={HomeData} /> */}
       <Partnerus />
     </div>

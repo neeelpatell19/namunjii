@@ -330,9 +330,10 @@
 }
 
 .CategoriesNamesContainer ul li {
+    font-family: var(--fira-sans);
     padding: 5px 10px;
     transition: .5s;
-    font-size: 14px;
+    font-size: 14px !important;
     scroll-snap-align: start;
     white-space: nowrap;
 }
@@ -365,11 +366,13 @@
 }
 
 .ProductsCount {
-    font-size: 14px;
+    font-family: var(--fira-sans);
+    font-size: 14px !important;
     color: #666;
 }
 
 .ResetFilterButton {
+    font-family: var(--fira-sans);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -378,7 +381,7 @@
     border-radius: 6px;
     background: #fff;
     color: #666;
-    font-size: 14px;
+    font-size: 14px !important;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -441,9 +444,10 @@
 }
 
 .FilterItem h4 {
+    font-family: var(--fira-sans);
     margin-bottom: 10px !important;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px !important;
+    font-weight: 500;
     color: #333;
 }
 
@@ -463,11 +467,12 @@
 }
 
 .FilterSearchInput {
+    font-family: var(--fira-sans) !important;
     width: 100%;
     padding: 12px 40px 12px 35px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 14px !important;
     outline: none;
     transition: border-color 0.3s ease;
 }
@@ -510,19 +515,21 @@
 }
 
 .PriceInputGroup label {
+    font-family: var(--fira-sans) !important;
     display: block;
     margin-bottom: 5px;
-    font-size: 12px;
+    font-size: 14px !important;
     font-weight: 500;
     color: #666;
 }
 
 .PriceInput {
+    font-family: var(--fira-sans) !important;
     width: 100%;
     padding: 10px 0px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 14px !important;
     outline: none;
     transition: border-color 0.3s ease;
 }
@@ -535,8 +542,9 @@
 }
 
 .PriceRangeDisplay {
+    font-family: var(--fira-sans) !important;
     text-align: center;
-    font-size: 14px;
+    font-size: 14px !important;
     font-weight: 500;
     color: var(--brandColor);
     padding: 8px;
@@ -654,7 +662,8 @@
 }
 
 .PriceValue {
-    font-size: 14px;
+    font-family: var(--fira-sans) !important;
+    font-size: 14px !important;
     font-weight: 600;
     color: var(--brandColor);
     background: #f8f9fa;
@@ -670,10 +679,11 @@
 }
 
 .SaleCheckboxLabel {
+    font-family: var(--fira-sans) !important;
     display: flex;
     align-items: center;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 14px !important;
     color: #333;
 }
 
@@ -889,9 +899,10 @@
 }
 
 .mobile-filter-header h3 {
+    font-family: var(--fira-sans);
     margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 14px !important;
+    font-weight: 500;
     color: #333;
 }
 
@@ -920,9 +931,10 @@
 }
 
 .mobile-filter-section h4 {
+    font-family: var(--fira-sans);
     margin: 0 0 12px 0;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px !important;
+    font-weight: 500;
     color: #333;
 }
 

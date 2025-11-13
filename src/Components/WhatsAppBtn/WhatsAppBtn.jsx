@@ -2,8 +2,8 @@ import React from "react";
 import "./WhatsAppBtn.css";
 
 const WhatsAppBtn = ({
-    phoneNumber = "9824037321",
-    message = "Hi! I'm interested in your services. Can you help me?",
+    phoneNumber = "919878911223",
+    message = "Hello! I want to be part of Namunjii. What's the procedure?",
     showPulse = true,
     size = "medium" // small, medium, large
 }) => {

@@ -1,5 +1,14 @@
-import React, { useState } from "react";
-import { HeartOutlined, HeartFilled, EyeOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import {
+  HeartOutlined,
+  HeartFilled,
+  EyeOutlined,
+  ThunderboltFilled,
+  ClockCircleFilled,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
+import { Tooltip, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
@@ -28,8 +37,93 @@ export default function ProductCard({
     refreshWishlist,
   } = useCartWishlist();
   const [showQuickViewModal, setShowQuickViewModal] = useState(false);
+  const [showSizeModal, setShowSizeModal] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
+  const autoPlayRef = useRef(null);
+  const imageRef = useRef(null);
+  const allImagesRef = useRef([]);
+
+  // Helper function to normalize images (handle both string and array)
+  const normalizeImages = (images) => {
+    if (!images) return [];
+    if (typeof images === "string") return [images];
+    if (Array.isArray(images)) return images;
+    return [];
+  };
+
+  // Memoize image arrays to prevent recreation on every render
+  const coverImages = useMemo(
+    () => normalizeImages(product?.coverImage),
+    [product?.coverImage]
+  );
+  const otherImages = useMemo(
+    () => normalizeImages(product?.otherImages),
+    [product?.otherImages]
+  );
+
+  // Combine all images for the slider - memoized to ensure stable reference
+  const allImages = useMemo(
+    () => [...coverImages, ...otherImages],
+    [coverImages, otherImages]
+  );
+  const firstCoverImage = useMemo(() => coverImages[0] || "", [coverImages]);
+
+  // Keep ref updated with latest images
+  useEffect(() => {
+    allImagesRef.current = allImages;
+  }, [allImages]);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Reset image index when product images change
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [product?._id]);
+
+  // Ensure currentImageIndex is always valid
+  useEffect(() => {
+    if (currentImageIndex >= allImages.length && allImages.length > 0) {
+      setCurrentImageIndex(0);
+    }
+  }, [currentImageIndex, allImages.length]);
+
+  // Update displayed image when index or hover state changes - using direct ref update for immediate effect
+  useEffect(() => {
+    if (!imageRef.current) return;
+
+    let targetSrc;
+
+    if ((isHovered || isMobile) && allImages.length > 1) {
+      // Ensure currentImageIndex is within bounds
+      const validIndex = Math.max(
+        0,
+        Math.min(currentImageIndex, allImages.length - 1)
+      );
+      targetSrc = allImages[validIndex] || firstCoverImage;
+    } else {
+      targetSrc = firstCoverImage;
+    }
+
+    // Only update if the src has actually changed
+    const currentSrc = imageRef.current.getAttribute("src");
+    if (currentSrc !== targetSrc && targetSrc) {
+      // Use direct assignment for instant update without flicker
+      imageRef.current.src = targetSrc;
+    }
+  }, [currentImageIndex, isHovered, isMobile, allImages, firstCoverImage]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -45,6 +139,42 @@ export default function ProductCard({
     return Math.round(basePricing - discountAmount);
   };
 
+  // Extract available sizes from products array
+  const getAvailableSizes = useMemo(() => {
+    if (!product?.products || !Array.isArray(product.products)) {
+      return [];
+    }
+
+    const sizesSet = new Set();
+    product.products.forEach((p) => {
+      if (p.size) {
+        sizesSet.add(p.size);
+      }
+    });
+
+    // Filter sizes based on isExpressShipping
+    let availableSizes = Array.from(sizesSet);
+    if (product.isExpressShipping) {
+      // If express shipping is enabled, exclude "Free Size"
+      availableSizes = availableSizes.filter((size) => size !== "Free Size");
+    }
+
+    // Sort sizes in a logical order
+    const sizeOrder = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL", "4XL", "Free Size"];
+    availableSizes.sort((a, b) => {
+      const indexA = sizeOrder.indexOf(a);
+      const indexB = sizeOrder.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+
+    return availableSizes;
+  }, [product?.products, product?.isExpressShipping]);
+
+  const availableSizes = getAvailableSizes;
+
   const handleQuickView = () => {
     setShowQuickViewModal(true);
     if (onQuickView) {
@@ -56,14 +186,47 @@ export default function ProductCard({
     e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
 
+    // If product has multiple sizes, show size selection modal
+    if (availableSizes.length > 1) {
+      setShowSizeModal(true);
+      return;
+    }
+
+    // If only one size or no sizes, add directly to cart
+    const sizeToAdd = availableSizes.length === 1 ? availableSizes[0] : product.size || "";
+    await addToCartWithSize(sizeToAdd);
+  };
+
+  const addToCartWithSize = async (size) => {
+    if (!deviceId) return;
+
     try {
+      // Find the product variant with the selected size
+      let productIdToAdd = product._id;
+      let colorToAdd = product.color || "";
+
+      if (product?.products && Array.isArray(product.products) && size) {
+        // Try to find exact match with size
+        const variant = product.products.find((p) => p.size === size);
+        if (variant) {
+          productIdToAdd = variant._id;
+          colorToAdd = variant.color || colorToAdd;
+        }
+      }
+
       const response = await cartApi.addToCart({
         deviceId,
-        productId: product._id,
+        productId: productIdToAdd,
         quantity: 1,
+        size: size,
+        color: colorToAdd,
       });
 
       if (response.success) {
+        // Close modal if open
+        setShowSizeModal(false);
+        setSelectedSize("");
+
         // Trigger cart drawer to open
         triggerCartDrawer();
         refreshCart();
@@ -115,21 +278,104 @@ export default function ProductCard({
     }
   };
 
+  // Navigate to next image
+  const goToNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Navigate to previous image
+  const goToPrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
+    );
+  };
+
+  // Navigate to specific image
+  const goToImage = (index) => {
+    setCurrentImageIndex(index);
+  };
+
+  // Handle mouse enter to start hovering and auto-play
+  const handleMouseEnter = () => {
+    if (allImages.length > 1) {
+      setIsHovered(true);
+      // Reset to first image for consistent behavior
+      setCurrentImageIndex(0);
+
+      // Preload all images for smooth transitions
+      allImages.forEach((imgSrc) => {
+        const img = new Image();
+        img.src = imgSrc;
+      });
+
+      // Transition to second image after 500ms
+      setTimeout(() => {
+        setCurrentImageIndex(1);
+      }, 100);
+    }
+  };
+
+  // Handle mouse leave to stop hovering and auto-play
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setCurrentImageIndex(0);
+    // Clear interval immediately
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+  };
+
+  // Auto-play effect - slide every 2 seconds when hovering (desktop only)
+  useEffect(() => {
+    // Clear any existing interval first to prevent multiple intervals
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+
+    // Only start auto-play if hovering, has multiple images, and not on mobile
+    if (isHovered && allImages.length > 1 && !isMobile) {
+      // Start interval immediately with consistent timing
+      autoPlayRef.current = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => {
+          const images = allImagesRef.current;
+          const nextIndex = prevIndex >= images.length - 1 ? 0 : prevIndex + 1;
+          return nextIndex;
+        });
+      }, 2000); // 2 seconds interval
+    }
+
+    // Cleanup function
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+        autoPlayRef.current = null;
+      }
+    };
+  }, [isHovered, allImages.length, isMobile]);
+
   // membership derived from context; no local fetching here
 
   return (
     <>
       <div className={`product-card ${className}`}>
-        <div className="product-card-image-container">
+        <div
+          className="product-card-image-container"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <img
-            src={product.coverImage[0]}
+            ref={imageRef}
+            src={firstCoverImage}
             alt={product.productName}
             className="product-card-image"
-            loading="lazy"
+            loading={!isHovered ? "lazy" : "eager"}
             onError={(e) => {
               e.target.style.display = "none";
               e.target.nextSibling.style.display = "flex";
-             
             }}
             onClick={handleViewProduct}
           />
@@ -139,41 +385,99 @@ export default function ProductCard({
             <p>Image not available</p>
           </div>
 
-          {/* Quick view button */}
-          {showQuickView && (
-            <div className="product-card-overlay">
-              <button
-                className="product-card-quick-view-btn"
-                onClick={handleQuickView}
-              >
-                <span>
-                  <img src="/icons/mingcute_eye-line.svg" alt="eye" />
-                </span>
-                Quick View
-              </button>
-            </div>
+          {/* Left Arrow - Show on mobile only if there are multiple images */}
+          {isMobile && allImages.length > 1 && (
+            <button
+              className="product-card-arrow product-card-arrow-left"
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrevImage();
+              }}
+            >
+              <LeftOutlined />
+            </button>
           )}
+
+          {/* Right Arrow - Show on mobile only if there are multiple images */}
+          {isMobile && allImages.length > 1 && (
+            <button
+              className="product-card-arrow product-card-arrow-right"
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNextImage();
+              }}
+            >
+              <RightOutlined />
+            </button>
+          )}
+
+          {/* Order Type Tag - Ready to Ship */}
+          <div className="product-card-order-tag product-card-order-tag-ready">
+            <ThunderboltFilled className="product-card-order-tag-icon" />
+            <span className="product-card-order-tag-text">Ready to ship</span>
+          </div>
+
+          {/* Order Type Tag - Made to Order */}
+          <div className="product-card-order-tag product-card-order-tag-made">
+            <ClockCircleFilled className="product-card-order-tag-icon" />
+            <span className="product-card-order-tag-text">Made to order</span>
+          </div>
+
+          {/* Wishlist and Quick View buttons on image */}
+          <div className="product-card-image-actions">
+            <button
+              className="product-card-wishlist-btn product-card-wishlist-btn-image"
+              onClick={(e) => handleAddToWishlist(e)}
+            >
+              {isInWishlist ? (
+                <HeartFilled style={{ color: "#000" }} />
+              ) : (
+                <HeartOutlined />
+              )}
+            </button>
+            {showQuickView && (
+              <button
+                className="product-card-quick-view-btn-image"
+                onClick={(e) => handleQuickView(e)}
+              >
+                <EyeOutlined />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="product-card-content" onClick={handleViewProduct}>
           <div className="product-card-info">
-            <h3 className="product-card-brandname">{product.brandname} brand name</h3>
+            {product.vendorId?.name && (
+              <h3 className="product-card-brandname">
+                {product.vendorId.name}
+              </h3>
+            )}
             <div className="product-card-header">
-              
-              <h3 className="product-card-name">{product.productName}</h3>
-              <button
-                className="product-card-wishlist-btn"
-                onClick={(e) => handleAddToWishlist(e)}
+              <Tooltip
+                title={product.productName}
+                placement="top"
+                overlayInnerStyle={{
+                  fontSize: "10px",
+                  fontFamily: "var(--fira-sans)",
+                  padding: "4px 8px",
+                  height: "auto",
+                }}
               >
-                {isInWishlist ? (
-                  <HeartFilled style={{ color: "#000" }} />
-                ) : (
-                  <HeartOutlined />
-                )}
-              </button>
-            </div>
-            <div className="product-card-details">
-              <span className="product-card-size">Size: {product.size}</span>
+                <h3 className="product-card-name">{product.productName}</h3>
+              </Tooltip>
+              {showAddToCart && (
+                <button
+                  className="product-card-cart-btn"
+                  onClick={(e) => handleAddToCart(e)}
+                >
+                  <img
+                    src="/shopping-cart.svg"
+                    alt="Add to cart"
+                    className="product-card-cart-icon"
+                  />
+                </button>
+              )}
             </div>
           </div>
 
@@ -199,25 +503,6 @@ export default function ProductCard({
                 </span>
               )}
             </div>
-
-            <div className="product-card-action-buttons">
-              {showAddToCart && (
-                <div
-                  className="product-card-add-to-cart-container"
-                  onClick={handleAddToCart}
-                >
-                  <span className="product-card-add-to-cart-btn">
-                    Add to Cart
-                  </span>
-                  <span
-                    className="product-card-add-to-cart-arrow"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img src="/icons/Arrow.svg" alt="arrow" />
-                  </span>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -228,100 +513,125 @@ export default function ProductCard({
           className="product-card-modal"
           onClick={() => setShowQuickViewModal(false)}
         >
-          <div className="product-card-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="product-card-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               className="product-card-modal-close"
               onClick={() => setShowQuickViewModal(false)}
             >
               ✕
             </button>
-            
+
             <div className="product-card-modal-wrapper">
               {/* Image Section - LEFT with Gradient */}
               <div className="product-card-modal-image-section">
                 <img
-                  src={product.coverImage[0]}
+                  src={firstCoverImage}
                   alt={product.productName}
                   className="product-card-modal-image"
                 />
-                
+
                 {/* Image Carousel Dots */}
-                {product.coverImage && product.coverImage.length > 1 && (
+                {coverImages.length > 1 && (
                   <div className="product-card-modal-carousel-dots">
-                    {product.coverImage.map((image, index) => (
+                    {coverImages.map((image, index) => (
                       <img
                         key={index}
                         src={image}
                         alt={`${product.productName} ${index + 1}`}
-                        className={`carousel-dot ${index === 0 ? 'active' : ''}`}
+                        className={`carousel-dot ${
+                          index === 0 ? "active" : ""
+                        }`}
                         onClick={() => {
-                          const mainImage = document.querySelector('.product-card-modal-image');
+                          const mainImage = document.querySelector(
+                            ".product-card-modal-image"
+                          );
                           if (mainImage) mainImage.src = image;
                           // Update active dot
-                          document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-                            dot.classList.toggle('active', i === index);
-                          });
+                          document
+                            .querySelectorAll(".carousel-dot")
+                            .forEach((dot, i) => {
+                              dot.classList.toggle("active", i === index);
+                            });
                         }}
                       />
                     ))}
                   </div>
                 )}
               </div>
-              
+
               {/* Product Details - RIGHT (White Background) */}
               <div className="product-card-modal-details-white">
                 <h2>{product.productName}</h2>
-                
+
                 {/* Price and Rating */}
                 <div className="product-card-modal-price-rating">
                   <div className="product-card-modal-price">
                     {product.discount > 0 ? (
                       <>
                         <span className="discounted-price">
-                          {formatPrice(calculateFinalPrice(product.basePricing, product.discount))}
+                          {formatPrice(
+                            calculateFinalPrice(
+                              product.basePricing,
+                              product.discount
+                            )
+                          )}
                         </span>
-                        <span className="original-price">{formatPrice(product.basePricing)}</span>
+                        <span className="original-price">
+                          {formatPrice(product.basePricing)}
+                        </span>
                       </>
                     ) : (
-                      <span className="final-price">{formatPrice(product.basePricing)}</span>
+                      <span className="final-price">
+                        {formatPrice(product.basePricing)}
+                      </span>
                     )}
                   </div>
-                  
+
                   {/* Star Rating */}
-                 
                 </div>
-                
+
                 {/* Description */}
                 {product.productDescription && (
-                  <p className="product-card-modal-description-white">{product.productDescription}</p>
+                  <p className="product-card-modal-description-white">
+                    {product.productDescription}
+                  </p>
                 )}
-                
-               
-                
-              
-               
-                
+
                 {/* Action Buttons */}
                 <div className="product-card-modal-actions-white">
-                  <button 
+                  <button
                     className="product-card-modal-add-to-cart-outline"
                     onClick={() => {
-                      handleAddToCart({ stopPropagation: () => {} });
                       setShowQuickViewModal(false);
+                      // If product has multiple sizes, show size selection modal
+                      if (availableSizes.length > 1) {
+                        setShowSizeModal(true);
+                      } else {
+                        // If only one size or no sizes, add directly to cart
+                        const sizeToAdd = availableSizes.length === 1 ? availableSizes[0] : product.size || "";
+                        addToCartWithSize(sizeToAdd);
+                      }
                     }}
                   >
                     Add to Cart
                   </button>
-                  <button 
+                  <button
                     className="product-card-modal-wishlist-icon-btn"
                     onClick={(e) => {
                       handleAddToWishlist(e);
                       setShowQuickViewModal(false);
                     }}
-                    title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                    title={
+                      isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+                    }
                   >
                     {isInWishlist ? (
-                      <HeartFilled style={{ color: "#dc2626", fontSize: "24px" }} />
+                      <HeartFilled
+                        style={{ color: "#dc2626", fontSize: "24px" }}
+                      />
                     ) : (
                       <HeartOutlined style={{ fontSize: "24px" }} />
                     )}
@@ -332,6 +642,58 @@ export default function ProductCard({
           </div>
         </div>
       )}
+
+      {/* Size Selection Modal */}
+      <Modal
+        open={showSizeModal}
+        onCancel={() => {
+          setShowSizeModal(false);
+          setSelectedSize("");
+        }}
+        footer={null}
+        title="Select Size"
+        centered
+        width={400}
+        className="product-card-size-modal"
+      >
+        <div className="product-card-size-modal-content">
+          <div className="product-card-size-options">
+            {availableSizes.map((size) => (
+              <button
+                key={size}
+                className={`product-card-size-btn ${
+                  selectedSize === size ? "selected" : ""
+                }`}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+          <div className="product-card-size-modal-actions">
+            <button
+              className="product-card-size-modal-cancel"
+              onClick={() => {
+                setShowSizeModal(false);
+                setSelectedSize("");
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="product-card-size-modal-add"
+              onClick={() => {
+                if (selectedSize) {
+                  addToCartWithSize(selectedSize);
+                }
+              }}
+              disabled={!selectedSize}
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
