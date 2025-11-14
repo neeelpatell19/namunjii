@@ -885,6 +885,10 @@ const SingleProductPageDesign = () => {
 
   const handlePreviewPrev = (e) => {
     e.stopPropagation();
+    // Reset mouse state to prevent interference from swipe handlers
+    isMouseDown.current = false;
+    mouseStartX.current = 0;
+    mouseEndX.current = 0;
     const newIndex =
       previewImageIndex > 0 ? previewImageIndex - 1 : displayImages.length - 1;
     setPrevPreviewImageIndex(previewImageIndex);
@@ -899,6 +903,10 @@ const SingleProductPageDesign = () => {
 
   const handlePreviewNext = (e) => {
     e.stopPropagation();
+    // Reset mouse state to prevent interference from swipe handlers
+    isMouseDown.current = false;
+    mouseStartX.current = 0;
+    mouseEndX.current = 0;
     const newIndex =
       previewImageIndex < displayImages.length - 1 ? previewImageIndex + 1 : 0;
     setPrevPreviewImageIndex(previewImageIndex);
@@ -958,6 +966,13 @@ const SingleProductPageDesign = () => {
 
   // Swipe handlers for preview (mouse) - only when not zoomed
   const handleMouseDown = (e) => {
+    // Ignore if clicking on a button or inside a button
+    if (e.target.closest('button')) {
+      isMouseDown.current = false;
+      mouseStartX.current = 0;
+      mouseEndX.current = 0;
+      return;
+    }
     if (previewZoom <= 1) {
       isMouseDown.current = true;
       mouseStartX.current = e.clientX;
@@ -966,11 +981,22 @@ const SingleProductPageDesign = () => {
   };
 
   const handleMouseMove = (e) => {
+    // Ignore if interacting with a button
+    if (e.target.closest('button')) {
+      return;
+    }
     if (!isMouseDown.current || previewZoom > 1) return;
     mouseEndX.current = e.clientX;
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    // Ignore if clicking on a button or inside a button
+    if (e.target.closest('button')) {
+      isMouseDown.current = false;
+      mouseStartX.current = 0;
+      mouseEndX.current = 0;
+      return;
+    }
     if (!isMouseDown.current || previewZoom > 1) return;
 
     const distance = mouseStartX.current - mouseEndX.current;
