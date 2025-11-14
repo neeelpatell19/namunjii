@@ -173,7 +173,7 @@ export default function Brands({ HomeData }) {
             pauseOnMouseEnter: true,
           }}
           loop={brands.length > (isMobile ? 2 : 4)}
-          grabCursor={true}
+          grabCursor={false}
           touchEventsTarget="container"
           simulateTouch={true}
           allowTouchMove={true}

@@ -62,11 +62,11 @@
 
 .brands-swiper {
   padding: 0;
-  cursor: grab;
+  cursor: pointer;
 }
 
 .brands-swiper:active {
-  cursor: grabbing;
+  cursor: pointer;
 }
 
 .brands-swiper .swiper-slide {
