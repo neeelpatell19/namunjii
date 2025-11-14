@@ -385,6 +385,50 @@ const Header = () => {
     setSearchInput("");
   };
 
+    // Render mega menu content
+  const renderMegaMenuContent = (gender, categories) => (
+    <div className="MegaMenuContent">
+      <div className="MegaMenuColumn">
+        <ul className="MegaMenuList">
+          <li>
+            <Link
+              to={`/products?gender=${gender}`}
+              className="MegaMenuLink"
+              onClick={() => {
+                if (gender === "Women") {
+                  setShowWomenMegaMenu(false);
+                } else {
+                  setShowMenMegaMenu(false);
+                }
+                setMobileMenuOpen(false);
+              }}
+            >
+              Shop All
+            </Link>
+          </li>
+          {categories.map((cat) => (
+            <li key={cat._id}>
+              <Link
+                to={`/products?gender=${gender}&category=${cat._id}`}
+                className="MegaMenuLink"
+                onClick={() => {
+                  if (gender === "Women") {
+                    setShowWomenMegaMenu(false);
+                  } else {
+                    setShowMenMegaMenu(false);
+                  }
+                  setMobileMenuOpen(false);
+                }}
+              >
+                {cat.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+
   // Render search suggestions dropdown
   const renderSearchSuggestions = () => {
     if (!showSuggestions || !searchInput.trim()) return null;
@@ -696,10 +740,16 @@ const Header = () => {
                           }
                         }}
                         onMouseLeave={() => {
-                          hideTimeoutRef.current = setTimeout(() => {
+                          // For desktop, close drawer immediately on mouse leave
+                          // For mobile, drawer handles its own close via mask/close button
+                          if (!isMobile) {
+                            if (hideTimeoutRef.current) {
+                              clearTimeout(hideTimeoutRef.current);
+                              hideTimeoutRef.current = null;
+                            }
                             setShowWomenMegaMenu(false);
                             setShowMenMegaMenu(false);
-                          }, 300);
+                          }
                         }}
                       >
                         <Link
@@ -758,112 +808,98 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {/* Women Mega Menu */}
-                    {category.name === "Women" && showWomenMegaMenu && (
-                      <div
-                        ref={womenMegaMenuRef}
-                        className="MegaMenuContainer fade-in women-mega-menu"
-                        onMouseEnter={() => {
-                          if (hideTimeoutRef.current) {
-                            clearTimeout(hideTimeoutRef.current);
-                            hideTimeoutRef.current = null;
-                          }
-                          setShowWomenMegaMenu(true);
-                        }}
-                        onMouseLeave={() => {
-                          hideTimeoutRef.current = setTimeout(() => {
-                            setShowWomenMegaMenu(false);
-                          }, 300);
-                        }}
-                      >
-                        <div className="MegaMenuArrow women-arrow"></div>
-                        <div className="MegaMenuContent">
-                          <div className="MegaMenuColumn">
-                            <ul className="MegaMenuList">
-                              <li>
-                                <Link
-                                  to="/products?gender=Women"
-                                  className="MegaMenuLink"
-                                  onClick={() => {
-                                    setShowWomenMegaMenu(false);
-                                    setMobileMenuOpen(false);
-                                  }}
-                                >
-                                  Shop All
-                                </Link>
-                              </li>
-                              {womenCategories.map((cat) => (
-                                <li key={cat._id}>
-                                  <Link
-                                    to={`/products?gender=Women&category=${cat._id}`}
-                                    className="MegaMenuLink"
-                                    onClick={() => {
-                                      setShowWomenMegaMenu(false);
-                                      setMobileMenuOpen(false);
-                                    }}
-                                  >
-                                    {cat.name}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
+                    {/* Women Mega Menu - Drawer for mobile, original container for desktop */}
+                    {category.name === "Women" && (
+                      <>
+                        {/* Mobile: Use Drawer */}
+                        {isMobile && (
+                          <Drawer
+                            title="Women"
+                            placement="right"
+                            onClose={() => setShowWomenMegaMenu(false)}
+                            open={showWomenMegaMenu}
+                            width="50%"
+                            height="100vh"
+                            className="mega-menu-drawer women-mega-menu-drawer"
+                            mask={true}
+                            maskClosable={true}
+                            closable={true}
+                            zIndex={10001}
+                            getContainer={document.body}
+                          >
+                            {renderMegaMenuContent("Women", womenCategories)}
+                          </Drawer>
+                        )}
+                        {/* Desktop: Use original MegaMenuContainer */}
+                        {!isMobile && showWomenMegaMenu && (
+                          <div
+                            ref={womenMegaMenuRef}
+                            className="MegaMenuContainer fade-in women-mega-menu"
+                            onMouseEnter={() => {
+                              if (hideTimeoutRef.current) {
+                                clearTimeout(hideTimeoutRef.current);
+                                hideTimeoutRef.current = null;
+                              }
+                              setShowWomenMegaMenu(true);
+                            }}
+                            onMouseLeave={() => {
+                              hideTimeoutRef.current = setTimeout(() => {
+                                setShowWomenMegaMenu(false);
+                              }, 300);
+                            }}
+                          >
+                            <div className="MegaMenuArrow women-arrow"></div>
+                            {renderMegaMenuContent("Women", womenCategories)}
                           </div>
-                        </div>
-                      </div>
+                        )}
+                      </>
                     )}
 
-                    {/* Men Mega Menu */}
-                    {category.name === "Men" && showMenMegaMenu && (
-                      <div
-                        ref={menMegaMenuRef}
-                        className="MegaMenuContainer fade-in men-mega-menu"
-                        onMouseEnter={() => {
-                          if (hideTimeoutRef.current) {
-                            clearTimeout(hideTimeoutRef.current);
-                            hideTimeoutRef.current = null;
-                          }
-                          setShowMenMegaMenu(true);
-                        }}
-                        onMouseLeave={() => {
-                          hideTimeoutRef.current = setTimeout(() => {
-                            setShowMenMegaMenu(false);
-                          }, 300);
-                        }}
-                      >
-                        <div className="MegaMenuArrow men-arrow"></div>
-                        <div className="MegaMenuContent">
-                          <div className="MegaMenuColumn">
-                            <ul className="MegaMenuList">
-                              <li>
-                                <Link
-                                  to="/products?gender=Men"
-                                  className="MegaMenuLink"
-                                  onClick={() => {
-                                    setShowMenMegaMenu(false);
-                                    setMobileMenuOpen(false);
-                                  }}
-                                >
-                                  Shop All
-                                </Link>
-                              </li>
-                              {menCategories.map((cat) => (
-                                <li key={cat._id}>
-                                  <Link
-                                    to={`/products?gender=Men&category=${cat._id}`}
-                                    className="MegaMenuLink"
-                                    onClick={() => {
-                                      setShowMenMegaMenu(false);
-                                      setMobileMenuOpen(false);
-                                    }}
-                                  >
-                                    {cat.name}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
+                    {/* Men Mega Menu - Drawer for mobile, original container for desktop */}
+                    {category.name === "Men" && (
+                      <>
+                        {/* Mobile: Use Drawer */}
+                        {isMobile && (
+                          <Drawer
+                            title="Men"
+                            placement="right"
+                            onClose={() => setShowMenMegaMenu(false)}
+                            open={showMenMegaMenu}
+                            width="50%"
+                            height="100vh"
+                            className="mega-menu-drawer men-mega-menu-drawer"
+                            mask={true}
+                            maskClosable={true}
+                            closable={true}
+                            zIndex={10001}
+                            getContainer={document.body}
+                          >
+                            {renderMegaMenuContent("Men", menCategories)}
+                          </Drawer>
+                        )}
+                        {/* Desktop: Use original MegaMenuContainer */}
+                        {!isMobile && showMenMegaMenu && (
+                          <div
+                            ref={menMegaMenuRef}
+                            className="MegaMenuContainer fade-in men-mega-menu"
+                            onMouseEnter={() => {
+                              if (hideTimeoutRef.current) {
+                                clearTimeout(hideTimeoutRef.current);
+                                hideTimeoutRef.current = null;
+                              }
+                              setShowMenMegaMenu(true);
+                            }}
+                            onMouseLeave={() => {
+                              hideTimeoutRef.current = setTimeout(() => {
+                                setShowMenMegaMenu(false);
+                              }, 300);
+                            }}
+                          >
+                            <div className="MegaMenuArrow men-arrow"></div>
+                            {renderMegaMenuContent("Men", menCategories)}
                           </div>
-                        </div>
-                      </div>
+                        )}
+                      </>
                     )}
                   </div>
                 ))}
