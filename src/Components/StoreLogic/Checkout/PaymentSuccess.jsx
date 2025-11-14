@@ -89,6 +89,22 @@ const PaymentSuccess = () => {
                 <Text>Order Number:</Text>
                 <Text strong>{orderData.orderNumber}</Text>
               </div>
+              {orderData.subtotal && (
+                <>
+                  <div className="summary-item">
+                    <Text>Subtotal (incl. GST):</Text>
+                    <Text>₹{orderData.subtotal?.toLocaleString()}</Text>
+                  </div>
+                  <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                    <Text type="secondary">Base Price:</Text>
+                    <Text type="secondary">₹{Math.round((orderData.subtotal * 100) / 118).toLocaleString()}</Text>
+                  </div>
+                  <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                    <Text type="secondary">GST (18% included):</Text>
+                    <Text type="secondary">₹{Math.round((orderData.subtotal * 18) / 118).toLocaleString()}</Text>
+                  </div>
+                </>
+              )}
               <div className="summary-item">
                 <Text>Total Amount:</Text>
                 <Text strong>₹{orderData.total?.toLocaleString()}</Text>

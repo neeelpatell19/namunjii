@@ -36,18 +36,57 @@ const Login = () => {
     return () => clearTimeout(timer);
   }, [countdown]);
 
+  // Reset phone number when country code changes to prevent invalid lengths
+  useEffect(() => {
+    const getMaxLength = () => {
+      if (countryCode === "+91") return 10;
+      if (countryCode === "+971") return 9;
+      if (countryCode === "+966") return 9;
+      if (countryCode === "+965") return 8;
+      if (countryCode === "+974") return 8;
+      if (countryCode === "+973") return 8;
+      if (countryCode === "+968") return 8;
+      if (countryCode === "+1") return 10;
+      if (countryCode === "+44") return 10;
+      return 15;
+    };
+    const maxLength = getMaxLength();
+    setPhone((prevPhone) => {
+      if (prevPhone.length > maxLength) {
+        return prevPhone.slice(0, maxLength);
+      }
+      return prevPhone;
+    });
+  }, [countryCode]);
+
+  // Get max length based on country code
+  const getMaxPhoneLength = () => {
+    if (countryCode === "+91") return 10; // India
+    if (countryCode === "+971") return 9; // UAE
+    if (countryCode === "+966") return 9; // Saudi Arabia
+    if (countryCode === "+965") return 8; // Kuwait
+    if (countryCode === "+974") return 8; // Qatar
+    if (countryCode === "+973") return 8; // Bahrain
+    if (countryCode === "+968") return 8; // Oman
+    if (countryCode === "+1") return 10; // USA/Canada
+    if (countryCode === "+44") return 10; // UK
+    return 15; // Default international standard
+  };
+
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, ""); // Only numbers
-    // Allow up to 15 digits (international standard)
-    if (value.length <= 15) {
+    const maxLength = getMaxPhoneLength();
+    // Limit to country-specific max length
+    if (value.length <= maxLength) {
       setPhone(value);
     }
   };
 
   const getPhoneNumberPlaceholder = () => {
-    if (countryCode === "+91") return "Enter 10-digit phone number";
-    if (countryCode === "+971") return "Enter 9-digit phone number";
-    if (countryCode === "+966") return "Enter 9-digit phone number";
+    const maxLength = getMaxPhoneLength();
+    if (maxLength === 10) return "Enter 10-digit phone number";
+    if (maxLength === 9) return "Enter 9-digit phone number";
+    if (maxLength === 8) return "Enter 8-digit phone number";
     return "Enter phone number";
   };
 
@@ -57,19 +96,17 @@ const Login = () => {
       return false;
     }
 
-    // Basic validation based on country code
-    if (countryCode === "+91" && phone.length !== 10) {
-      message.error("Please enter a valid 10-digit phone number");
-      return false;
-    }
-    
-    if ((countryCode === "+971" || countryCode === "+966") && phone.length !== 9) {
-      message.error("Please enter a valid 9-digit phone number");
+    const maxLength = getMaxPhoneLength();
+    const requiredLength = maxLength <= 10 ? maxLength : 7; // For countries with >10 digits, minimum 7
+
+    // Validate based on country-specific length
+    if (maxLength <= 10 && phone.length !== maxLength) {
+      message.error(`Please enter a valid ${maxLength}-digit phone number`);
       return false;
     }
 
-    // Minimum length check for other countries
-    if (phone.length < 7) {
+    // For countries with longer numbers, check minimum length
+    if (maxLength > 10 && phone.length < requiredLength) {
       message.error("Please enter a valid phone number");
       return false;
     }
@@ -243,7 +280,7 @@ const Login = () => {
                     placeholder={getPhoneNumberPlaceholder()}
                     value={phone}
                     onChange={handlePhoneChange}
-                    maxLength={15}
+                    maxLength={getMaxPhoneLength()}
                     className="phone-input"
                     onPressEnter={handlePhoneSubmit}
                   />
