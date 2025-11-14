@@ -435,7 +435,7 @@ export default function ProductCard({
                 <HeartOutlined />
               )}
             </button>
-            {showQuickView && (
+            {showQuickView && !isMobile && (
               <button
                 className="product-card-quick-view-btn-image"
                 onClick={(e) => handleQuickView(e)}
