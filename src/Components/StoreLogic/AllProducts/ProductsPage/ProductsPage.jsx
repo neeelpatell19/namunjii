@@ -1174,12 +1174,24 @@ const ProductsPage = () => {
             </div>
             <div className="product-card-content">
               <div className="product-card-info">
-                <div className="skeleton-line skeleton-brand" style={{ width: "80px", height: "14px", marginBottom: "8px" }}></div>
-                <div className="skeleton-line skeleton-title" style={{ width: "90%", height: "18px", marginBottom: "8px" }}></div>
-                <div className="skeleton-line skeleton-text" style={{ width: "60%", height: "14px" }}></div>
+                <div
+                  className="skeleton-line skeleton-brand"
+                  style={{ width: "80px", height: "14px", marginBottom: "8px" }}
+                ></div>
+                <div
+                  className="skeleton-line skeleton-title"
+                  style={{ width: "90%", height: "18px", marginBottom: "8px" }}
+                ></div>
+                <div
+                  className="skeleton-line skeleton-text"
+                  style={{ width: "60%", height: "14px" }}
+                ></div>
               </div>
               <div className="product-card-pricing">
-                <div className="skeleton-line skeleton-price" style={{ width: "100px", height: "20px" }}></div>
+                <div
+                  className="skeleton-line skeleton-price"
+                  style={{ width: "100px", height: "20px" }}
+                ></div>
               </div>
             </div>
           </div>
@@ -1283,7 +1295,7 @@ const ProductsPage = () => {
                 className="products-search-input"
               />
 
-              {/* Autocomplete Dropdown */}
+              {/* Autocomplete Dropdown
               {showSuggestions && searchInput.trim() && (
                 <div className="search-suggestions-dropdown">
                   {suggestionsLoading ? (
@@ -1362,7 +1374,7 @@ const ProductsPage = () => {
                     </div>
                   )}
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* Products Header - Controls Bar */}
@@ -1398,7 +1410,7 @@ const ProductsPage = () => {
                   className="products-search-input"
                 />
 
-                {/* Autocomplete Dropdown */}
+                {/* Autocomplete Dropdown
                 {showSuggestions && searchInput.trim() && (
                   <div className="search-suggestions-dropdown">
                     {suggestionsLoading ? (
@@ -1477,7 +1489,7 @@ const ProductsPage = () => {
                       </div>
                     )}
                   </div>
-                )}
+                )} */}
               </div>
               {/* Filters Button with Badge */}
               <div className="filters-button-wrapper">
