@@ -1520,7 +1520,7 @@ const SingleProductPageDesign = () => {
                 className="delivery-icon"
               />
               <span className="delivery-text">
-                Ready to ship are expected to arrive within{" "}
+                Ready to ship items are expected to arrive within{" "}
                 <strong>5–7 business days</strong>.
               </span>
             </div>
@@ -1530,9 +1530,20 @@ const SingleProductPageDesign = () => {
                 alt="Made to order"
                 className="delivery-icon"
               />
-              <span className="delivery-text">
-                Made to order are delivered within{" "}
-                <strong>10 business days</strong>.
+              <span>
+                {product?.vendorId?.name === "Flapper6" ||
+                product?.vendorId?.name === "Demira" ? (
+                  <>
+                    Made to order items are dispatched within{" "}
+                    <strong>15 to 20 business days</strong>, as there are
+                    hand-embroidered pieces.
+                  </>
+                ) : (
+                  <>
+                    Made to order items are dispatched within{" "}
+                    <strong>10 business days</strong>.
+                  </>
+                )}
               </span>
             </div>
           </div>
@@ -1607,15 +1618,26 @@ const SingleProductPageDesign = () => {
                         <div className="feature-item">
                           <div className="feature-icon">✓</div>
                           <span>
-                            Ready to ship are expected to arrive within{" "}
+                            Ready to ship items are expected to arrive within{" "}
                             <strong>5–7 business days</strong>.
                           </span>
                         </div>
                         <div className="feature-item">
                           <div className="feature-icon">✓</div>
                           <span>
-                            Made to order are delivered within{" "}
-                            <strong>10 business days</strong>.
+                            {product?.vendorId?.name === "Flapper6" ||
+                            product?.vendorId?.name === "Demira" ? (
+                              <>
+                                Made to order items are dispatched within{" "}
+                                <strong>15 to 20 business days</strong>, as
+                                there are hand-embroidered pieces.
+                              </>
+                            ) : (
+                              <>
+                                Made to order items are dispatched within{" "}
+                                <strong>10 business days</strong>.
+                              </>
+                            )}
                           </span>
                         </div>
                       </div>
