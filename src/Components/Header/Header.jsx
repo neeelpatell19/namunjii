@@ -640,7 +640,7 @@ const Header = () => {
                       gap: "8px",
                     }}
                   >
-                    <FiUser />
+                    {/* <FiUser /> */}
                   </div>
                 </Dropdown>
                 <div

@@ -26,6 +26,22 @@ const OrderConfirmationStep = ({
     return finalPrice * item.quantity;
   };
 
+  // Calculate GST breakdown (GST is 18% included in MRP)
+  // Formula: If MRP includes 18% GST, then GST = MRP * (18/118)
+  const calculateGSTBreakdown = () => {
+    const subtotal = orderData?.subtotal || 0;
+    // GST is 18% included, so GST amount = subtotal * (18/118)
+    const gstAmount = Math.round((subtotal * 18) / 118);
+    const baseAmount = subtotal - gstAmount;
+    return {
+      baseAmount,
+      gstAmount,
+      total: subtotal,
+    };
+  };
+
+  const gstBreakdown = calculateGSTBreakdown();
+
   const handleProceedToPayment = async () => {
     try {
       setLoading(true);
@@ -144,8 +160,16 @@ const OrderConfirmationStep = ({
             <Card title="Order Summary" className="order-summary-card">
               <div className="summary-section">
                 <div className="summary-item">
-                  <Text>Subtotal:</Text>
+                  <Text>Subtotal (incl. GST):</Text>
                   <Text>₹{orderData?.subtotal?.toLocaleString()}</Text>
+                </div>
+                <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                  <Text type="secondary">Base Price:</Text>
+                  <Text type="secondary">₹{gstBreakdown.baseAmount.toLocaleString()}</Text>
+                </div>
+                <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                  <Text type="secondary">GST (18% included):</Text>
+                  <Text type="secondary">₹{gstBreakdown.gstAmount.toLocaleString()}</Text>
                 </div>
                 <div className="summary-item">
                   <Text>Discount:</Text>
@@ -163,10 +187,6 @@ const OrderConfirmationStep = ({
                     )}
                   </Text>
                 </div>
-                <div className="summary-item">
-                  <Text>Tax (GST):</Text>
-                  <Text>₹{orderData?.tax?.toLocaleString()}</Text>
-                </div>
                 <Divider />
                 <div className="summary-item total">
                   <Text strong>Total:</Text>
@@ -180,15 +200,27 @@ const OrderConfirmationStep = ({
               <div className="customer-details">
                 <div className="detail-item">
                   <Text strong>Name:</Text>
-                  <Text>{orderData?.customerInfo?.name}</Text>
+                  <Text>
+                    {orderData?.customerInfo?.name ||
+                      orderData?.shippingAddress?.fullName ||
+                      "N/A"}
+                  </Text>
                 </div>
                 <div className="detail-item">
                   <Text strong>Email:</Text>
-                  <Text>{orderData?.customerInfo?.email}</Text>
+                  <Text>
+                    {orderData?.customerInfo?.email ||
+                      orderData?.shippingAddress?.email ||
+                      "N/A"}
+                  </Text>
                 </div>
                 <div className="detail-item">
                   <Text strong>Mobile:</Text>
-                  <Text>{orderData?.customerInfo?.mobileNumber}</Text>
+                  <Text>
+                    {orderData?.customerInfo?.mobileNumber ||
+                      orderData?.shippingAddress?.mobileNumber ||
+                      "N/A"}
+                  </Text>
                 </div>
               </div>
             </Card>
