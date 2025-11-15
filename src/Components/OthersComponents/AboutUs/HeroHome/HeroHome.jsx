@@ -32,9 +32,10 @@ const videoVariants = {
 const HeroHome = () => {
     const { CarousalText } = HomePageCrousaltext;
     const location = useLocation();
+    const isAboutUsPage = location.pathname.includes('/about-us');
     
     // Determine video source based on current route
-    const videoSource = location.pathname.includes('/about-us') 
+    const videoSource = isAboutUsPage
         ? '/Videos/namunjii_landing_page.mp4'
         : '/Videos/namunjii_aboutUs_page.mp4';
 
@@ -59,7 +60,7 @@ const HeroHome = () => {
                         <source src={videoSource} type="video/mp4" />
                     </video>
                     {/* Dark translucent overlay */}
-                    <div className="video-overlay"></div>
+                    <div className={`video-overlay ${isAboutUsPage ? 'video-overlay-darker' : ''}`}></div>
                 </motion.div>
 
                 {/* Text Overlay */}
