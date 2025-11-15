@@ -35,8 +35,8 @@ const HeroHome = () => {
     
     // Determine video source based on current route
     const videoSource = location.pathname.includes('/about-us') 
-        ? '/Videos/namunjii_aboutUs_page.mp4'
-        : '/Videos/namunjii_landing_page.mp4';
+        ? '/Videos/namunjii_landing_page.mp4'
+        : '/Videos/namunjii_aboutUs_page.mp4';
 
     return (
         <div className="HeroHomeContainerWithoutPadding">
