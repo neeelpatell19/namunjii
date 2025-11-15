@@ -263,7 +263,7 @@ const Header = () => {
 
       if (categoryNavBarRef.current) {
         const navBarRect = categoryNavBarRef.current.getBoundingClientRect();
-        const topPosition = navBarRect.bottom;
+        const topPosition = navBarRect.bottom - 8; // Move up by 8px
 
         // Update Women mega menu position and arrow
         if (showWomenMegaMenu && womenMegaMenuRef.current) {
