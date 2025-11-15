@@ -10,45 +10,29 @@
   position: relative;
 }
 
-.HeroHomeContainerLeftImages,
-.HeroHomeContainerRightImages {
+.VideoContainer {
+  width: 100%;
   height: 100vh;
   position: relative;
   overflow: hidden;
 }
 
-.CarousalImages {
-  width: 100%;
-  height: 100vh;
-  position: relative;
-}
-
-.carousel-image {
+.hero-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
 }
 
-.carousel-image.active {
-  opacity: 1;
-}
-
-.carousel-image.fade-out {
-  opacity: 0;
-}
-
-.carousel-overlay {
+.video-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgb(0 0 0 / 53%), rgb(0 0 0 / 43%));
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 
@@ -177,12 +161,7 @@
     height: 50vh;
   }
 
-  .HeroHomeContainerLeftImages,
-  .HeroHomeContainerRightImages {
-    height: 50vh;
-  }
-
-  .CarousalImages {
+  .VideoContainer {
     height: 50vh;
   }
 
