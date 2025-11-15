@@ -63,7 +63,9 @@ const Header = () => {
   const womenMegaMenuRef = useRef(null);
   const menMegaMenuRef = useRef(null);
   const categoryNavBarRef = useRef(null);
+  const mobileMenuToggleRef = useRef(null);
   const hideTimeoutRef = useRef(null);
+  const isTogglingRef = useRef(false);
 
   // Check if we're on products page
   const isProductsPage = location.pathname === "/products";
@@ -267,10 +269,13 @@ const Header = () => {
         if (showWomenMegaMenu && womenMegaMenuRef.current) {
           womenMegaMenuRef.current.style.top = `${topPosition}px`;
           // Find Women category link and position menu + arrow
-          const allCategoryItems = categoryNavBarRef.current.querySelectorAll('.CategoryItem');
+          const allCategoryItems =
+            categoryNavBarRef.current.querySelectorAll(".CategoryItem");
           let womenCategoryItem = null;
           allCategoryItems.forEach((item) => {
-            const link = item.querySelector('.category-text-link[href*="gender=Women"]');
+            const link = item.querySelector(
+              '.category-text-link[href*="gender=Women"]'
+            );
             if (link) {
               womenCategoryItem = item;
             }
@@ -281,13 +286,18 @@ const Header = () => {
             const menuWidth = womenMegaMenuRef.current.offsetWidth || 250;
             const menuLeft = linkRect.left + linkRect.width / 2 - menuWidth / 2;
             // Ensure menu doesn't go off screen
-            const adjustedLeft = Math.max(10, Math.min(menuLeft, window.innerWidth - menuWidth - 10));
+            const adjustedLeft = Math.max(
+              10,
+              Math.min(menuLeft, window.innerWidth - menuWidth - 10)
+            );
             womenMegaMenuRef.current.style.left = `${adjustedLeft}px`;
-            
-            const arrow = womenMegaMenuRef.current.querySelector('.women-arrow');
+
+            const arrow =
+              womenMegaMenuRef.current.querySelector(".women-arrow");
             if (arrow) {
               // Position arrow to point to center of category link
-              const arrowOffset = (linkRect.left + linkRect.width / 2) - adjustedLeft;
+              const arrowOffset =
+                linkRect.left + linkRect.width / 2 - adjustedLeft;
               arrow.style.left = `${arrowOffset - 8}px`; // 8px is half of arrow width
             }
           }
@@ -297,10 +307,13 @@ const Header = () => {
         if (showMenMegaMenu && menMegaMenuRef.current) {
           menMegaMenuRef.current.style.top = `${topPosition}px`;
           // Find Men category link and position menu + arrow
-          const allCategoryItems = categoryNavBarRef.current.querySelectorAll('.CategoryItem');
+          const allCategoryItems =
+            categoryNavBarRef.current.querySelectorAll(".CategoryItem");
           let menCategoryItem = null;
           allCategoryItems.forEach((item) => {
-            const link = item.querySelector('.category-text-link[href*="gender=Men"]');
+            const link = item.querySelector(
+              '.category-text-link[href*="gender=Men"]'
+            );
             if (link) {
               menCategoryItem = item;
             }
@@ -311,13 +324,17 @@ const Header = () => {
             const menuWidth = menMegaMenuRef.current.offsetWidth || 250;
             const menuLeft = linkRect.left + linkRect.width / 2 - menuWidth / 2;
             // Ensure menu doesn't go off screen
-            const adjustedLeft = Math.max(10, Math.min(menuLeft, window.innerWidth - menuWidth - 10));
+            const adjustedLeft = Math.max(
+              10,
+              Math.min(menuLeft, window.innerWidth - menuWidth - 10)
+            );
             menMegaMenuRef.current.style.left = `${adjustedLeft}px`;
-            
-            const arrow = menMegaMenuRef.current.querySelector('.men-arrow');
+
+            const arrow = menMegaMenuRef.current.querySelector(".men-arrow");
             if (arrow) {
               // Position arrow to point to center of category link
-              const arrowOffset = (linkRect.left + linkRect.width / 2) - adjustedLeft;
+              const arrowOffset =
+                linkRect.left + linkRect.width / 2 - adjustedLeft;
               arrow.style.left = `${arrowOffset - 8}px`; // 8px is half of arrow width
             }
           }
@@ -376,6 +393,60 @@ const Header = () => {
     };
   }, [showMenMegaMenu, showWomenMegaMenu]);
 
+  // Close mobile CategoryNavBar when clicking outside (mobile only)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Only handle on mobile
+      if (!isMobile) return;
+
+      // Don't handle if we're currently toggling
+      if (isTogglingRef.current) {
+        return;
+      }
+
+      const navBarRef = categoryNavBarRef.current;
+      const toggleRef = mobileMenuToggleRef.current;
+      const backdropRef = document.querySelector(".mobile-menu-backdrop");
+      const menDrawerRef = document.querySelector(".men-mega-menu-drawer");
+      const womenDrawerRef = document.querySelector(".women-mega-menu-drawer");
+
+      // If clicking on toggle button, let it handle the toggle - don't interfere
+      if (toggleRef && toggleRef.contains(event.target)) {
+        return;
+      }
+
+      // If clicking on backdrop, close menu
+      if (backdropRef && backdropRef.contains(event.target)) {
+        setMobileMenuOpen(false);
+        return;
+      }
+
+      // Check if click is outside the CategoryNavBar, toggle button, and mega menu drawers
+      const outsideNavBar = !navBarRef || !navBarRef.contains(event.target);
+      const outsideMenDrawer =
+        !menDrawerRef || !menDrawerRef.contains(event.target);
+      const outsideWomenDrawer =
+        !womenDrawerRef || !womenDrawerRef.contains(event.target);
+
+      if (
+        outsideNavBar &&
+        outsideMenDrawer &&
+        outsideWomenDrawer
+      ) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen && isMobile) {
+      // Use click event instead of mousedown/touchstart to avoid conflicts with toggle button
+      document.addEventListener("click", handleClickOutside, true);
+
+      return () => {
+        document.removeEventListener("click", handleClickOutside, true);
+      };
+    }
+  }, [mobileMenuOpen, isMobile]);
+
   // Handle suggestion click - navigate to product page
   const handleSuggestionClick = (productId) => {
     navigate(`/product/${productId}`);
@@ -385,7 +456,7 @@ const Header = () => {
     setSearchInput("");
   };
 
-    // Render mega menu content
+  // Render mega menu content
   const renderMegaMenuContent = (gender, categories) => (
     <div className="MegaMenuContent">
       <div className="MegaMenuColumn">
@@ -516,7 +587,13 @@ const Header = () => {
   };
 
   const toggleMobileMenu = () => {
+    // Set flag to prevent click-outside handler from interfering
+    isTogglingRef.current = true;
     setMobileMenuOpen(!mobileMenuOpen);
+    // Reset flag after a short delay to allow state update to complete
+    setTimeout(() => {
+      isTogglingRef.current = false;
+    }, 100);
   };
 
   // Fetch counts when deviceId is available
@@ -600,7 +677,23 @@ const Header = () => {
           <Row justify="space-between" align="middle">
             <Col style={{ display: "flex", alignItems: "center" }}>
               <div className="NavLeft">
-                <div className="MobileMenuToggle" onClick={toggleMobileMenu}>
+                <div
+                  className="MobileMenuToggle"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMobileMenu();
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  ref={mobileMenuToggleRef}
+                >
                   {mobileMenuOpen ? <FiX /> : <FiMenu />}
                 </div>
                 {!isProductsPage && (
@@ -707,6 +800,14 @@ const Header = () => {
           </Row>
         </div>
       </div>
+
+      {/* Mobile Menu Backdrop */}
+      {mobileMenuOpen && isMobile && (
+        <div
+          className="mobile-menu-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
 
       {/* Secondary Navigation Bar */}
       <div
