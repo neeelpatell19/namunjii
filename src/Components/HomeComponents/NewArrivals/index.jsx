@@ -95,7 +95,7 @@ export default function NewArrivals({ HomeData }) {
             pauseOnMouseEnter: true,
           }}
           loop={newArrivals.length > (isMobile ? 2 : 4)}
-          grabCursor={true}
+          grabCursor={false}
           touchEventsTarget="container"
           simulateTouch={true}
           allowTouchMove={true}

@@ -67,7 +67,7 @@ export default function Carousel({ HomeData }) {
               dynamicBullets: true,
             }}
             navigation={true}
-            grabCursor={true}
+            grabCursor={false}
             keyboard={{
               enabled: true,
             }}

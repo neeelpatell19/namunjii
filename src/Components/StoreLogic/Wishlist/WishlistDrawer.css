@@ -12,6 +12,7 @@
   align-items: flex-start;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
+  cursor: pointer;
 }
 
 /* Wishlist Drawer */

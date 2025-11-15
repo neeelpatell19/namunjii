@@ -225,7 +225,7 @@
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   padding: 5px 0;
-  cursor: grab;
+  cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -234,11 +234,11 @@
 }
 
 .thumbnail-container:active {
-  cursor: grabbing;
+  cursor: pointer;
 }
 
 .thumbnail-container.dragging {
-  cursor: grabbing;
+  cursor: pointer;
   user-select: none;
 }
 
@@ -1509,11 +1509,11 @@
   z-index: 10000;
   padding: 20px;
   box-sizing: border-box;
-  cursor: grab;
+  cursor: pointer;
 }
 
 .preview-content:active {
-  cursor: grabbing;
+  cursor: pointer;
 }
 
 .preview-top-bar {

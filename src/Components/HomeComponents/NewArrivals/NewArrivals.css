@@ -62,11 +62,11 @@
 
 .new-arrivals-swiper {
   padding: 0;
-  cursor: grab;
+  cursor: pointer;
 }
 
 .new-arrivals-swiper:active {
-  cursor: grabbing;
+  cursor: pointer;
 }
 
 .new-arrivals-swiper .swiper-slide {
