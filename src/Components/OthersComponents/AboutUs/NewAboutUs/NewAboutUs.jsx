@@ -63,7 +63,7 @@ const NewAboutUs = () => {
               className="about-image about-image-default"
             />
             <img
-              src="/Images/modern-muse2.webp"
+              src="/Images/modern-muse2.jpg"
               alt=""
               className="about-image about-image-hover"
             />
