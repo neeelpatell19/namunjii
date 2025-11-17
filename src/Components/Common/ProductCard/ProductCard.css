@@ -954,6 +954,23 @@
   }
 }
 
+/* Tablet styles for arrows - includes all iPads (Mini, Air, Pro) */
+@media (min-width: 769px) and (max-width: 1440px) {
+  .product-card-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .product-card-arrow-left {
+    left: 12px;
+  }
+
+  .product-card-arrow-right {
+    right: 12px;
+  }
+}
+
 @media (max-width: 768px) and (min-width: 481px) {
   .product-card-price {
     font-size: 1.3rem;

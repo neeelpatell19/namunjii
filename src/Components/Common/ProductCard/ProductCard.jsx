@@ -42,6 +42,7 @@ export default function ProductCard({
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
   const autoPlayRef = useRef(null);
@@ -78,14 +79,17 @@ export default function ProductCard({
     allImagesRef.current = allImages;
   }, [allImages]);
 
-  // Detect mobile screen size
+  // Detect mobile and tablet screen sizes
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 768);
+      // Include all tablets (iPad Mini, iPad Air, iPad Pro up to 1440px)
+      setIsTablet(width > 768 && width <= 1440);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   // Reset image index when product images change
@@ -106,7 +110,7 @@ export default function ProductCard({
 
     let targetSrc;
 
-    if ((isHovered || isMobile) && allImages.length > 1) {
+    if ((isHovered || isMobile || isTablet) && allImages.length > 1) {
       // Ensure currentImageIndex is within bounds
       const validIndex = Math.max(
         0,
@@ -123,7 +127,7 @@ export default function ProductCard({
       // Use direct assignment for instant update without flicker
       imageRef.current.src = targetSrc;
     }
-  }, [currentImageIndex, isHovered, isMobile, allImages, firstCoverImage]);
+  }, [currentImageIndex, isHovered, isMobile, isTablet, allImages, firstCoverImage]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -385,8 +389,8 @@ export default function ProductCard({
             <p>Image not available</p>
           </div>
 
-          {/* Left Arrow - Show on mobile only if there are multiple images */}
-          {isMobile && allImages.length > 1 && (
+          {/* Left Arrow - Show on mobile and tablet if there are multiple images */}
+          {(isMobile || isTablet) && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-left"
               onClick={(e) => {
@@ -398,8 +402,8 @@ export default function ProductCard({
             </button>
           )}
 
-          {/* Right Arrow - Show on mobile only if there are multiple images */}
-          {isMobile && allImages.length > 1 && (
+          {/* Right Arrow - Show on mobile and tablet if there are multiple images */}
+          {(isMobile || isTablet) && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-right"
               onClick={(e) => {
