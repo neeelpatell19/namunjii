@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Row, Col } from "antd";
 import "./Brands.css";
 import { Link } from "react-router-dom";
@@ -10,6 +10,8 @@ import "swiper/css/navigation";
 export default function Brands({ HomeData }) {
   const [isMobile, setIsMobile] = useState(false);
   const [hoveredBrandId, setHoveredBrandId] = useState(null);
+  const swiperRef = useRef(null);
+  const mobileTimeoutRef = useRef(null);
 
   // Detect mobile screen size
   useEffect(() => {
@@ -19,6 +21,15 @@ export default function Brands({ HomeData }) {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (mobileTimeoutRef.current) {
+        clearTimeout(mobileTimeoutRef.current);
+      }
+    };
   }, []);
 
   const brands = useMemo(() => {
@@ -70,6 +81,75 @@ export default function Brands({ HomeData }) {
 
     return reorderedBrands;
   }, [HomeData]);
+
+  // Handle mobile slide change - show 2nd photo after 1 second
+  const handleSlideChange = (swiper) => {
+    // Clear any existing timeout
+    if (mobileTimeoutRef.current) {
+      clearTimeout(mobileTimeoutRef.current);
+      mobileTimeoutRef.current = null;
+    }
+
+    // Reset hovered brand when slide changes
+    setHoveredBrandId(null);
+
+    // Only apply mobile behavior on mobile devices
+    if (!isMobile || !swiper || !brands || brands.length === 0) return;
+
+    // Get visible slides
+    const activeIndex = swiper.activeIndex;
+    const slidesPerView = swiper.params.slidesPerView || 2;
+    const visibleBrandIds = [];
+
+    // Calculate which brands are currently visible
+    for (let i = 0; i < slidesPerView; i++) {
+      const slideIndex = swiper.params.loop
+        ? swiper.realIndex + i
+        : activeIndex + i;
+      if (slideIndex < brands.length) {
+        const brandIndex = swiper.params.loop
+          ? slideIndex % brands.length
+          : slideIndex;
+        if (brands[brandIndex]) {
+          visibleBrandIds.push(brands[brandIndex]._id);
+        }
+      }
+    }
+
+    // After 1 second, show 2nd photo for visible brands
+    mobileTimeoutRef.current = setTimeout(() => {
+      // Show 2nd photo for the first visible brand
+      if (visibleBrandIds.length > 0) {
+        setHoveredBrandId(visibleBrandIds[0]);
+      }
+    }, 1000);
+  };
+
+  // Handle initial load on mobile - show 2nd photo after 1 second
+  useEffect(() => {
+    if (isMobile && brands && brands.length > 0 && swiperRef.current) {
+      // Clear any existing timeout
+      if (mobileTimeoutRef.current) {
+        clearTimeout(mobileTimeoutRef.current);
+      }
+
+      // Reset hovered brand
+      setHoveredBrandId(null);
+
+      // After 1 second, show 2nd photo for first visible brand
+      mobileTimeoutRef.current = setTimeout(() => {
+        if (brands.length > 0) {
+          setHoveredBrandId(brands[0]._id);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      if (mobileTimeoutRef.current) {
+        clearTimeout(mobileTimeoutRef.current);
+      }
+    };
+  }, [isMobile, brands]);
 
   // Loading state
   if (!HomeData || (Array.isArray(HomeData) && HomeData.length === 0)) {
@@ -185,6 +265,14 @@ export default function Brands({ HomeData }) {
           followFinger={true}
           threshold={5}
           touchMoveStopPropagation={false}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+            // Trigger initial slide change for mobile
+            if (isMobile) {
+              handleSlideChange(swiper);
+            }
+          }}
+          onSlideChange={handleSlideChange}
           breakpoints={{
             320: {
               slidesPerView: 2,
