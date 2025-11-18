@@ -8,7 +8,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import { Tooltip, Modal, message, notification } from "antd";
+import { Tooltip, Modal, App } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
@@ -26,6 +26,7 @@ export default function ProductCard({
   onViewProduct,
   className = "",
 }) {
+  const { message, notification } = App.useApp();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
   const {
@@ -43,7 +44,6 @@ export default function ProductCard({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
@@ -207,23 +207,17 @@ export default function ProductCard({
   };
 
   const addToCartWithSize = async (size) => {
-    // Clear any previous error
-    setErrorMessage("");
     setIsAddingToCart(true);
 
     if (!deviceId) {
-      const errorMsg = "Device ID not found. Please refresh the page.";
-      setErrorMessage(errorMsg);
       setIsAddingToCart(false);
-      message.error(errorMsg);
+      message.error("Device ID not found. Please refresh the page.");
       return;
     }
 
     if (!size) {
-      const errorMsg = "Please select a size";
-      setErrorMessage(errorMsg);
       setIsAddingToCart(false);
-      message.warning(errorMsg);
+      message.warning("Please select a size");
       return;
     }
 
@@ -233,7 +227,6 @@ export default function ProductCard({
       let colorToAdd = product.color || "";
 
       if (product?.products && Array.isArray(product.products) && size) {
-        // Try to find exact match with size
         const variant = product.products.find((p) => p.size === size);
         if (variant) {
           productIdToAdd = variant._id;
@@ -251,95 +244,35 @@ export default function ProductCard({
 
       const response = await cartApi.addToCart(cartPayload);
 
-      // Check if response exists and has success property
-      if (!response) {
-        message.error("No response from server. Please try again.");
-        return;
-      }
-
-      if (response.success === true) {
+      if (response?.success === true) {
         setIsAddingToCart(false);
-        setErrorMessage("");
-        
-        // Close modal if open
         setShowSizeModal(false);
         setSelectedSize("");
 
-        // Show success message
-        const successMsg = response.message || "Item added to cart";
-        message.success(successMsg);
-
-        // Trigger cart drawer to open
+        message.success(response.message || "Item added to cart");
         triggerCartDrawer();
         refreshCart();
 
-        // Call custom onAddToCart if provided
         if (onAddToCart) {
           onAddToCart(product);
         }
       } else {
         setIsAddingToCart(false);
-        
-        // Handle API error response (success: false)
-        // Keep modal open so user can try again
-        const errorMsg = response.message || response.error || "Failed to add item to cart";
-        
-        // Set error message in state to display in modal
-        setErrorMessage(errorMsg);
-        
-        // Also try to show message/notification
-        setTimeout(() => {
-          try {
-            message.error(errorMsg, 5);
-            notification.error({
-              message: "Add to Cart Failed",
-              description: errorMsg,
-              placement: "topRight",
-              duration: 5,
-            });
-          } catch (msgError) {
-            // Silent fail
-          }
-        }, 100);
+        const errorMsg = response?.message || response?.error || "Failed to add item to cart";
+        notification.error({
+          message: errorMsg,
+          placement: "topRight",
+          duration: 5,
+        });
       }
     } catch (error) {
       setIsAddingToCart(false);
-      
-      // Handle error response from API (HTTP errors like 400, 500, etc.)
-      if (error.response?.data) {
-        const errorData = error.response.data;
-        const errorMsg = errorData.message || "Failed to add item to cart";
-        
-        // Set error message in state to display in modal
-        setErrorMessage(errorMsg);
-        
-        // Also try to show message/notification
-        setTimeout(() => {
-          try {
-            message.error(errorMsg, 5);
-            notification.error({
-              message: "Add to Cart Failed",
-              description: errorMsg,
-              placement: "topRight",
-              duration: 5,
-            });
-          } catch (msgError) {
-            // Silent fail
-          }
-        }, 100);
-      } else if (error.message) {
-        const errorMsg = error.message;
-        setErrorMessage(errorMsg);
-        setTimeout(() => {
-          message.error(errorMsg);
-        }, 100);
-      } else {
-        const errorMsg = "Failed to add item to cart. Please try again.";
-        setErrorMessage(errorMsg);
-        setTimeout(() => {
-          message.error(errorMsg);
-        }, 100);
-      }
+      const errorMsg = error.response?.data?.message || error.message || "Failed to add item to cart. Please try again.";
+      notification.error({
+        message: errorMsg,
+        placement: "topRight",
+        duration: 5,
+      });
     }
   };
 
@@ -749,7 +682,6 @@ export default function ProductCard({
         onCancel={() => {
           setShowSizeModal(false);
           setSelectedSize("");
-          setErrorMessage("");
         }}
         footer={null}
         title="Select Size"
@@ -758,18 +690,7 @@ export default function ProductCard({
         className="product-card-size-modal"
       >
         <div className="product-card-size-modal-content">
-          {errorMessage && (
-            <div style={{
-              padding: "12px",
-              marginBottom: "16px",
-              backgroundColor: "#fff2f0",
-              border: "1px solid #ffccc7",
-              borderRadius: "4px",
-              color: "#cf1322"
-            }}>
-               {errorMessage}
-            </div>
-          )}
+          
           <div className="product-card-size-options">
             {availableSizes.map((size) => (
               <button
@@ -777,10 +698,7 @@ export default function ProductCard({
                 className={`product-card-size-btn ${
                   selectedSize === size ? "selected" : ""
                 }`}
-                onClick={() => {
-                  setSelectedSize(size);
-                  setErrorMessage(""); // Clear error when selecting new size
-                }}
+                onClick={() => setSelectedSize(size)}
               >
                 {size}
               </button>
@@ -792,7 +710,6 @@ export default function ProductCard({
               onClick={() => {
                 setShowSizeModal(false);
                 setSelectedSize("");
-                setErrorMessage("");
               }}
             >
               Cancel

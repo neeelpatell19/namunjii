@@ -186,7 +186,6 @@ const SingleProductPageDesign = () => {
 
       // Fetch from API to get product with all variants
       const response = await productApi.getProductById(productId);
-      console.log("API Response:", response);
 
       // Handle the API response structure: { success: true, data: {...} }
       if (response && response.success && response.data) {
