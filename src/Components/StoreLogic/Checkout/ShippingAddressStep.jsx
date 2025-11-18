@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Row, Col, Typography } from "antd";
 import {
   HomeOutlined,
@@ -14,6 +14,18 @@ const { Option } = Select;
 const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const name = orderData?.user?.name || orderData?.customerInfo?.name;
+    const mobile = orderData?.user?.mobileNumber || orderData?.customerInfo?.mobileNumber;
+    
+    if (name && !orderData?.shippingAddress?.fullName) {
+      form.setFieldsValue({ fullName: name });
+    }
+    if (mobile && !orderData?.shippingAddress?.mobileNumber) {
+      form.setFieldsValue({ mobileNumber: mobile });
+    }
+  }, [orderData?.user?.name, orderData?.user?.mobileNumber, orderData?.customerInfo?.name, orderData?.customerInfo?.mobileNumber, form]);
 
   const indianStates = [
     "Andhra Pradesh",
@@ -100,13 +112,16 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
+        key={`shipping-form-${orderData?.user?.name || orderData?.customerInfo?.name || 'empty'}-${orderData?.user?.mobileNumber || orderData?.customerInfo?.mobileNumber || 'empty'}`}
         initialValues={{
           fullName:
             orderData?.shippingAddress?.fullName ||
+            orderData?.user?.name ||
             orderData?.customerInfo?.name ||
             "",
           mobileNumber:
             orderData?.shippingAddress?.mobileNumber ||
+            orderData?.user?.mobileNumber ||
             orderData?.customerInfo?.mobileNumber ||
             "",
           addressLine1: orderData?.shippingAddress?.addressLine1 || "",

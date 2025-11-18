@@ -201,7 +201,8 @@ const OrderConfirmationStep = ({
                 <div className="detail-item">
                   <Text strong>Name:</Text>
                   <Text>
-                    {orderData?.customerInfo?.name ||
+                    {orderData?.user?.name ||
+                      orderData?.customerInfo?.name ||
                       orderData?.shippingAddress?.fullName ||
                       "N/A"}
                   </Text>
@@ -209,7 +210,8 @@ const OrderConfirmationStep = ({
                 <div className="detail-item">
                   <Text strong>Email:</Text>
                   <Text>
-                    {orderData?.customerInfo?.email ||
+                    {orderData?.user?.email ||
+                      orderData?.customerInfo?.email ||
                       orderData?.shippingAddress?.email ||
                       "N/A"}
                   </Text>
@@ -217,7 +219,8 @@ const OrderConfirmationStep = ({
                 <div className="detail-item">
                   <Text strong>Mobile:</Text>
                   <Text>
-                    {orderData?.customerInfo?.mobileNumber ||
+                    {orderData?.user?.mobileNumber ||
+                      orderData?.customerInfo?.mobileNumber ||
                       orderData?.shippingAddress?.mobileNumber ||
                       "N/A"}
                   </Text>
