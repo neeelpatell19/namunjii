@@ -1579,48 +1579,48 @@ const SingleProductPageDesign = () => {
             <Tabs
               defaultActiveKey="details"
               items={[
-                {
-                  key: "details",
-                  label: "Product Details",
-                  children: (
-                    <div className="tab-content">
-                      <div className="specifications">
-                        <div className="spec-row">
-                          <span className="spec-label">Sleeve Length:</span>
-                          <span className="spec-value">Short Sleeves</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Fit:</span>
-                          <span className="spec-value">Regular Fit</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Length:</span>
-                          <span className="spec-value">Regular</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Placket:</span>
-                          <span className="spec-value">Button Placket</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Collar:</span>
-                          <span className="spec-value">Spread Collar</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Brand Fit Name:</span>
-                          <span className="spec-value">Comfort</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Hemline:</span>
-                          <span className="spec-value">Curved</span>
-                        </div>
-                        <div className="spec-row">
-                          <span className="spec-label">Placket Length:</span>
-                          <span className="spec-value">Full</span>
-                        </div>
-                      </div>
-                    </div>
-                  ),
-                },
+                // {
+                //   key: "details",
+                //   label: "Product Details",
+                //   children: (
+                //     <div className="tab-content">
+                //       <div className="specifications">
+                //         <div className="spec-row">
+                //           <span className="spec-label">Sleeve Length:</span>
+                //           <span className="spec-value">Short Sleeves</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Fit:</span>
+                //           <span className="spec-value">Regular Fit</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Length:</span>
+                //           <span className="spec-value">Regular</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Placket:</span>
+                //           <span className="spec-value">Button Placket</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Collar:</span>
+                //           <span className="spec-value">Spread Collar</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Brand Fit Name:</span>
+                //           <span className="spec-value">Comfort</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Hemline:</span>
+                //           <span className="spec-value">Curved</span>
+                //         </div>
+                //         <div className="spec-row">
+                //           <span className="spec-label">Placket Length:</span>
+                //           <span className="spec-value">Full</span>
+                //         </div>
+                //       </div>
+                //     </div>
+                //   ),
+                // },
                 {
                   key: "sizeguide",
                   label: "Delivery & Return",
