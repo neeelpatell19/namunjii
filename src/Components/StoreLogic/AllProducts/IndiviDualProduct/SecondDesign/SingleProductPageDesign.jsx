@@ -966,7 +966,7 @@ const SingleProductPageDesign = () => {
   // Swipe handlers for preview (mouse) - only when not zoomed
   const handleMouseDown = (e) => {
     // Ignore if clicking on a button or inside a button
-    if (e.target.closest('button')) {
+    if (e.target.closest("button")) {
       isMouseDown.current = false;
       mouseStartX.current = 0;
       mouseEndX.current = 0;
@@ -981,7 +981,7 @@ const SingleProductPageDesign = () => {
 
   const handleMouseMove = (e) => {
     // Ignore if interacting with a button
-    if (e.target.closest('button')) {
+    if (e.target.closest("button")) {
       return;
     }
     if (!isMouseDown.current || previewZoom > 1) return;
@@ -990,7 +990,7 @@ const SingleProductPageDesign = () => {
 
   const handleMouseUp = (e) => {
     // Ignore if clicking on a button or inside a button
-    if (e.target.closest('button')) {
+    if (e.target.closest("button")) {
       isMouseDown.current = false;
       mouseStartX.current = 0;
       mouseEndX.current = 0;
@@ -1637,7 +1637,8 @@ const SingleProductPageDesign = () => {
                         <div className="feature-item">
                           <div className="feature-icon">✓</div>
                           <span>
-                            Exchange available within 7 days of delivery.
+                            Exchange is available within 7 days of delivery only
+                            if a wrong or <br /> defective product is received.
                           </span>
                         </div>
                         <div className="feature-item">
