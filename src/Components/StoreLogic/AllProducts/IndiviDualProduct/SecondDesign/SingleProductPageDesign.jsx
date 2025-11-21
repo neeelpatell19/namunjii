@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { Tabs, Alert, Button, Badge, Modal } from "antd";
+import { Tabs, Alert, Button, Badge, Modal, App } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   HeartOutlined,
@@ -33,6 +33,7 @@ const SingleProductPageDesign = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
+  const { message } = App.useApp();
   const {
     triggerCartDrawer,
     triggerWishlistDrawer,
@@ -181,8 +182,6 @@ const SingleProductPageDesign = () => {
       // Always fetch from API to get product with all variants
       // The API response includes the products array with all size/color combinations
       const apiProducts = Array.isArray(state?.products) ? state.products : [];
-      console.log("Looking for product ID:", productId);
-      console.log("Available products:", apiProducts.length);
 
       // Fetch from API to get product with all variants
       const response = await productApi.getProductById(productId);
@@ -212,7 +211,6 @@ const SingleProductPageDesign = () => {
         setError("Product not found");
       }
     } catch (err) {
-      console.error("Error loading product:", err);
       setError(err.message || "Failed to load product");
     } finally {
       setLoading(false);
@@ -251,7 +249,6 @@ const SingleProductPageDesign = () => {
         setError("Product not found via API");
       }
     } catch (err) {
-      console.error("API Error:", err);
       // If API fails, fall back to context method
       findProduct();
     }
@@ -273,9 +270,21 @@ const SingleProductPageDesign = () => {
       if (response.success) {
         triggerCartDrawer();
         refreshCart();
+      } else {
+        // Show error message from backend
+        message.error(response.message || "Failed to add to cart");
       }
     } catch (err) {
-      console.error("Failed to add to cart:", err);
+      // Check if error has response data (axios error)
+      if (err.response?.data) {
+        const errorData = err.response.data;
+        // Show error message from backend response
+        const errorMessage = errorData.message || "Failed to add to cart";
+        message.error(errorMessage);
+      } else {
+        // Network error or other error
+        message.error(err.message || "Failed to add to cart");
+      }
     }
   };
 
@@ -295,7 +304,7 @@ const SingleProductPageDesign = () => {
         refreshWishlist();
       }
     } catch (err) {
-      console.error("Failed to add to wishlist:", err);
+      // Error handled silently
     }
   };
 
