@@ -69,7 +69,6 @@ export default function NewArrivals({ HomeData }) {
     );
   }
 
-  console.log("New Arrivals:", newArrivals);
 
   return (
     <div className="new-arrivals-container">

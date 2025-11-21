@@ -21,6 +21,11 @@ const CustomerInfoStep = ({ orderData, onComplete, onError }) => {
 
       if (response.success) {
         onComplete({
+          user: response.data.user || {
+            name: values.name,
+            email: values.email,
+            mobileNumber: values.mobileNumber,
+          },
           customerInfo: response.data.customerInfo,
           status: response.data.status,
         });

@@ -27,7 +27,7 @@ import HomeComponents from "./Components/HomeComponents";
 import Login from "./Components/Auth/Login/Login";
 import WhatsAppBtn from "./Components/WhatsAppBtn/WhatsAppBtn";
 // import Maintenance from "./Components/Maintenance/Maintenance";
-import { Grid } from "antd";
+import { Grid, App as AntdApp } from "antd";
 import { UserProvider } from "./Components/StoreLogic/Context/UserContext";
 import { CartWishlistProvider } from "./Components/StoreLogic/Context/CartWishlistContext";
 import { HomeDataProvider } from "./Components/StoreLogic/Context/HomeDataContext";
@@ -243,29 +243,31 @@ function App() {
           <UserProvider>
             <HomeDataProvider>
               <CartWishlistProvider>
-                <BrowserRouter>
-                  <div
-                    style={{
-                      width: "100vw",
-                      // overflowX: "hidden",
-                      paddingTop: lg ? "120px" : "60px",
-                    }}
-                  >
-                    <Header />
-                    {/* <Maintenance /> */}
-                    <AnimatedRoutes />
+                <AntdApp>
+                  <BrowserRouter>
+                    <div
+                      style={{
+                        width: "100vw",
+                        // overflowX: "hidden",
+                        paddingTop: lg ? "120px" : "60px",
+                      }}
+                    >
+                      <Header />
+                      {/* <Maintenance /> */}
+                      <AnimatedRoutes />
 
-                    {/* <FeaturesAndQuestion /> */}
-                    {/* <CommonUserInteractionsPopup /> */}
-                    <Footer />
-                    {/* <Cookies /> */}
-                    <WhatsAppBtn />
+                      {/* <FeaturesAndQuestion /> */}
+                      {/* <CommonUserInteractionsPopup /> */}
+                      <Footer />
+                      {/* <Cookies /> */}
+                      <WhatsAppBtn />
 
-                    {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
-                    {/* <UserDetailsModal /> */}
-                    {/* <Cart /> */}
-                  </div>
-                </BrowserRouter>
+                      {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
+                      {/* <UserDetailsModal /> */}
+                      {/* <Cart /> */}
+                    </div>
+                  </BrowserRouter>
+                </AntdApp>
               </CartWishlistProvider>
             </HomeDataProvider>
           </UserProvider>

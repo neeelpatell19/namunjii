@@ -8,7 +8,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import { Tooltip, Modal } from "antd";
+import { Tooltip, Modal, App } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
@@ -26,6 +26,7 @@ export default function ProductCard({
   onViewProduct,
   className = "",
 }) {
+  const { message, notification } = App.useApp();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
   const {
@@ -43,6 +44,7 @@ export default function ProductCard({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
   const autoPlayRef = useRef(null);
@@ -143,18 +145,22 @@ export default function ProductCard({
     return Math.round(basePricing - discountAmount);
   };
 
-  // Extract available sizes from products array
+  // Extract available sizes from products array or direct size property
   const getAvailableSizes = useMemo(() => {
-    if (!product?.products || !Array.isArray(product.products)) {
-      return [];
-    }
-
     const sizesSet = new Set();
-    product.products.forEach((p) => {
-      if (p.size) {
-        sizesSet.add(p.size);
-      }
-    });
+
+    // Check if product has a products array (multiple variants)
+    if (product?.products && Array.isArray(product.products) && product.products.length > 0) {
+      product.products.forEach((p) => {
+        if (p.size) {
+          sizesSet.add(p.size);
+        }
+      });
+    } 
+    // If no products array, check for direct size property (single variant)
+    else if (product?.size) {
+      sizesSet.add(product.size);
+    }
 
     // Filter sizes based on isExpressShipping
     let availableSizes = Array.from(sizesSet);
@@ -175,7 +181,7 @@ export default function ProductCard({
     });
 
     return availableSizes;
-  }, [product?.products, product?.isExpressShipping]);
+  }, [product?.products, product?.size, product?.isExpressShipping]);
 
   const availableSizes = getAvailableSizes;
 
@@ -190,19 +196,30 @@ export default function ProductCard({
     e.stopPropagation(); // Prevent event bubbling
     if (!deviceId) return;
 
-    // If product has multiple sizes, show size selection modal
-    if (availableSizes.length > 1) {
+    // Always show size selection modal if there are available sizes
+    if (availableSizes.length > 0) {
       setShowSizeModal(true);
       return;
     }
 
-    // If only one size or no sizes, add directly to cart
-    const sizeToAdd = availableSizes.length === 1 ? availableSizes[0] : product.size || "";
-    await addToCartWithSize(sizeToAdd);
+    // If no sizes available, show message
+    message.warning("No sizes available for this product");
   };
 
   const addToCartWithSize = async (size) => {
-    if (!deviceId) return;
+    setIsAddingToCart(true);
+
+    if (!deviceId) {
+      setIsAddingToCart(false);
+      message.error("Device ID not found. Please refresh the page.");
+      return;
+    }
+
+    if (!size) {
+      setIsAddingToCart(false);
+      message.warning("Please select a size");
+      return;
+    }
 
     try {
       // Find the product variant with the selected size
@@ -210,7 +227,6 @@ export default function ProductCard({
       let colorToAdd = product.color || "";
 
       if (product?.products && Array.isArray(product.products) && size) {
-        // Try to find exact match with size
         const variant = product.products.find((p) => p.size === size);
         if (variant) {
           productIdToAdd = variant._id;
@@ -218,30 +234,45 @@ export default function ProductCard({
         }
       }
 
-      const response = await cartApi.addToCart({
+      const cartPayload = {
         deviceId,
         productId: productIdToAdd,
         quantity: 1,
         size: size,
         color: colorToAdd,
-      });
+      };
 
-      if (response.success) {
-        // Close modal if open
+      const response = await cartApi.addToCart(cartPayload);
+
+      if (response?.success === true) {
+        setIsAddingToCart(false);
         setShowSizeModal(false);
         setSelectedSize("");
 
-        // Trigger cart drawer to open
+        message.success(response.message || "Item added to cart");
         triggerCartDrawer();
         refreshCart();
 
-        // Call custom onAddToCart if provided
         if (onAddToCart) {
           onAddToCart(product);
         }
+      } else {
+        setIsAddingToCart(false);
+        const errorMsg = response?.message || response?.error || "Failed to add item to cart";
+        notification.error({
+          message: errorMsg,
+          placement: "topRight",
+          duration: 5,
+        });
       }
     } catch (error) {
-      console.error("Failed to add to cart:", error);
+      setIsAddingToCart(false);
+      const errorMsg = error.response?.data?.message || error.message || "Failed to add item to cart. Please try again.";
+      notification.error({
+        message: errorMsg,
+        placement: "topRight",
+        duration: 5,
+      });
     }
   };
 
@@ -270,7 +301,7 @@ export default function ProductCard({
         }
       }
     } catch (error) {
-      console.error("Failed to update wishlist:", error);
+      // Silent fail
     }
   };
   const handleViewProduct = () => {
@@ -610,13 +641,11 @@ export default function ProductCard({
                     className="product-card-modal-add-to-cart-outline"
                     onClick={() => {
                       setShowQuickViewModal(false);
-                      // If product has multiple sizes, show size selection modal
-                      if (availableSizes.length > 1) {
+                      // Always show size selection modal if there are available sizes
+                      if (availableSizes.length > 0) {
                         setShowSizeModal(true);
                       } else {
-                        // If only one size or no sizes, add directly to cart
-                        const sizeToAdd = availableSizes.length === 1 ? availableSizes[0] : product.size || "";
-                        addToCartWithSize(sizeToAdd);
+                        message.warning("No sizes available for this product");
                       }
                     }}
                   >
@@ -661,6 +690,7 @@ export default function ProductCard({
         className="product-card-size-modal"
       >
         <div className="product-card-size-modal-content">
+          
           <div className="product-card-size-options">
             {availableSizes.map((size) => (
               <button
@@ -691,9 +721,10 @@ export default function ProductCard({
                   addToCartWithSize(selectedSize);
                 }
               }}
-              disabled={!selectedSize}
+              disabled={!selectedSize || isAddingToCart}
+              loading={isAddingToCart}
             >
-              Add to Cart
+              {isAddingToCart ? "Adding..." : "Add to Cart"}
             </button>
           </div>
         </div>
