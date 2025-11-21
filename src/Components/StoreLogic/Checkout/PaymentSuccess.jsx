@@ -45,11 +45,6 @@ const PaymentSuccess = () => {
     navigate("/");
   };
 
-  const handleViewOrder = () => {
-    // Navigate to order details page if implemented
-    console.log("View order:", orderNumber);
-  };
-
   return (
     <div className="payment-success-container">
       <div className="payment-success-content">
