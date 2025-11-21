@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { Tabs, Alert, Button, Badge, Modal, App } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
@@ -309,28 +315,69 @@ const SingleProductPageDesign = () => {
   };
 
   // Find product variant by size and color
-  const findProductVariant = (size, color) => {
-    if (!product?.products || !Array.isArray(product.products)) {
-      return null;
+  const findProductVariant = useCallback(
+    (size, color) => {
+      if (!product?.products || !Array.isArray(product.products)) {
+        return null;
+      }
+
+      // Try to find exact match first (both size and color match)
+      let variant = product.products.find(
+        (p) => p.size === size && p.color === color
+      );
+
+      // If no exact match and we have a size, try to find by size with any color
+      if (!variant && size) {
+        variant = product.products.find((p) => p.size === size);
+      }
+
+      // If still no match and we have a color, try to find by color with any size
+      if (!variant && color) {
+        variant = product.products.find((p) => p.color === color);
+      }
+
+      return variant;
+    },
+    [product]
+  );
+
+  // Find exact product variant by size AND color (for stock checking)
+  const findExactProductVariant = useCallback(
+    (size, color) => {
+      if (!product?.products || !Array.isArray(product.products)) {
+        return null;
+      }
+
+      // Only return variant if both size and color match exactly
+      return (
+        product.products.find((p) => p.size === size && p.color === color) ||
+        null
+      );
+    },
+    [product]
+  );
+
+  // Get current product variant and check stock availability
+  // Only check stock if both size and color are selected
+  const currentVariant = useMemo(() => {
+    if (!product) return null;
+
+    // For stock checking, we need both size and color
+    const sizeToCheck = selectedSize || product.size;
+    const colorToCheck = selectedColor || product.color;
+
+    // If we have both size and color, check exact match for stock
+    if (sizeToCheck && colorToCheck) {
+      return findExactProductVariant(sizeToCheck, colorToCheck);
     }
 
-    // Try to find exact match first (both size and color match)
-    let variant = product.products.find(
-      (p) => p.size === size && p.color === color
-    );
+    // If we don't have both, return null (will default to no stock)
+    return null;
+  }, [product, selectedSize, selectedColor, findExactProductVariant]);
 
-    // If no exact match and we have a size, try to find by size with any color
-    if (!variant && size) {
-      variant = product.products.find((p) => p.size === size);
-    }
-
-    // If still no match and we have a color, try to find by color with any size
-    if (!variant && color) {
-      variant = product.products.find((p) => p.color === color);
-    }
-
-    return variant;
-  };
+  const availableStock =
+    currentVariant?.availableStock ?? currentVariant?.stock ?? 0;
+  const hasStock = availableStock > 0;
 
   // Handle size selection
   const handleSizeSelect = (size) => {
@@ -1523,6 +1570,49 @@ const SingleProductPageDesign = () => {
             )}
           </div>
 
+          {/* Delivery Information */}
+          <div
+            className="delivery-info-section"
+            style={{ marginBottom: "24px" }}
+          >
+            {hasStock ? (
+              <div className="delivery-info-item">
+                <img
+                  src="/fast-delivery-icon.svg"
+                  alt="Fast delivery"
+                  className="delivery-icon"
+                />
+                <span className="delivery-text">
+                  This product is <strong>ready to ship</strong> and will take
+                  up to <strong>5-7 business days</strong> to dispatch.
+                </span>
+              </div>
+            ) : (
+              <div className="delivery-info-item">
+                <img
+                  src="/made-to-order-icon.svg"
+                  alt="Made to order"
+                  className="delivery-icon"
+                />
+                <span className="delivery-text">
+                  {product?.vendorId?.name === "Flapper6" ||
+                  product?.vendorId?.name === "Demira" ? (
+                    <>
+                      This product is <strong>made to order</strong> and will
+                      take up to <strong>15 to 20 business days</strong> to
+                      dispatch, as there are hand-embroidered pieces.
+                    </>
+                  ) : (
+                    <>
+                      This product is <strong>made to order</strong> and will
+                      take up to <strong>10 business days</strong> to dispatch.
+                    </>
+                  )}
+                </span>
+              </div>
+            )}
+          </div>
+
           {/* Action Buttons */}
           <div className="action-buttons">
             <button className="wishlist-btn" onClick={handleAddToWishlist}>
@@ -1544,43 +1634,6 @@ const SingleProductPageDesign = () => {
           </div>
 
           {/* Product Features */}
-
-          {/* Delivery Information */}
-          <div className="delivery-info-section">
-            <div className="delivery-info-item">
-              <img
-                src="/fast-delivery-icon.svg"
-                alt="Fast delivery"
-                className="delivery-icon"
-              />
-              <span className="delivery-text">
-                Ready to ship items are expected to arrive within{" "}
-                <strong>5–7 business days</strong>.
-              </span>
-            </div>
-            <div className="delivery-info-item">
-              <img
-                src="/made-to-order-icon.svg"
-                alt="Made to order"
-                className="delivery-icon"
-              />
-              <span className="delivery-text">
-                {product?.vendorId?.name === "Flapper6" ||
-                product?.vendorId?.name === "Demira" ? (
-                  <>
-                    Made to order items are dispatched within{" "}
-                    <strong>15 to 20 business days</strong>, as there are
-                    hand-embroidered pieces.
-                  </>
-                ) : (
-                  <>
-                    Made to order items are dispatched within{" "}
-                    <strong>10 business days</strong>.
-                  </>
-                )}
-              </span>
-            </div>
-          </div>
 
           {/* Product Details Tabs */}
           <div className="product-details-tabs">
