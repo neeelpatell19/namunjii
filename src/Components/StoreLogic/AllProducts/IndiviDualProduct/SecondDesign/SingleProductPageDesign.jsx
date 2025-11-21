@@ -1564,7 +1564,7 @@ const SingleProductPageDesign = () => {
                 alt="Made to order"
                 className="delivery-icon"
               />
-              <span>
+              <span className="delivery-text">
                 {product?.vendorId?.name === "Flapper6" ||
                 product?.vendorId?.name === "Demira" ? (
                   <>
