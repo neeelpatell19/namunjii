@@ -274,6 +274,7 @@ const SingleProductPageDesign = () => {
       });
 
       if (response.success) {
+        message.success(response.message || "Added to cart");
         triggerCartDrawer();
         refreshCart();
       } else {
