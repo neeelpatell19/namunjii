@@ -118,7 +118,7 @@ const OrderConfirmationStep = ({
                         <Tag color="orange">Qty: {item.quantity}</Tag>
                       </div>
                       <div className="item-pricing">
-                        <Text strong>₹{item.finalPrice?.toLocaleString()}</Text>
+                        <Text strong>₹{item.price?.toLocaleString()}</Text>
                         {item.discount > 0 && (
                           <Space>
                             <Text delete type="secondary">
