@@ -1530,7 +1530,7 @@ const SingleProductPageDesign = () => {
               disabled={isInCart}
             >
               {/* <ShoppingCartOutlined /> */}
-              {isInCart ? "Added To Bag" : "Add to Bag"}
+              {isInCart ? "Added To cart" : "Add to cart"}
             </button>
           </div>
 
