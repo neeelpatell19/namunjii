@@ -129,7 +129,14 @@ export default function ProductCard({
       // Use direct assignment for instant update without flicker
       imageRef.current.src = targetSrc;
     }
-  }, [currentImageIndex, isHovered, isMobile, isTablet, allImages, firstCoverImage]);
+  }, [
+    currentImageIndex,
+    isHovered,
+    isMobile,
+    isTablet,
+    allImages,
+    firstCoverImage,
+  ]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
@@ -150,13 +157,17 @@ export default function ProductCard({
     const sizesSet = new Set();
 
     // Check if product has a products array (multiple variants)
-    if (product?.products && Array.isArray(product.products) && product.products.length > 0) {
+    if (
+      product?.products &&
+      Array.isArray(product.products) &&
+      product.products.length > 0
+    ) {
       product.products.forEach((p) => {
         if (p.size) {
           sizesSet.add(p.size);
         }
       });
-    } 
+    }
     // If no products array, check for direct size property (single variant)
     else if (product?.size) {
       sizesSet.add(product.size);
@@ -170,7 +181,19 @@ export default function ProductCard({
     }
 
     // Sort sizes in a logical order
-    const sizeOrder = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL", "4XL", "Free Size"];
+    const sizeOrder = [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "2XL",
+      "3XL",
+      "4XL",
+      "Free Size",
+    ];
     availableSizes.sort((a, b) => {
       const indexA = sizeOrder.indexOf(a);
       const indexB = sizeOrder.indexOf(b);
@@ -258,7 +281,8 @@ export default function ProductCard({
         }
       } else {
         setIsAddingToCart(false);
-        const errorMsg = response?.message || response?.error || "Failed to add item to cart";
+        const errorMsg =
+          response?.message || response?.error || "Failed to add item to cart";
         notification.error({
           message: errorMsg,
           placement: "topRight",
@@ -267,7 +291,10 @@ export default function ProductCard({
       }
     } catch (error) {
       setIsAddingToCart(false);
-      const errorMsg = error.response?.data?.message || error.message || "Failed to add item to cart. Please try again.";
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to add item to cart. Please try again.";
       notification.error({
         message: errorMsg,
         placement: "topRight",
@@ -501,7 +528,7 @@ export default function ProductCard({
               >
                 <h3 className="product-card-name">{product.productName}</h3>
               </Tooltip>
-              {showAddToCart && (
+              {/* {showAddToCart && (
                 <button
                   className="product-card-cart-btn"
                   onClick={(e) => handleAddToCart(e)}
@@ -512,7 +539,7 @@ export default function ProductCard({
                     className="product-card-cart-icon"
                   />
                 </button>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -690,7 +717,6 @@ export default function ProductCard({
         className="product-card-size-modal"
       >
         <div className="product-card-size-modal-content">
-          
           <div className="product-card-size-options">
             {availableSizes.map((size) => (
               <button

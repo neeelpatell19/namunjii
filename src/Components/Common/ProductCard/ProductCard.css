@@ -362,7 +362,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.5rem;
 }
 
 .product-card-name {
@@ -404,7 +404,7 @@
   flex-direction: column;
   gap: 6px;
   flex: 0 0 auto;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .product-card-price-container {
@@ -874,6 +874,7 @@
 
 .product-card-brandname {
   margin-top: 6px;
+  margin-bottom: 0.5rem;
   font-size: 0.8rem;
   color: #775242;
   font-family: var(--fira-sans);
