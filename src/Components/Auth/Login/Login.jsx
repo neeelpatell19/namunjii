@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button, message, Select } from "antd";
 import { PhoneOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import authApi from "../../../apis/auth";
 import "./Login.css";
 
 // Common country codes for India and Gulf region
@@ -17,6 +20,7 @@ const countryCodes = [
 ];
 
 const Login = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState("phone"); // 'phone' or 'otp'
   const [countryCode, setCountryCode] = useState("+91"); // Default to India
   const [phone, setPhone] = useState("");
@@ -121,17 +125,19 @@ const Login = () => {
 
     setLoading(true);
     try {
-      // TODO: API call to send OTP
-      // await authApi.sendOTP({ phone: `${countryCode}${phone}`, countryCode, phone });
+      // API call to send OTP - send only mobileNumber without country code
+      const response = await authApi.sendOTP(phone);
       
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      setStep("otp");
-      setCountdown(60);
-      message.success("OTP sent to your phone number");
+      if (response.success) {
+        setStep("otp");
+        setCountdown(60);
+        message.success(response.message || "OTP sent to your phone number");
+      } else {
+        message.error(response.message || "Failed to send OTP. Please try again.");
+      }
     } catch (error) {
-      message.error("Failed to send OTP. Please try again.");
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to send OTP. Please try again.";
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -185,16 +191,34 @@ const Login = () => {
 
     setLoading(true);
     try {
-      // TODO: API call to verify OTP and login/register
-      // await authApi.verifyOTP({ phone: `${countryCode}${phone}`, countryCode, phone, otp });
+      // API call to verify OTP and login/register
+      const response = await authApi.verifyOTP(otp, phone);
       
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      message.success("Login successful!");
-      // TODO: Handle successful login (update Redux state, redirect, etc.)
+      if (response.success && response.token) {
+        // Save token in cookies (expires in 30 days) and localStorage
+        const expiresInDays = 30;
+        Cookies.set("token", response.token, { expires: expiresInDays });
+        localStorage.setItem("token", response.token);
+        
+        // Save user data if needed
+        if (response.user) {
+          localStorage.setItem("user", JSON.stringify(response.user));
+        }
+        
+        message.success("Login successful!");
+        
+        // Redirect to home page or previous page
+        setTimeout(() => {
+          navigate("/");
+          // Reload to update auth state across the app
+          window.location.reload();
+        }, 500);
+      } else {
+        message.error(response.message || "Invalid OTP. Please try again.");
+      }
     } catch (error) {
-      message.error("Invalid OTP. Please try again.");
+      const errorMessage = error?.response?.data?.message || error?.message || "Invalid OTP. Please try again.";
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -205,18 +229,20 @@ const Login = () => {
 
     setLoading(true);
     try {
-      // TODO: API call to resend OTP
-      // await authApi.sendOTP({ phone: `${countryCode}${phone}`, countryCode, phone });
+      // API call to resend OTP
+      const response = await authApi.sendOTP(phone);
       
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      setCountdown(60);
-      setOtpValues(Array(6).fill(""));
-      setOtp("");
-      message.success("OTP resent successfully");
+      if (response.success) {
+        setCountdown(60);
+        setOtpValues(Array(6).fill(""));
+        setOtp("");
+        message.success(response.message || "OTP resent successfully");
+      } else {
+        message.error(response.message || "Failed to resend OTP. Please try again.");
+      }
     } catch (error) {
-      message.error("Failed to resend OTP. Please try again.");
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to resend OTP. Please try again.";
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -392,6 +392,54 @@
   color: var(--brand-500);
 }
 
+/* User Popover Styles */
+.user-popover .ant-popover-inner-content {
+  padding: 12px 16px;
+  min-width: 200px;
+}
+
+.user-popover-content {
+  font-family: var(--Poppins-font);
+}
+
+.user-popover-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.user-popover-mobile {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.user-popover-divider {
+  height: 1px;
+  background-color: #e8e8e8;
+  margin: 12px 0;
+}
+
+.user-popover-link {
+  font-size: 14px;
+  color: var(--brand-primary);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.3s ease;
+}
+
+.user-popover-link:hover {
+  color: var(--brand-500);
+}
+
+.user-popover-login-button {
+  font-family: var(--Poppins-font);
+  font-weight: 500;
+}
+
 /* Secondary Navigation Bar */
 .CategoryNavBar {
   background: #fff;

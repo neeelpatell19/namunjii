@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Row, Col, Dropdown, Input, Spin, Drawer } from "antd";
+import { Row, Col, Dropdown, Input, Spin, Drawer, Popover, Button } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FiSearch,
@@ -9,6 +9,8 @@ import {
   FiUser,
   FiChevronDown,
 } from "react-icons/fi";
+import { HiOutlineUser } from "react-icons/hi2";
+import Cookies from "js-cookie";
 import {
   LogoutOutlined,
   ProfileOutlined,
@@ -33,7 +35,24 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.api.userData);
-  const isLoggedIn = !!userData;
+  
+  // Check if user is logged in (check token and user data)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  
+  // Check login status on mount and when userData changes
+  useEffect(() => {
+    const token = Cookies.get("token") || localStorage.getItem("token");
+    const user = userData || JSON.parse(localStorage.getItem("user") || "null");
+    
+    if (token && user) {
+      setIsLoggedIn(true);
+      setLoggedInUser(user);
+    } else {
+      setIsLoggedIn(false);
+      setLoggedInUser(null);
+    }
+  }, [userData]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [, setWishlistCount] = useState(0);
@@ -762,24 +781,43 @@ const Header = () => {
             </Col>
             <Col>
               <div className="NavActions">
-                <Dropdown
-                  menu={{ items: isLoggedIn ? userMenuItems : loginMenuItems }}
-                  placement="bottomCenter"
-                  trigger={["click"]}
-                  arrow={{ pointAtCenter: true }}
+                <Popover
+                  content={
+                    isLoggedIn && loggedInUser ? (
+                      <div className="user-popover-content">
+                        <div
+                          className="user-popover-link"
+                          onClick={() => {
+                            navigate("/orders");
+                          }}
+                        >
+                          My Orders
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="user-popover-content">
+                        <Button
+                          type="primary"
+                          block
+                          onClick={() => {
+                            navigate("/login");
+                          }}
+                          className="user-popover-login-button"
+                        >
+                          Login
+                        </Button>
+                      </div>
+                    )
+                  }
+                  title={null}
+                  trigger="hover"
+                  placement="bottomRight"
+                  overlayClassName="user-popover"
                 >
-                  <div
-                    className="UserIcon"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      cursor: "pointer",
-                      gap: "8px",
-                    }}
-                  >
-                    {/* <FiUser /> */}
+                  <div className="UserIcon" style={{ cursor: "pointer" }}>
+                    <HiOutlineUser />
                   </div>
-                </Dropdown>
+                </Popover>
                 <div
                   className="WishlistIcon"
                   style={{ display: "flex", alignItems: "center" }}
