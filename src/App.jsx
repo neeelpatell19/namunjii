@@ -25,6 +25,7 @@ import SellerPolicy from "./Components/Policies/SellerPolicy";
 import TermsOfUse from "./Components/Policies/TermsOfUse";
 import HomeComponents from "./Components/HomeComponents";
 import Login from "./Components/Auth/Login/Login";
+import Orders from "./Components/Orders/Orders";
 import WhatsAppBtn from "./Components/WhatsAppBtn/WhatsAppBtn";
 // import Maintenance from "./Components/Maintenance/Maintenance";
 import { Grid, App as AntdApp } from "antd";
@@ -226,6 +227,14 @@ const AnimatedRoutes = () => {
           element={
             <PageTransition>
               <Login />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <PageTransition>
+              <Orders />
             </PageTransition>
           }
         />
