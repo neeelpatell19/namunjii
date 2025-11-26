@@ -503,7 +503,9 @@ const ProductsPage = () => {
         if (filters.gender) {
           params.gender = filters.gender;
         }
-        const response = await subcategoryApi.getSubCategoriesForSelection(params);
+        const response = await subcategoryApi.getSubCategoriesForSelection(
+          params
+        );
         if (response.success) {
           setSubcategories(response.data || []);
         } else {
@@ -933,7 +935,7 @@ const ProductsPage = () => {
   // Render breadcrumb navigation
   const renderBreadcrumb = () => {
     const breadcrumbItems = [];
-    
+
     // Always show Home
     breadcrumbItems.push(
       <Link key="home" to="/" className="breadcrumb-item">
@@ -944,44 +946,58 @@ const ProductsPage = () => {
     // Show Namunjii Exclusive if selected
     if (filters.isNamunjiiExclusive) {
       breadcrumbItems.push(
-        <span key="separator-namunjii" className="breadcrumb-separator">|</span>
+        <span key="separator-namunjii" className="breadcrumb-separator">
+          |
+        </span>
       );
       breadcrumbItems.push(
-        <Link key="namunjii" to="/products?isNamunjiiExclusive=true" className="breadcrumb-item">
+        <Link
+          key="namunjii"
+          to="/products?isNamunjiiExclusive=true"
+          className="breadcrumb-item"
+        >
           Namunjii Exclusive
         </Link>
       );
       return breadcrumbItems.length > 1 ? (
-        <div className="breadcrumb-navigation">
-          {breadcrumbItems}
-        </div>
+        <div className="breadcrumb-navigation">{breadcrumbItems}</div>
       ) : null;
     }
 
     // Show Accessories if selected
     if (filters.productType === "accessory") {
       breadcrumbItems.push(
-        <span key="separator-accessories" className="breadcrumb-separator">|</span>
+        <span key="separator-accessories" className="breadcrumb-separator">
+          |
+        </span>
       );
       breadcrumbItems.push(
-        <Link key="accessories" to="/products?productType=accessory" className="breadcrumb-item">
+        <Link
+          key="accessories"
+          to="/products?productType=accessory"
+          className="breadcrumb-item"
+        >
           Accessories
         </Link>
       );
       return breadcrumbItems.length > 1 ? (
-        <div className="breadcrumb-navigation">
-          {breadcrumbItems}
-        </div>
+        <div className="breadcrumb-navigation">{breadcrumbItems}</div>
       ) : null;
     }
 
     // Show gender if selected (Men/Women)
     if (filters.gender === "Men" || filters.gender === "Women") {
       breadcrumbItems.push(
-        <span key="separator-gender" className="breadcrumb-separator">|</span>
+        <span key="separator-gender" className="breadcrumb-separator">
+          |
+        </span>
       );
       breadcrumbItems.push(
-        <Link key="gender" to={`/products?gender=${filters.gender}`} className="breadcrumb-item">
+        <Link
+          key="gender"
+          to={`/products?gender=${filters.gender}`}
+          className="breadcrumb-item"
+        >
           {filters.gender}
         </Link>
       );
@@ -998,7 +1014,9 @@ const ProductsPage = () => {
       const categoryName = getCategoryName(categoryIdToShow);
       if (categoryName) {
         breadcrumbItems.push(
-          <span key="separator1" className="breadcrumb-separator">|</span>
+          <span key="separator1" className="breadcrumb-separator">
+            |
+          </span>
         );
         breadcrumbItems.push(
           <span key="category" className="breadcrumb-item active">
@@ -1009,11 +1027,16 @@ const ProductsPage = () => {
     }
 
     // Show subcategory if Men/Women is selected and subcategory exists
-    if ((filters.gender === "Men" || filters.gender === "Women") && filters.subcategory) {
+    if (
+      (filters.gender === "Men" || filters.gender === "Women") &&
+      filters.subcategory
+    ) {
       const subcategoryName = getSubcategoryName(filters.subcategory);
       if (subcategoryName) {
         breadcrumbItems.push(
-          <span key="separator2" className="breadcrumb-separator">|</span>
+          <span key="separator2" className="breadcrumb-separator">
+            |
+          </span>
         );
         breadcrumbItems.push(
           <span key="subcategory" className="breadcrumb-item active">
@@ -1024,9 +1047,7 @@ const ProductsPage = () => {
     }
 
     return breadcrumbItems.length > 1 ? (
-      <div className="breadcrumb-navigation">
-        {breadcrumbItems}
-      </div>
+      <div className="breadcrumb-navigation">{breadcrumbItems}</div>
     ) : null;
   };
 
@@ -1266,7 +1287,7 @@ const ProductsPage = () => {
         </div>
         {expandedFilters.orderType && (
           <div className="checkbox-group">
-            <Checkbox
+            {/* <Checkbox
               checked={filters.orderType === "made_to_order"}
               onChange={(e) =>
                 handleFilterChange(
@@ -1276,7 +1297,7 @@ const ProductsPage = () => {
               }
             >
               Made to Order
-            </Checkbox>
+            </Checkbox> */}
             <Checkbox
               checked={filters.orderType === "ready_to_ship"}
               onChange={(e) =>

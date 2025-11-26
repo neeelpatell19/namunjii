@@ -6,6 +6,8 @@ import {
   CreditCardOutlined,
 } from "@ant-design/icons";
 import checkoutApi from "../../../apis/checkout";
+import { useCartWishlist } from "../Context/CartWishlistContext";
+import cartApi from "../../../apis/cart";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -17,6 +19,7 @@ const OrderConfirmationStep = ({
   onError,
 }) => {
   const [loading, setLoading] = useState(false);
+  const { refreshCart } = useCartWishlist();
 
   const calculateItemTotal = (item) => {
     const basePrice = item.price || 0;
@@ -50,8 +53,14 @@ const OrderConfirmationStep = ({
       });
 
       if (response.success) {
-        // Replace current window with payment link
-        window.location.replace(response.data.paymentLink);
+        // Clear cart before redirecting to payment
+        try {
+          await cartApi.clearCart();
+          refreshCart();
+        } catch (cartError) {
+          console.error("Error clearing cart:", cartError);
+          // Continue with payment even if cart clearing fails
+        }
 
         // Update order data
         onComplete({
@@ -61,6 +70,9 @@ const OrderConfirmationStep = ({
           },
           status: response.data.status,
         });
+
+        // Replace current window with payment link
+        window.location.replace(response.data.paymentLink);
       }
     } catch (error) {
       console.error("Error generating payment link:", error);
@@ -85,73 +97,75 @@ const OrderConfirmationStep = ({
         <Row gutter={[24, 24]}>
           {/* Order Items */}
           <Col xs={24} lg={16}>
-          <div className="Sticky-wrraper">
-            <Card title="Order Items" className="order-items-card">
-              <div className="order-items">
-                {orderData?.items?.map((item, index) => {
-                  // Helper function to normalize images (handle both string and array)
-                  const normalizeImage = (image) => {
-                    if (!image) return "";
-                    if (typeof image === 'string') return image;
-                    if (Array.isArray(image) && image.length > 0) return image[0];
-                    return "";
-                  };
-                  
-                  const coverImage = normalizeImage(item.coverImage);
-                  
-                  return (
-                  <div key={index} className="order-item">
-                    <div className="item-image">
-                      <img
-                        src={coverImage}
-                        alt={item.productName}
-                        className="product-image"
-                      />
-                    </div>
-                    <div className="item-details">
-                      <h4>{item.productName}</h4>
-                      <div className="item-specs">
-                        <Tag color="blue">Size: {item.size || "One Size"}</Tag>
-                        <Tag color="green">
-                          Color: {item.color || "Default"}
-                        </Tag>
-                        <Tag color="orange">Qty: {item.quantity}</Tag>
+            <div className="Sticky-wrraper">
+              <Card title="Order Items" className="order-items-card">
+                <div className="order-items">
+                  {orderData?.items?.map((item, index) => {
+                    // Helper function to normalize images (handle both string and array)
+                    const normalizeImage = (image) => {
+                      if (!image) return "";
+                      if (typeof image === "string") return image;
+                      if (Array.isArray(image) && image.length > 0)
+                        return image[0];
+                      return "";
+                    };
+
+                    const coverImage = normalizeImage(item.coverImage);
+
+                    return (
+                      <div key={index} className="order-item">
+                        <div className="item-image">
+                          <img
+                            src={coverImage}
+                            alt={item.productName}
+                            className="product-image"
+                          />
+                        </div>
+                        <div className="item-details">
+                          <h4>{item.productName}</h4>
+                          <div className="item-specs">
+                            <Tag color="blue">
+                              Size: {item.size || "One Size"}
+                            </Tag>
+                            <Tag color="green">
+                              Color: {item.color || "Default"}
+                            </Tag>
+                            <Tag color="orange">Qty: {item.quantity}</Tag>
+                          </div>
+                          <div className="item-pricing">
+                            <Text strong>₹{item.price?.toLocaleString()}</Text>
+                            {item.discount > 0 && (
+                              <Space>
+                                <Text delete type="secondary">
+                                  ₹{item.price?.toLocaleString()}
+                                </Text>
+                                <Tag color="red">{item.discount}% OFF</Tag>
+                              </Space>
+                            )}
+                          </div>
+                        </div>
+                        <div className="item-total">
+                          <Text strong>
+                            ₹{calculateItemTotal(item).toLocaleString()}
+                          </Text>
+                        </div>
                       </div>
-                      <div className="item-pricing">
-                        <Text strong>₹{item.price?.toLocaleString()}</Text>
-                        {item.discount > 0 && (
-                          <Space>
-                            <Text delete type="secondary">
-                              ₹{item.price?.toLocaleString()}
-                            </Text>
-                            <Tag color="red">{item.discount}% OFF</Tag>
-                          </Space>
-                        )}
-                      </div>
-                    </div>
-                    <div className="item-total">
-                      <Text strong>
-                        ₹{calculateItemTotal(item).toLocaleString()}
-                      </Text>
-                    </div>
-                  </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+              </Card>
+              <div className="payment-actions">
+                <Button
+                  type="primary"
+                  size="large"
+                  icon={<CreditCardOutlined />}
+                  loading={loading}
+                  onClick={handleProceedToPayment}
+                  className="proceed-payment-btn forlgscreen"
+                >
+                  Proceed to Payment
+                </Button>
               </div>
-      
-            </Card>
-            <div className="payment-actions">
-        <Button
-          type="primary"
-          size="large"
-          icon={<CreditCardOutlined />}
-          loading={loading}
-          onClick={handleProceedToPayment}
-          className="proceed-payment-btn forlgscreen"
-        >
-          Proceed to Payment
-        </Button>
-      </div>
             </div>
           </Col>
 
@@ -163,13 +177,31 @@ const OrderConfirmationStep = ({
                   <Text>Subtotal (incl. GST):</Text>
                   <Text>₹{orderData?.subtotal?.toLocaleString()}</Text>
                 </div>
-                <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                <div
+                  className="summary-item"
+                  style={{
+                    fontSize: "12px",
+                    color: "#666",
+                    paddingLeft: "12px",
+                  }}
+                >
                   <Text type="secondary">Base Price:</Text>
-                  <Text type="secondary">₹{gstBreakdown.baseAmount.toLocaleString()}</Text>
+                  <Text type="secondary">
+                    ₹{gstBreakdown.baseAmount.toLocaleString()}
+                  </Text>
                 </div>
-                <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                <div
+                  className="summary-item"
+                  style={{
+                    fontSize: "12px",
+                    color: "#666",
+                    paddingLeft: "12px",
+                  }}
+                >
                   <Text type="secondary">GST (18% included):</Text>
-                  <Text type="secondary">₹{gstBreakdown.gstAmount.toLocaleString()}</Text>
+                  <Text type="secondary">
+                    ₹{gstBreakdown.gstAmount.toLocaleString()}
+                  </Text>
                 </div>
                 <div className="summary-item">
                   <Text>Discount:</Text>
