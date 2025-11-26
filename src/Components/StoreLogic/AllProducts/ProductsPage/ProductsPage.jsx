@@ -210,6 +210,7 @@ const ProductsPage = () => {
 
   // Collapsible filter sections state
   const [expandedFilters, setExpandedFilters] = useState({
+    gender: true,
     size: true,
     brand: true,
     priceRange: false,
@@ -1080,6 +1081,39 @@ const ProductsPage = () => {
           Clear All
         </span>
       </div>
+
+      {/* Gender Filter - Only show for Namunjii Exclusive */}
+      {filters.isNamunjiiExclusive && (
+        <div className="filter-section">
+          <div
+            className="filter-section-header"
+            onClick={() => toggleFilterSection("gender")}
+          >
+            <h4>GENDER</h4>
+            {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
+          </div>
+          {expandedFilters.gender && (
+            <div className="gender-buttons">
+              <button
+                className={`gender-button ${filters.gender === "Men" ? "active" : ""}`}
+                onClick={() =>
+                  handleFilterChange("gender", filters.gender === "Men" ? "" : "Men")
+                }
+              >
+                Men
+              </button>
+              <button
+                className={`gender-button ${filters.gender === "Women" ? "active" : ""}`}
+                onClick={() =>
+                  handleFilterChange("gender", filters.gender === "Women" ? "" : "Women")
+                }
+              >
+                Women
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Size */}
       <div className="filter-section">

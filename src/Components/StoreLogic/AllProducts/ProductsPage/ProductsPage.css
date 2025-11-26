@@ -748,6 +748,38 @@
 }
 
 /* Size Buttons */
+.gender-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gender-button {
+  min-width: 80px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  font-family: var(--fira-sans);
+  font-size: 14px !important;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.gender-button:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.gender-button.active {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: white;
+}
+
 .size-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -1191,6 +1223,17 @@
   .products-grid .product-card-image-container,
   .products-grid .product-card img {
     aspect-ratio: 3 / 4;
+  }
+
+  .gender-buttons {
+    gap: 6px;
+  }
+
+  .gender-button {
+    min-width: 70px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
   }
 
   .size-buttons {
