@@ -20,8 +20,6 @@ import {
 import {
   SearchOutlined,
   FilterOutlined,
-  SortAscendingOutlined,
-  SortDescendingOutlined,
   UpOutlined,
   DownOutlined,
 } from "@ant-design/icons";
@@ -880,14 +878,19 @@ const ProductsPage = () => {
     return () => window.removeEventListener("scroll", throttledHandleScroll);
   }, [loadMoreProducts]);
 
-  // Clear all filters
+  // Clear all filters (but preserve gender, productType, and isNamunjiiExclusive)
   const clearFilters = () => {
+    // Preserve these filters from current state
+    const preservedGender = filters.gender || "";
+    const preservedProductType = filters.productType || "";
+    const preservedIsNamunjiiExclusive = filters.isNamunjiiExclusive || false;
+
     const defaultFilters = {
       search: "",
       category: "",
       subcategory: "",
-      gender: "", // Added for Men/Women filtering
-      productType: "", // Added for Accessories filtering
+      gender: preservedGender, // Preserve gender filter
+      productType: preservedProductType, // Preserve productType filter
       minPrice: "",
       maxPrice: "",
       size: [],
@@ -899,13 +902,25 @@ const ProductsPage = () => {
       isNewArrival: false,
       isBestSeller: false,
       isFeatured: false,
-      isNamunjiiExclusive: false,
+      isNamunjiiExclusive: preservedIsNamunjiiExclusive, // Preserve isNamunjiiExclusive filter
       page: 1,
       limit: 20,
     };
     setFilters(defaultFilters);
     setPriceRange([0, 50000]);
-    setSearchParams(new URLSearchParams());
+
+    // Create new URL params preserving the important filters
+    const newParams = new URLSearchParams();
+    if (preservedGender) {
+      newParams.set("gender", preservedGender);
+    }
+    if (preservedProductType) {
+      newParams.set("productType", preservedProductType);
+    }
+    if (preservedIsNamunjiiExclusive) {
+      newParams.set("isNamunjiiExclusive", "true");
+    }
+    setSearchParams(newParams);
 
     // Fetch products with cleared filters
     if (fetchProductsRef.current) {
@@ -1057,6 +1072,13 @@ const ProductsPage = () => {
       {renderBreadcrumb()}
       <div className="filters-header">
         <h3>Filters</h3>
+        <span
+          onClick={clearFilters}
+          className="reset-filters-btn"
+          title="Clear all filters"
+        >
+          Clear All
+        </span>
       </div>
 
       {/* Size */}

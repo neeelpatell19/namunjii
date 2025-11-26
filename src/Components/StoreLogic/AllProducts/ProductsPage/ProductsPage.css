@@ -94,6 +94,9 @@
   margin-bottom: 30px;
   padding-bottom: 0;
   border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .filters-header h3 {
@@ -104,6 +107,19 @@
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.reset-filters-btn {
+  font-family: var(--fira-sans);
+  font-size: 14px;
+  color: #e40e0b;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  line-height: 1.2;
+}
+
+.reset-filters-btn:hover {
+  opacity: 0.8;
 }
 
 /* Filter Sections */
