@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import {
   Spin,
   Skeleton,
@@ -37,6 +37,7 @@ const { Option } = Select;
 
 const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // State for products and loading
   const [products, setProducts] = useState([]);
@@ -485,6 +486,41 @@ const ProductsPage = () => {
     fetchColors();
   }, []);
 
+  // Fetch subcategories when category or gender changes
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      if (!filters.category && !filters.gender) {
+        setSubcategories([]);
+        return;
+      }
+
+      try {
+        setSubcategoriesLoading(true);
+        const params = {};
+        if (filters.category) {
+          params.category = filters.category;
+        }
+        if (filters.gender) {
+          params.gender = filters.gender;
+        }
+        const response = await subcategoryApi.getSubCategoriesForSelection(params);
+        if (response.success) {
+          setSubcategories(response.data || []);
+        } else {
+          console.error("Failed to fetch subcategories:", response.message);
+          setSubcategories([]);
+        }
+      } catch (err) {
+        console.error("Error fetching subcategories:", err);
+        setSubcategories([]);
+      } finally {
+        setSubcategoriesLoading(false);
+      }
+    };
+
+    fetchSubcategories();
+  }, [filters.category, filters.gender]);
+
   // Initialize filters from URL params and fetch products
   // This ensures filters are properly applied from URL, including multi-select filters
   useEffect(() => {
@@ -875,9 +911,129 @@ const ProductsPage = () => {
     }
   };
 
+  // Get category and subcategory names for breadcrumb
+  const getCategoryName = (categoryId) => {
+    if (!categoryId) return null;
+    const category = categories.find((cat) => cat._id === categoryId);
+    return category?.name || null;
+  };
+
+  const getSubcategoryName = (subcategoryId) => {
+    if (!subcategoryId) return null;
+    const subcategory = subcategories.find((sub) => sub._id === subcategoryId);
+    return subcategory?.name || null;
+  };
+
+  const getCategoryIdFromSubcategory = (subcategoryId) => {
+    if (!subcategoryId) return null;
+    const subcategory = subcategories.find((sub) => sub._id === subcategoryId);
+    return subcategory?.category || subcategory?.categoryId || null;
+  };
+
+  // Render breadcrumb navigation
+  const renderBreadcrumb = () => {
+    const breadcrumbItems = [];
+    
+    // Always show Home
+    breadcrumbItems.push(
+      <Link key="home" to="/" className="breadcrumb-item">
+        HOME
+      </Link>
+    );
+
+    // Show Namunjii Exclusive if selected
+    if (filters.isNamunjiiExclusive) {
+      breadcrumbItems.push(
+        <span key="separator-namunjii" className="breadcrumb-separator">|</span>
+      );
+      breadcrumbItems.push(
+        <Link key="namunjii" to="/products?isNamunjiiExclusive=true" className="breadcrumb-item">
+          Namunjii Exclusive
+        </Link>
+      );
+      return breadcrumbItems.length > 1 ? (
+        <div className="breadcrumb-navigation">
+          {breadcrumbItems}
+        </div>
+      ) : null;
+    }
+
+    // Show Accessories if selected
+    if (filters.productType === "accessory") {
+      breadcrumbItems.push(
+        <span key="separator-accessories" className="breadcrumb-separator">|</span>
+      );
+      breadcrumbItems.push(
+        <Link key="accessories" to="/products?productType=accessory" className="breadcrumb-item">
+          Accessories
+        </Link>
+      );
+      return breadcrumbItems.length > 1 ? (
+        <div className="breadcrumb-navigation">
+          {breadcrumbItems}
+        </div>
+      ) : null;
+    }
+
+    // Show gender if selected (Men/Women)
+    if (filters.gender === "Men" || filters.gender === "Women") {
+      breadcrumbItems.push(
+        <span key="separator-gender" className="breadcrumb-separator">|</span>
+      );
+      breadcrumbItems.push(
+        <Link key="gender" to={`/products?gender=${filters.gender}`} className="breadcrumb-item">
+          {filters.gender}
+        </Link>
+      );
+    }
+
+    // Determine category to show - use filters.category or get from subcategory
+    let categoryIdToShow = filters.category;
+    if (!categoryIdToShow && filters.subcategory) {
+      categoryIdToShow = getCategoryIdFromSubcategory(filters.subcategory);
+    }
+
+    // Show category if available (always show if subcategory exists)
+    if (categoryIdToShow) {
+      const categoryName = getCategoryName(categoryIdToShow);
+      if (categoryName) {
+        breadcrumbItems.push(
+          <span key="separator1" className="breadcrumb-separator">|</span>
+        );
+        breadcrumbItems.push(
+          <span key="category" className="breadcrumb-item active">
+            {categoryName}
+          </span>
+        );
+      }
+    }
+
+    // Show subcategory if Men/Women is selected and subcategory exists
+    if ((filters.gender === "Men" || filters.gender === "Women") && filters.subcategory) {
+      const subcategoryName = getSubcategoryName(filters.subcategory);
+      if (subcategoryName) {
+        breadcrumbItems.push(
+          <span key="separator2" className="breadcrumb-separator">|</span>
+        );
+        breadcrumbItems.push(
+          <span key="subcategory" className="breadcrumb-item active">
+            {subcategoryName}
+          </span>
+        );
+      }
+    }
+
+    return breadcrumbItems.length > 1 ? (
+      <div className="breadcrumb-navigation">
+        {breadcrumbItems}
+      </div>
+    ) : null;
+  };
+
   // Render filters content (reusable for sidebar and drawer)
   const renderFiltersContent = () => (
     <>
+      {renderBreadcrumb()}
       <div className="filters-header">
         <h3>Filters</h3>
       </div>
