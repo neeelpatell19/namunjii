@@ -419,11 +419,11 @@ export default function ProductCard({
     };
   }, [isHovered, allImages.length, isMobile]);
 
-  // Check if ALL product variants have stock > 0
+  // Check if ANY product variant has stock > 0
   const hasStock = useMemo(() => {
     if (product?.products && Array.isArray(product.products) && product.products.length > 0) {
-      // All products must have stock > 0
-      return product.products.every((p) => p.stock > 0);
+      // Any product with stock > 0
+      return product.products.some((p) => p.stock > 0);
     }
     // If no products array, check direct stock property
     return product?.stock > 0;
