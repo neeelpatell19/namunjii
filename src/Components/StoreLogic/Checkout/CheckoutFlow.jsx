@@ -121,72 +121,63 @@ const CheckoutFlow = () => {
               <p>Review your cart and proceed to checkout</p>
             </div>
 
-            {cartItems.length === 0 ? (
-              <div className="empty-cart">
-                <p>Your cart is empty</p>
-                <Button type="primary" onClick={() => navigate("/products")}>
-                  Continue Shopping
+            <div className="cart-summary">
+              <h3>Cart Summary</h3>
+              <div className="cart-items">
+                {cartItems.map((item, index) => {
+                  // Helper function to normalize images (handle both string and array)
+                  const normalizeImage = (image) => {
+                    if (!image) return "";
+                    if (typeof image === 'string') return image;
+                    if (Array.isArray(image) && image.length > 0) return image[0];
+                    return "";
+                  };
+                  
+                  const coverImage = normalizeImage(item.productId?.coverImage);
+                  
+                  return (
+                  <div key={index} className="cart-item">
+                    <img
+                      src={coverImage}
+                      alt={item.productId?.productName}
+                      className="item-image"
+                    />
+                    <div className="item-details">
+                      <h4>{item.productId?.productName}</h4>
+                      <p>Size: {item.size || "One Size"}</p>
+                      <p>Color: {item.color || "Default"}</p>
+                      <p>Quantity: {item.quantity}</p>
+                      <p className="item-price">
+                        ₹
+                        {(() => {
+                          const basePrice = item.productId?.basePricing || 0;
+                          const discount = item.productId?.discount || 0;
+                          const finalPrice =
+                            discount > 0
+                              ? Math.round(basePrice * (1 - discount / 100))
+                              : basePrice;
+                          return (
+                            finalPrice * item.quantity
+                          ).toLocaleString();
+                        })()}
+                      </p>
+                    </div>
+                  </div>
+                  );
+                })}
+              </div>
+
+              <div className="checkout-actions">
+                <Button
+                  type="primary"
+                  size="large"
+                  loading={loading}
+                  onClick={handleCreateOrder}
+                >
+                  Proceed to Checkout
                 </Button>
               </div>
-            ) : (
-              <div className="cart-summary">
-                <h3>Cart Summary</h3>
-                <div className="cart-items">
-                  {cartItems.map((item, index) => {
-                    // Helper function to normalize images (handle both string and array)
-                    const normalizeImage = (image) => {
-                      if (!image) return "";
-                      if (typeof image === 'string') return image;
-                      if (Array.isArray(image) && image.length > 0) return image[0];
-                      return "";
-                    };
-                    
-                    const coverImage = normalizeImage(item.productId?.coverImage);
-                    
-                    return (
-                    <div key={index} className="cart-item">
-                      <img
-                        src={coverImage}
-                        alt={item.productId?.productName}
-                        className="item-image"
-                      />
-                      <div className="item-details">
-                        <h4>{item.productId?.productName}</h4>
-                        <p>Size: {item.size || "One Size"}</p>
-                        <p>Color: {item.color || "Default"}</p>
-                        <p>Quantity: {item.quantity}</p>
-                        <p className="item-price">
-                          ₹
-                          {(() => {
-                            const basePrice = item.productId?.basePricing || 0;
-                            const discount = item.productId?.discount || 0;
-                            const finalPrice =
-                              discount > 0
-                                ? Math.round(basePrice * (1 - discount / 100))
-                                : basePrice;
-                            return (
-                              finalPrice * item.quantity
-                            ).toLocaleString();
-                          })()}
-                        </p>
-                      </div>
-                    </div>
-                    );
-                  })}
-                </div>
-
-                <div className="checkout-actions">
-                  <Button
-                    type="primary"
-                    size="large"
-                    loading={loading}
-                    onClick={handleCreateOrder}
-                  >
-                    Proceed to Checkout
-                  </Button>
-                </div>
-              </div>
-            )}
+            </div>
 
             {error && (
               <Alert

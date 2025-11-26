@@ -1293,8 +1293,8 @@ const SingleProductPageDesign = () => {
       <div className="product-breadcrumbs">
         <Link to="/">HOME</Link>
         <span className="breadcrumb-separator">|</span>
-        <Link to="/products">SHOP ALL</Link>
-        <span className="breadcrumb-separator">|</span>
+        {/* <Link to="/products">SHOP ALL</Link>
+        <span className="breadcrumb-separator">|</span> */}
         <span className="breadcrumb-current">{product.productName}</span>
       </div>
 
