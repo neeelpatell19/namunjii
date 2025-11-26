@@ -55,7 +55,7 @@ const Footer = () => {
                   <p>
                     {" "}
                     <span className="contact-label">Phone number:</span>
-                    <span className="contact-value"> +91 98789 11223</span>
+                    <span className="contact-value"> +91 92271 16036</span>
                   </p>
                   <p>
                     {" "}
