@@ -10,6 +10,7 @@
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: visible;
 }
 
 /* Main Navigation Bar */
@@ -18,6 +19,7 @@
   padding: 12px 0;
   border-bottom: 1px solid var(--neutral-950);
   width: 100%;
+  overflow: visible;
 }
 
 .NavLeft {
@@ -308,8 +310,12 @@
   align-items: center;
   gap: 20px;
   padding-right: 8px;
+  padding-top: 8px;
   overflow-x: hidden;
+  overflow-y: visible;
   max-width: 100%;
+  height: auto;
+  line-height: 1;
 }
 
 .WishlistIcon {
@@ -317,6 +323,12 @@
   color: var(--brand-primary);
   cursor: pointer;
   transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 20px;
+  margin-top: 0;
 }
 
 .WishlistIcon:hover {
@@ -327,8 +339,17 @@
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: color 0.3s ease;
+  overflow: visible;
+  width: auto;
+  height: 20px;
+  padding: 0;
+  box-sizing: content-box;
+  line-height: 1;
+  margin: 0;
+  margin-top: 0;
 }
 
 .CartContainer:hover .CartIcon {
@@ -343,27 +364,33 @@
 
 .CartBadge {
   position: absolute;
-  top: -6px;
-  right: -4px;
+  top: -8px;
+  right: -8px;
   background: var(--brand-primary);
   color: var(--bg-white);
   border-radius: 50%;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  aspect-ratio: 1;
-  padding: 2px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  z-index: 10;
   line-height: 1;
   white-space: nowrap;
 }
 
 .CartBadge span {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
-  font-size: inherit;
-  font-weight: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .UserIcon {
@@ -373,7 +400,11 @@
   transition: color 0.3s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  line-height: 1;
+  height: 20px;
+  margin-top: 0;
 }
 
 .UserIcon:hover {
@@ -950,15 +981,17 @@
   }
 
   .CartBadge {
-    font-size: 12px;
-    top: -5px;
-    right: -5px;
-    padding: 1.5px;
-    aspect-ratio: 1;
-    box-sizing: content-box;
-    /* Ensure badge doesn't cause horizontal scroll */
-    max-width: 20px;
-    overflow: hidden;
+    font-size: 10px;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    box-sizing: border-box;
+  }
+  
+  .CartBadge span {
+    font-size: 10px;
   }
 
   .CategoryNavBar {
@@ -1181,15 +1214,17 @@
   }
 
   .CartBadge {
-    font-size: 12px;
-    top: -6px;
-    right: -10px;
-    padding: 1px;
-    aspect-ratio: 1;
-    box-sizing: content-box;
-    /* Ensure badge doesn't cause horizontal scroll */
-    max-width: 20px;
-    overflow: hidden;
+    font-size: 10px;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    box-sizing: border-box;
+  }
+  
+  .CartBadge span {
+    font-size: 10px;
   }
 
   .CategoryLinks {

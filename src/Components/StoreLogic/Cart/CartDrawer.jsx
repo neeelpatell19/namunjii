@@ -260,9 +260,9 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           Size:{" "}
                           {item.size || item.productId?.size || "One Size"}
                         </p>
-                        {(item.color || item.productId?.color) && (
+                        {(item?.color && item?.color !== "N/A") && (
                           <p className="cart-item-color">
-                            Color: {item.color || item.productId?.color}
+                            Color: {item?.color}
                           </p>
                         )}
                       </div>
