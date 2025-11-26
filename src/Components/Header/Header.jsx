@@ -64,6 +64,8 @@ const Header = () => {
     closeWishlistDrawer,
     triggerCartDrawer,
     triggerWishlistDrawer,
+    cartItems,
+    wishlistItems,
   } = useCartWishlist();
   const { getMenCategories, getWomenCategories } = useHomeData();
 
@@ -621,6 +623,20 @@ const Header = () => {
       fetchCounts();
     }
   }, [deviceId, fetchCounts]);
+
+  // Update cart count when cartItems from context change
+  useEffect(() => {
+    if (cartItems && Array.isArray(cartItems)) {
+      setCartCount(cartItems.length);
+    }
+  }, [cartItems]);
+
+  // Update wishlist count when wishlistItems from context change
+  useEffect(() => {
+    if (wishlistItems && Array.isArray(wishlistItems)) {
+      setWishlistCount(wishlistItems.length);
+    }
+  }, [wishlistItems]);
 
   // Refresh counts when drawers are closed
   const handleCartClose = () => {

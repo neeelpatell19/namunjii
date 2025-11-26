@@ -275,7 +275,6 @@ const SingleProductPageDesign = () => {
 
       if (response.success) {
         message.success(response.message || "Added to cart");
-        triggerCartDrawer();
         refreshCart();
       } else {
         // Show error message from backend
@@ -1626,11 +1625,11 @@ const SingleProductPageDesign = () => {
             </button>
             <button
               className="add-to-bag-btn"
-              onClick={handleAddToCart}
-              disabled={isInCart}
+              onClick={isInCart ? () => triggerCartDrawer() : handleAddToCart}
+              disabled={false}
             >
               {/* <ShoppingCartOutlined /> */}
-              {isInCart ? "Added To cart" : "Add to cart"}
+              {isInCart ? "Go to Cart" : "Add to Cart"}
             </button>
           </div>
 
