@@ -480,10 +480,10 @@ export default function ProductCard({
           </div>
 
           {/* Order Type Tag - Made to Order */}
-          <div className="product-card-order-tag product-card-order-tag-made">
+          {/* <div className="product-card-order-tag product-card-order-tag-made">
             <ClockCircleFilled className="product-card-order-tag-icon" />
             <span className="product-card-order-tag-text">Made to order</span>
-          </div>
+          </div> */}
 
           {/* Wishlist and Quick View buttons on image */}
           <div className="product-card-image-actions">

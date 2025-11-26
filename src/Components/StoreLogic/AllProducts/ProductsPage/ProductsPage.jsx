@@ -1418,7 +1418,7 @@ const ProductsPage = () => {
             <div className="page-title-section">
               <h2 className="page-title">
                 {filters.isNamunjiiExclusive
-                  ? "Namunjii Exclusive"
+                  ? "The Exclusive Collection"
                   : filters.productType === "accessory"
                   ? "Accessories"
                   : filters.gender === "Men"
