@@ -419,6 +419,16 @@ export default function ProductCard({
     };
   }, [isHovered, allImages.length, isMobile]);
 
+  // Check if ALL product variants have stock > 0
+  const hasStock = useMemo(() => {
+    if (product?.products && Array.isArray(product.products) && product.products.length > 0) {
+      // All products must have stock > 0
+      return product.products.every((p) => p.stock > 0);
+    }
+    // If no products array, check direct stock property
+    return product?.stock > 0;
+  }, [product?.products, product?.stock]);
+
   // membership derived from context; no local fetching here
 
   return (
@@ -473,11 +483,13 @@ export default function ProductCard({
             </button>
           )}
 
-          {/* Order Type Tag - Ready to Ship */}
-          <div className="product-card-order-tag product-card-order-tag-ready">
-            <ThunderboltFilled className="product-card-order-tag-icon" />
-            <span className="product-card-order-tag-text">Ready to ship</span>
-          </div>
+          {/* Order Type Tag - Ready to Ship - Only show if stock > 0 */}
+          {hasStock && (
+            <div className="product-card-order-tag product-card-order-tag-ready">
+              <ThunderboltFilled className="product-card-order-tag-icon" />
+              <span className="product-card-order-tag-text">Ready to ship</span>
+            </div>
+          )}
 
           {/* Order Type Tag - Made to Order */}
           {/* <div className="product-card-order-tag product-card-order-tag-made">
