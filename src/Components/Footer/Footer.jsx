@@ -13,10 +13,14 @@ const Footer = () => {
     setEmail("");
   };
 
+  const handleLinkClick = (path) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const quickLinks = [
     { name: "Home", path: "/" },
     { name: "Shop All", path: "/products" },
-    { name: "Namunjii Exclusive", path: "/products" },
+    { name: "Namunjii Exclusive", path: "/products?isNamunjiiExclusive=true" },
     { name: "About Us", path: "/about-us" },
     { name: "Join Us", path: "/vendor-verification" },
   ];
@@ -81,7 +85,11 @@ const Footer = () => {
                 <ul className="FooterLinks">
                   {quickLinks.map((link, index) => (
                     <li key={index}>
-                      <Link to={link.path} className="FooterLink">
+                      <Link
+                        to={link.path}
+                        className="FooterLink"
+                        onClick={() => handleLinkClick(link.path)}
+                      >
                         {link.name}
                       </Link>
                     </li>
@@ -105,7 +113,11 @@ const Footer = () => {
                 <ul className="FooterLinks">
                   {policyLinks.map((link, index) => (
                     <li key={index}>
-                      <Link to={link.path} className="FooterLink">
+                      <Link
+                        to={link.path}
+                        className="FooterLink"
+                        onClick={() => handleLinkClick(link.path)}
+                      >
                         {link.name}
                       </Link>
                     </li>
