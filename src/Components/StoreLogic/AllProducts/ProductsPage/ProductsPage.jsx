@@ -1416,8 +1416,20 @@ const ProductsPage = () => {
           <div className="products-content">
             {/* Page Title */}
             <div className="page-title-section">
-              <h1 className="page-title">Products</h1>
-              <p className="page-subtitle">{pagination.total} Items</p>
+              <h2 className="page-title">
+                {filters.isNamunjiiExclusive
+                  ? "Namunjii Exclusive"
+                  : filters.productType === "accessory"
+                  ? "Accessories"
+                  : filters.gender === "Men"
+                  ? "Menswear"
+                  : filters.gender === "Women"
+                  ? "Womenswear"
+                  : "Products"}{" "}
+                <span className="page-subtitle">
+                  ({pagination.total} Items)
+                </span>
+              </h2>
             </div>
 
             {/* Search Bar - Mobile Only (above controls) */}

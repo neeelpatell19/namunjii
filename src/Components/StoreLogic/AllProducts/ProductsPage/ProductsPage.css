@@ -309,18 +309,21 @@
 
 .page-title {
   font-family: var(--playfair-display);
-  font-size: 48px;
+  font-size: 38px;
   font-weight: 400;
   color: #333;
-  margin: 0 0 8px 0;
+  margin: 0;
   line-height: 1.2;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .page-subtitle {
   font-family: var(--Poppins-font);
   font-size: 16px;
   font-weight: 400;
-  color: #666;
+  color: #999;
   margin: 0;
 }
 
