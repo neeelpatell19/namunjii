@@ -85,9 +85,9 @@ const ProductsPage = () => {
   });
 
   // Price range state
-  const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [priceRange, setPriceRange] = useState([0, 100000]);
   // Local input values for debouncing (empty string for 0 to show blank)
-  const [priceInput, setPriceInput] = useState(["", 50000]);
+  const [priceInput, setPriceInput] = useState(["", 100000]);
   // Search input local debounced state
   const [searchInput, setSearchInput] = useState("");
 
@@ -573,9 +573,9 @@ const ProductsPage = () => {
     }
 
     // Set price range from URL
-    let newPriceRange = [0, 50000];
+    let newPriceRange = [0, 100000];
     if (urlFilters.minPrice || urlFilters.maxPrice) {
-      newPriceRange = [urlFilters.minPrice || 0, urlFilters.maxPrice || 50000];
+      newPriceRange = [urlFilters.minPrice || 0, urlFilters.maxPrice || 100000];
       setPriceRange(newPriceRange);
       // Convert 0 to empty string for display
       setPriceInput([
@@ -759,7 +759,7 @@ const ProductsPage = () => {
       
       // Convert empty strings to 0 for filter logic, but keep for display
       const minValue = value[0] === "" || value[0] === 0 ? 0 : value[0];
-      const maxValue = value[1] === "" || value[1] === 0 ? 50000 : value[1];
+      const maxValue = value[1] === "" || value[1] === 0 ? 100000 : value[1];
 
       setPriceRange([minValue, maxValue]);
       const newFilters = {
@@ -849,7 +849,7 @@ const ProductsPage = () => {
         // Normalize empty strings to 0 for comparison
         const normalizedInput = [
           priceInput[0] === "" || priceInput[0] === 0 ? 0 : priceInput[0],
-          priceInput[1] === "" || priceInput[1] === 0 ? 50000 : priceInput[1],
+          priceInput[1] === "" || priceInput[1] === 0 ? 100000 : priceInput[1],
         ];
 
         // Only trigger if values actually changed
@@ -928,7 +928,7 @@ const ProductsPage = () => {
       limit: 20,
     };
     setFilters(defaultFilters);
-    setPriceRange([0, 50000]);
+    setPriceRange([0, 100000]);
 
     // Create new URL params preserving the important filters
     const newParams = new URLSearchParams();
@@ -945,7 +945,7 @@ const ProductsPage = () => {
 
     // Fetch products with cleared filters
     if (fetchProductsRef.current) {
-      fetchProductsRef.current(defaultFilters, [0, 50000]);
+      fetchProductsRef.current(defaultFilters, [0, 100000]);
     }
   };
 
