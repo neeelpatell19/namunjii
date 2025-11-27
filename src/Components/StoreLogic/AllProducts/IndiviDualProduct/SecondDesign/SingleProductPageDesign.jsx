@@ -22,6 +22,8 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
   ReloadOutlined,
+  UpOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Thumbs } from "swiper/modules";
@@ -519,32 +521,63 @@ const SingleProductPageDesign = () => {
 
   // Scroll thumbnail container to show active thumbnail - must be before conditional returns
   useEffect(() => {
-    if (thumbnailContainerRef.current && displayImages.length > 4) {
+    if (thumbnailContainerRef.current && displayImages.length > 0) {
       const thumbnail =
         thumbnailContainerRef.current.children[currentImageIndex];
       if (thumbnail) {
         const container = thumbnailContainerRef.current;
-        const thumbnailLeft = thumbnail.offsetLeft;
-        const thumbnailWidth = thumbnail.offsetWidth;
-        const containerWidth = container.offsetWidth;
-        const scrollLeft = container.scrollLeft;
+        // Check if container is vertical (desktop) or horizontal (mobile/tablet)
+        const isVertical = container.scrollHeight > container.clientHeight;
+        const isHorizontal = container.scrollWidth > container.clientWidth;
 
-        // Check if thumbnail is not fully visible
-        if (thumbnailLeft < scrollLeft) {
-          // Thumbnail is to the left, scroll to show it
-          container.scrollTo({
-            left: thumbnailLeft - 10, // 10px padding
-            behavior: "smooth",
-          });
-        } else if (
-          thumbnailLeft + thumbnailWidth >
-          scrollLeft + containerWidth
-        ) {
-          // Thumbnail is to the right, scroll to show it
-          container.scrollTo({
-            left: thumbnailLeft + thumbnailWidth - containerWidth + 10, // 10px padding
-            behavior: "smooth",
-          });
+        if (isVertical) {
+          // Vertical scrolling (desktop - thumbnails on left)
+          const thumbnailTop = thumbnail.offsetTop;
+          const thumbnailHeight = thumbnail.offsetHeight;
+          const containerHeight = container.clientHeight;
+          const scrollTop = container.scrollTop;
+
+          // Check if thumbnail is not fully visible
+          if (thumbnailTop < scrollTop) {
+            // Thumbnail is above, scroll to show it
+            container.scrollTo({
+              top: thumbnailTop - 10, // 10px padding
+              behavior: "smooth",
+            });
+          } else if (
+            thumbnailTop + thumbnailHeight >
+            scrollTop + containerHeight
+          ) {
+            // Thumbnail is below, scroll to show it
+            container.scrollTo({
+              top: thumbnailTop + thumbnailHeight - containerHeight + 10, // 10px padding
+              behavior: "smooth",
+            });
+          }
+        } else if (isHorizontal) {
+          // Horizontal scrolling (mobile/tablet - thumbnails below)
+          const thumbnailLeft = thumbnail.offsetLeft;
+          const thumbnailWidth = thumbnail.offsetWidth;
+          const containerWidth = container.clientWidth;
+          const scrollLeft = container.scrollLeft;
+
+          // Check if thumbnail is not fully visible
+          if (thumbnailLeft < scrollLeft) {
+            // Thumbnail is to the left, scroll to show it
+            container.scrollTo({
+              left: thumbnailLeft - 10, // 10px padding
+              behavior: "smooth",
+            });
+          } else if (
+            thumbnailLeft + thumbnailWidth >
+            scrollLeft + containerWidth
+          ) {
+            // Thumbnail is to the right, scroll to show it
+            container.scrollTo({
+              left: thumbnailLeft + thumbnailWidth - containerWidth + 10, // 10px padding
+              behavior: "smooth",
+            });
+          }
         }
       }
     }
@@ -1194,18 +1227,32 @@ const SingleProductPageDesign = () => {
   const handleThumbnailMouseMove = (e) => {
     if (!thumbnailMouseDown.current || !thumbnailContainerRef.current) return;
 
-    const x = e.clientX;
-    const distance = thumbnailMouseStartX.current - x;
+    const container = thumbnailContainerRef.current;
+    const isVertical = container.scrollHeight > container.clientHeight;
+    const isHorizontal = container.scrollWidth > container.clientWidth;
 
     // Mark as dragged if moved more than 5px
-    if (Math.abs(distance) > 5) {
-      thumbnailWasDragged.current = true;
+    if (isVertical) {
+      const y = e.clientY;
+      const distance = thumbnailMouseStartX.current - y; // Reusing X ref for Y in vertical mode
+      if (Math.abs(distance) > 5) {
+        thumbnailWasDragged.current = true;
+      }
+      // Scroll the container vertically
+      const walk = distance * 1.5; // Scroll speed multiplier
+      const newScrollTop = thumbnailScrollLeft.current + walk; // Reusing scrollLeft ref for scrollTop
+      container.scrollTop = newScrollTop;
+    } else if (isHorizontal) {
+      const x = e.clientX;
+      const distance = thumbnailMouseStartX.current - x;
+      if (Math.abs(distance) > 5) {
+        thumbnailWasDragged.current = true;
+      }
+      // Scroll the container horizontally
+      const walk = distance * 1.5; // Scroll speed multiplier
+      const newScrollLeft = thumbnailScrollLeft.current + walk;
+      container.scrollLeft = newScrollLeft;
     }
-
-    // Scroll the container - update scrollLeft based on initial position + distance
-    const walk = distance * 1.5; // Scroll speed multiplier
-    const newScrollLeft = thumbnailScrollLeft.current + walk;
-    thumbnailContainerRef.current.scrollLeft = newScrollLeft;
 
     e.preventDefault();
     e.stopPropagation();
@@ -1234,10 +1281,20 @@ const SingleProductPageDesign = () => {
     e.preventDefault();
     e.stopPropagation();
 
+    const container = thumbnailContainerRef.current;
+    const isVertical = container.scrollHeight > container.clientHeight;
+    const isHorizontal = container.scrollWidth > container.clientWidth;
+
     thumbnailMouseDown.current = true;
     thumbnailWasDragged.current = false;
-    thumbnailMouseStartX.current = e.clientX;
-    thumbnailScrollLeft.current = thumbnailContainerRef.current.scrollLeft;
+    
+    if (isVertical) {
+      thumbnailMouseStartX.current = e.clientY; // Use Y for vertical scrolling
+      thumbnailScrollLeft.current = container.scrollTop; // Use scrollTop for vertical
+    } else if (isHorizontal) {
+      thumbnailMouseStartX.current = e.clientX; // Use X for horizontal scrolling
+      thumbnailScrollLeft.current = container.scrollLeft; // Use scrollLeft for horizontal
+    }
 
     // Add global mouse move and up listeners
     document.addEventListener("mousemove", handleThumbnailMouseMove, {
@@ -1249,27 +1306,51 @@ const SingleProductPageDesign = () => {
   // Thumbnail touch handlers for mobile swipe
   const handleThumbnailTouchStart = (e) => {
     if (!thumbnailContainerRef.current) return;
+    const container = thumbnailContainerRef.current;
+    const isVertical = container.scrollHeight > container.clientHeight;
+    const isHorizontal = container.scrollWidth > container.clientWidth;
+
     thumbnailMouseDown.current = true;
     thumbnailWasDragged.current = false;
-    thumbnailMouseStartX.current = e.touches[0].clientX;
-    thumbnailScrollLeft.current = thumbnailContainerRef.current.scrollLeft;
+    
+    if (isVertical) {
+      thumbnailMouseStartX.current = e.touches[0].clientY;
+      thumbnailScrollLeft.current = container.scrollTop;
+    } else if (isHorizontal) {
+      thumbnailMouseStartX.current = e.touches[0].clientX;
+      thumbnailScrollLeft.current = container.scrollLeft;
+    }
   };
 
   const handleThumbnailTouchMove = (e) => {
     if (!thumbnailMouseDown.current || !thumbnailContainerRef.current) return;
 
-    const x = e.touches[0].clientX;
-    const distance = thumbnailMouseStartX.current - x;
+    const container = thumbnailContainerRef.current;
+    const isVertical = container.scrollHeight > container.clientHeight;
+    const isHorizontal = container.scrollWidth > container.clientWidth;
 
     // Mark as dragged if moved more than 5px
-    if (Math.abs(distance) > 5) {
-      thumbnailWasDragged.current = true;
+    if (isVertical) {
+      const y = e.touches[0].clientY;
+      const distance = thumbnailMouseStartX.current - y;
+      if (Math.abs(distance) > 5) {
+        thumbnailWasDragged.current = true;
+      }
+      // Scroll the container vertically
+      const walk = distance * 1.5;
+      const newScrollTop = thumbnailScrollLeft.current + walk;
+      container.scrollTop = newScrollTop;
+    } else if (isHorizontal) {
+      const x = e.touches[0].clientX;
+      const distance = thumbnailMouseStartX.current - x;
+      if (Math.abs(distance) > 5) {
+        thumbnailWasDragged.current = true;
+      }
+      // Scroll the container horizontally
+      const walk = distance * 1.5;
+      const newScrollLeft = thumbnailScrollLeft.current + walk;
+      container.scrollLeft = newScrollLeft;
     }
-
-    // Scroll the container - update scrollLeft based on initial position + distance
-    const walk = distance * 1.5; // Scroll speed multiplier
-    const newScrollLeft = thumbnailScrollLeft.current + walk;
-    thumbnailContainerRef.current.scrollLeft = newScrollLeft;
 
     e.preventDefault();
     e.stopPropagation();
@@ -1300,6 +1381,105 @@ const SingleProductPageDesign = () => {
       <div className="product-page-container">
         {/* Product Images Section */}
         <div className="product-images-section">
+          {/* Thumbnails on the left */}
+          {displayImages.length > 1 && (
+            <div className="thumbnail-wrapper">
+              <button
+                className="thumbnail-nav-btn thumbnail-nav-up"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Move to previous image
+                  const newIndex =
+                    currentImageIndex > 0
+                      ? currentImageIndex - 1
+                      : displayImages.length - 1;
+                  setCurrentImageIndex(newIndex);
+                  // Also scroll thumbnail container to show the new active thumbnail
+                  if (thumbnailContainerRef.current) {
+                    setTimeout(() => {
+                      const thumbnail =
+                        thumbnailContainerRef.current.children[newIndex];
+                      if (thumbnail) {
+                        thumbnail.scrollIntoView({
+                          behavior: "smooth",
+                          block: "nearest",
+                        });
+                      }
+                    }, 50);
+                  }
+                }}
+                aria-label="Previous image"
+              >
+                <UpOutlined />
+              </button>
+              <div
+                className="thumbnail-container"
+                ref={thumbnailContainerRef}
+                onMouseDown={handleThumbnailMouseDown}
+                onTouchStart={handleThumbnailTouchStart}
+                onTouchMove={handleThumbnailTouchMove}
+                onTouchEnd={handleThumbnailTouchEnd}
+              >
+                {displayImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`thumbnail ${
+                      currentImageIndex === index ? "active" : ""
+                    }`}
+                    draggable="false"
+                    onDragStart={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      // Only change image if there was no drag
+                      if (!thumbnailWasDragged.current) {
+                        setCurrentImageIndex(index);
+                      }
+                      // Reset immediately after click
+                      setTimeout(() => {
+                        thumbnailWasDragged.current = false;
+                      }, 10);
+                    }}
+                  >
+                    <img
+                      src={image}
+                      alt={`${product.productName} - ${index + 1}`}
+                      draggable="false"
+                      onDragStart={(e) => e.preventDefault()}
+                    />
+                  </div>
+                ))}
+              </div>
+              <button
+                className="thumbnail-nav-btn thumbnail-nav-down"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Move to next image
+                  const newIndex =
+                    currentImageIndex < displayImages.length - 1
+                      ? currentImageIndex + 1
+                      : 0;
+                  setCurrentImageIndex(newIndex);
+                  // Also scroll thumbnail container to show the new active thumbnail
+                  if (thumbnailContainerRef.current) {
+                    setTimeout(() => {
+                      const thumbnail =
+                        thumbnailContainerRef.current.children[newIndex];
+                      if (thumbnail) {
+                        thumbnail.scrollIntoView({
+                          behavior: "smooth",
+                          block: "nearest",
+                        });
+                      }
+                    }, 50);
+                  }
+                }}
+                aria-label="Next image"
+              >
+                <DownOutlined />
+              </button>
+            </div>
+          )}
+
+          {/* Main image on the right */}
           <div className="main-image-container">
             {displayImages.length > 0 ? (
               <>
@@ -1423,45 +1603,6 @@ const SingleProductPageDesign = () => {
               </div>
             )}
           </div>
-
-          {displayImages.length > 1 && (
-            <div
-              className="thumbnail-container"
-              ref={thumbnailContainerRef}
-              onMouseDown={handleThumbnailMouseDown}
-              onTouchStart={handleThumbnailTouchStart}
-              onTouchMove={handleThumbnailTouchMove}
-              onTouchEnd={handleThumbnailTouchEnd}
-            >
-              {displayImages.map((image, index) => (
-                <div
-                  key={index}
-                  className={`thumbnail ${
-                    currentImageIndex === index ? "active" : ""
-                  }`}
-                  draggable="false"
-                  onDragStart={(e) => e.preventDefault()}
-                  onClick={(e) => {
-                    // Only change image if there was no drag
-                    if (!thumbnailWasDragged.current) {
-                      setCurrentImageIndex(index);
-                    }
-                    // Reset immediately after click
-                    setTimeout(() => {
-                      thumbnailWasDragged.current = false;
-                    }, 10);
-                  }}
-                >
-                  <img
-                    src={image}
-                    alt={`${product.productName} - ${index + 1}`}
-                    draggable="false"
-                    onDragStart={(e) => e.preventDefault()}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Product Details Section */}
