@@ -597,6 +597,13 @@
   }
 }
 
+/* iPad/Tablet view (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .VendorVerificationPage {
+    margin-top: 80px !important;
+  }
+}
+
 .PhoneInputCountryIcon .PhoneInputInternationalIconGlobe {
   display: none !important;
 }

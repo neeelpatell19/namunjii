@@ -170,6 +170,32 @@
   margin: 0 auto;
 }
 
+/* iPad/Tablet view (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .MainContainer.marginTop50.paddingBottom50 .Container {
+    padding: 0 40px !important;
+  }
+
+  .Container.fontstyle {
+    padding: 0 20px;
+  }
+
+  .LeftsideAboutContainer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .LeftsideAboutContainer p,
+  .Container.fontstyle p {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .maxWidth800 {
+    padding: 0 20px;
+  }
+}
+
 @media (max-width: 900px) {
   .RightsideAboutContainer > div {
     height: 100% !important;
