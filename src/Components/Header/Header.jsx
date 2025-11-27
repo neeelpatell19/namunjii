@@ -91,14 +91,17 @@ const Header = () => {
   // Check if we're on products page
   const isProductsPage = location.pathname === "/products";
 
-  // Detect mobile screen size
+  // Detect mobile and tablet screen size
+  const [isTablet, setIsTablet] = useState(false);
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 768);
+      setIsTablet(width > 768 && width <= 1024); // iPad range
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   // Get dynamic categories from home API
@@ -521,6 +524,50 @@ const Header = () => {
     </div>
   );
 
+  // Render dropdown menu items for Ant Design Dropdown (for iPad)
+  const renderDropdownMenuItems = (gender, categories) => {
+    const items = [
+      {
+        key: 'shop-all',
+        label: (
+          <Link
+            to={`/products?gender=${gender}`}
+            onClick={() => {
+              if (gender === "Women") {
+                setShowWomenMegaMenu(false);
+              } else {
+                setShowMenMegaMenu(false);
+              }
+            }}
+          >
+            Shop All
+          </Link>
+        ),
+      },
+      {
+        type: 'divider',
+      },
+      ...categories.map((cat) => ({
+        key: cat._id,
+        label: (
+          <Link
+            to={`/products?gender=${gender}&category=${cat._id}`}
+            onClick={() => {
+              if (gender === "Women") {
+                setShowWomenMegaMenu(false);
+              } else {
+                setShowMenMegaMenu(false);
+              }
+            }}
+          >
+            {cat.name}
+          </Link>
+        ),
+      })),
+    ];
+    return items;
+  };
+
   // Render search suggestions dropdown
   const renderSearchSuggestions = () => {
     if (!showSuggestions || !searchInput.trim()) return null;
@@ -875,76 +922,117 @@ const Header = () => {
                 {categories.map((category, index) => (
                   <div key={index} className="CategoryItem">
                     {category.hasDropdown ? (
-                      <div
-                        className={`CategoryLink ${
-                          category.isSpecial ? "special" : ""
-                        } ${category.isJoinUs ? "join-us" : ""} ${
-                          isCategoryActive(category) ? "active" : ""
-                        } dropdown-link`}
-                        onMouseEnter={() => {
-                          if (hideTimeoutRef.current) {
-                            clearTimeout(hideTimeoutRef.current);
-                            hideTimeoutRef.current = null;
-                          }
-                          if (category.name === "Women") {
-                            setShowWomenMegaMenu(true);
-                            setShowMenMegaMenu(false);
-                          } else if (category.name === "Men") {
-                            setShowMenMegaMenu(true);
-                            setShowWomenMegaMenu(false);
-                          }
-                        }}
-                        onMouseLeave={() => {
-                          // For desktop, close drawer immediately on mouse leave
-                          // For mobile, drawer handles its own close via mask/close button
-                          if (!isMobile) {
+                      // Use Ant Design Dropdown for iPad/Tablet, hover-based for desktop
+                      isTablet ? (
+                        <Dropdown
+                          menu={{
+                            items:
+                              category.name === "Women"
+                                ? renderDropdownMenuItems("Women", womenCategories)
+                                : renderDropdownMenuItems("Men", menCategories),
+                          }}
+                          trigger={["click"]}
+                          placement="bottom"
+                          overlayClassName="category-dropdown-menu"
+                        >
+                          <div
+                            className={`CategoryLink ${
+                              category.isSpecial ? "special" : ""
+                            } ${category.isJoinUs ? "join-us" : ""} ${
+                              isCategoryActive(category) ? "active" : ""
+                            } dropdown-link`}
+                          >
+                            <Link
+                              to={category.path}
+                              className="category-text-link"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setMobileMenuOpen(false);
+                              }}
+                            >
+                              {category.name}
+                            </Link>
+                            <span className="dropdown-icon">
+                              <FiChevronDown
+                                style={{
+                                  fontSize: "14px",
+                                  transition: "transform 0.3s ease",
+                                }}
+                              />
+                            </span>
+                          </div>
+                        </Dropdown>
+                      ) : (
+                        <div
+                          className={`CategoryLink ${
+                            category.isSpecial ? "special" : ""
+                          } ${category.isJoinUs ? "join-us" : ""} ${
+                            isCategoryActive(category) ? "active" : ""
+                          } dropdown-link`}
+                          onMouseEnter={() => {
                             if (hideTimeoutRef.current) {
                               clearTimeout(hideTimeoutRef.current);
                               hideTimeoutRef.current = null;
                             }
-                            setShowWomenMegaMenu(false);
-                            setShowMenMegaMenu(false);
-                          }
-                        }}
-                      >
-                        <Link
-                          to={category.path}
-                          className="category-text-link"
-                          onClick={() => {
-                            setMobileMenuOpen(false);
-                            setShowWomenMegaMenu(false);
-                            setShowMenMegaMenu(false);
-                          }}
-                        >
-                          {category.name}
-                        </Link>
-                        <span
-                          className="dropdown-icon"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
                             if (category.name === "Women") {
-                              setShowWomenMegaMenu(!showWomenMegaMenu);
+                              setShowWomenMegaMenu(true);
                               setShowMenMegaMenu(false);
                             } else if (category.name === "Men") {
-                              setShowMenMegaMenu(!showMenMegaMenu);
+                              setShowMenMegaMenu(true);
                               setShowWomenMegaMenu(false);
                             }
                           }}
+                          onMouseLeave={() => {
+                            // For desktop, close drawer immediately on mouse leave
+                            if (!isMobile) {
+                              if (hideTimeoutRef.current) {
+                                clearTimeout(hideTimeoutRef.current);
+                                hideTimeoutRef.current = null;
+                              }
+                              setShowWomenMegaMenu(false);
+                              setShowMenMegaMenu(false);
+                            }
+                          }}
                         >
-                          <FiChevronDown
-                            style={{
-                              fontSize: "14px",
-                              transition: "transform 0.3s ease",
-                              transform:
-                                (category.name === "Men" && showMenMegaMenu) ||
-                                (category.name === "Women" && showWomenMegaMenu)
-                                  ? "rotate(180deg)"
-                                  : "rotate(0deg)",
+                          <Link
+                            to={category.path}
+                            className="category-text-link"
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              setShowWomenMegaMenu(false);
+                              setShowMenMegaMenu(false);
                             }}
-                          />
-                        </span>
-                      </div>
+                          >
+                            {category.name}
+                          </Link>
+                          <span
+                            className="dropdown-icon"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (category.name === "Women") {
+                                setShowWomenMegaMenu(!showWomenMegaMenu);
+                                setShowMenMegaMenu(false);
+                              } else if (category.name === "Men") {
+                                setShowMenMegaMenu(!showMenMegaMenu);
+                                setShowWomenMegaMenu(false);
+                              }
+                            }}
+                          >
+                            <FiChevronDown
+                              style={{
+                                fontSize: "14px",
+                                transition: "transform 0.3s ease",
+                                transform:
+                                  (category.name === "Men" && showMenMegaMenu) ||
+                                  (category.name === "Women" && showWomenMegaMenu)
+                                    ? "rotate(180deg)"
+                                    : "rotate(0deg)",
+                              }}
+                            />
+                          </span>
+                        </div>
+                      )
                     ) : (
                       <Link
                         to={category.path}

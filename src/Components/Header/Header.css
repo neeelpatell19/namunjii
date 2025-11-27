@@ -1247,6 +1247,43 @@
 }
 
 /* Tablet responsive - Mega menu active only on larger tablets and desktops */
+/* Ant Design Dropdown Menu for iPad */
+.category-dropdown-menu {
+  min-width: 200px !important;
+  max-width: 300px !important;
+}
+
+.category-dropdown-menu .ant-dropdown-menu-item {
+  padding: 8px 16px !important;
+  font-family: var(--fira-sans) !important;
+}
+
+.category-dropdown-menu .ant-dropdown-menu-item a {
+  color: var(--brandColor) !important;
+  text-decoration: none !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.category-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.category-dropdown-menu .ant-dropdown-menu-item-divider {
+  margin: 4px 0 !important;
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* Hide mega menu containers on iPad - use Dropdown instead */
+  .MegaMenuContainer {
+    display: none !important;
+  }
+
+  .MegaMenuArrow {
+    display: none !important;
+  }
+}
+
 @media (max-width: 1024px) {
   .MegaMenuContainer {
     left: 0;
