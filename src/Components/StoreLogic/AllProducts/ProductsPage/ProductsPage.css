@@ -448,16 +448,86 @@
 
 .filter-badge {
   margin-left: 4px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
 .filter-badge .ant-badge-count {
-  background: var(--brand-primary);
-  font-size: 12px;
-  min-width: 18px;
-  height: 18px;
-  line-height: 18px;
-  padding: 0 6px;
-  border-radius: 9px;
+  background: var(--brand-primary) !important;
+  font-size: 12px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  border: none !important;
+  position: relative !important;
+}
+
+.filter-badge .ant-badge-count .ant-scroll-number-only {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+}
+
+.filter-badge .ant-badge-count .ant-scroll-number-only > p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
+}
+
+/* Fix badge alignment on iPad */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .filter-badge .ant-badge-count {
+    min-width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+  }
+  
+  .filter-badge .ant-badge-count .ant-scroll-number-only {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    line-height: 1 !important;
+  }
+  
+  .filter-badge .ant-badge-count .ant-scroll-number-only > p {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .filters-button {
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .filter-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+  }
 }
 
 /* Sort Wrapper */
