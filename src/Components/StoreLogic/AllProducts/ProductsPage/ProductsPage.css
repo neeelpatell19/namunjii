@@ -323,6 +323,13 @@
   margin-bottom: 30px;
 }
 
+/* Reduce spacing on mobile and tablet */
+@media (max-width: 1024px) {
+  .page-title-section {
+    margin-bottom: 15px;
+  }
+}
+
 .page-title {
   font-family: var(--playfair-display);
   font-size: 38px;
@@ -351,7 +358,7 @@
   top: 0;
   z-index: 100;
   background: white;
-  padding: 20px 0 20px 0;
+  padding: 15px 0 10px 0;
   margin-top: -20px;
 }
 
@@ -1174,6 +1181,8 @@
     align-items: center;
     top: 80px; /* Position below search on tablet */
     margin-top: 0;
+    padding: 8px 0;
+    margin-bottom: 15px;
   }
 
   .filters-button-wrapper {
@@ -1212,6 +1221,7 @@
 
   .page-title-section {
     margin-top: 20px;
+    margin-bottom: 15px;
   }
 
   /* Show tablet controls, hide desktop/mobile */
@@ -1258,6 +1268,9 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 12px;
     align-items: center;
+    padding: 8px 0;
+    margin-bottom: 15px;
+    margin-top: 0;
   }
 
   .sort-select {
@@ -1528,6 +1541,9 @@
     gap: 12px;
     align-items: center;
     top: 80px; /* Position below search on mobile */
+    padding: 8px 0;
+    margin-bottom: 15px;
+    margin-top: 0;
   }
 
   .filters-button {
