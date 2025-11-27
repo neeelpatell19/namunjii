@@ -685,6 +685,9 @@ const ProductsPage = () => {
   // Handle filter changes
   const handleFilterChange = useCallback(
     (key, value) => {
+      // Scroll to top when filter changes
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
       // Normalize null/undefined to empty string for string filter fields
       const normalizedValue =
         value === null || value === undefined ? "" : value;
@@ -711,6 +714,9 @@ const ProductsPage = () => {
   // Handle multi-select filter changes (for size, brand, color)
   const handleMultiSelectFilterChange = useCallback(
     (key, value, checked) => {
+      // Scroll to top when filter changes
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
       let newValues;
       const currentValues = Array.isArray(filters[key]) ? filters[key] : [];
 
@@ -740,6 +746,9 @@ const ProductsPage = () => {
   // Handle price range change
   const handlePriceRangeChange = useCallback(
     (value) => {
+      // Scroll to top when filter changes
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
       // Convert empty strings to 0 for filter logic, but keep for display
       const minValue = value[0] === "" || value[0] === 0 ? 0 : value[0];
       const maxValue = value[1] === "" || value[1] === 0 ? 50000 : value[1];
@@ -881,6 +890,9 @@ const ProductsPage = () => {
 
   // Clear all filters (but preserve gender, productType, and isNamunjiiExclusive)
   const clearFilters = () => {
+    // Scroll to top when clearing filters
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     // Preserve these filters from current state
     const preservedGender = filters.gender || "";
     const preservedProductType = filters.productType || "";
@@ -1268,6 +1280,9 @@ const ProductsPage = () => {
                 }
                 // Debounce the filter update
                 priceSliderTimerRef.current = setTimeout(() => {
+                  // Scroll to top when price slider changes
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  
                   const newFilters = {
                     ...filtersRef.current,
                     minPrice: clampedValue[0] > 0 ? clampedValue[0] : "",
@@ -1770,6 +1785,9 @@ const ProductsPage = () => {
                             : `${filters.sortBy}-${filters.sortOrder}`,
                         ]}
                         onClick={({ key }) => {
+                          // Scroll to top when sort changes
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          
                           const [sortBy, sortOrder] = key.split("-");
                           const newFilters = {
                             ...filters,
@@ -1833,6 +1851,9 @@ const ProductsPage = () => {
                           : `${filters.sortBy}-${filters.sortOrder}`
                       }
                       onChange={(value) => {
+                        // Scroll to top when sort changes
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        
                         const [sortBy, sortOrder] = value.split("-");
                         const newFilters = {
                           ...filters,
