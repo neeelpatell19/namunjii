@@ -61,10 +61,16 @@ const createProductApi = () => {
     },
 
     // Get all unique sizes from products
-    getSizes: () => api.get("/products/sizes").then((res) => res.data),
+    getSizes: (type = null) => {
+      const params = type ? { type } : {};
+      return api.get("/products/sizes", { params }).then((res) => res.data);
+    },
 
     // Get all unique colors from products
-    getColors: () => api.get("/products/colors").then((res) => res.data),
+    getColors: (type = null) => {
+      const params = type ? { type } : {};
+      return api.get("/products/colors", { params }).then((res) => res.data);
+    },
 
     // Get search suggestions (autocomplete)
     getSearchSuggestions: (query, limit = 10) =>

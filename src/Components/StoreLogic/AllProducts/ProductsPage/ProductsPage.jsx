@@ -234,6 +234,7 @@ const ProductsPage = () => {
   const priceRangeRef = useRef(priceRange);
   const fetchProductsRef = useRef();
   const priceSliderTimerRef = useRef(null);
+  const lastFilterTypeRef = useRef(null);
 
   // Update refs when state changes
   useEffect(() => {
@@ -416,74 +417,81 @@ const ProductsPage = () => {
     fetchCategories();
   }, []);
 
-  // Fetch brands for selection
+  // Helper function to determine filter type based on active tab
+  const getFilterType = useCallback(() => {
+    if (filters.isNamunjiiExclusive) {
+      return "Exclusive";
+    } else if (filters.productType === "accessory") {
+      return "Accessories";
+    } else if (filters.gender === "Men") {
+      return "Men";
+    } else if (filters.gender === "Women") {
+      return "Women";
+    }
+    return null;
+  }, [filters.isNamunjiiExclusive, filters.productType, filters.gender]);
+
+  // Fetch brands, sizes, and colors for selection (dynamic based on active tab)
+  // Combined into one useEffect to prevent multiple calls
   useEffect(() => {
-    const fetchBrands = async () => {
+    // Determine the current filter type
+    const currentType = getFilterType();
+    
+    // Only fetch if the type has changed (prevent duplicate calls)
+    if (currentType === lastFilterTypeRef.current) {
+      return;
+    }
+    
+    // Update the ref to track the current type
+    lastFilterTypeRef.current = currentType;
+
+    // Fetch all three in parallel
+    const fetchAll = async () => {
       try {
         setBrandsLoading(true);
-        const response = await brandApi.getBrandsForSelection();
-        if (response.success) {
-          setBrands(response.data || []);
+        setSizesLoading(true);
+        setColorsLoading(true);
+
+        const [brandsResponse, sizesResponse, colorsResponse] = await Promise.all([
+          brandApi.getBrandsForSelection(currentType),
+          productApi.getSizes(currentType),
+          productApi.getColors(currentType),
+        ]);
+
+        if (brandsResponse.success) {
+          setBrands(brandsResponse.data || []);
         } else {
-          console.error("Failed to fetch brands:", response.message);
+          console.error("Failed to fetch brands:", brandsResponse.message);
           setBrands([]);
         }
-      } catch (err) {
-        console.error("Error fetching brands:", err);
-        setBrands([]);
-      } finally {
-        setBrandsLoading(false);
-      }
-    };
 
-    fetchBrands();
-  }, []);
-
-  // Fetch sizes for selection
-  useEffect(() => {
-    const fetchSizes = async () => {
-      try {
-        setSizesLoading(true);
-        const response = await productApi.getSizes();
-        if (response.success) {
-          setSizes(response.data || []);
+        if (sizesResponse.success) {
+          setSizes(sizesResponse.data || []);
         } else {
-          console.error("Failed to fetch sizes:", response.message);
+          console.error("Failed to fetch sizes:", sizesResponse.message);
           setSizes([]);
         }
-      } catch (err) {
-        console.error("Error fetching sizes:", err);
-        setSizes([]);
-      } finally {
-        setSizesLoading(false);
-      }
-    };
 
-    fetchSizes();
-  }, []);
-
-  // Fetch colors for selection
-  useEffect(() => {
-    const fetchColors = async () => {
-      try {
-        setColorsLoading(true);
-        const response = await productApi.getColors();
-        if (response.success) {
-          setColors(response.data || []);
+        if (colorsResponse.success) {
+          setColors(colorsResponse.data || []);
         } else {
-          console.error("Failed to fetch colors:", response.message);
+          console.error("Failed to fetch colors:", colorsResponse.message);
           setColors([]);
         }
       } catch (err) {
-        console.error("Error fetching colors:", err);
+        console.error("Error fetching filter options:", err);
+        setBrands([]);
+        setSizes([]);
         setColors([]);
       } finally {
+        setBrandsLoading(false);
+        setSizesLoading(false);
         setColorsLoading(false);
       }
     };
 
-    fetchColors();
-  }, []);
+    fetchAll();
+  }, [filters.gender, filters.productType, filters.isNamunjiiExclusive]);
 
   // Fetch subcategories when category or gender changes
   useEffect(() => {
@@ -2049,3 +2057,4 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+
