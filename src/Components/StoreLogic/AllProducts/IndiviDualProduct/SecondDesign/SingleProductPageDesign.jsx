@@ -86,6 +86,8 @@ const SingleProductPageDesign = () => {
   const isMouseDown = useRef(false);
   const productImageTouchStartX = useRef(0);
   const productImageTouchEndX = useRef(0);
+  const productImageTouchStartY = useRef(0);
+  const productImageTouchEndY = useRef(0);
   const productImageMouseStartX = useRef(0);
   const productImageMouseEndX = useRef(0);
   const isProductImageMouseDown = useRef(false);
@@ -1125,24 +1127,54 @@ const SingleProductPageDesign = () => {
   const handleProductImageTouchStart = (e) => {
     if (displayImages.length <= 1) return;
     productImageTouchStartX.current = e.touches[0].clientX;
+    productImageTouchStartY.current = e.touches[0].clientY;
     productImageTouchEndX.current = e.touches[0].clientX;
+    productImageTouchEndY.current = e.touches[0].clientY;
+    productImageWasDragged.current = false;
   };
 
   const handleProductImageTouchMove = (e) => {
     if (!productImageTouchStartX.current || displayImages.length <= 1) return;
-    productImageTouchEndX.current = e.touches[0].clientX;
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    const startX = productImageTouchStartX.current;
+    const startY = productImageTouchStartY.current;
+    
+    // Calculate both horizontal and vertical movement
+    const deltaX = Math.abs(currentX - startX);
+    const deltaY = Math.abs(currentY - startY);
+    
+    // Only mark as dragged if it's a horizontal swipe (more horizontal than vertical)
+    // Allow vertical scrolling if movement is more vertical
+    if (deltaX > 10 || deltaY > 10) {
+      if (deltaX > deltaY) {
+        // Horizontal movement - this is a swipe
+        productImageWasDragged.current = true;
+        productImageTouchEndX.current = currentX;
+      } else {
+        // Vertical movement - allow scrolling, don't prevent default
+        productImageWasDragged.current = false;
+      }
+    }
+    // Don't prevent default - let browser handle vertical scrolling
   };
 
   const handleProductImageTouchEnd = (e) => {
     if (displayImages.length <= 1) {
       productImageTouchStartX.current = 0;
       productImageTouchEndX.current = 0;
+      productImageTouchStartY.current = 0;
+      productImageTouchEndY.current = 0;
+      productImageWasDragged.current = false;
       return;
     }
 
     if (!productImageTouchStartX.current || !productImageTouchEndX.current) {
       productImageTouchStartX.current = 0;
       productImageTouchEndX.current = 0;
+      productImageTouchStartY.current = 0;
+      productImageTouchEndY.current = 0;
+      productImageWasDragged.current = false;
       return;
     }
 
@@ -1150,20 +1182,26 @@ const SingleProductPageDesign = () => {
       productImageTouchStartX.current - productImageTouchEndX.current;
     const minSwipeDistance = 50;
 
-    if (distance > minSwipeDistance) {
-      // Swipe left - next image
-      e.preventDefault();
-      e.stopPropagation();
-      handleNextImage();
-    } else if (distance < -minSwipeDistance) {
-      // Swipe right - previous image
-      e.preventDefault();
-      e.stopPropagation();
-      handlePrevImage();
+    // Only handle swipe if it was a horizontal drag
+    if (productImageWasDragged.current && Math.abs(distance) > minSwipeDistance) {
+      if (distance > minSwipeDistance) {
+        // Swipe left - next image
+        e.preventDefault();
+        e.stopPropagation();
+        handleNextImage();
+      } else if (distance < -minSwipeDistance) {
+        // Swipe right - previous image
+        e.preventDefault();
+        e.stopPropagation();
+        handlePrevImage();
+      }
     }
 
     productImageTouchStartX.current = 0;
     productImageTouchEndX.current = 0;
+    productImageTouchStartY.current = 0;
+    productImageTouchEndY.current = 0;
+    productImageWasDragged.current = false;
   };
 
   // Swipe handlers for product image (mouse)
@@ -1542,6 +1580,7 @@ const SingleProductPageDesign = () => {
                   style={{
                     overflow: mainImageZoom > 1 ? "hidden" : "visible",
                     cursor: mainImageZoom > 1 ? "move" : "grab",
+                    touchAction: mainImageZoom > 1 ? "pan-x pan-y" : "pan-y",
                   }}
                   onMouseDown={(e) => {
                     handleMainImageMouseDown(e);
@@ -1591,7 +1630,7 @@ const SingleProductPageDesign = () => {
                       transformOrigin: "center center",
                       transition:
                         mainImageZoom === 1 ? "transform 0.3s ease" : "none",
-                      touchAction: "none",
+                      touchAction: mainImageZoom > 1 ? "pan-x pan-y" : "pan-y",
                     }}
                   />
                 </div>

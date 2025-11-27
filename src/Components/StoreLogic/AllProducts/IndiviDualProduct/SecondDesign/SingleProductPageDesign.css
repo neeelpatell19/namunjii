@@ -115,7 +115,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  touch-action: none;
+  touch-action: pan-y;
   box-sizing: border-box;
 }
 
