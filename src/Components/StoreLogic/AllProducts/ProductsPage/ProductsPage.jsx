@@ -2043,7 +2043,19 @@ const ProductsPage = () => {
 
       {/* Mobile/Tablet Filter Drawer */}
       <Drawer
-        title="Filters"
+        title={
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <span>Filters</span>
+            <span
+              onClick={clearFilters}
+              className="mobile-drawer-clear-all"
+              title="Clear all filters"
+              style={{ cursor: 'pointer' }}
+            >
+              Clear All
+            </span>
+          </div>
+        }
         placement="left"
         onClose={() => setFilterDrawerVisible(false)}
         open={filterDrawerVisible}
