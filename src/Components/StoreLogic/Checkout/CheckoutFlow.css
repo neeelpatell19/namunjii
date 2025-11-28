@@ -6,6 +6,20 @@
   font-family: var(--fira-sans);
 }
 
+.checkout-flow-container *,
+.checkout-flow-container input,
+.checkout-flow-container button,
+.checkout-flow-container select,
+.checkout-flow-container textarea,
+.checkout-flow-container label,
+.checkout-flow-container .ant-input,
+.checkout-flow-container .ant-btn,
+.checkout-flow-container .ant-select,
+.checkout-flow-container .ant-form-item-label > label,
+.checkout-flow-container .ant-typography {
+  font-family: var(--fira-sans) !important;
+}
+
 .checkout-initial {
   max-width: 800px;
   margin: 0 auto;
@@ -37,7 +51,7 @@
   margin: 0;
   font-size: 2.5rem;
   color: #333;
-  font-family: var(--fira-sans);
+  font-family: var(--fira-sans) !important;
 }
 
 .checkout-header h2 {
@@ -61,11 +75,20 @@
 
 .checkout-steps {
   margin-bottom: 30px;
+  font-family: var(--fira-sans);
 }
 
 .checkout-steps .ant-steps {
   max-width: 800px;
   margin: 0 auto;
+  font-family: var(--fira-sans) !important;
+}
+
+.checkout-steps .ant-steps-item-title,
+.checkout-steps .ant-steps-item-content,
+.checkout-steps .ant-steps-item-description,
+.checkout-steps .ant-steps-item * {
+  font-family: var(--fira-sans) !important;
 }
 
 .checkout-main {
@@ -86,9 +109,12 @@
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid #f0f0f0;
+  font-family: var(--fira-sans);
 }
 
-.step-header h3 {
+.step-header h3,
+.step-header * {
+  font-family: var(--fira-sans) !important;
   margin: 0 0 10px 0;
   color: #333;
 }
@@ -98,12 +124,25 @@
 .shipping-address-step,
 .order-confirmation-step {
   padding: 30px;
+  font-family: var(--fira-sans);
+}
+
+.customer-info-step *,
+.shipping-address-step *,
+.order-confirmation-step * {
+  font-family: var(--fira-sans) !important;
 }
 
 .customer-form,
 .shipping-form {
   max-width: 600px;
   margin: 0 auto;
+  font-family: var(--fira-sans);
+}
+
+.customer-form *,
+.shipping-form * {
+  font-family: var(--fira-sans) !important;
 }
 
 .form-actions {
@@ -114,6 +153,11 @@
 /* Order Confirmation Step */
 .order-summary {
   margin-bottom: 30px;
+  font-family: var(--fira-sans);
+}
+
+.order-summary * {
+  font-family: var(--fira-sans) !important;
 }
 
 .order-items-card,
@@ -121,6 +165,14 @@
 .customer-info-card,
 .shipping-info-card {
   margin-bottom: 20px;
+  font-family: var(--fira-sans);
+}
+
+.order-items-card *,
+.order-summary-card *,
+.customer-info-card *,
+.shipping-info-card * {
+  font-family: var(--fira-sans) !important;
 }
 
 .order-item {
@@ -151,9 +203,12 @@
 .item-details {
   flex: 1;
   margin-right: 15px;
+  font-family: var(--fira-sans);
 }
 
-.item-details h4 {
+.item-details h4,
+.item-details * {
+  font-family: var(--fira-sans) !important;
   margin: 0 0 8px 0;
   color: #333;
 }
@@ -177,6 +232,11 @@
 /* Summary Section */
 .summary-section {
   margin-bottom: 20px;
+  font-family: var(--fira-sans);
+}
+
+.summary-section * {
+  font-family: var(--fira-sans) !important;
 }
 
 .summary-item {
@@ -184,6 +244,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
+  font-family: var(--fira-sans);
 }
 
 .summary-item.total {
@@ -197,10 +258,17 @@
 .customer-details,
 .shipping-details {
   margin-bottom: 15px;
+  font-family: var(--fira-sans);
+}
+
+.customer-details *,
+.shipping-details * {
+  font-family: var(--fira-sans) !important;
 }
 
 .detail-item {
   margin-bottom: 8px;
+  font-family: var(--fira-sans);
 }
 
 .detail-item:last-child {
@@ -211,6 +279,11 @@
 .payment-actions {
   text-align: center;
   margin: 30px 0;
+  font-family: var(--fira-sans);
+}
+
+.payment-actions * {
+  font-family: var(--fira-sans) !important;
 }
 
 .proceed-payment-btn {
@@ -581,6 +654,47 @@
     padding: 0 10px;
   }
 
+  .checkout-steps .ant-steps-item {
+    flex: 1;
+    min-width: 0;
+    padding: 0 3px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .checkout-steps .ant-steps-item-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    width: 100%;
+  }
+
+  .checkout-steps .ant-steps-item-content {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .checkout-steps .ant-steps-item-icon {
+    width: 22px !important;
+    height: 22px !important;
+    line-height: 22px !important;
+    font-size: 11px !important;
+    margin-right: 5px !important;
+    flex-shrink: 0;
+  }
+
+  .checkout-steps .ant-steps-item-title {
+    font-size: 0.7rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin-left: 0 !important;
+    display: inline-block;
+  }
+
   .customer-info-step,
   .shipping-address-step,
   .order-confirmation-step {
@@ -720,6 +834,71 @@
   .customer-info-card,
   .shipping-info-card {
     margin-bottom: 15px;
+  }
+
+  .checkout-steps .ant-steps{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+  }
+
+  .checkout-steps .ant-steps-item {
+    flex: 1;
+    min-width: 0;
+    padding: 0 2px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .checkout-steps .ant-steps-item-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    width: 100%;
+  }
+
+  .checkout-steps .ant-steps-item-content {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .checkout-steps .ant-steps-item-icon {
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    font-size: 10px !important;
+    margin-right: 4px !important;
+    flex-shrink: 0;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .checkout-steps .ant-steps-item-icon > * {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  .checkout-steps .ant-steps-item-title {
+    font-size: 0.65rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin-left: 0 !important;
+    display: inline-block;
+  }
+
+  .checkout-steps .ant-steps-item-tail {
+    margin: 0 2px !important;
   }
 }
 
