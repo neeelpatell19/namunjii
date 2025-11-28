@@ -33,6 +33,11 @@
   color: var(--brand-primary);
   cursor: pointer;
   transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 100%;
 }
 
 .SearchIcon:hover {
@@ -265,6 +270,11 @@
   color: var(--brand-primary);
   cursor: pointer;
   transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 100%;
 }
 
 .MobileMenuToggle:hover {
@@ -274,6 +284,8 @@
 .LogoContainer {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .Logo {
@@ -310,7 +322,7 @@
   align-items: center;
   gap: 20px;
   padding-right: 8px;
-  padding-top: 8px;
+  padding-top: 0;
   overflow-x: hidden;
   overflow-y: visible;
   max-width: 100%;
@@ -941,23 +953,55 @@
     margin: 0 !important;
     overflow-x: hidden;
     box-sizing: border-box;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .MainNavBar .Container .ant-row .ant-col {
+    display: flex !important;
+    align-items: center !important;
+    height: 100%;
+  }
+  
+  .MainNavBar .Container .ant-row .ant-col:first-child {
+    justify-content: flex-start;
+  }
+  
+  .MainNavBar .Container .ant-row .ant-col:nth-child(2) {
+    justify-content: center;
+  }
+  
+  .MainNavBar .Container .ant-row .ant-col:last-child {
+    justify-content: flex-end;
   }
 
   .NavLeft {
     gap: 12px;
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
 
   .NavActions {
     gap: 14px;
     padding-right: 10px;
+    padding-top: 0 !important;
     overflow-x: hidden;
     max-width: 100%;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
   }
 
   .MobileMenuToggle {
-    display: block;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     font-size: 22px;
+    height: 100%;
+    line-height: 1;
   }
 
   .LogoText {
@@ -966,18 +1010,38 @@
 
   .SearchIcon {
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    line-height: 1;
   }
 
   .UserIcon {
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
   .WishlistIcon {
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
   .CartIcon {
     font-size: 20px;
+  }
+  
+  .CartContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
   .CartBadge {
@@ -1179,14 +1243,22 @@
 
   .NavLeft {
     gap: 10px;
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
 
   .NavActions {
     gap: 12px;
     padding-right: 12px;
+    padding-top: 0 !important;
     overflow-x: hidden;
     max-width: 100%;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
   }
 
   .LogoText {
@@ -1199,6 +1271,11 @@
 
   .SearchIcon {
     font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    line-height: 1;
   }
 
   .UserIcon {
