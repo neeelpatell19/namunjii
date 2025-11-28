@@ -244,6 +244,15 @@ const CartDrawer = ({ isOpen, onClose }) => {
                         <h3 className="cart-item-name">
                           {item.productId?.productName || "Product"}
                         </h3>
+                        <p className="cart-item-size">
+                          Size:{" "}
+                          {item.size || item.productId?.size || "One Size"}
+                        </p>
+                        {(item?.color && item?.color !== "N/A") && (
+                          <p className="cart-item-color">
+                            Color: {item?.color}
+                          </p>
+                        )}
                         <p className="cart-item-price">
                           ₹
                           {(() => {
@@ -256,15 +265,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
                             return finalPrice.toLocaleString();
                           })()}
                         </p>
-                        <p className="cart-item-size">
-                          Size:{" "}
-                          {item.size || item.productId?.size || "One Size"}
-                        </p>
-                        {(item?.color && item?.color !== "N/A") && (
-                          <p className="cart-item-color">
-                            Color: {item?.color}
-                          </p>
-                        )}
                       </div>
 
                       <div className="cart-item-controls">

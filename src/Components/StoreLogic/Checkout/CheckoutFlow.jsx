@@ -122,7 +122,7 @@ const CheckoutFlow = () => {
             </div>
 
             <div className="cart-summary">
-              <h3>Cart Summary</h3>
+              <h4>Cart Summary</h4>
               <div className="cart-items">
                 {cartItems.map((item, index) => {
                   // Helper function to normalize images (handle both string and array)
@@ -145,7 +145,9 @@ const CheckoutFlow = () => {
                     <div className="item-details">
                       <h4>{item.productId?.productName}</h4>
                       <p>Size: {item.size || "One Size"}</p>
-                      <p>Color: {item.color || "Default"}</p>
+                      {item.color && item.color !== "N/A" && item.color !== "n/a" && (
+                        <p>Color: {item.color}</p>
+                      )}
                       <p>Quantity: {item.quantity}</p>
                       <p className="item-price">
                         ₹
