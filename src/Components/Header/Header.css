@@ -265,16 +265,14 @@
 }
 
 .MobileMenuToggle {
-  display: none;
+  display: none !important;
   font-size: 20px;
   color: var(--brand-primary);
   cursor: pointer;
   transition: color 0.3s ease;
-  display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
-  height: 100%;
 }
 
 .MobileMenuToggle:hover {
