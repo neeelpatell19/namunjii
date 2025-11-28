@@ -1401,8 +1401,6 @@ const SingleProductPageDesign = () => {
     }, 50);
   };
 
-  console.log("availableSizes: ", availableSizes);
-
   return (
     <div className="modern-product-page">
       {/* Breadcrumbs */}
