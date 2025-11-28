@@ -504,9 +504,9 @@ export default function ProductCard({
               onClick={(e) => handleAddToWishlist(e)}
             >
               {isInWishlist ? (
-                <HeartFilled style={{ color: "#000" }} />
+                <HeartFilled style={{ color: "#000", outline: "none", border: "none" }} />
               ) : (
-                <HeartOutlined />
+                <HeartOutlined style={{ outline: "none", border: "none", color: "#333" }} />
               )}
             </button>
             {showQuickView && !isMobile && (
