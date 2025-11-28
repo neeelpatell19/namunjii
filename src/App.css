@@ -345,7 +345,7 @@ button {
 
 .prev-btn:hover,
 .next-btn:hover {
-  background-color: var(--OrangeColor);
+  /* background-color: var(--OrangeColor); */
   color: white;
   transition: 0.5s;
 }
