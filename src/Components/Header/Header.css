@@ -480,6 +480,15 @@
 .user-popover-login-button {
   font-family: var(--Poppins-font);
   font-weight: 500;
+  background-color: #36424E !important;
+  border-color: #36424E !important;
+}
+
+.user-popover-login-button:hover,
+.user-popover-login-button:focus {
+  background-color: #36424E !important;
+  border-color: #36424E !important;
+  opacity: 0.9;
 }
 
 /* Secondary Navigation Bar */

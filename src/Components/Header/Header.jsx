@@ -81,6 +81,7 @@ const Header = () => {
   const mobileSearchRef = useRef(null);
   const [showWomenMegaMenu, setShowWomenMegaMenu] = useState(false);
   const [showMenMegaMenu, setShowMenMegaMenu] = useState(false);
+  const [userPopoverOpen, setUserPopoverOpen] = useState(false);
   const womenMegaMenuRef = useRef(null);
   const menMegaMenuRef = useRef(null);
   const categoryNavBarRef = useRef(null);
@@ -852,6 +853,7 @@ const Header = () => {
                           className="user-popover-link"
                           onClick={() => {
                             navigate("/orders");
+                            setUserPopoverOpen(false);
                           }}
                         >
                           My Orders
@@ -864,6 +866,7 @@ const Header = () => {
                           block
                           onClick={() => {
                             navigate("/login");
+                            setUserPopoverOpen(false);
                           }}
                           className="user-popover-login-button"
                         >
@@ -873,9 +876,11 @@ const Header = () => {
                     )
                   }
                   title={null}
-                  trigger="hover"
+                  trigger={isMobile || isTablet ? "click" : "hover"}
                   placement="bottomRight"
                   overlayClassName="user-popover"
+                  open={userPopoverOpen}
+                  onOpenChange={setUserPopoverOpen}
                 >
                   <div className="UserIcon" style={{ cursor: "pointer" }}>
                     <HiOutlineUser />
