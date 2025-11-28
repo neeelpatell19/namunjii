@@ -136,12 +136,8 @@ const SingleProductPageDesign = () => {
       }
     });
 
-    // Filter sizes based on isExpressShipping
+    // Get all sizes from backend
     let availableSizes = Array.from(sizesSet);
-    if (product.isExpressShipping) {
-      // If express shipping is enabled, exclude "Free Size"
-      availableSizes = availableSizes.filter((size) => size !== "Free Size");
-    }
 
     // Sort sizes in a logical order
     const sizeOrder = [
@@ -169,7 +165,7 @@ const SingleProductPageDesign = () => {
     const availableColors = Array.from(colorsSet);
 
     return { sizes: availableSizes, colors: availableColors, colorCodeMap };
-  }, [product?.products, product?.isExpressShipping]);
+  }, [product?.products]);
 
   const {
     sizes: availableSizes,
@@ -1404,6 +1400,8 @@ const SingleProductPageDesign = () => {
       thumbnailWasDragged.current = false;
     }, 50);
   };
+
+  console.log("availableSizes: ", availableSizes);
 
   return (
     <div className="modern-product-page">
