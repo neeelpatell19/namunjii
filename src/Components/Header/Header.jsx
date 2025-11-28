@@ -890,7 +890,7 @@ const Header = () => {
                 </div>
                 <div className="CartContainer" onClick={handleCartClick}>
                   <ShoppingCartOutlined className="CartIcon" />
-                  {cartCount > 0 && (
+                  {cartCount > 0 && !openCartDrawer && (
                     <div className="CartBadge">
                       <span>{cartCount}</span>
                     </div>
