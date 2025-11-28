@@ -209,6 +209,14 @@
 
 .price-range-slider {
   margin: 0;
+  padding: 0 0 20px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.price-range-slider .ant-slider {
+  margin: 0;
+  padding: 0;
 }
 
 .price-range-slider .ant-slider-track {
@@ -239,6 +247,13 @@
   font-family: var(--fira-sans) !important;
   font-size: 14px !important;
   color: #666;
+  white-space: nowrap;
+}
+
+/* Position the last mark text (₹1,00,000) more to the left */
+.price-range-slider .ant-slider-mark-text:last-child {
+  transform: translateX(-100%) !important;
+  margin-left: 0 !important;
 }
 
 /* Select Dropdowns */
@@ -1316,6 +1331,12 @@
   .grid-layout-mobile {
     display: flex;
   }
+
+  /* Price Range Slider Mobile - ensure last mark is visible */
+  .price-range-slider .ant-slider-mark-text:last-child {
+    transform: translateX(-100%) !important;
+    font-size: 12px !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1325,6 +1346,12 @@
 
   .page-title {
     font-size: 28px;
+  }
+
+  /* Price Range Slider Small Mobile - ensure last mark is visible */
+  .price-range-slider .ant-slider-mark-text:last-child {
+    transform: translateX(-100%) !important;
+    font-size: 11px !important;
   }
 
   /* Mobile Grid - use data-grid-mobile attribute (same as 768px) */
