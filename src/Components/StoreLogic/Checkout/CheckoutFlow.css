@@ -383,6 +383,18 @@
 }
 }
 @media (max-width: 1024px) and (min-width: 825px) {
+  .checkout-flow-container {
+    padding-top: 100px;
+  }
+
+  .checkout-initial {
+    margin-top: 80px;
+  }
+
+  .checkout-content {
+    margin-top: 80px;
+  }
+
   .order-confirmation-step {
     padding: 30px;
     max-height: 85vh;
@@ -409,6 +421,18 @@
 
 /* Tablet (768px to 819px) */
 @media (max-width: 821px) and (min-width: 769px) {
+  .checkout-flow-container {
+    padding-top: 100px;
+  }
+
+  .checkout-initial {
+    margin-top: 80px;
+  }
+
+  .checkout-content {
+    margin-top: 80px;
+  }
+
   .order-confirmation-step {
     padding: 25px;
     max-height: 80vh;
