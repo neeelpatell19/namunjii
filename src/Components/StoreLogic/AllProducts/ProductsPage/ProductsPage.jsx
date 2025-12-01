@@ -864,6 +864,85 @@ const ProductsPage = () => {
     return () => clearTimeout(timer);
   }, [priceInput, priceRange, handlePriceRangeChange]);
 
+  // Update page title, meta tags, and structured data for SEO
+  useEffect(() => {
+    if (!hasLoadedProductsOnce.current) return;
+
+    // Determine page type and title
+    let pageTitle = "Products";
+    let pageDescription = "Browse our curated collection of luxury fashion products";
+    
+    if (filters.isNamunjiiExclusive) {
+      pageTitle = "The Exclusive Collection";
+      pageDescription = "Discover exclusive luxury fashion from Namunjii's curated collection";
+    } else if (filters.productType === "accessory") {
+      pageTitle = "Accessories";
+      pageDescription = "Explore our collection of luxury fashion accessories";
+    } else if (filters.gender === "Men") {
+      pageTitle = "Menswear";
+      pageDescription = "Discover luxury menswear from emerging designers";
+    } else if (filters.gender === "Women") {
+      pageTitle = "Womenswear";
+      pageDescription = "Explore luxury womenswear from emerging designers";
+    }
+
+    // Update document title (without number for SEO)
+    document.title = `${pageTitle} | Namunjii`;
+
+    // Update meta description (without number)
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', pageDescription);
+    }
+
+    // Update or create structured data for CollectionPage
+    let structuredDataScript = document.getElementById('products-structured-data');
+    if (!structuredDataScript) {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.id = 'products-structured-data';
+      structuredDataScript.type = 'application/ld+json';
+      document.head.appendChild(structuredDataScript);
+    }
+
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": pageTitle,
+      "url": `https://namunjii.com/products${window.location.search}`,
+      "description": pageDescription,
+      "image": "https://namunjii.com/LogoImages/WithNamebrandLogo.svg",
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": `${pageTitle} Collection`,
+        "description": pageDescription
+      }
+    };
+
+    structuredDataScript.textContent = JSON.stringify(structuredData);
+
+    // Update Open Graph tags (without number)
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', `${pageTitle} | Namunjii`);
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', pageDescription);
+    }
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', `https://namunjii.com/products${window.location.search}`);
+    }
+
+    // Cleanup function
+    return () => {
+      // Reset to default on unmount
+      document.title = "Namunjii - A Home for Emerging Brands | Luxury Fashion Platform";
+    };
+  }, [pagination.total, filters.isNamunjiiExclusive, filters.productType, filters.gender, hasLoadedProductsOnce]);
+
   // Infinite scroll - detect when user scrolls near bottom
   useEffect(() => {
     const handleScroll = () => {
