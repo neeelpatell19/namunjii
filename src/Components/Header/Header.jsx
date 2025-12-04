@@ -1023,6 +1023,7 @@ const Header = () => {
                                 setShowWomenMegaMenu(false);
                               }
                             }}
+                            style={isMobile || isTablet ? { marginLeft: '8px' } : {}}
                           >
                             <FiChevronDown
                               style={{
@@ -1059,24 +1060,11 @@ const Header = () => {
                     {/* Women Mega Menu - Drawer for mobile, original container for desktop */}
                     {category.name === "Women" && (
                       <>
-                        {/* Mobile: Use Drawer */}
-                        {isMobile && (
-                          <Drawer
-                            title="Women"
-                            placement="right"
-                            onClose={() => setShowWomenMegaMenu(false)}
-                            open={showWomenMegaMenu}
-                            width="50%"
-                            height="100vh"
-                            className="mega-menu-drawer women-mega-menu-drawer"
-                            mask={true}
-                            maskClosable={true}
-                            closable={true}
-                            zIndex={10001}
-                            getContainer={document.body}
-                          >
+                        {/* Mobile: Use inline dropdown */}
+                        {isMobile && showWomenMegaMenu && (
+                          <div className="mobile-category-dropdown">
                             {renderMegaMenuContent("Women", womenCategories)}
-                          </Drawer>
+                          </div>
                         )}
                         {/* Desktop: Use original MegaMenuContainer */}
                         {!isMobile && showWomenMegaMenu && (
@@ -1106,24 +1094,11 @@ const Header = () => {
                     {/* Men Mega Menu - Drawer for mobile, original container for desktop */}
                     {category.name === "Men" && (
                       <>
-                        {/* Mobile: Use Drawer */}
-                        {isMobile && (
-                          <Drawer
-                            title="Men"
-                            placement="right"
-                            onClose={() => setShowMenMegaMenu(false)}
-                            open={showMenMegaMenu}
-                            width="50%"
-                            height="100vh"
-                            className="mega-menu-drawer men-mega-menu-drawer"
-                            mask={true}
-                            maskClosable={true}
-                            closable={true}
-                            zIndex={10001}
-                            getContainer={document.body}
-                          >
+                        {/* Mobile: Use inline dropdown */}
+                        {isMobile && showMenMegaMenu && (
+                          <div className="mobile-category-dropdown">
                             {renderMegaMenuContent("Men", menCategories)}
-                          </Drawer>
+                          </div>
                         )}
                         {/* Desktop: Use original MegaMenuContainer */}
                         {!isMobile && showMenMegaMenu && (

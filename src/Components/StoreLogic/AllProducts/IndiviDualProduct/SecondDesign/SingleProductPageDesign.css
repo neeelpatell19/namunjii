@@ -22,6 +22,7 @@
   right: 0;
 }
 
+
 /* Prevent any child from causing overflow */
 .modern-product-page > * {
   max-width: 100% !important;
@@ -236,6 +237,17 @@
   -o-user-drag: none;
   box-sizing: border-box;
 }
+.DeliveryImages{
+  
+  width: 20px;
+}
+.DeliveryImages1{
+width: 24px;
+}
+.feature-icon{
+  background: none !important;
+}
+
 
 /* Mobile: Use contain to show full image without cropping */
 @media (max-width: 768px) {

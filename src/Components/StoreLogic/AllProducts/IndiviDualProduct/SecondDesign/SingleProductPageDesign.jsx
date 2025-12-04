@@ -1865,29 +1865,29 @@ const SingleProductPageDesign = () => {
                     <div className="tab-content">
                       <div className="features-section">
                         <div className="feature-item">
-                          <div className="feature-icon">✓</div>
+                          <div className="feature-icon"><img src="/icons/Original.svg" alt="" /></div>
                           <span>100% Original Products</span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon">✓</div>
+                          <div className="feature-icon"><img className="DeliveryImages" src="/icons/Payment.svg" alt="" /></div>
                           <span>Pay on delivery might be available</span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon">✓</div>
+                          <div className="feature-icon"><img src="/icons/Exchange.svg" alt="" /></div>
                           <span>
                             Exchange is available within 7 days of delivery only
                             if a wrong or <br /> defective product is received.
                           </span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon">✓</div>
+                          <div className="feature-icon"><img className="DeliveryImages DeliveryImages1"  src="/icons/ReadyToShip.svg" alt="" /></div>
                           <span>
                             Ready to ship items are expected to arrive within{" "}
                             <strong>5–7 business days</strong>.
                           </span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon">✓</div>
+                          <div className="feature-icon"><img src="/icons/MadeToOrder.svg" alt="" /></div>
                           <span>
                             {product?.vendorId?.name === "Flapper6" ||
                             product?.vendorId?.name === "Demira" ? (
