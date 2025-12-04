@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import ReactDOM from "react-dom";
 import {
   HeartOutlined,
   HeartFilled,
@@ -581,139 +582,145 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* Quick View Modal */}
-      {showQuickViewModal && (
-        <div
-          className="product-card-modal"
-          onClick={() => setShowQuickViewModal(false)}
-        >
+      {/* Quick View Modal (rendered via portal to avoid being clipped by sliders) */}
+      {showQuickViewModal &&
+        ReactDOM.createPortal(
           <div
-            className="product-card-modal-content"
-            onClick={(e) => e.stopPropagation()}
+            className="product-card-modal"
+            onClick={() => setShowQuickViewModal(false)}
           >
-            <button
-              className="product-card-modal-close"
-              onClick={() => setShowQuickViewModal(false)}
+            <div
+              className="product-card-modal-content"
+              onClick={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
+              <button
+                className="product-card-modal-close"
+                onClick={() => setShowQuickViewModal(false)}
+              >
+                ✕
+              </button>
 
-            <div className="product-card-modal-wrapper">
-              {/* Image Section - LEFT with Gradient */}
-              <div className="product-card-modal-image-section">
-                <img
-                  src={firstCoverImage}
-                  alt={product.productName}
-                  className="product-card-modal-image"
-                />
+              <div className="product-card-modal-wrapper">
+                {/* Image Section - LEFT with Gradient */}
+                <div className="product-card-modal-image-section">
+                  <img
+                    src={firstCoverImage}
+                    alt={product.productName}
+                    className="product-card-modal-image"
+                  />
 
-                {/* Image Carousel Dots */}
-                {coverImages.length > 1 && (
-                  <div className="product-card-modal-carousel-dots">
-                    {coverImages.map((image, index) => (
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`${product.productName} ${index + 1}`}
-                        className={`carousel-dot ${
-                          index === 0 ? "active" : ""
-                        }`}
-                        onClick={() => {
-                          const mainImage = document.querySelector(
-                            ".product-card-modal-image"
-                          );
-                          if (mainImage) mainImage.src = image;
-                          // Update active dot
-                          document
-                            .querySelectorAll(".carousel-dot")
-                            .forEach((dot, i) => {
-                              dot.classList.toggle("active", i === index);
-                            });
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Product Details - RIGHT (White Background) */}
-              <div className="product-card-modal-details-white">
-                <h2>{product.productName}</h2>
-
-                {/* Price and Rating */}
-                <div className="product-card-modal-price-rating">
-                  <div className="product-card-modal-price">
-                    {product.discount > 0 ? (
-                      <>
-                        <span className="discounted-price">
-                          {formatPrice(
-                            calculateFinalPrice(
-                              product.basePricing,
-                              product.discount
-                            )
-                          )}
-                        </span>
-                        <span className="original-price">
-                          {formatPrice(product.basePricing)}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="final-price">
-                        {formatPrice(product.basePricing)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Star Rating */}
+                  {/* Image Carousel Dots */}
+                  {coverImages.length > 1 && (
+                    <div className="product-card-modal-carousel-dots">
+                      {coverImages.map((image, index) => (
+                        <img
+                          key={index}
+                          src={image}
+                          alt={`${product.productName} ${index + 1}`}
+                          className={`carousel-dot ${
+                            index === 0 ? "active" : ""
+                          }`}
+                          onClick={() => {
+                            const mainImage = document.querySelector(
+                              ".product-card-modal-image"
+                            );
+                            if (mainImage) mainImage.src = image;
+                            // Update active dot
+                            document
+                              .querySelectorAll(".carousel-dot")
+                              .forEach((dot, i) => {
+                                dot.classList.toggle("active", i === index);
+                              });
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* Description */}
-                {product.productDescription && (
-                  <p className="product-card-modal-description-white">
-                    {product.productDescription}
-                  </p>
-                )}
+                {/* Product Details - RIGHT (White Background) */}
+                <div className="product-card-modal-details-white">
+                  <h2>{product.productName}</h2>
 
-                {/* Action Buttons */}
-                <div className="product-card-modal-actions-white">
-                  <button
-                    className="product-card-modal-add-to-cart-outline"
-                    onClick={() => {
-                      setShowQuickViewModal(false);
-                      // Always show size selection modal if there are available sizes
-                      if (availableSizes.length > 0) {
-                        setShowSizeModal(true);
-                      } else {
-                        message.warning("No sizes available for this product");
+                  {/* Price and Rating */}
+                  <div className="product-card-modal-price-rating">
+                    <div className="product-card-modal-price">
+                      {product.discount > 0 ? (
+                        <>
+                          <span className="discounted-price">
+                            {formatPrice(
+                              calculateFinalPrice(
+                                product.basePricing,
+                                product.discount
+                              )
+                            )}
+                          </span>
+                          <span className="original-price">
+                            {formatPrice(product.basePricing)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="final-price">
+                          {formatPrice(product.basePricing)}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Star Rating */}
+                  </div>
+
+                  {/* Description */}
+                  {product.productDescription && (
+                    <p className="product-card-modal-description-white">
+                      {product.productDescription}
+                    </p>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="product-card-modal-actions-white">
+                    <button
+                      className="product-card-modal-add-to-cart-outline"
+                      onClick={() => {
+                        setShowQuickViewModal(false);
+                        // Always show size selection modal if there are available sizes
+                        if (availableSizes.length > 0) {
+                          setShowSizeModal(true);
+                        } else {
+                          message.warning(
+                            "No sizes available for this product"
+                          );
+                        }
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      className="product-card-modal-wishlist-icon-btn"
+                      onClick={(e) => {
+                        handleAddToWishlist(e);
+                        setShowQuickViewModal(false);
+                      }}
+                      title={
+                        isInWishlist
+                          ? "Remove from Wishlist"
+                          : "Add to Wishlist"
                       }
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    className="product-card-modal-wishlist-icon-btn"
-                    onClick={(e) => {
-                      handleAddToWishlist(e);
-                      setShowQuickViewModal(false);
-                    }}
-                    title={
-                      isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
-                    }
-                  >
-                    {isInWishlist ? (
-                      <HeartFilled
-                        style={{ color: "#dc2626", fontSize: "24px" }}
-                      />
-                    ) : (
-                      <HeartOutlined style={{ fontSize: "24px" }} />
-                    )}
-                  </button>
+                    >
+                      {isInWishlist ? (
+                        <HeartFilled
+                          style={{ color: "#dc2626", fontSize: "24px" }}
+                        />
+                      ) : (
+                        <HeartOutlined style={{ fontSize: "24px" }} />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {/* Size Selection Modal */}
       <Modal
