@@ -115,6 +115,9 @@
   transition: all 1s;
   transition-delay: 1s;
 }
+.text-item.active h2{
+  font-family: var(--fira-sans);
+}
 
 .text-item.fade-out {
   opacity: 0;
