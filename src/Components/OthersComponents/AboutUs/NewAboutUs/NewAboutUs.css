@@ -48,6 +48,14 @@
   height: 15px;
   width: 15px;
 }
+.about-btn:hover{
+  background-color: #775242;
+  color: #dfd6d6;
+}
+.about-btn:hover span img {
+  filter: brightness(0) invert(1);
+  transform: translateX(3px);
+}
 .left {
   /* padding-left: 20px; */
 }
