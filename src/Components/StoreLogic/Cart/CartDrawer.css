@@ -78,12 +78,17 @@
 .cart-drawer-close {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: var(--brand-600);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;  
+  display: flex;  
+  align-items: center;  
+  justify-content: center; 
 }
 
 .cart-drawer-close:hover {
