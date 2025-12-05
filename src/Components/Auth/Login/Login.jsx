@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button, message, Select } from "antd";
+import { Input, Button, message, Select,App } from "antd";
 import { PhoneOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -27,7 +27,7 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
-
+  const { notification } = App.useApp();
   // OTP input refs
   const otpInputs = Array(6).fill(null);
   const [otpValues, setOtpValues] = useState(Array(6).fill(""));
@@ -206,6 +206,12 @@ const Login = () => {
         }
         
         message.success("Login successful!");
+              notification.success({
+        message: 'Login Successful',
+        description: 'You have been logged in successfully.',
+        duration: 2,
+      });
+      
         
         // Redirect to home page or previous page
         setTimeout(() => {

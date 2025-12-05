@@ -325,6 +325,9 @@
   color: var(--brand-400);
   text-decoration: underline;
 }
+.anticon svg{
+  transform: scaleX(-1);
+}
 
 @media (max-width: 768px) {
   .login-container {
