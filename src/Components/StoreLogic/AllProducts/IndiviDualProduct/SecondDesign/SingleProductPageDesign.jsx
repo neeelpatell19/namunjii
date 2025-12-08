@@ -75,6 +75,7 @@ const SingleProductPageDesign = () => {
   const [mainImagePosition, setMainImagePosition] = useState({ x: 0, y: 0 });
   const [isMainImageDragging, setIsMainImageDragging] = useState(false);
   const [mainImageDragStart, setMainImageDragStart] = useState({ x: 0, y: 0 });
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const previewRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
   const previewImageRef = useRef(null);
@@ -1671,10 +1672,20 @@ const SingleProductPageDesign = () => {
             <p className="tax-note">Inclusive of all taxes.</p>
           </div>
 
-          {/* Short Description */}
+          {/* Full Description */}
           {product.productDescription && (
             <div className="short-description">
-              <p>{product.productDescription.split(".")[0]}.</p>
+              <p className={!isDescriptionExpanded ? "line-clamp-3" : ""}>
+                {product.productDescription}
+              </p>
+              {product.productDescription.length > 150 && (
+                <button 
+                  className="read-more-btn" 
+                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                >
+                  {isDescriptionExpanded ? "Read Less" : "Read More"}
+                </button>
+              )}
             </div>
           )}
 
