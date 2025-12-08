@@ -72,6 +72,7 @@ const Footer = () => {
 
             {/* Column 2: QUICK LINKS */}
             <Col
+            className="padding-left"
               xs={12}
               sm={12}
               md={6}
