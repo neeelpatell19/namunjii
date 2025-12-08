@@ -28,6 +28,7 @@ import { useDevice } from "../../hooks/useDevice";
 import cartApi from "../../apis/cart";
 import wishlistApi from "../../apis/wishlist";
 import productApi from "../../apis/product";
+import brandApi from "../../apis/brand";
 import "./Header.css";
 
 const Header = () => {
@@ -104,6 +105,35 @@ const Header = () => {
   } = useCartWishlist();
   const { getMenCategories, getWomenCategories } = useHomeData();
 
+  // Get designers from brands - reuse existing brand data
+  const [designers, setDesigners] = useState([]);
+  const [designersLoading, setDesignersLoading] = useState(false);
+  const [showDesignersMegaMenu, setShowDesignersMegaMenu] = useState(false);
+  const designersMegaMenuRef = useRef(null);
+
+  // Fetch designers (brands)
+  useEffect(() => {
+    const fetchDesigners = async () => {
+      try {
+        setDesignersLoading(true);
+        const response = await brandApi.getBrandsForSelection();
+        if (response.success) {
+          setDesigners(response.data || []);
+          console.log("Fetched designers:", response.data);
+        } else {
+          setDesigners([]);
+        }
+      } catch (err) {
+        console.error("Error fetching designers:", err);
+        setDesigners([]);
+      } finally {
+        setDesignersLoading(false);
+      }
+    };
+
+    fetchDesigners();
+  }, []);
+
   // Search state
   const [searchInput, setSearchInput] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState([]);
@@ -152,6 +182,7 @@ const Header = () => {
       hasDropdown: false,
       path: "/products?productType=accessory",
     },
+      { name: "Designers", hasDropdown: true, path: "/designers" },
     {
       name: "Namunjii Exclusive",
       hasDropdown: false,
@@ -165,6 +196,7 @@ const Header = () => {
       path: "/vendor-verification",
       isJoinUs: true,
     },
+  
   ];
 
   // Function to check if a category is active
@@ -399,10 +431,47 @@ const Header = () => {
             }
           }
         }
+
+        // Update Designers mega menu position and arrow
+        if (showDesignersMegaMenu && designersMegaMenuRef.current) {
+          designersMegaMenuRef.current.style.top = `${topPosition}px`;
+          // Find Designers category link and position menu + arrow
+          const allCategoryItems =
+            categoryNavBarRef.current.querySelectorAll(".CategoryItem");
+          let designersCategoryItem = null;
+          allCategoryItems.forEach((item) => {
+            const link = item.querySelector(
+              '.category-text-link[href*="/designers"]'
+            );
+            if (link) {
+              designersCategoryItem = item;
+            }
+          });
+          if (designersCategoryItem) {
+            const linkRect = designersCategoryItem.getBoundingClientRect();
+            // Force a reflow to ensure width is calculated
+            const menuWidth = designersMegaMenuRef.current.offsetWidth || 250;
+            const menuLeft = linkRect.left + linkRect.width / 2 - menuWidth / 2;
+            // Ensure menu doesn't go off screen
+            const adjustedLeft = Math.max(
+              10,
+              Math.min(menuLeft, window.innerWidth - menuWidth - 10)
+            );
+            designersMegaMenuRef.current.style.left = `${adjustedLeft}px`;
+
+            const arrow = designersMegaMenuRef.current.querySelector(".designers-arrow");
+            if (arrow) {
+              // Position arrow to point to center of category link
+              const arrowOffset =
+                linkRect.left + linkRect.width / 2 - adjustedLeft;
+              arrow.style.left = `${arrowOffset - 8}px`; // 8px is half of arrow width
+            }
+          }
+        }
       }
     };
 
-    if (showWomenMegaMenu || showMenMegaMenu) {
+    if (showWomenMegaMenu || showMenMegaMenu || showDesignersMegaMenu) {
       // Small delay to ensure DOM is updated
       setTimeout(() => {
         updateMegaMenuPosition();
@@ -415,7 +484,7 @@ const Header = () => {
       window.removeEventListener("scroll", updateMegaMenuPosition);
       window.removeEventListener("resize", updateMegaMenuPosition);
     };
-  }, [showWomenMegaMenu, showMenMegaMenu, isMobile, mobileMenuOpen]);
+  }, [showWomenMegaMenu, showMenMegaMenu, showDesignersMegaMenu, isMobile, mobileMenuOpen]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -431,27 +500,30 @@ const Header = () => {
     const handleClickOutside = (event) => {
       const menRef = menMegaMenuRef.current;
       const womenRef = womenMegaMenuRef.current;
+      const designersRef = designersMegaMenuRef.current;
       const navBarRef = categoryNavBarRef.current;
 
       // Check if click is outside both mega menus and the nav bar
       const outsideMen = !menRef || !menRef.contains(event.target);
       const outsideWomen = !womenRef || !womenRef.contains(event.target);
+      const outsideDesigners = !designersRef || !designersRef.contains(event.target);
       const outsideNavBar = !navBarRef || !navBarRef.contains(event.target);
 
-      if (outsideMen && outsideWomen && outsideNavBar) {
+      if (outsideMen && outsideWomen && outsideDesigners && outsideNavBar) {
         setShowMenMegaMenu(false);
         setShowWomenMegaMenu(false);
+        setShowDesignersMegaMenu(false);
       }
     };
 
-    if (showMenMegaMenu || showWomenMegaMenu) {
+    if (showMenMegaMenu || showWomenMegaMenu || showDesignersMegaMenu) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showMenMegaMenu, showWomenMegaMenu]);
+  }, [showMenMegaMenu, showWomenMegaMenu, showDesignersMegaMenu]);
 
   // Close mobile CategoryNavBar when clicking outside (mobile only)
   useEffect(() => {
@@ -560,6 +632,45 @@ const Header = () => {
     </div>
   );
 
+  // Render designers mega menu content
+  const renderDesignersMegaMenuContent = () => (
+    <div className="MegaMenuContent">
+      <div className="MegaMenuColumn">
+        <ul className="MegaMenuList">
+          {designersLoading ? (
+            <li style={{ padding: '10px', textAlign: 'center' }}>
+              <Spin size="small" />
+            </li>
+          ) : designers.length > 0 ? (
+            designers.map((designer, index) => {
+              // API returns array of strings, not objects
+              const designerName = typeof designer === 'string' ? designer : (designer.brandName || designer.name);
+              
+              return (
+                <li key={index}>
+                  <Link
+                    to={`/products?brand=${encodeURIComponent(designerName)}`}
+                    className="MegaMenuLink"
+                    onClick={() => {
+                      setShowDesignersMegaMenu(false);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    {designerName}
+                  </Link>
+                </li>
+              );
+            })
+          ) : (
+            <li style={{ padding: '10px', textAlign: 'center', color: '#999' }}>
+              No designers available
+            </li>
+          )}
+        </ul>
+      </div>
+    </div>
+  );
+
   // Render dropdown menu items for Ant Design Dropdown (for iPad)
   const renderDropdownMenuItems = (gender, categories) => {
     const items = [
@@ -600,6 +711,41 @@ const Header = () => {
           </Link>
         ),
       })),
+    ];
+    return items;
+  };
+
+  // Render designers dropdown menu items for Ant Design Dropdown (for iPad)
+  const renderDesignersDropdownMenuItems = () => {
+    const items = designersLoading ? [
+      {
+        key: 'loading',
+        label: <Spin size="small" />,
+        disabled: true,
+      }
+    ] : designers.length > 0 ? designers.map((designer, index) => {
+      // API returns array of strings, not objects
+      const designerName = typeof designer === 'string' ? designer : (designer.brandName || designer.name);
+      
+      return {
+        key: index,
+        label: (
+          <Link
+            to={`/products?brand=${encodeURIComponent(designerName)}`}
+            onClick={() => {
+              setShowDesignersMegaMenu(false);
+            }}
+          >
+            {designerName}
+          </Link>
+        ),
+      };
+    }) : [
+      {
+        key: 'no-designers',
+        label: 'No designers available',
+        disabled: true,
+      }
     ];
     return items;
   };
@@ -787,6 +933,9 @@ const Header = () => {
     },
   ];
 
+  // State to track which mobile dropdown is open
+  const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
+
   return (
     <div className="HeaderContainer">
       {/* Main Navigation Bar */}
@@ -973,54 +1122,14 @@ const Header = () => {
                 {categories.map((category, index) => (
                   <div key={index} className="CategoryItem">
                     {category.hasDropdown ? (
-                      // Use Ant Design Dropdown for iPad/Tablet, hover-based for desktop
-                      isTablet ? (
-                        <Dropdown
-                          menu={{
-                            items:
-                              category.name === "Women"
-                                ? renderDropdownMenuItems("Women", womenCategories)
-                                : renderDropdownMenuItems("Men", menCategories),
-                          }}
-                          trigger={["click"]}
-                          placement="bottom"
-                          overlayClassName="category-dropdown-menu"
-                        >
-                          <div
-                            className={`CategoryLink ${
-                              category.isSpecial ? "special" : ""
-                            } ${category.isJoinUs ? "join-us" : ""} ${
-                              isCategoryActive(category) ? "active" : ""
-                            } dropdown-link`}
-                          >
-                            <Link
-                              to={category.path}
-                              className="category-text-link"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setMobileMenuOpen(false);
-                              }}
-                            >
-                              {category.name}
-                            </Link>
-                            <span className="dropdown-icon">
-                              <FiChevronDown
-                                style={{
-                                  fontSize: "14px",
-                                  transition: "transform 0.3s ease",
-                                }}
-                              />
-                            </span>
-                          </div>
-                        </Dropdown>
-                      ) : (
-                        <div
-                          className={`CategoryLink ${
-                            category.isSpecial ? "special" : ""
-                          } ${category.isJoinUs ? "join-us" : ""} ${
-                            isCategoryActive(category) ? "active" : ""
-                          } dropdown-link`}
-                          onMouseEnter={() => {
+                      <div
+                        className={`CategoryLink ${
+                          category.isSpecial ? "special" : ""
+                        } ${category.isJoinUs ? "join-us" : ""} ${
+                          isCategoryActive(category) ? "active" : ""
+                        } dropdown-link`}
+                        onMouseEnter={() => {
+                          if (!isMobile && !isTablet) {
                             if (hideTimeoutRef.current) {
                               clearTimeout(hideTimeoutRef.current);
                               hideTimeoutRef.current = null;
@@ -1028,63 +1137,88 @@ const Header = () => {
                             if (category.name === "Women") {
                               setShowWomenMegaMenu(true);
                               setShowMenMegaMenu(false);
+                              setShowDesignersMegaMenu(false);
                             } else if (category.name === "Men") {
                               setShowMenMegaMenu(true);
                               setShowWomenMegaMenu(false);
-                            }
-                          }}
-                          onMouseLeave={() => {
-                            // For desktop, close drawer immediately on mouse leave
-                            if (!isMobile) {
-                              if (hideTimeoutRef.current) {
-                                clearTimeout(hideTimeoutRef.current);
-                                hideTimeoutRef.current = null;
-                              }
+                              setShowDesignersMegaMenu(false);
+                            } else if (category.name === "Designers") {
+                              setShowDesignersMegaMenu(true);
                               setShowWomenMegaMenu(false);
                               setShowMenMegaMenu(false);
                             }
-                          }}
-                        >
-                          <Link
-                            to={category.path}
-                            className="category-text-link"
-                            onClick={() => {
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (!isMobile && !isTablet) {
+                            if (hideTimeoutRef.current) {
+                              clearTimeout(hideTimeoutRef.current);
+                              hideTimeoutRef.current = null;
+                            }
+                            setShowWomenMegaMenu(false);
+                            setShowMenMegaMenu(false);
+                            setShowDesignersMegaMenu(false);
+                          }
+                        }}
+                      >
+                        <Link
+                          to={category.path}
+                          className="category-text-link"
+                          onClick={(e) => {
+                            // On mobile/tablet, prevent navigation and toggle dropdown
+                            if (isMobile || isTablet) {
+                              e.preventDefault();
+                              setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                            } else {
                               setMobileMenuOpen(false);
                               setShowWomenMegaMenu(false);
                               setShowMenMegaMenu(false);
-                            }}
-                          >
-                            {category.name}
-                          </Link>
-                          <span
-                            className="dropdown-icon"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
+                              setShowDesignersMegaMenu(false);
+                            }
+                          }}
+                        >
+                          {category.name}
+                        </Link>
+                        <span
+                          className="dropdown-icon"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (isMobile || isTablet) {
+                              setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                            } else {
                               if (category.name === "Women") {
                                 setShowWomenMegaMenu(!showWomenMegaMenu);
                                 setShowMenMegaMenu(false);
+                                setShowDesignersMegaMenu(false);
                               } else if (category.name === "Men") {
                                 setShowMenMegaMenu(!showMenMegaMenu);
                                 setShowWomenMegaMenu(false);
+                                setShowDesignersMegaMenu(false);
+                              } else if (category.name === "Designers") {
+                                setShowDesignersMegaMenu(!showDesignersMegaMenu);
+                                setShowWomenMegaMenu(false);
+                                setShowMenMegaMenu(false);
                               }
+                            }
+                          }}
+                          style={isMobile || isTablet ? { marginLeft: '8px' } : {}}
+                        >
+                          <FiChevronDown
+                            style={{
+                              fontSize: "14px",
+                              transition: "transform 0.3s ease",
+                              transform:
+                                openMobileDropdown === category.name ||
+                                (category.name === "Men" && showMenMegaMenu && !isMobile && !isTablet) ||
+                                (category.name === "Women" && showWomenMegaMenu && !isMobile && !isTablet) ||
+                                (category.name === "Designers" && showDesignersMegaMenu && !isMobile && !isTablet)
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
                             }}
-                            style={isMobile || isTablet ? { marginLeft: '8px' } : {}}
-                          >
-                            <FiChevronDown
-                              style={{
-                                fontSize: "14px",
-                                transition: "transform 0.3s ease",
-                                transform:
-                                  (category.name === "Men" && showMenMegaMenu) ||
-                                  (category.name === "Women" && showWomenMegaMenu)
-                                    ? "rotate(180deg)"
-                                    : "rotate(0deg)",
-                              }}
-                            />
-                          </span>
-                        </div>
-                      )
+                          />
+                        </span>
+                      </div>
                     ) : (
                       <Link
                         to={category.path}
@@ -1097,23 +1231,39 @@ const Header = () => {
                           setMobileMenuOpen(false);
                           setShowWomenMegaMenu(false);
                           setShowMenMegaMenu(false);
+                          setShowDesignersMegaMenu(false);
+                          setOpenMobileDropdown(null);
                         }}
                       >
                         {category.name}
                       </Link>
                     )}
 
-                    {/* Women Mega Menu - Drawer for mobile, original container for desktop */}
-                    {category.name === "Women" && (
+                    {/* Mobile/Tablet inline dropdowns */}
+                    {(isMobile || isTablet) && (
                       <>
-                        {/* Mobile: Use inline dropdown */}
-                        {isMobile && showWomenMegaMenu && (
+                        {category.name === "Women" && openMobileDropdown === "Women" && (
                           <div className="mobile-category-dropdown">
                             {renderMegaMenuContent("Women", womenCategories)}
                           </div>
                         )}
-                        {/* Desktop: Use original MegaMenuContainer */}
-                        {!isMobile && showWomenMegaMenu && (
+                        {category.name === "Men" && openMobileDropdown === "Men" && (
+                          <div className="mobile-category-dropdown">
+                            {renderMegaMenuContent("Men", menCategories)}
+                          </div>
+                        )}
+                        {category.name === "Designers" && openMobileDropdown === "Designers" && (
+                          <div className="mobile-category-dropdown">
+                            {renderDesignersMegaMenuContent()}
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* Desktop mega menus (unchanged) */}
+                    {!isMobile && !isTablet && (
+                      <>
+                        {category.name === "Women" && showWomenMegaMenu && (
                           <div
                             ref={womenMegaMenuRef}
                             className="MegaMenuContainer fade-in women-mega-menu"
@@ -1134,20 +1284,7 @@ const Header = () => {
                             {renderMegaMenuContent("Women", womenCategories)}
                           </div>
                         )}
-                      </>
-                    )}
-
-                    {/* Men Mega Menu - Drawer for mobile, original container for desktop */}
-                    {category.name === "Men" && (
-                      <>
-                        {/* Mobile: Use inline dropdown */}
-                        {isMobile && showMenMegaMenu && (
-                          <div className="mobile-category-dropdown">
-                            {renderMegaMenuContent("Men", menCategories)}
-                          </div>
-                        )}
-                        {/* Desktop: Use original MegaMenuContainer */}
-                        {!isMobile && showMenMegaMenu && (
+                        {category.name === "Men" && showMenMegaMenu && (
                           <div
                             ref={menMegaMenuRef}
                             className="MegaMenuContainer fade-in men-mega-menu"
@@ -1166,6 +1303,27 @@ const Header = () => {
                           >
                             <div className="MegaMenuArrow men-arrow"></div>
                             {renderMegaMenuContent("Men", menCategories)}
+                          </div>
+                        )}
+                        {category.name === "Designers" && showDesignersMegaMenu && (
+                          <div
+                            ref={designersMegaMenuRef}
+                            className="MegaMenuContainer fade-in designers-mega-menu"
+                            onMouseEnter={() => {
+                              if (hideTimeoutRef.current) {
+                                clearTimeout(hideTimeoutRef.current);
+                                hideTimeoutRef.current = null;
+                              }
+                              setShowDesignersMegaMenu(true);
+                            }}
+                            onMouseLeave={() => {
+                              hideTimeoutRef.current = setTimeout(() => {
+                                setShowDesignersMegaMenu(false);
+                              }, 300);
+                            }}
+                          >
+                            <div className="MegaMenuArrow designers-arrow"></div>
+                            {renderDesignersMegaMenuContent()}
                           </div>
                         )}
                       </>

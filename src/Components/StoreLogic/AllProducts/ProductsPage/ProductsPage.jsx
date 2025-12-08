@@ -447,13 +447,17 @@ const ProductsPage = () => {
     // Determine the current filter type
     const currentType = getFilterType();
     
-    // Only fetch if the type has changed (prevent duplicate calls)
-    if (currentType === lastFilterTypeRef.current) {
+    // Create a unique key for cache busting - include brand in the key
+    const currentBrand = Array.isArray(filters.brand) && filters.brand.length > 0 ? filters.brand[0] : null;
+    const cacheKey = `${currentType || 'all'}-${currentBrand || 'all'}`;
+    
+    // Only fetch if the type/brand combination has changed
+    if (cacheKey === lastFilterTypeRef.current) {
       return;
     }
     
     // Update the ref to track the current type
-    lastFilterTypeRef.current = currentType;
+    lastFilterTypeRef.current = cacheKey;
 
     // Fetch all three in parallel
     const fetchAll = async () => {
@@ -462,10 +466,13 @@ const ProductsPage = () => {
         setSizesLoading(true);
         setColorsLoading(true);
 
+        // Prepare params for sizes and colors - include brand filter
+        const sizeColorParams = currentType || (currentBrand ? { brand: currentBrand } : null);
+
         const [brandsResponse, sizesResponse, colorsResponse] = await Promise.all([
           brandApi.getBrandsForSelection(currentType),
-          productApi.getSizes(currentType),
-          productApi.getColors(currentType),
+          productApi.getSizes(sizeColorParams),
+          productApi.getColors(sizeColorParams),
         ]);
 
         if (brandsResponse.success) {
@@ -501,7 +508,7 @@ const ProductsPage = () => {
     };
 
     fetchAll();
-  }, [filters.gender, filters.productType, filters.isNamunjiiExclusive]);
+  }, [filters.gender, filters.productType, filters.isNamunjiiExclusive, filters.brand, getFilterType]);
 
   // Fetch subcategories when category or gender changes
   useEffect(() => {
@@ -882,7 +889,11 @@ const ProductsPage = () => {
     let pageTitle = "Products";
     let pageDescription = "Browse our curated collection of luxury fashion products";
     
-    if (filters.isNamunjiiExclusive) {
+    // Check if brand filter is active (single brand selected)
+    if (Array.isArray(filters.brand) && filters.brand.length === 1) {
+      pageTitle = filters.brand[0];
+      pageDescription = `Explore ${filters.brand[0]}'s collection of luxury fashion`;
+    } else if (filters.isNamunjiiExclusive) {
       pageTitle = "The Exclusive Collection";
       pageDescription = "Discover exclusive luxury fashion from Namunjii's curated collection";
     } else if (filters.productType === "accessory") {
@@ -951,7 +962,7 @@ const ProductsPage = () => {
       // Reset to default on unmount
       document.title = "Namunjii - A Home for Emerging Brands | Luxury Fashion Platform";
     };
-  }, [pagination.total, filters.isNamunjiiExclusive, filters.productType, filters.gender, hasLoadedProductsOnce]);
+  }, [pagination.total, filters.isNamunjiiExclusive, filters.productType, filters.gender, filters.brand, hasLoadedProductsOnce]);
 
   // Infinite scroll - detect when user scrolls near bottom
   useEffect(() => {
@@ -1191,38 +1202,45 @@ const ProductsPage = () => {
         </span>
       </div>
 
-      {/* Gender Filter - Only show for Namunjii Exclusive */}
-      {filters.isNamunjiiExclusive && (
-        <div className="filter-section">
-          <div
-            className="filter-section-header"
-            onClick={() => toggleFilterSection("gender")}
-          >
-            <h4>GENDER</h4>
-            {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
-          </div>
-          {expandedFilters.gender && (
-            <div className="gender-buttons">
-              <button
-                className={`gender-button ${filters.gender === "Men" ? "active" : ""}`}
-                onClick={() =>
-                  handleFilterChange("gender", filters.gender === "Men" ? "" : "Men")
-                }
-              >
-                Men
-              </button>
-              <button
-                className={`gender-button ${filters.gender === "Women" ? "active" : ""}`}
-                onClick={() =>
-                  handleFilterChange("gender", filters.gender === "Women" ? "" : "Women")
-                }
-              >
-                Women
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+
+    {/* Gender */}
+
+    {/* Gender Filter Section */}
+<div className="filter-section">
+  <div
+    className="filter-section-header"
+    onClick={() => toggleFilterSection("gender")}
+  >
+    <h4>GENDER</h4>
+    {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
+  </div>
+  {expandedFilters.gender && (
+    <div className="gender-buttons">
+      <button
+        className={`gender-button ${filters.gender === "Men" ? "active" : ""}`}
+        onClick={() =>
+          handleFilterChange("gender", filters.gender === "Men" ? "" : "Men")
+        }
+      >
+        Men
+      </button>
+      <button
+        className={`gender-button ${filters.gender === "Women" ? "active" : ""}`}
+        onClick={() =>
+          handleFilterChange("gender", filters.gender === "Women" ? "" : "Women")
+        }
+      >
+        Women
+      </button>
+    </div>
+  )}
+</div>
+
+
+
+      
+
+
 
       {/* Size */}
       <div className="filter-section">
@@ -1265,76 +1283,84 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* Brand */}
-      <div className="filter-section">
-        <div
-          className="filter-section-header"
-          onClick={() => toggleFilterSection("brand")}
-        >
-          <h4>DESIGNERS</h4>
-          {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
-        </div>
-        {expandedFilters.brand && (
-          <div className="checkbox-group">
-            {brandsLoading ? (
-              <div style={{ padding: "10px 0" }}>
-                <Spin size="small" />
-              </div>
-            ) : brands.length > 0 ? (
-              (() => {
-                // Filter brands based on isNamunjiiExclusive
-                // Only filter to exclusive brands when isNamunjiiExclusive is explicitly true
-                // Otherwise, show all brands
-                const namunjiiExclusiveBrands = [
-                  "Grey Horn",
-                  "The Branch",
-                  "The Drift Line",
-                  "The Pure Forms",
-                ];
-                const filteredBrands =
-                  filters.isNamunjiiExclusive === true
-                    ? brands.filter((brand) =>
-                        namunjiiExclusiveBrands.includes(brand)
-                      )
-                    : brands;
-
-                return filteredBrands.length > 0 ? (
-                  filteredBrands.map((brand, index) => {
-                    const isSelected =
-                      Array.isArray(filters.brand) &&
-                      filters.brand.includes(brand);
-                    return (
-                      <Checkbox
-                        key={index}
-                        checked={isSelected}
-                        onChange={(e) =>
-                          handleMultiSelectFilterChange(
-                            "brand",
-                            brand,
-                            e.target.checked
+      {/* Brand - Hide ONLY when brand is selected but NO gender/productType/isNamunjiiExclusive (means came from header Designers dropdown) */}
+      {!(
+        Array.isArray(filters.brand) && 
+        filters.brand.length > 0 && 
+        !filters.gender && 
+        !filters.productType && 
+        !filters.isNamunjiiExclusive
+      ) && (
+        <div className="filter-section">
+          <div
+            className="filter-section-header"
+            onClick={() => toggleFilterSection("brand")}
+          >
+            <h4>DESIGNERS</h4>
+            {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
+          </div>
+          {expandedFilters.brand && (
+            <>
+              <div className="checkbox-group">
+                {brandsLoading ? (
+                  <div style={{ padding: "10px 0" }}>
+                    <Spin size="small" />
+                  </div>
+                ) : brands.length > 0 ? (
+                  (() => {
+                    // Filter brands based on isNamunjiiExclusive
+                    const namunjiiExclusiveBrands = [
+                      "Grey Horn",
+                      "The Branch",
+                      "The Drift Line",
+                      "The Pure Forms",
+                    ];
+                    const filteredBrands =
+                      filters.isNamunjiiExclusive === true
+                        ? brands.filter((brand) =>
+                            namunjiiExclusiveBrands.includes(brand)
                           )
-                        }
-                      >
-                        {brand}
-                      </Checkbox>
+                        : brands;
+
+                    return filteredBrands.length > 0 ? (
+                      filteredBrands.map((brand, index) => {
+                        const isSelected =
+                          Array.isArray(filters.brand) &&
+                          filters.brand.includes(brand);
+                        return (
+                          <Checkbox
+                            key={index}
+                            checked={isSelected}
+                            onChange={(e) =>
+                              handleMultiSelectFilterChange(
+                                "brand",
+                                brand,
+                                e.target.checked
+                              )
+                            }
+                          >
+                            {brand}
+                          </Checkbox>
+                        );
+                      })
+                    ) : (
+                      <span style={{ fontSize: "14px", color: "#999" }}>
+                        {filters.isNamunjiiExclusive
+                          ? "No Namunjii Exclusive brands available"
+                          : "No brands available"}
+                      </span>
                     );
-                  })
+                  })()
                 ) : (
                   <span style={{ fontSize: "14px", color: "#999" }}>
-                    {filters.isNamunjiiExclusive
-                      ? "No Namunjii Exclusive brands available"
-                      : "No brands available"}
+                    No brands available
                   </span>
-                );
-              })()
-            ) : (
-              <span style={{ fontSize: "14px", color: "#999" }}>
-                No brands available
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Price Range */}
       <div className="filter-section">
@@ -1541,6 +1567,38 @@ const ProductsPage = () => {
             </div>
           </div>
         ))}
+
+        {/* Extra skeleton boxes for larger grid */}
+        {gridLayout.desktop === 4 &&
+          Array.from({ length: count }).map((_, index) => (
+            <div key={`extra-${index}`} className="product-card product-card-skeleton">
+              <div className="product-card-image-container">
+                <div className="skeleton-image"></div>
+              </div>
+              <div className="product-card-content">
+                <div className="product-card-info">
+                  <div
+                    className="skeleton-line skeleton-brand"
+                    style={{ width: "80px", height: "14px", marginBottom: "8px" }}
+                  ></div>
+                  <div
+                    className="skeleton-line skeleton-title"
+                    style={{ width: "90%", height: "18px", marginBottom: "8px" }}
+                  ></div>
+                  <div
+                    className="skeleton-line skeleton-text"
+                    style={{ width: "60%", height: "14px" }}
+                  ></div>
+                </div>
+                <div className="product-card-pricing">
+                  <div
+                    className="skeleton-line skeleton-price"
+                    style={{ width: "100px", height: "20px" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
     );
   };
@@ -1606,7 +1664,10 @@ const ProductsPage = () => {
             {/* Page Title */}
             <div className="page-title-section">
               <h2 className="page-title">
-                {filters.isNamunjiiExclusive
+                {/* Show designer name if brand filter is active */}
+                {Array.isArray(filters.brand) && filters.brand.length === 1
+                  ? filters.brand[0]
+                  : filters.isNamunjiiExclusive
                   ? "The Exclusive Collection"
                   : filters.productType === "accessory"
                   ? "Accessories"
@@ -1664,10 +1725,8 @@ const ProductsPage = () => {
                     <ul className="search-suggestions-list">
                       {searchSuggestions.map((suggestion) => {
                         const discountedPrice =
-                          suggestion.basePricing -
-                          (suggestion.basePricing *
-                            (suggestion.discount || 0)) /
-                            100;
+                          suggestion.basePricing - 
+                          (suggestion.basePricing * (suggestion.discount || 0)) / 100;
                         const coverImage =
                           Array.isArray(suggestion.coverImage) &&
                           suggestion.coverImage.length > 0
@@ -1731,7 +1790,7 @@ const ProductsPage = () => {
                     </div>
                   )}
                 </div>
-              )} */}
+              ) */}
             </div>
 
             {/* Products Header - Controls Bar */}
@@ -1779,10 +1838,8 @@ const ProductsPage = () => {
                       <ul className="search-suggestions-list">
                         {searchSuggestions.map((suggestion) => {
                           const discountedPrice =
-                            suggestion.basePricing -
-                            (suggestion.basePricing *
-                              (suggestion.discount || 0)) /
-                              100;
+                            suggestion.basePricing - 
+                            (suggestion.basePricing * (suggestion.discount || 0)) / 100;
                           const coverImage =
                             Array.isArray(suggestion.coverImage) &&
                             suggestion.coverImage.length > 0
