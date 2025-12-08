@@ -364,8 +364,20 @@ font-family: var(--fira-sans) !important;
   }
 
   .order-item-meta {
-    flex-direction: column;
+    flex-direction: row;
     gap: 4px;
+  }
+  .order-item-price-label{
+    font-size: 16px;
+  }
+  .order-item-price-row.total .order-item-price-label {
+    font-size: 16px !important; 
+    justify-self: start;
+    position: absolute;
+    left: 38px;
+  }
+  .order-item-price-value{
+    font-size: 16px;
   }
 }
 
