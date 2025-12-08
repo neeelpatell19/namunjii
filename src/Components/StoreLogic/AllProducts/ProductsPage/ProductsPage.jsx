@@ -1271,7 +1271,7 @@ const ProductsPage = () => {
           className="filter-section-header"
           onClick={() => toggleFilterSection("brand")}
         >
-          <h4>BRAND</h4>
+          <h4>DESIGNERS</h4>
           {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
         </div>
         {expandedFilters.brand && (
