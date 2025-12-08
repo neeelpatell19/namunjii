@@ -279,7 +279,7 @@ font-family: var(--fira-sans) !important;
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans) !important;
 }
 
 .order-shipping-label {
