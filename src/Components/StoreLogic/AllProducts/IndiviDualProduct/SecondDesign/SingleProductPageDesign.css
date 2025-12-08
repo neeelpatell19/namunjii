@@ -491,6 +491,32 @@ width: 24px;
   max-width: 100%;
 }
 
+.short-description p.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.short-description .read-more-btn {
+  background: none;
+  border: none;
+  color: #754a38;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 5px 0;
+  margin-top: 5px;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+  font-family: var(--fira-sans);
+}
+
+.short-description .read-more-btn:hover {
+  color: #754a38;
+}
+
 /* Size Selection */
 .size-selection-section {
   margin-bottom: 10px;
