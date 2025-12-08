@@ -20,14 +20,14 @@
   font-weight: 600;
   color: #333;
   margin: 0 0 8px 0;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
 }
 
 .orders-subtitle {
   font-size: 16px;
   color: #666;
   margin: 0;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
 }
 
 .orders-loading {
@@ -83,13 +83,13 @@
   font-weight: 600;
   color: #333;
   margin-bottom: 4px;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
 }
 
 .order-date {
   font-size: 14px;
   color: #666;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
 }
 
 .order-header-right {
@@ -145,7 +145,7 @@
   font-weight: 500;
   color: #8b4513;
   margin: 0 0 4px 0;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
 }
 
 .order-item-name {
@@ -153,7 +153,7 @@
   font-weight: 600;
   color: #333;
   margin: 0 0 6px 0;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans);
 }
 
 .order-item-meta {
@@ -170,6 +170,7 @@
 .order-item-color,
 .order-item-quantity {
   display: inline-block;
+  font-family: var(--fira-sans) !important;
 }
 
 .order-item-separator {
@@ -191,19 +192,21 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--Poppins-font);
+  
 }
 
 .order-item-price-label {
   font-size: 12px;
   color: #666;
   font-weight: 400;
+font-family: var(--fira-sans) !important;
 }
 
 .order-item-price-value {
   font-size: 14px;
   color: #333;
   font-weight: 500;
+  font-family: var(--fira-sans) !important;
 }
 
 .order-item-price-row.total .order-item-price-label {
@@ -276,7 +279,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-family: var(--Poppins-font);
+  font-family: var(--fira-sans) !important;
 }
 
 .order-shipping-label {
@@ -285,6 +288,7 @@
   color: #333;
   flex-shrink: 0;
   min-width: 120px;
+  font-family: var(--fira-sans) !important;
 }
 
 .order-shipping-address {
@@ -292,6 +296,7 @@
   color: #666;
   line-height: 1.6;
   flex: 1;
+  font-family: var(--fira-sans) !important;
 }
 
 /* Responsive Design */
@@ -359,8 +364,20 @@
   }
 
   .order-item-meta {
-    flex-direction: column;
+    flex-direction: row;
     gap: 4px;
+  }
+  .order-item-price-label{
+    font-size: 16px;
+  }
+  .order-item-price-row.total .order-item-price-label {
+    font-size: 16px !important; 
+    justify-self: start;
+    position: absolute;
+    left: 38px;
+  }
+  .order-item-price-value{
+    font-size: 16px;
   }
 }
 
