@@ -320,3 +320,9 @@
     font-size: 11px;
   }
 }
+@media (max-width: 825px) {
+  .padding-left{
+    padding-left: 80px !important;
+  }
+  }
+}
