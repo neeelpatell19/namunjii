@@ -35,7 +35,6 @@ import { HomeDataProvider } from "./Components/StoreLogic/Context/HomeDataContex
 import { Provider } from "react-redux";
 import store from "./store";
 import { useEffect } from "react";
-import { Helmet } from "react-helmet";
 // Wrapper component for page transitions
 const PageTransition = ({ children }) => {
   return <div style={{ marginTop: -10 }}>{children}</div>;
@@ -50,6 +49,11 @@ const AnimatedRoutes = () => {
       top: 0,
       behavior: "instant",
     });
+
+    // Track Facebook Pixel PageView on route change
+    if (window.fbq) {
+      window.fbq("track", "PageView");
+    }
   }, [pathname]);
 
   return (
@@ -246,6 +250,44 @@ const AnimatedRoutes = () => {
 
 function App() {
   const { lg } = Grid.useBreakpoint();
+
+  // Initialize Facebook Pixel
+  useEffect(() => {
+    // Check if fbq is already initialized
+    if (window.fbq) {
+      return;
+    }
+
+    // Initialize Facebook Pixel
+    (function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod
+          ? n.callMethod.apply(n, arguments)
+          : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = "2.0";
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(
+      window,
+      document,
+      "script",
+      "https://connect.facebook.net/en_US/fbevents.js"
+    );
+
+    // Initialize and track PageView
+    window.fbq("init", "1940045939875054");
+    window.fbq("track", "PageView");
+  }, []);
+
   return (
     <>
       <Provider store={store}>
@@ -262,22 +304,6 @@ function App() {
                         paddingTop: lg ? "120px" : "60px",
                       }}
                     >
-                      <Helmet>
-                        <script>
-                          {`
-                            !function(f,b,e,v,n,t,s)
-                            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                            n.queue=[];t=b.createElement(e);t.async=!0;
-                            t.src=v;s=b.getElementsByTagName(e)[0];
-                            s.parentNode.insertBefore(t,s)}(window, document,'script',
-                            'https://connect.facebook.net/en_US/fbevents.js');
-                            fbq('init', '1940045939875054');
-                            fbq('track', 'PageView');
-                          `}
-                        </script>
-                      </Helmet>
                       <Header />
                       {/* <Maintenance /> */}
                       <AnimatedRoutes />
