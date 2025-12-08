@@ -467,7 +467,7 @@ export default function ProductCard({
                 goToPrevImage();
               }}
             >
-              <LeftOutlined />
+              <RightOutlined />
             </button>
           )}
 
@@ -480,7 +480,7 @@ export default function ProductCard({
                 goToNextImage();
               }}
             >
-              <RightOutlined />
+              <LeftOutlined />
             </button>
           )}
 
