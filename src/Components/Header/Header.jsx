@@ -182,7 +182,7 @@ const Header = () => {
       hasDropdown: false,
       path: "/products?productType=accessory",
     },
-      { name: "Designers", hasDropdown: true, path: "/designers" },
+    { name: "Designers", hasDropdown: true, path: null }, // Set path to null - no navigation
     {
       name: "Namunjii Exclusive",
       hasDropdown: false,
@@ -440,10 +440,9 @@ const Header = () => {
             categoryNavBarRef.current.querySelectorAll(".CategoryItem");
           let designersCategoryItem = null;
           allCategoryItems.forEach((item) => {
-            const link = item.querySelector(
-              '.category-text-link[href*="/designers"]'
-            );
-            if (link) {
+            // Look for the span with text "Designers" instead of href
+            const span = item.querySelector('.category-text-link');
+            if (span && span.textContent.trim() === 'Designers') {
               designersCategoryItem = item;
             }
           });
@@ -1161,24 +1160,41 @@ const Header = () => {
                           }
                         }}
                       >
-                        <Link
-                          to={category.path}
-                          className="category-text-link"
-                          onClick={(e) => {
-                            // On mobile/tablet, prevent navigation and toggle dropdown
-                            if (isMobile || isTablet) {
+                        {/* Only render Link if path exists, otherwise just text */}
+                        {category.path ? (
+                          <Link
+                            to={category.path}
+                            className="category-text-link"
+                            onClick={(e) => {
+                              // On mobile/tablet, prevent navigation and toggle dropdown
+                              if (isMobile || isTablet) {
+                                e.preventDefault();
+                                setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                              } else {
+                                setMobileMenuOpen(false);
+                                setShowWomenMegaMenu(false);
+                                setShowMenMegaMenu(false);
+                                setShowDesignersMegaMenu(false);
+                              }
+                            }}
+                          >
+                            {category.name}
+                          </Link>
+                        ) : (
+                          <span
+                            className="category-text-link"
+                            onClick={(e) => {
                               e.preventDefault();
-                              setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
-                            } else {
-                              setMobileMenuOpen(false);
-                              setShowWomenMegaMenu(false);
-                              setShowMenMegaMenu(false);
-                              setShowDesignersMegaMenu(false);
-                            }
-                          }}
-                        >
-                          {category.name}
-                        </Link>
+                              // Toggle dropdown on click for Designers
+                              if (isMobile || isTablet) {
+                                setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                              }
+                            }}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {category.name}
+                          </span>
+                        )}
                         <span
                           className="dropdown-icon"
                           onClick={(e) => {
