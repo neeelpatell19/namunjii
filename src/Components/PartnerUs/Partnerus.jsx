@@ -27,7 +27,7 @@ const Partnerus = () => {
               <p>PARTNER WITH US</p>
               <div className="partnerus-input-button-mobile">
                 <Link to={"/vendor-verification"}>
-                  <button>
+                  <button className="joinus-btn">
                     Join Us{" "}
                     <span>
                       <img src="/icons/TiltedArrow.svg" alt="arrow" />

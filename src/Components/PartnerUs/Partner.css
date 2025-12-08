@@ -111,8 +111,11 @@
 }
 
 .partnerus-input-button-mobile button:hover {
-  background-color: #f5f5f5;
-  border-color: #cccccc;
+  background-color: #775242;
+  color: #dfd6d6;
+}
+.partnerus-input-button-mobile button:hover span img {
+  filter: brightness(0) invert(1);
 }
 
 .partnerus-input-button-mobile button span {
@@ -149,12 +152,6 @@
   cursor: pointer;
   font-family: var(--fira-sans);
 }
-
-.partnerus-input-button button:hover {
-  background-color: #f5f5f5;
-  border-color: #cccccc;
-}
-
 .partnerus-input-button button {
   background-color: transparent;
   border: 2px solid #775242;
@@ -165,17 +162,20 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   display: flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
 }
 
-.partnerus-input-button button::after {
-  content: none;
+.partnerus-input-button button:hover{
+  background-color: #775242;
+  color: #dfd6d6;
 }
-
+.partnerus-input-button button:hover span img {
+  filter: brightness(0) invert(1);
+}
 /* ===== RESPONSIVE BREAKPOINTS ===== */
 
 /* Large Desktops - 1280px */

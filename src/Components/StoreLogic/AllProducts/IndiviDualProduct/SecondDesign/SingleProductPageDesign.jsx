@@ -109,6 +109,7 @@ const SingleProductPageDesign = () => {
       red: "#FF0000",
       blue: "#0000FF",
       green: "#008000",
+      mango: "#F27000",
     };
     return colorMap[colorName?.toLowerCase()] || "#D4AF37";
   };
