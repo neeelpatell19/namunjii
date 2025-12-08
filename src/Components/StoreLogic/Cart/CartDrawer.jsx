@@ -206,7 +206,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
             </div>
           ) : cartItems.length === 0 ? (
             <div className="cart-empty">
-              <div className="cart-empty-icon">🛒</div>
+              <div className="cart-empty-icon"><video style={{width: '50vw', height:'30vh'}}  src="/Videos/namunjii_wishlist_page.mp4" autoPlay loop muted ></video></div>
               <p>Your cart is empty</p>
               <button className="cart-continue-shopping" onClick={onClose}>
                 Continue Shopping
