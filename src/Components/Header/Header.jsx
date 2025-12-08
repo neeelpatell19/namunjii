@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Row, Col, Dropdown, Input, Spin, Drawer, Popover, Button } from "antd";
+import { Row, Col, Dropdown, Input, Spin, Drawer, Popover, Button,App } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FiSearch,
@@ -35,6 +35,41 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.api.userData);
+  const { notification } = App.useApp();
+
+
+  //logout handler 
+  const handlelogout = () => {
+    try {
+      // Clear cookies
+      Cookies.remove('token');
+      
+      // Clear Redux state
+      dispatch(updateUserData(null));
+      
+      // Clear storage
+      localStorage.clear();
+      sessionStorage.clear();
+            notification.success({
+        message: 'Logout Successful',
+        description: 'You have been logged out successfully.',
+        duration: 1,
+        
+      });
+      
+      // Navigate to home
+      setIsLoggedIn(false)
+      setLoggedInUser(false)
+  
+      navigate("/");
+    
+      
+      console.log("Logged out successfully");
+      
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }
   
   // Check if user is logged in (check token and user data)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -858,6 +893,17 @@ const Header = () => {
                         >
                           My Orders
                         </div>
+
+                          <div  className="user-popover-link"
+                              onClick={() => {
+                            handlelogout()
+                            setUserPopoverOpen(false);
+                          }}
+                          >
+                            Logout
+                          </div>
+
+
                       </div>
                     ) : (
                       <div className="user-popover-content">

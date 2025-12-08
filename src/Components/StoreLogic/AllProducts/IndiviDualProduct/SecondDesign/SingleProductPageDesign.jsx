@@ -1867,11 +1867,11 @@ const SingleProductPageDesign = () => {
                       <div className="features-section">
                         <div className="feature-item">
                           <div className="feature-icon"><img src="/icons/Original.svg" alt="" /></div>
-                          <span>100% Original Products</span>
+                          <span>100% Original Products.</span>
                         </div>
                         <div className="feature-item">
                           <div className="feature-icon"><img className="DeliveryImages" src="/icons/Payment.svg" alt="" /></div>
-                          <span>Pay on delivery might be available</span>
+                          <span>Pay on delivery might be available.</span>
                         </div>
                         <div className="feature-item">
                           <div className="feature-icon"><img src="/icons/Exchange.svg" alt="" /></div>

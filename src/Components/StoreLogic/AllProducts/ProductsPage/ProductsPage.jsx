@@ -210,19 +210,29 @@ const ProductsPage = () => {
 
   // Collapsible filter sections state
   const [expandedFilters, setExpandedFilters] = useState({
-    gender: true,
+    gender: false,
     size: true,
-    brand: true,
+    brand: false,
     priceRange: false,
     colour: false,
     orderType: false,
   });
 
   const toggleFilterSection = (section) => {
-    setExpandedFilters((prev) => ({
-      ...prev,
+    setExpandedFilters((prev) => {
+      const allClosed={
+      gender: false,
+      size: false,
+      brand: false,
+      priceRange: false,
+      colour: false,
+      orderType: false,
+    };
+       return {
+      ...allClosed,
       [section]: !prev[section],
-    }));
+    };
+    });
   };
 
   // Ref to track if we're in initial load
