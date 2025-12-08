@@ -15,6 +15,7 @@ import { useCartWishlist } from "../../StoreLogic/Context/CartWishlistContext";
 import { useDevice } from "../../../hooks/useDevice";
 import cartApi from "../../../apis/cart";
 import wishlistApi from "../../../apis/wishlist";
+import productApi from "../../../apis/product";
 import "./ProductCard.css";
 
 export default function ProductCard({
@@ -42,6 +43,10 @@ export default function ProductCard({
   const [showSizeModal, setShowSizeModal] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
   const [isHovered, setIsHovered] = useState(false);
+  const [fullProductData, setFullProductData] = useState(null);
+  const [isLoadingFullProduct, setIsLoadingFullProduct] = useState(false);
+  const [sizeError, setSizeError] = useState("");
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -157,6 +162,9 @@ export default function ProductCard({
   const getAvailableSizes = useMemo(() => {
     const sizesSet = new Set();
 
+    // Debug: Log product structure
+
+
     // Check if product has a products array (multiple variants)
     if (
       product?.products &&
@@ -176,7 +184,10 @@ export default function ProductCard({
 
     // Filter sizes based on isExpressShipping
     let availableSizes = Array.from(sizesSet);
-    if (product.isExpressShipping) {
+    
+    // console.log('ProductCard - Available sizes before filtering:', availableSizes);
+    
+    if (product?.isExpressShipping) {
       // If express shipping is enabled, exclude "Free Size"
       availableSizes = availableSizes.filter((size) => size !== "Free Size");
     }
@@ -204,13 +215,107 @@ export default function ProductCard({
       return indexA - indexB;
     });
 
+    // console.log('ProductCard - Final available sizes:', availableSizes);
+
     return availableSizes;
-  }, [product?.products, product?.size, product?.isExpressShipping]);
+  }, [product?.products, product?.size, product?.isExpressShipping, product?._id]);
 
   const availableSizes = getAvailableSizes;
 
-  const handleQuickView = () => {
+  // Get sizes from full product data (used in QuickView)
+  const getFullProductSizes = useMemo(() => {
+    if (!fullProductData) return [];
+    
+    const sizesSet = new Set();
+
+    console.log('Getting sizes from full product:', {
+      id: fullProductData?._id,
+      hasProducts: !!fullProductData?.products,
+      productsLength: fullProductData?.products?.length,
+      products: fullProductData?.products
+    });
+
+    // Check if product has a products array (multiple variants)
+    if (
+      fullProductData?.products &&
+      Array.isArray(fullProductData.products) &&
+      fullProductData.products.length > 0
+    ) {
+      fullProductData.products.forEach((p) => {
+        if (p.size) {
+          sizesSet.add(p.size);
+        }
+      });
+    }
+    // If no products array, check for direct size property (single variant)
+    else if (fullProductData?.size) {
+      sizesSet.add(fullProductData.size);
+    }
+
+    let sizes = Array.from(sizesSet);
+    
+    if (fullProductData?.isExpressShipping) {
+      sizes = sizes.filter((size) => size !== "Free Size");
+    }
+
+    // Sort sizes
+    const sizeOrder = [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "2XL",
+      "3XL",
+      "4XL",
+      "Free Size",
+    ];
+    sizes.sort((a, b) => {
+      const indexA = sizeOrder.indexOf(a);
+      const indexB = sizeOrder.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+
+    console.log('Full product sizes:', sizes);
+    return sizes;
+  }, [fullProductData]);
+
+  const handleQuickView = async () => {
     setShowQuickViewModal(true);
+    setIsLoadingFullProduct(true);
+    
+    try {
+      // Fetch full product details with all variants
+      const response = await productApi.getProductById(product._id);
+      console.log('Full product API response:', response);
+      
+      // Handle API response structure: { success: true, data: {...} }
+      if (response?.success && response?.data) {
+        const fullProduct = response.data;
+        console.log('Full product with all variants:', {
+          id: fullProduct._id,
+          name: fullProduct.productName,
+          hasProducts: !!fullProduct.products,
+          productsLength: fullProduct.products?.length,
+          allVariants: fullProduct.products
+        });
+        setFullProductData(fullProduct);
+      } else {
+        console.log('Using fallback product data');
+        setFullProductData(product);
+      }
+    } catch (error) {
+      console.error('Error fetching full product:', error);
+      setFullProductData(product);
+    } finally {
+      setIsLoadingFullProduct(false);
+    }
+    
     if (onQuickView) {
       onQuickView(product);
     }
@@ -246,12 +351,23 @@ export default function ProductCard({
     }
 
     try {
+      // Use full product data if available (from QuickView), otherwise use regular product
+      const productToUse = fullProductData || product;
+      
       // Find the product variant with the selected size
-      let productIdToAdd = product._id;
-      let colorToAdd = product.color || "";
+      let productIdToAdd = productToUse._id;
+      let colorToAdd = productToUse.color || "";
 
-      if (product?.products && Array.isArray(product.products) && size) {
-        const variant = product.products.find((p) => p.size === size);
+      console.log('Adding to cart with product:', {
+        productToUse,
+        size,
+        hasProducts: !!productToUse?.products,
+        productsLength: productToUse?.products?.length
+      });
+
+      if (productToUse?.products && Array.isArray(productToUse.products) && size) {
+        const variant = productToUse.products.find((p) => p.size === size);
+        console.log('Found variant:', variant);
         if (variant) {
           productIdToAdd = variant._id;
           colorToAdd = variant.color || colorToAdd;
@@ -640,6 +756,8 @@ export default function ProductCard({
 
                 {/* Product Details - RIGHT (White Background) */}
                 <div className="product-card-modal-details-white">
+                  <p className="brand-name">{product.vendorId.name}</p>
+
                   <h2>{product.productName}</h2>
 
                   {/* Price and Rating */}
@@ -671,28 +789,76 @@ export default function ProductCard({
 
                   {/* Description */}
                   {product.productDescription && (
-                    <p className="product-card-modal-description-white">
-                      {product.productDescription}
-                    </p>
+                    <div className="product-card-modal-description-container">
+                      <p className={`product-card-modal-description-white ${
+                        !isDescriptionExpanded ? "line-clamp-3" : ""
+                      }`}>
+                        {product.productDescription}
+                      </p>
+                      {product.productDescription.length > 150 && (
+                        <button 
+                          className="description-read-more-btn" 
+                          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                        >
+                          {isDescriptionExpanded ? "Read Less" : "Read More"}
+                        </button>
+                      )}
+                    </div>
                   )}
+
+                  {/* Size Selection in QuickView */}
+                  {isLoadingFullProduct ? (
+                    <div className="product-card-modal-size-selection">
+                      <label className="size-selection-label">Loading sizes...</label>
+                    </div>
+                  ) : getFullProductSizes.length > 0 ? (
+                    <div className="product-card-modal-size-selection">
+                      <label className="size-selection-label">Select Size:</label>
+                      <div className="product-card-modal-size-options">
+                        {getFullProductSizes.map((size) => (
+                          <button
+                            key={size}
+                            className={`product-card-modal-size-btn ${
+                              selectedSize === size ? "selected" : ""
+                            }`}
+                            onClick={() => {
+                              setSelectedSize(size);
+                              setSizeError("");
+                            }}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                      {sizeError && (
+                        <p className="product-card-size-error">{sizeError}</p>
+                      )}
+                    </div>
+                  ) : null}
 
                   {/* Action Buttons */}
                   <div className="product-card-modal-actions-white">
                     <button
                       className="product-card-modal-add-to-cart-outline"
                       onClick={() => {
+                        if (getFullProductSizes.length > 0 && !selectedSize) {
+                          setSizeError("Please select a size");
+                          return;
+                        }
+                        setSizeError("");
                         setShowQuickViewModal(false);
-                        // Always show size selection modal if there are available sizes
-                        if (availableSizes.length > 0) {
-                          setShowSizeModal(true);
+                        if (getFullProductSizes.length > 0) {
+                          addToCartWithSize(selectedSize);
+                          setSelectedSize("");
                         } else {
                           message.warning(
                             "No sizes available for this product"
                           );
                         }
                       }}
+                      disabled={isAddingToCart || isLoadingFullProduct}
                     >
-                      Add to Cart
+                      {isAddingToCart ? "Adding..." : "Add to Cart"}
                     </button>
                     <button
                       className="product-card-modal-wishlist-icon-btn"
