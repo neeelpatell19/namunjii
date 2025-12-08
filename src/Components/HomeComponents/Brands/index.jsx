@@ -238,7 +238,7 @@ export default function Brands({ HomeData }) {
   return (
     <div className="brands-container">
       <div className="brands-header">
-        <h2 className="brands-title">Brands</h2>
+        <h2 className="brands-title">DESIGNERS</h2>
       </div>
 
       <div className="brands-slider-wrapper">

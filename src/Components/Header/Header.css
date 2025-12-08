@@ -642,8 +642,8 @@
   border-radius: 6px;
   height: auto;
   max-height: 400px;
-  overflow-y: auto;
-  overflow-x: visible;
+   overflow-y: auto;
+  overflow-x: visible
 }
 
 /* Arrow indicator pointing to category */
@@ -704,10 +704,11 @@
 
 /* Custom scrollbar for mega menu - positioned at the extreme right edge */
 .MegaMenuContainer::-webkit-scrollbar {
-  width: 10px !important;
-  height: 10px !important;
+  /* width: 10px !important;
+  height: 10px !important; */
   /* display: block !important; */
   /* -webkit-appearance: none !important; */
+  display: none;
 }
 
 .MegaMenuContainer::-webkit-scrollbar-track {
@@ -1221,7 +1222,7 @@
     overflow-x: hidden;
     box-sizing: border-box;
     /* background-color: red; */
-    gap: 657px;
+    gap: 630px;
 
   }
 
@@ -1319,159 +1320,113 @@
   }
 }
 
-@media (max-width: 480px) {
-  .MainNavBar {
-    padding: 10px 10px;
-    width: 100%;
-    box-sizing: border-box;
-  }
 
-  .MainNavBar .Container {
-    padding: 0 !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    width: 100%;
+/* @media (max-width:1024px) {
+  .CategoryLink{
+    gap:800px
   }
+  
+} */
 
-  .MainNavBar .Container .ant-row {
-    width: 100%;
-    margin: 0 !important;
-  }
 
-  .NavLeft {
-    gap: 10px;
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-
-  .NavActions {
-    gap: 12px;
-    padding-right: 12px;
-    padding-top: 0 !important;
-    overflow-x: hidden;
-    overflow-y: visible !important;
-    overflow: visible !important;
-    max-width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    height: 100%;
-  }
-
-  .LogoText {
-    font-size: 16px;
-  }
-
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* iPad/Tablet: Show hamburger menu like mobile */
+  
   .MobileMenuToggle {
-    font-size: 20px;
-  }
-
-  .SearchIcon {
-    font-size: 18px;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+    font-size: 22px;
     height: 100%;
     line-height: 1;
   }
 
-  .UserIcon {
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+  .CategoryNavBar {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-light-beige);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
   }
 
-  .WishlistIcon {
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  .CartIcon {
-    font-size: 18px;
-  }
-  
-  .CartContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    overflow: visible !important;
-    padding: 4px;
+  .CategoryNavBar.mobile-open {
+    display: block;
     position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
   }
 
-  .CartBadge {
-    font-size: 9px;
-    top: -2px;
-    right: -2px;
-    min-width: 16px;
-    height: 16px;
-    padding: 0 4px;
+  .CategoryNavBar .Container {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
-    z-index: 1001;
-  }
-  
-  .CartBadge span {
-    font-size: 10px;
   }
 
   .CategoryLinks {
-    padding: 12px;
+    flex-direction: column;
+    gap: 0;
+    padding: 16px;
     align-items: flex-start;
+    position: relative;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
- 
+  }
+
+  .CategoryItem {
+    width: 100%;
+    max-width: 100%;
+    border-bottom: 1px solid var(--neutral-950);
+    position: relative;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .CategoryItem:last-child {
+    border-bottom: none;
   }
 
   .CategoryLink {
-    font-size: 13px;
-    padding: 10px 0;
-    width: 100%;
+    font-size: 14px;
+    padding: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100% !important;
     max-width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
-    gap: 315px;
+    gap: 680px;
   }
-}
 
-/* Tablet responsive - Mega menu active only on larger tablets and desktops */
-/* Ant Design Dropdown Menu for iPad */
-.category-dropdown-menu {
-  min-width: 200px !important;
-  max-width: 300px !important;
-}
+  .CategoryLink.active::after,
+  .CategoryLink:hover::after {
+    display: none !important;
+  }
 
-.category-dropdown-menu .ant-dropdown-menu-item {
-  padding: 8px 16px !important;
-  font-family: var(--fira-sans) !important;
-}
+  .mobile-category-dropdown {
+    padding: 0px !important;
+    display: block;
+  }
 
-.category-dropdown-menu .ant-dropdown-menu-item a {
-  color: var(--brandColor) !important;
-  text-decoration: none !important;
-  display: block !important;
-  width: 100% !important;
-}
+  .MegaMenuContent {
+    padding: 0px 15px !important;
+  }
 
-.category-dropdown-menu .ant-dropdown-menu-item:hover {
-  background-color: #f5f5f5 !important;
-}
-
-.category-dropdown-menu .ant-dropdown-menu-item-divider {
-  margin: 4px 0 !important;
-}
-
-@media (max-width: 1024px) and (min-width: 769px) {
-  /* Hide mega menu containers on iPad - use Dropdown instead */
+  /* Hide desktop mega menus on iPad */
   .MegaMenuContainer {
     display: none !important;
   }
@@ -1479,11 +1434,32 @@
   .MegaMenuArrow {
     display: none !important;
   }
+
+  .mobile-menu-backdrop {
+    display: block;
+  }
 }
+
+
+@media (max-width: 540px) {
+  .CategoryLink{
+    gap: 406px !important;
+  }
+  
+}
+
+
 
 @media (max-width:431px) {
   .CategoryLink{
-    gap: 314px !important;
+    gap: 299px !important;
+  }
+
+  @media(max-width:413px) {
+    .CategoryLink{
+      gap: 276px !important;
+    }
+    
   }
   
 }
@@ -1492,18 +1468,34 @@
 
 @media (max-width:396px) {
   .CategoryLink{
-    gap: 291px !important;
+    gap: 270px !important;
+  }
+  
+}
+
+@media (max-width:390px) {
+  .CategoryLink{
+    gap: 251px !important;
   }
   
 }
 @media (max-width: 376px) {
   .CategoryLink{
-    gap: 263px !important;
+    gap: 243px !important;
+  }
+  
+}
+
+@media (max-width: 344px) {
+  .CategoryLink{
+    gap: 210px !important;
   }
   
 }
 
 @media (max-width: 1024px) {
+
+  
   .MegaMenuContainer {
     left: 0;
     right: 0;
