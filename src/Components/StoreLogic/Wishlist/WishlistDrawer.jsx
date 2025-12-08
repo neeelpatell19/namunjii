@@ -126,7 +126,7 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
             </div>
           ) : wishlistItems.length === 0 ? (
             <div className="wishlist-empty">
-              <div className="wishlist-empty-icon">❤️</div>
+              <div className="wishlist-empty-icon"><video style={{width: '50vw', height:'30vh'}}  src="/Videos/namunjii_wishlist_page.mp4" autoPlay loop muted ></video></div>
               <p>Your wishlist is empty</p>
               <button className="wishlist-continue-shopping" onClick={onClose}>
                 Continue Shopping
