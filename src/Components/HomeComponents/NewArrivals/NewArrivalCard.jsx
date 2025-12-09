@@ -20,6 +20,20 @@ export default function NewArrivalCard({ product, isMobile = false }) {
       });
 
       if (response.success) {
+
+               console.log("Triggering FB Pixel AddToCart event for product:")
+
+      // ✅ Meta Pixel AddToCart event
+      if (window.fbq) {
+        const price =
+          productToUse?.salePrice || productToUse?.price || 0;
+
+        window.fbq("track", "AddToCart", {
+        deviceId,
+        productId: product._id,
+        quantity: 1,
+      });
+      }
         // Trigger cart drawer to open
         triggerCartDrawer();
         refreshCart();
