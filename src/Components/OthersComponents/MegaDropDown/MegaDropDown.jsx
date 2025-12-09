@@ -1,12 +1,11 @@
-import React from 'react'
-import './MegaDropDown.css'
+import React, { useEffect } from "react";
+import "./MegaDropDown.css";
 
 const MegaDropDown = () => {
-  return (
-    <div className='mega-dropdown'>
-        
-    </div>
-  )
-}
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "MegaDropDownPageView");
+  }, []);
+  return <div className="mega-dropdown"></div>;
+};
 
-export default MegaDropDown
+export default MegaDropDown;

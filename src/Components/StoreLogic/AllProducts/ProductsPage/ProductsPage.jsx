@@ -34,6 +34,9 @@ const { Search } = Input;
 const { Option } = Select;
 
 const ProductsPage = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "ProductsPageView");
+  }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -220,18 +223,18 @@ const ProductsPage = () => {
 
   const toggleFilterSection = (section) => {
     setExpandedFilters((prev) => {
-      const allClosed={
-      gender: false,
-      size: false,
-      brand: false,
-      priceRange: false,
-      colour: false,
-      orderType: false,
-    };
-       return {
-      ...allClosed,
-      [section]: !prev[section],
-    };
+      const allClosed = {
+        gender: false,
+        size: false,
+        brand: false,
+        priceRange: false,
+        colour: false,
+        orderType: false,
+      };
+      return {
+        ...allClosed,
+        [section]: !prev[section],
+      };
     });
   };
 
@@ -446,14 +449,21 @@ const ProductsPage = () => {
   useEffect(() => {
     // Determine the current filter type
     const currentType = getFilterType();
-    
-    // Only fetch if the type has changed (prevent duplicate calls)
-    if (currentType === lastFilterTypeRef.current) {
+
+    // Create a unique key for cache busting - include brand in the key
+    const currentBrand =
+      Array.isArray(filters.brand) && filters.brand.length > 0
+        ? filters.brand[0]
+        : null;
+    const cacheKey = `${currentType || "all"}-${currentBrand || "all"}`;
+
+    // Only fetch if the type/brand combination has changed
+    if (cacheKey === lastFilterTypeRef.current) {
       return;
     }
-    
+
     // Update the ref to track the current type
-    lastFilterTypeRef.current = currentType;
+    lastFilterTypeRef.current = cacheKey;
 
     // Fetch all three in parallel
     const fetchAll = async () => {
@@ -462,11 +472,16 @@ const ProductsPage = () => {
         setSizesLoading(true);
         setColorsLoading(true);
 
-        const [brandsResponse, sizesResponse, colorsResponse] = await Promise.all([
-          brandApi.getBrandsForSelection(currentType),
-          productApi.getSizes(currentType),
-          productApi.getColors(currentType),
-        ]);
+        // Prepare params for sizes and colors - include brand filter
+        const sizeColorParams =
+          currentType || (currentBrand ? { brand: currentBrand } : null);
+
+        const [brandsResponse, sizesResponse, colorsResponse] =
+          await Promise.all([
+            brandApi.getBrandsForSelection(currentType),
+            productApi.getSizes(sizeColorParams),
+            productApi.getColors(sizeColorParams),
+          ]);
 
         if (brandsResponse.success) {
           setBrands(brandsResponse.data || []);
@@ -501,7 +516,13 @@ const ProductsPage = () => {
     };
 
     fetchAll();
-  }, [filters.gender, filters.productType, filters.isNamunjiiExclusive]);
+  }, [
+    filters.gender,
+    filters.productType,
+    filters.isNamunjiiExclusive,
+    filters.brand,
+    getFilterType,
+  ]);
 
   // Fetch subcategories when category or gender changes
   useEffect(() => {
@@ -704,8 +725,8 @@ const ProductsPage = () => {
   const handleFilterChange = useCallback(
     (key, value) => {
       // Scroll to top when filter changes
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       // Normalize null/undefined to empty string for string filter fields
       const normalizedValue =
         value === null || value === undefined ? "" : value;
@@ -733,8 +754,8 @@ const ProductsPage = () => {
   const handleMultiSelectFilterChange = useCallback(
     (key, value, checked) => {
       // Scroll to top when filter changes
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       let newValues;
       const currentValues = Array.isArray(filters[key]) ? filters[key] : [];
 
@@ -765,8 +786,8 @@ const ProductsPage = () => {
   const handlePriceRangeChange = useCallback(
     (value) => {
       // Scroll to top when filter changes
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       // Convert empty strings to 0 for filter logic, but keep for display
       const minValue = value[0] === "" || value[0] === 0 ? 0 : value[0];
       const maxValue = value[1] === "" || value[1] === 0 ? 100000 : value[1];
@@ -880,11 +901,17 @@ const ProductsPage = () => {
 
     // Determine page type and title
     let pageTitle = "Products";
-    let pageDescription = "Browse our curated collection of luxury fashion products";
-    
-    if (filters.isNamunjiiExclusive) {
+    let pageDescription =
+      "Browse our curated collection of luxury fashion products";
+
+    // Check if brand filter is active (single brand selected)
+    if (Array.isArray(filters.brand) && filters.brand.length === 1) {
+      pageTitle = filters.brand[0];
+      pageDescription = `Explore ${filters.brand[0]}'s collection of luxury fashion`;
+    } else if (filters.isNamunjiiExclusive) {
       pageTitle = "The Exclusive Collection";
-      pageDescription = "Discover exclusive luxury fashion from Namunjii's curated collection";
+      pageDescription =
+        "Discover exclusive luxury fashion from Namunjii's curated collection";
     } else if (filters.productType === "accessory") {
       pageTitle = "Accessories";
       pageDescription = "Explore our collection of luxury fashion accessories";
@@ -902,30 +929,32 @@ const ProductsPage = () => {
     // Update meta description (without number)
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', pageDescription);
+      metaDescription.setAttribute("content", pageDescription);
     }
 
     // Update or create structured data for CollectionPage
-    let structuredDataScript = document.getElementById('products-structured-data');
+    let structuredDataScript = document.getElementById(
+      "products-structured-data"
+    );
     if (!structuredDataScript) {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'products-structured-data';
-      structuredDataScript.type = 'application/ld+json';
+      structuredDataScript = document.createElement("script");
+      structuredDataScript.id = "products-structured-data";
+      structuredDataScript.type = "application/ld+json";
       document.head.appendChild(structuredDataScript);
     }
 
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": pageTitle,
-      "url": `https://namunjii.com/products${window.location.search}`,
-      "description": pageDescription,
-      "image": "https://namunjii.com/LogoImages/WithNamebrandLogo.svg",
-      "mainEntity": {
+      name: pageTitle,
+      url: `https://namunjii.com/products${window.location.search}`,
+      description: pageDescription,
+      image: "https://namunjii.com/LogoImages/WithNamebrandLogo.svg",
+      mainEntity: {
         "@type": "ItemList",
-        "name": `${pageTitle} Collection`,
-        "description": pageDescription
-      }
+        name: `${pageTitle} Collection`,
+        description: pageDescription,
+      },
     };
 
     structuredDataScript.textContent = JSON.stringify(structuredData);
@@ -933,25 +962,38 @@ const ProductsPage = () => {
     // Update Open Graph tags (without number)
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
-      ogTitle.setAttribute('content', `${pageTitle} | Namunjii`);
+      ogTitle.setAttribute("content", `${pageTitle} | Namunjii`);
     }
 
-    const ogDescription = document.querySelector('meta[property="og:description"]');
+    const ogDescription = document.querySelector(
+      'meta[property="og:description"]'
+    );
     if (ogDescription) {
-      ogDescription.setAttribute('content', pageDescription);
+      ogDescription.setAttribute("content", pageDescription);
     }
 
     const ogUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl) {
-      ogUrl.setAttribute('content', `https://namunjii.com/products${window.location.search}`);
+      ogUrl.setAttribute(
+        "content",
+        `https://namunjii.com/products${window.location.search}`
+      );
     }
 
     // Cleanup function
     return () => {
       // Reset to default on unmount
-      document.title = "Namunjii - A Home for Emerging Brands | Luxury Fashion Platform";
+      document.title =
+        "Namunjii - A Home for Emerging Brands | Luxury Fashion Platform";
     };
-  }, [pagination.total, filters.isNamunjiiExclusive, filters.productType, filters.gender, hasLoadedProductsOnce]);
+  }, [
+    pagination.total,
+    filters.isNamunjiiExclusive,
+    filters.productType,
+    filters.gender,
+    filters.brand,
+    hasLoadedProductsOnce,
+  ]);
 
   // Infinite scroll - detect when user scrolls near bottom
   useEffect(() => {
@@ -988,8 +1030,8 @@ const ProductsPage = () => {
   // Clear all filters (but preserve gender, productType, and isNamunjiiExclusive)
   const clearFilters = () => {
     // Scroll to top when clearing filters
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     // Preserve these filters from current state
     const preservedGender = filters.gender || "";
     const preservedProductType = filters.productType || "";
@@ -1191,38 +1233,48 @@ const ProductsPage = () => {
         </span>
       </div>
 
-      {/* Gender Filter - Only show for Namunjii Exclusive */}
-      {filters.isNamunjiiExclusive && (
-        <div className="filter-section">
-          <div
-            className="filter-section-header"
-            onClick={() => toggleFilterSection("gender")}
-          >
-            <h4>GENDER</h4>
-            {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
-          </div>
-          {expandedFilters.gender && (
-            <div className="gender-buttons">
-              <button
-                className={`gender-button ${filters.gender === "Men" ? "active" : ""}`}
-                onClick={() =>
-                  handleFilterChange("gender", filters.gender === "Men" ? "" : "Men")
-                }
-              >
-                Men
-              </button>
-              <button
-                className={`gender-button ${filters.gender === "Women" ? "active" : ""}`}
-                onClick={() =>
-                  handleFilterChange("gender", filters.gender === "Women" ? "" : "Women")
-                }
-              >
-                Women
-              </button>
-            </div>
-          )}
+      {/* Gender */}
+
+      {/* Gender Filter Section */}
+      <div className="filter-section">
+        <div
+          className="filter-section-header"
+          onClick={() => toggleFilterSection("gender")}
+        >
+          <h4>GENDER</h4>
+          {expandedFilters.gender ? <UpOutlined /> : <DownOutlined />}
         </div>
-      )}
+        {expandedFilters.gender && (
+          <div className="gender-buttons">
+            <button
+              className={`gender-button ${
+                filters.gender === "Men" ? "active" : ""
+              }`}
+              onClick={() =>
+                handleFilterChange(
+                  "gender",
+                  filters.gender === "Men" ? "" : "Men"
+                )
+              }
+            >
+              Men
+            </button>
+            <button
+              className={`gender-button ${
+                filters.gender === "Women" ? "active" : ""
+              }`}
+              onClick={() =>
+                handleFilterChange(
+                  "gender",
+                  filters.gender === "Women" ? "" : "Women"
+                )
+              }
+            >
+              Women
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Size */}
       <div className="filter-section">
@@ -1265,76 +1317,84 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* Brand */}
-      <div className="filter-section">
-        <div
-          className="filter-section-header"
-          onClick={() => toggleFilterSection("brand")}
-        >
-          <h4>BRAND</h4>
-          {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
-        </div>
-        {expandedFilters.brand && (
-          <div className="checkbox-group">
-            {brandsLoading ? (
-              <div style={{ padding: "10px 0" }}>
-                <Spin size="small" />
-              </div>
-            ) : brands.length > 0 ? (
-              (() => {
-                // Filter brands based on isNamunjiiExclusive
-                // Only filter to exclusive brands when isNamunjiiExclusive is explicitly true
-                // Otherwise, show all brands
-                const namunjiiExclusiveBrands = [
-                  "Grey Horn",
-                  "The Branch",
-                  "The Drift Line",
-                  "The Pure Forms",
-                ];
-                const filteredBrands =
-                  filters.isNamunjiiExclusive === true
-                    ? brands.filter((brand) =>
-                        namunjiiExclusiveBrands.includes(brand)
-                      )
-                    : brands;
-
-                return filteredBrands.length > 0 ? (
-                  filteredBrands.map((brand, index) => {
-                    const isSelected =
-                      Array.isArray(filters.brand) &&
-                      filters.brand.includes(brand);
-                    return (
-                      <Checkbox
-                        key={index}
-                        checked={isSelected}
-                        onChange={(e) =>
-                          handleMultiSelectFilterChange(
-                            "brand",
-                            brand,
-                            e.target.checked
+      {/* Brand - Hide ONLY when brand is selected but NO gender/productType/isNamunjiiExclusive (means came from header Designers dropdown) */}
+      {!(
+        Array.isArray(filters.brand) &&
+        filters.brand.length > 0 &&
+        !filters.gender &&
+        !filters.productType &&
+        !filters.isNamunjiiExclusive
+      ) && (
+        <div className="filter-section">
+          <div
+            className="filter-section-header"
+            onClick={() => toggleFilterSection("brand")}
+          >
+            <h4>DESIGNERS</h4>
+            {expandedFilters.brand ? <UpOutlined /> : <DownOutlined />}
+          </div>
+          {expandedFilters.brand && (
+            <>
+              <div className="checkbox-group">
+                {brandsLoading ? (
+                  <div style={{ padding: "10px 0" }}>
+                    <Spin size="small" />
+                  </div>
+                ) : brands.length > 0 ? (
+                  (() => {
+                    // Filter brands based on isNamunjiiExclusive
+                    const namunjiiExclusiveBrands = [
+                      "Grey Horn",
+                      "The Branch",
+                      "The Drift Line",
+                      "The Pure Forms",
+                    ];
+                    const filteredBrands =
+                      filters.isNamunjiiExclusive === true
+                        ? brands.filter((brand) =>
+                            namunjiiExclusiveBrands.includes(brand)
                           )
-                        }
-                      >
-                        {brand}
-                      </Checkbox>
+                        : brands;
+
+                    return filteredBrands.length > 0 ? (
+                      filteredBrands.map((brand, index) => {
+                        const isSelected =
+                          Array.isArray(filters.brand) &&
+                          filters.brand.includes(brand);
+                        return (
+                          <Checkbox
+                            key={index}
+                            checked={isSelected}
+                            onChange={(e) =>
+                              handleMultiSelectFilterChange(
+                                "brand",
+                                brand,
+                                e.target.checked
+                              )
+                            }
+                          >
+                            {brand}
+                          </Checkbox>
+                        );
+                      })
+                    ) : (
+                      <span style={{ fontSize: "14px", color: "#999" }}>
+                        {filters.isNamunjiiExclusive
+                          ? "No Namunjii Exclusive brands available"
+                          : "No brands available"}
+                      </span>
                     );
-                  })
+                  })()
                 ) : (
                   <span style={{ fontSize: "14px", color: "#999" }}>
-                    {filters.isNamunjiiExclusive
-                      ? "No Namunjii Exclusive brands available"
-                      : "No brands available"}
+                    No brands available
                   </span>
-                );
-              })()
-            ) : (
-              <span style={{ fontSize: "14px", color: "#999" }}>
-                No brands available
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Price Range */}
       <div className="filter-section">
@@ -1378,8 +1438,8 @@ const ProductsPage = () => {
                 // Debounce the filter update
                 priceSliderTimerRef.current = setTimeout(() => {
                   // Scroll to top when price slider changes
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+
                   const newFilters = {
                     ...filtersRef.current,
                     minPrice: clampedValue[0] > 0 ? clampedValue[0] : "",
@@ -1541,6 +1601,49 @@ const ProductsPage = () => {
             </div>
           </div>
         ))}
+
+        {/* Extra skeleton boxes for larger grid */}
+        {gridLayout.desktop === 4 &&
+          Array.from({ length: count }).map((_, index) => (
+            <div
+              key={`extra-${index}`}
+              className="product-card product-card-skeleton"
+            >
+              <div className="product-card-image-container">
+                <div className="skeleton-image"></div>
+              </div>
+              <div className="product-card-content">
+                <div className="product-card-info">
+                  <div
+                    className="skeleton-line skeleton-brand"
+                    style={{
+                      width: "80px",
+                      height: "14px",
+                      marginBottom: "8px",
+                    }}
+                  ></div>
+                  <div
+                    className="skeleton-line skeleton-title"
+                    style={{
+                      width: "90%",
+                      height: "18px",
+                      marginBottom: "8px",
+                    }}
+                  ></div>
+                  <div
+                    className="skeleton-line skeleton-text"
+                    style={{ width: "60%", height: "14px" }}
+                  ></div>
+                </div>
+                <div className="product-card-pricing">
+                  <div
+                    className="skeleton-line skeleton-price"
+                    style={{ width: "100px", height: "20px" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
     );
   };
@@ -1606,7 +1709,10 @@ const ProductsPage = () => {
             {/* Page Title */}
             <div className="page-title-section">
               <h2 className="page-title">
-                {filters.isNamunjiiExclusive
+                {/* Show designer name if brand filter is active */}
+                {Array.isArray(filters.brand) && filters.brand.length === 1
+                  ? filters.brand[0]
+                  : filters.isNamunjiiExclusive
                   ? "The Exclusive Collection"
                   : filters.productType === "accessory"
                   ? "Accessories"
@@ -1619,6 +1725,13 @@ const ProductsPage = () => {
                   ({pagination.total} Items)
                 </span>
               </h2>
+
+              {Array.isArray(filters.brand) && filters.brand.length === 1 && (
+                <p className="designer-page-description">
+                  Explore {filters.brand[0]}'s exclusive collection of luxury
+                  fashion
+                </p>
+              )}
             </div>
 
             {/* Search Bar - Mobile Only (above controls) */}
@@ -1664,10 +1777,8 @@ const ProductsPage = () => {
                     <ul className="search-suggestions-list">
                       {searchSuggestions.map((suggestion) => {
                         const discountedPrice =
-                          suggestion.basePricing -
-                          (suggestion.basePricing *
-                            (suggestion.discount || 0)) /
-                            100;
+                          suggestion.basePricing - 
+                          (suggestion.basePricing * (suggestion.discount || 0)) / 100;
                         const coverImage =
                           Array.isArray(suggestion.coverImage) &&
                           suggestion.coverImage.length > 0
@@ -1731,7 +1842,7 @@ const ProductsPage = () => {
                     </div>
                   )}
                 </div>
-              )} */}
+              ) */}
             </div>
 
             {/* Products Header - Controls Bar */}
@@ -1779,10 +1890,8 @@ const ProductsPage = () => {
                       <ul className="search-suggestions-list">
                         {searchSuggestions.map((suggestion) => {
                           const discountedPrice =
-                            suggestion.basePricing -
-                            (suggestion.basePricing *
-                              (suggestion.discount || 0)) /
-                              100;
+                            suggestion.basePricing - 
+                            (suggestion.basePricing * (suggestion.discount || 0)) / 100;
                           const coverImage =
                             Array.isArray(suggestion.coverImage) &&
                             suggestion.coverImage.length > 0
@@ -1883,8 +1992,8 @@ const ProductsPage = () => {
                         ]}
                         onClick={({ key }) => {
                           // Scroll to top when sort changes
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                          
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+
                           const [sortBy, sortOrder] = key.split("-");
                           const newFilters = {
                             ...filters,
@@ -1949,8 +2058,8 @@ const ProductsPage = () => {
                       }
                       onChange={(value) => {
                         // Scroll to top when sort changes
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+
                         const [sortBy, sortOrder] = value.split("-");
                         const newFilters = {
                           ...filters,
@@ -2133,13 +2242,20 @@ const ProductsPage = () => {
       {/* Mobile/Tablet Filter Drawer */}
       <Drawer
         title={
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
             <span>Filters</span>
             <span
               onClick={clearFilters}
               className="mobile-drawer-clear-all"
               title="Clear all filters"
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             >
               Clear All
             </span>
@@ -2158,4 +2274,3 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
-

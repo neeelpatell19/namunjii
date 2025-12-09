@@ -8,6 +8,9 @@ import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./CartDrawer.css";
 
 const CartDrawer = ({ isOpen, onClose }) => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "CartDrawerPageView");
+  }, []);
   const navigate = useNavigate();
   const { deviceId } = useDevice();
   const { refreshCart } = useCartWishlist();
@@ -207,12 +210,12 @@ const CartDrawer = ({ isOpen, onClose }) => {
           ) : cartItems.length === 0 ? (
             <div className="cart-empty">
               <div className="cart-empty-icon">
-                <video 
-                  style={{width: '50vw', height:'30vh'}}  
-                  src="/Videos/namunjii_wishlist_page.mp4" 
-                  autoPlay 
-                  loop 
-                  muted 
+                <video
+                  style={{ width: "50vw", height: "30vh" }}
+                  src="/Videos/namunjii_wishlist_page.mp4"
+                  autoPlay
+                  loop
+                  muted
                   playsInline
                   disablePictureInPicture
                   disableRemotePlayback
@@ -221,7 +224,9 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 ></video>
               </div>
               <p className="heading">Your Cart is Empty</p>
-              <p className="sub-heading">Add items to your cart to continue shopping.</p>
+              <p className="sub-heading">
+                Add items to your cart to continue shopping.
+              </p>
               <button className="cart-continue-shopping" onClick={onClose}>
                 Continue Shopping
               </button>
@@ -241,8 +246,13 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           src={(() => {
                             const coverImage = item.productId?.coverImage;
                             if (!coverImage) return "";
-                            if (typeof coverImage === 'string') return coverImage;
-                            if (Array.isArray(coverImage) && coverImage.length > 0) return coverImage[0];
+                            if (typeof coverImage === "string")
+                              return coverImage;
+                            if (
+                              Array.isArray(coverImage) &&
+                              coverImage.length > 0
+                            )
+                              return coverImage[0];
                             return "";
                           })()}
                           alt={item.productId?.productName || "Product"}
@@ -262,7 +272,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           Size:{" "}
                           {item.size || item.productId?.size || "One Size"}
                         </p>
-                        {(item?.color && item?.color !== "N/A") && (
+                        {item?.color && item?.color !== "N/A" && (
                           <p className="cart-item-color">
                             Color: {item?.color}
                           </p>

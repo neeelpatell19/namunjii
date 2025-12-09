@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./OldFooter.css";
 
 const OldFooter = () => {
+  useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "OldFooterPageView");
+  }, [])
   return (
     <>
       <footer className="rf-footer paddingTop50 paddingBottom50">

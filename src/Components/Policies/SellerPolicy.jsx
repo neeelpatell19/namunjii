@@ -3,6 +3,9 @@ import "./Policies.css";
 
 const SellerPolicy = () => {
   useEffect(() => {
+    if (window.fbq) window.fbq("track", "SellerPolicyPageView");
+  }, []);
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

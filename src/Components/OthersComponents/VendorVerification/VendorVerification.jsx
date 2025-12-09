@@ -33,6 +33,9 @@ const allCategories = [
 ];
 
 const VendorVerification = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "VenderVerificationPageView");
+  }, []);
   const STORAGE_KEY = "vendorVerificationForm";
 
   // Initialize form with data from localStorage if available
@@ -1035,15 +1038,20 @@ const VendorVerification = () => {
                     {/* Column 1: Product Categories with 3 checkboxes */}
                     <div className="form-group">
                       <label>Product Categories</label>
-                      
+
                       <div className="checkbox-group">
                         {/* Mens Wear Checkbox */}
                         <label className="checkbox-label">
                           <input
                             type="checkbox"
-                            checked={selectedMainCategories.includes("Mens Wear")}
+                            checked={selectedMainCategories.includes(
+                              "Mens Wear"
+                            )}
                             onChange={(e) =>
-                              handleMainCategoryChange("Mens Wear", e.target.checked)
+                              handleMainCategoryChange(
+                                "Mens Wear",
+                                e.target.checked
+                              )
                             }
                           />
                           Mens Wear
@@ -1053,9 +1061,14 @@ const VendorVerification = () => {
                         <label className="checkbox-label">
                           <input
                             type="checkbox"
-                            checked={selectedMainCategories.includes("Womens Wear")}
+                            checked={selectedMainCategories.includes(
+                              "Womens Wear"
+                            )}
                             onChange={(e) =>
-                              handleMainCategoryChange("Womens Wear", e.target.checked)
+                              handleMainCategoryChange(
+                                "Womens Wear",
+                                e.target.checked
+                              )
                             }
                           />
                           Womens Wear
@@ -1076,7 +1089,10 @@ const VendorVerification = () => {
 
                       {/* Custom Category Input - Shows when Other is checked */}
                       {showCustomCategoryInput && (
-                        <div className="custom-category-input" style={{ marginTop: "15px" }}>
+                        <div
+                          className="custom-category-input"
+                          style={{ marginTop: "15px" }}
+                        >
                           <input
                             type="text"
                             placeholder="Enter your category..."
@@ -1100,7 +1116,8 @@ const VendorVerification = () => {
                               display: "block",
                             }}
                           >
-                            Please specify your product category (minimum 2 characters)
+                            Please specify your product category (minimum 2
+                            characters)
                           </small>
                         </div>
                       )}
@@ -1120,14 +1137,25 @@ const VendorVerification = () => {
                               >
                                 {mainCat}:
                               </h5>
-                              <div className="checkbox-group" style={{ marginLeft: "15px" }}>
+                              <div
+                                className="checkbox-group"
+                                style={{ marginLeft: "15px" }}
+                              >
                                 {mainCategories[mainCat].map((subcat) => (
-                                  <label key={subcat} className="checkbox-label">
+                                  <label
+                                    key={subcat}
+                                    className="checkbox-label"
+                                  >
                                     <input
                                       type="checkbox"
-                                      checked={form.productCategories.includes(subcat)}
+                                      checked={form.productCategories.includes(
+                                        subcat
+                                      )}
                                       onChange={(e) =>
-                                        handleSubcategoryChange(subcat, e.target.checked)
+                                        handleSubcategoryChange(
+                                          subcat,
+                                          e.target.checked
+                                        )
                                       }
                                     />
                                     {subcat}
@@ -1140,7 +1168,9 @@ const VendorVerification = () => {
                       )}
 
                       {errors.productCategories && (
-                        <p className="error-message">{errors.productCategories}</p>
+                        <p className="error-message">
+                          {errors.productCategories}
+                        </p>
                       )}
                     </div>
 
@@ -1162,7 +1192,7 @@ const VendorVerification = () => {
                   </div>
 
                   {/* Continue with other full-width fields */}
-            
+
                   {/* <div className="form-group full-width">
                     <label>Describe Your Brand?</label>
                     <textarea
@@ -1197,7 +1227,7 @@ const VendorVerification = () => {
                         </p>
                       )}
                     </div>
-                    
+
                     <div className="form-group">
                       <label>Why Namunjii?</label>
                       <textarea
@@ -1242,7 +1272,10 @@ const VendorVerification = () => {
                                         </label>
                                         {errors.termsAccepted && <p className="error-message">{errors.termsAccepted}</p>}
                                     </div> */}
-                  <div className="right-align" style={{ marginTop: "20px", textAlign: "center" }}>
+                  <div
+                    className="right-align"
+                    style={{ marginTop: "20px", textAlign: "center" }}
+                  >
                     {/* <small
                       style={{
                         color: "#666",

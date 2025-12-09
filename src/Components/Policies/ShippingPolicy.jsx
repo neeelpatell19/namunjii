@@ -3,6 +3,9 @@ import "./Policies.css";
 
 const ShippingPolicy = () => {
   useEffect(() => {
+    if (window.fbq) window.fbq("track", "ShippingPolicyPageView");
+  }, []);
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

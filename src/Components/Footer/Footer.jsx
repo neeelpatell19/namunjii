@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col } from "antd";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "FooterPageView");
+  }, []);
   const [email, setEmail] = useState("");
 
   const handleEmailSubmit = (e) => {
@@ -72,7 +75,7 @@ const Footer = () => {
 
             {/* Column 2: QUICK LINKS */}
             <Col
-            className="padding-left"
+              className="padding-left"
               xs={12}
               sm={12}
               md={6}

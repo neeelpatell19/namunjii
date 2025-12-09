@@ -54,6 +54,9 @@ const shopMegaMenuData = [
 ];
 
 const NavigationBar = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "NavigationBarPageView");
+  }, []);
   const [showMegaMenu, setShowMegaMenu] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);

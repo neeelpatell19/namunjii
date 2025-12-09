@@ -3,6 +3,10 @@ import "./Policies.css";
 
 const TermsAndConditions = () => {
   useEffect(() => {
+    if (window.fbq) window.fbq("track", "TermsAndConditionsPageView");
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

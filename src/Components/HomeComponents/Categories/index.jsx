@@ -1,7 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import "./Categories.css";
 
 export default function Categories({ HomeData }) {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "CategoriesPageView");
+  }, []);
   const categoriesData = useMemo(() => {
     console.log("HomeData in Categories:", HomeData);
 

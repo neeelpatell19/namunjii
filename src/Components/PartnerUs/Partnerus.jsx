@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import "./Partner.css";
 
 const Partnerus = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "PartnerusPageView");
+  }, []);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size
