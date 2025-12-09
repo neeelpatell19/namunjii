@@ -29,9 +29,8 @@ export default function ProductCard({
   className = "",
 }) {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "ProductCardPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "ProductCardPageView");
+  }, []);
   const { message, notification } = App.useApp();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
@@ -168,7 +167,6 @@ window.fbq("track", "ProductCardPageView");
 
     // Debug: Log product structure
 
-
     // Check if product has a products array (multiple variants)
     if (
       product?.products &&
@@ -188,9 +186,9 @@ window.fbq("track", "ProductCardPageView");
 
     // Filter sizes based on isExpressShipping
     let availableSizes = Array.from(sizesSet);
-    
+
     // console.log('ProductCard - Available sizes before filtering:', availableSizes);
-    
+
     if (product?.isExpressShipping) {
       // If express shipping is enabled, exclude "Free Size"
       availableSizes = availableSizes.filter((size) => size !== "Free Size");
@@ -222,21 +220,26 @@ window.fbq("track", "ProductCardPageView");
     // console.log('ProductCard - Final available sizes:', availableSizes);
 
     return availableSizes;
-  }, [product?.products, product?.size, product?.isExpressShipping, product?._id]);
+  }, [
+    product?.products,
+    product?.size,
+    product?.isExpressShipping,
+    product?._id,
+  ]);
 
   const availableSizes = getAvailableSizes;
 
   // Get sizes from full product data (used in QuickView)
   const getFullProductSizes = useMemo(() => {
     if (!fullProductData) return [];
-    
+
     const sizesSet = new Set();
 
-    console.log('Getting sizes from full product:', {
+    console.log("Getting sizes from full product:", {
       id: fullProductData?._id,
       hasProducts: !!fullProductData?.products,
       productsLength: fullProductData?.products?.length,
-      products: fullProductData?.products
+      products: fullProductData?.products,
     });
 
     // Check if product has a products array (multiple variants)
@@ -257,7 +260,7 @@ window.fbq("track", "ProductCardPageView");
     }
 
     let sizes = Array.from(sizesSet);
-    
+
     if (fullProductData?.isExpressShipping) {
       sizes = sizes.filter((size) => size !== "Free Size");
     }
@@ -285,41 +288,41 @@ window.fbq("track", "ProductCardPageView");
       return indexA - indexB;
     });
 
-    console.log('Full product sizes:', sizes);
+    console.log("Full product sizes:", sizes);
     return sizes;
   }, [fullProductData]);
 
   const handleQuickView = async () => {
     setShowQuickViewModal(true);
     setIsLoadingFullProduct(true);
-    
+
     try {
       // Fetch full product details with all variants
       const response = await productApi.getProductById(product._id);
-      console.log('Full product API response:', response);
-      
+      console.log("Full product API response:", response);
+
       // Handle API response structure: { success: true, data: {...} }
       if (response?.success && response?.data) {
         const fullProduct = response.data;
-        console.log('Full product with all variants:', {
+        console.log("Full product with all variants:", {
           id: fullProduct._id,
           name: fullProduct.productName,
           hasProducts: !!fullProduct.products,
           productsLength: fullProduct.products?.length,
-          allVariants: fullProduct.products
+          allVariants: fullProduct.products,
         });
         setFullProductData(fullProduct);
       } else {
-        console.log('Using fallback product data');
+        console.log("Using fallback product data");
         setFullProductData(product);
       }
     } catch (error) {
-      console.error('Error fetching full product:', error);
+      console.error("Error fetching full product:", error);
       setFullProductData(product);
     } finally {
       setIsLoadingFullProduct(false);
     }
-    
+
     if (onQuickView) {
       onQuickView(product);
     }
@@ -357,21 +360,25 @@ window.fbq("track", "ProductCardPageView");
     try {
       // Use full product data if available (from QuickView), otherwise use regular product
       const productToUse = fullProductData || product;
-      
+
       // Find the product variant with the selected size
       let productIdToAdd = productToUse._id;
       let colorToAdd = productToUse.color || "";
 
-      console.log('Adding to cart with product:', {
+      console.log("Adding to cart with product:", {
         productToUse,
         size,
         hasProducts: !!productToUse?.products,
-        productsLength: productToUse?.products?.length
+        productsLength: productToUse?.products?.length,
       });
 
-      if (productToUse?.products && Array.isArray(productToUse.products) && size) {
+      if (
+        productToUse?.products &&
+        Array.isArray(productToUse.products) &&
+        size
+      ) {
         const variant = productToUse.products.find((p) => p.size === size);
-        console.log('Found variant:', variant);
+        console.log("Found variant:", variant);
         if (variant) {
           productIdToAdd = variant._id;
           colorToAdd = variant.color || colorToAdd;
@@ -542,7 +549,11 @@ window.fbq("track", "ProductCardPageView");
 
   // Check if ANY product variant has stock > 0
   const hasStock = useMemo(() => {
-    if (product?.products && Array.isArray(product.products) && product.products.length > 0) {
+    if (
+      product?.products &&
+      Array.isArray(product.products) &&
+      product.products.length > 0
+    ) {
       // Any product with stock > 0
       return product.products.some((p) => p.stock > 0);
     }
@@ -625,9 +636,13 @@ window.fbq("track", "ProductCardPageView");
               onClick={(e) => handleAddToWishlist(e)}
             >
               {isInWishlist ? (
-                <HeartFilled style={{ color: "#000", outline: "none", border: "none" }} />
+                <HeartFilled
+                  style={{ color: "#000", outline: "none", border: "none" }}
+                />
               ) : (
-                <HeartOutlined style={{ outline: "none", border: "none", color: "#333" }} />
+                <HeartOutlined
+                  style={{ outline: "none", border: "none", color: "#333" }}
+                />
               )}
             </button>
             {showQuickView && !isMobile && (
@@ -794,15 +809,19 @@ window.fbq("track", "ProductCardPageView");
                   {/* Description */}
                   {product.productDescription && (
                     <div className="product-card-modal-description-container">
-                      <p className={`product-card-modal-description-white ${
-                        !isDescriptionExpanded ? "line-clamp-3" : ""
-                      }`}>
+                      <p
+                        className={`product-card-modal-description-white ${
+                          !isDescriptionExpanded ? "line-clamp-3" : ""
+                        }`}
+                      >
                         {product.productDescription}
                       </p>
                       {product.productDescription.length > 150 && (
-                        <button 
-                          className="description-read-more-btn" 
-                          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                        <button
+                          className="description-read-more-btn"
+                          onClick={() =>
+                            setIsDescriptionExpanded(!isDescriptionExpanded)
+                          }
                         >
                           {isDescriptionExpanded ? "Read Less" : "Read More"}
                         </button>
@@ -813,11 +832,15 @@ window.fbq("track", "ProductCardPageView");
                   {/* Size Selection in QuickView */}
                   {isLoadingFullProduct ? (
                     <div className="product-card-modal-size-selection">
-                      <label className="size-selection-label">Loading sizes...</label>
+                      <label className="size-selection-label">
+                        Loading sizes...
+                      </label>
                     </div>
                   ) : getFullProductSizes.length > 0 ? (
                     <div className="product-card-modal-size-selection">
-                      <label className="size-selection-label">Select Size:</label>
+                      <label className="size-selection-label">
+                        Select Size:
+                      </label>
                       <div className="product-card-modal-size-options">
                         {getFullProductSizes.map((size) => (
                           <button

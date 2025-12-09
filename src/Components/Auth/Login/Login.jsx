@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button, message, Select,App } from "antd";
+import { Input, Button, message, Select, App } from "antd";
 import { PhoneOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -21,9 +21,8 @@ const countryCodes = [
 
 const Login = () => {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "LoginPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "LoginPageView");
+  }, []);
   const navigate = useNavigate();
   const [step, setStep] = useState("phone"); // 'phone' or 'otp'
   const [countryCode, setCountryCode] = useState("+91"); // Default to India
@@ -131,16 +130,21 @@ window.fbq("track", "LoginPageView");
     try {
       // API call to send OTP - send only mobileNumber without country code
       const response = await authApi.sendOTP(phone);
-      
+
       if (response.success) {
         setStep("otp");
         setCountdown(60);
         message.success(response.message || "OTP sent to your phone number");
       } else {
-        message.error(response.message || "Failed to send OTP. Please try again.");
+        message.error(
+          response.message || "Failed to send OTP. Please try again."
+        );
       }
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || error?.message || "Failed to send OTP. Please try again.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to send OTP. Please try again.";
       message.error(errorMessage);
     } finally {
       setLoading(false);
@@ -149,11 +153,11 @@ window.fbq("track", "LoginPageView");
 
   const handleOtpChange = (index, value) => {
     if (value && !/^\d$/.test(value)) return; // Only single digit
-    
+
     const newOtpValues = [...otpValues];
     newOtpValues[index] = value;
     setOtpValues(newOtpValues);
-    
+
     const otpString = newOtpValues.join("");
     setOtp(otpString);
 
@@ -173,14 +177,17 @@ window.fbq("track", "LoginPageView");
 
   const handleOtpPaste = (e) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const pastedData = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
     const newOtpValues = Array(6).fill("");
     pastedData.split("").forEach((digit, index) => {
       if (index < 6) newOtpValues[index] = digit;
     });
     setOtpValues(newOtpValues);
     setOtp(pastedData);
-    
+
     // Focus last filled input or first empty
     const lastFilledIndex = Math.min(pastedData.length - 1, 5);
     const nextInput = document.getElementById(`otp-${lastFilledIndex}`);
@@ -197,26 +204,25 @@ window.fbq("track", "LoginPageView");
     try {
       // API call to verify OTP and login/register
       const response = await authApi.verifyOTP(otp, phone);
-      
+
       if (response.success && response.token) {
         // Save token in cookies (expires in 30 days) and localStorage
         const expiresInDays = 30;
         Cookies.set("token", response.token, { expires: expiresInDays });
         localStorage.setItem("token", response.token);
-        
+
         // Save user data if needed
         if (response.user) {
           localStorage.setItem("user", JSON.stringify(response.user));
         }
-        
+
         message.success("Login successful!");
-              notification.success({
-        message: 'Login Successful',
-        description: 'You have been logged in successfully.',
-        duration: 2,
-      });
-      
-        
+        notification.success({
+          message: "Login Successful",
+          description: "You have been logged in successfully.",
+          duration: 2,
+        });
+
         // Redirect to home page or previous page
         setTimeout(() => {
           navigate("/");
@@ -227,7 +233,10 @@ window.fbq("track", "LoginPageView");
         message.error(response.message || "Invalid OTP. Please try again.");
       }
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || error?.message || "Invalid OTP. Please try again.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Invalid OTP. Please try again.";
       message.error(errorMessage);
     } finally {
       setLoading(false);
@@ -241,17 +250,22 @@ window.fbq("track", "LoginPageView");
     try {
       // API call to resend OTP
       const response = await authApi.sendOTP(phone);
-      
+
       if (response.success) {
         setCountdown(60);
         setOtpValues(Array(6).fill(""));
         setOtp("");
         message.success(response.message || "OTP resent successfully");
       } else {
-        message.error(response.message || "Failed to resend OTP. Please try again.");
+        message.error(
+          response.message || "Failed to resend OTP. Please try again."
+        );
       }
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || error?.message || "Failed to resend OTP. Please try again.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to resend OTP. Please try again.";
       message.error(errorMessage);
     } finally {
       setLoading(false);
@@ -270,10 +284,7 @@ window.fbq("track", "LoginPageView");
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            <img
-              src="/LogoImages/BrandColorIconLogo.svg"
-              alt="Namunjii"
-            />
+            <img src="/LogoImages/BrandColorIconLogo.svg" alt="Namunjii" />
           </div>
           <h1 className="login-title">
             {step === "phone" ? "Welcome Back" : "Verify OTP"}
@@ -300,14 +311,21 @@ window.fbq("track", "LoginPageView");
                       label: (
                         <span className="country-code-option">
                           <span className="country-flag">{code.flag}</span>
-                          <span className="country-code-value">{code.label}</span>
+                          <span className="country-code-value">
+                            {code.label}
+                          </span>
                         </span>
                       ),
                     }))}
                     showSearch
                     filterOption={(input, option) =>
-                      option?.value?.toLowerCase().includes(input.toLowerCase()) ||
-                      countryCodes.find(c => c.value === option?.value)?.country.toLowerCase().includes(input.toLowerCase())
+                      option?.value
+                        ?.toLowerCase()
+                        .includes(input.toLowerCase()) ||
+                      countryCodes
+                        .find((c) => c.value === option?.value)
+                        ?.country.toLowerCase()
+                        .includes(input.toLowerCase())
                     }
                   />
                   <Input
@@ -373,11 +391,13 @@ window.fbq("track", "LoginPageView");
                   disabled={countdown > 0}
                   className="resend-button"
                 >
-                  {countdown > 0
-                    ? `Resend OTP in ${countdown}s`
-                    : "Resend OTP"}
+                  {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
                 </Button>
-                <Button type="link" onClick={handleBackToPhone} className="back-button">
+                <Button
+                  type="link"
+                  onClick={handleBackToPhone}
+                  className="back-button"
+                >
                   Change Phone Number
                 </Button>
               </div>
@@ -403,4 +423,3 @@ window.fbq("track", "LoginPageView");
 };
 
 export default Login;
-

@@ -35,9 +35,8 @@ const { Option } = Select;
 
 const ProductsPage = () => {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "ProductsPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "ProductsPageView");
+  }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 

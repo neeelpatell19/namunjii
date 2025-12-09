@@ -39,9 +39,8 @@ import "./SingleProductPageDesign.css";
 
 const SingleProductPageDesign = () => {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "SingleProductPageDesignPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "SingleProductPageDesignPageView");
+  }, []);
   const { productId } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
@@ -1141,11 +1140,11 @@ window.fbq("track", "SingleProductPageDesignPageView");
     const currentY = e.touches[0].clientY;
     const startX = productImageTouchStartX.current;
     const startY = productImageTouchStartY.current;
-    
+
     // Calculate both horizontal and vertical movement
     const deltaX = Math.abs(currentX - startX);
     const deltaY = Math.abs(currentY - startY);
-    
+
     // Only mark as dragged if it's a horizontal swipe (more horizontal than vertical)
     // Allow vertical scrolling if movement is more vertical
     if (deltaX > 10 || deltaY > 10) {
@@ -1185,7 +1184,10 @@ window.fbq("track", "SingleProductPageDesignPageView");
     const minSwipeDistance = 50;
 
     // Only handle swipe if it was a horizontal drag
-    if (productImageWasDragged.current && Math.abs(distance) > minSwipeDistance) {
+    if (
+      productImageWasDragged.current &&
+      Math.abs(distance) > minSwipeDistance
+    ) {
       if (distance > minSwipeDistance) {
         // Swipe left - next image
         e.preventDefault();
@@ -1327,7 +1329,7 @@ window.fbq("track", "SingleProductPageDesignPageView");
 
     thumbnailMouseDown.current = true;
     thumbnailWasDragged.current = false;
-    
+
     if (isVertical) {
       thumbnailMouseStartX.current = e.clientY; // Use Y for vertical scrolling
       thumbnailScrollLeft.current = container.scrollTop; // Use scrollTop for vertical
@@ -1352,7 +1354,7 @@ window.fbq("track", "SingleProductPageDesignPageView");
 
     thumbnailMouseDown.current = true;
     thumbnailWasDragged.current = false;
-    
+
     if (isVertical) {
       thumbnailMouseStartX.current = e.touches[0].clientY;
       thumbnailScrollLeft.current = container.scrollTop;
@@ -1683,9 +1685,11 @@ window.fbq("track", "SingleProductPageDesignPageView");
                 {product.productDescription}
               </p>
               {product.productDescription.length > 150 && (
-                <button 
-                  className="read-more-btn" 
-                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                <button
+                  className="read-more-btn"
+                  onClick={() =>
+                    setIsDescriptionExpanded(!isDescriptionExpanded)
+                  }
                 >
                   {isDescriptionExpanded ? "Read Less" : "Read More"}
                 </button>
@@ -1881,29 +1885,47 @@ window.fbq("track", "SingleProductPageDesignPageView");
                     <div className="tab-content">
                       <div className="features-section">
                         <div className="feature-item">
-                          <div className="feature-icon"><img src="/icons/Original.svg" alt="" /></div>
+                          <div className="feature-icon">
+                            <img src="/icons/Original.svg" alt="" />
+                          </div>
                           <span>100% Original Products.</span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon"><img className="DeliveryImages" src="/icons/Payment.svg" alt="" /></div>
+                          <div className="feature-icon">
+                            <img
+                              className="DeliveryImages"
+                              src="/icons/Payment.svg"
+                              alt=""
+                            />
+                          </div>
                           <span>Pay on delivery might be available.</span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon"><img src="/icons/Exchange.svg" alt="" /></div>
+                          <div className="feature-icon">
+                            <img src="/icons/Exchange.svg" alt="" />
+                          </div>
                           <span>
                             Exchange is available within 7 days of delivery only
                             if a wrong or <br /> defective product is received.
                           </span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon"><img className="DeliveryImages DeliveryImages1"  src="/icons/ReadyToShip.svg" alt="" /></div>
+                          <div className="feature-icon">
+                            <img
+                              className="DeliveryImages DeliveryImages1"
+                              src="/icons/ReadyToShip.svg"
+                              alt=""
+                            />
+                          </div>
                           <span>
                             Ready to ship items are expected to arrive within{" "}
                             <strong>5–7 business days</strong>.
                           </span>
                         </div>
                         <div className="feature-item">
-                          <div className="feature-icon"><img src="/icons/MadeToOrder.svg" alt="" /></div>
+                          <div className="feature-icon">
+                            <img src="/icons/MadeToOrder.svg" alt="" />
+                          </div>
                           <span>
                             {product?.vendorId?.name === "Flapper6" ||
                             product?.vendorId?.name === "Demira" ? (

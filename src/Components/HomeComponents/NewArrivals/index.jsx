@@ -10,9 +10,8 @@ import "swiper/css/navigation";
 
 export default function NewArrivals({ HomeData }) {
   useEffect(() => {
-    if(window.fbq)
-  window.fbq("track", "NewArrivalsPageView");
-  }, [])
+    if (window.fbq) window.fbq("track", "NewArrivalsPageView");
+  }, []);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size
@@ -73,15 +72,11 @@ export default function NewArrivals({ HomeData }) {
     );
   }
 
-
   return (
     <div className="new-arrivals-container">
       <div className="new-arrivals-header">
         <h2 className="new-arrivals-title">New Arrivals</h2>
-        <Link
-          to="/products?isNewArrival=true"
-          className="view-all-btn"
-        >
+        <Link to="/products?isNewArrival=true" className="view-all-btn">
           View All <span className="arrow-icon">→</span>
         </Link>
       </div>

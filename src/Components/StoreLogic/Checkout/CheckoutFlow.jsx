@@ -14,9 +14,8 @@ const { Step } = Steps;
 
 const CheckoutFlow = () => {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "CheckoutFlowPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "CheckoutFlowPageView");
+  }, []);
   const { orderNumber } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
@@ -132,43 +131,44 @@ window.fbq("track", "CheckoutFlowPageView");
                   // Helper function to normalize images (handle both string and array)
                   const normalizeImage = (image) => {
                     if (!image) return "";
-                    if (typeof image === 'string') return image;
-                    if (Array.isArray(image) && image.length > 0) return image[0];
+                    if (typeof image === "string") return image;
+                    if (Array.isArray(image) && image.length > 0)
+                      return image[0];
                     return "";
                   };
-                  
+
                   const coverImage = normalizeImage(item.productId?.coverImage);
-                  
+
                   return (
-                  <div key={index} className="cart-item">
-                    <img
-                      src={coverImage}
-                      alt={item.productId?.productName}
-                      className="item-image"
-                    />
-                    <div className="item-details">
-                      <h4>{item.productId?.productName}</h4>
-                      <p>Size: {item.size || "One Size"}</p>
-                      {item.color && item.color !== "N/A" && item.color !== "n/a" && (
-                        <p>Color: {item.color}</p>
-                      )}
-                      <p>Quantity: {item.quantity}</p>
-                      <p className="item-price">
-                        ₹
-                        {(() => {
-                          const basePrice = item.productId?.basePricing || 0;
-                          const discount = item.productId?.discount || 0;
-                          const finalPrice =
-                            discount > 0
-                              ? Math.round(basePrice * (1 - discount / 100))
-                              : basePrice;
-                          return (
-                            finalPrice * item.quantity
-                          ).toLocaleString();
-                        })()}
-                      </p>
+                    <div key={index} className="cart-item">
+                      <img
+                        src={coverImage}
+                        alt={item.productId?.productName}
+                        className="item-image"
+                      />
+                      <div className="item-details">
+                        <h4>{item.productId?.productName}</h4>
+                        <p>Size: {item.size || "One Size"}</p>
+                        {item.color &&
+                          item.color !== "N/A" &&
+                          item.color !== "n/a" && <p>Color: {item.color}</p>}
+                        <p>Quantity: {item.quantity}</p>
+                        <p className="item-price">
+                          ₹
+                          {(() => {
+                            const basePrice = item.productId?.basePricing || 0;
+                            const discount = item.productId?.discount || 0;
+                            const finalPrice =
+                              discount > 0
+                                ? Math.round(basePrice * (1 - discount / 100))
+                                : basePrice;
+                            return (
+                              finalPrice * item.quantity
+                            ).toLocaleString();
+                          })()}
+                        </p>
+                      </div>
                     </div>
-                  </div>
                   );
                 })}
               </div>
@@ -216,9 +216,7 @@ window.fbq("track", "CheckoutFlowPageView");
       <div className="checkout-flow-container">
         <div className="checkout-error">
           <Alert message="Error" description={error} type="error" showIcon />
-          <Button onClick={() => navigate("/cart")}>
-            Back to Cart
-          </Button>
+          <Button onClick={() => navigate("/cart")}>Back to Cart</Button>
         </div>
       </div>
     );

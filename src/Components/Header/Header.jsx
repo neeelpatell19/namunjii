@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Row, Col, Dropdown, Input, Spin, Drawer, Popover, Button,App } from "antd";
+import {
+  Row,
+  Col,
+  Dropdown,
+  Input,
+  Spin,
+  Drawer,
+  Popover,
+  Button,
+  App,
+} from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FiSearch,
@@ -33,58 +43,53 @@ import "./Header.css";
 
 const Header = () => {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "HeaderPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "HeaderPageView");
+  }, []);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.api.userData);
   const { notification } = App.useApp();
 
-
-  //logout handler 
+  //logout handler
   const handlelogout = () => {
     try {
       // Clear cookies
-      Cookies.remove('token');
-      
+      Cookies.remove("token");
+
       // Clear Redux state
       dispatch(updateUserData(null));
-      
+
       // Clear storage
       localStorage.clear();
       sessionStorage.clear();
-            notification.success({
-        message: 'Logout Successful',
-        description: 'You have been logged out successfully.',
+      notification.success({
+        message: "Logout Successful",
+        description: "You have been logged out successfully.",
         duration: 1,
-        
       });
-      
+
       // Navigate to home
-      setIsLoggedIn(false)
-      setLoggedInUser(false)
-  
+      setIsLoggedIn(false);
+      setLoggedInUser(false);
+
       navigate("/");
-    
-      
+
       console.log("Logged out successfully");
-      
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
-  }
-  
+  };
+
   // Check if user is logged in (check token and user data)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  
+
   // Check login status on mount and when userData changes
   useEffect(() => {
     const token = Cookies.get("token") || localStorage.getItem("token");
     const user = userData || JSON.parse(localStorage.getItem("user") || "null");
-    
+
     if (token && user) {
       setIsLoggedIn(true);
       setLoggedInUser(user);
@@ -200,7 +205,6 @@ window.fbq("track", "HeaderPageView");
       path: "/vendor-verification",
       isJoinUs: true,
     },
-  
   ];
 
   // Function to check if a category is active
@@ -445,8 +449,8 @@ window.fbq("track", "HeaderPageView");
           let designersCategoryItem = null;
           allCategoryItems.forEach((item) => {
             // Look for the span with text "Designers" instead of href
-            const span = item.querySelector('.category-text-link');
-            if (span && span.textContent.trim() === 'Designers') {
+            const span = item.querySelector(".category-text-link");
+            if (span && span.textContent.trim() === "Designers") {
               designersCategoryItem = item;
             }
           });
@@ -462,7 +466,8 @@ window.fbq("track", "HeaderPageView");
             );
             designersMegaMenuRef.current.style.left = `${adjustedLeft}px`;
 
-            const arrow = designersMegaMenuRef.current.querySelector(".designers-arrow");
+            const arrow =
+              designersMegaMenuRef.current.querySelector(".designers-arrow");
             if (arrow) {
               // Position arrow to point to center of category link
               const arrowOffset =
@@ -487,7 +492,13 @@ window.fbq("track", "HeaderPageView");
       window.removeEventListener("scroll", updateMegaMenuPosition);
       window.removeEventListener("resize", updateMegaMenuPosition);
     };
-  }, [showWomenMegaMenu, showMenMegaMenu, showDesignersMegaMenu, isMobile, mobileMenuOpen]);
+  }, [
+    showWomenMegaMenu,
+    showMenMegaMenu,
+    showDesignersMegaMenu,
+    isMobile,
+    mobileMenuOpen,
+  ]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -509,7 +520,8 @@ window.fbq("track", "HeaderPageView");
       // Check if click is outside both mega menus and the nav bar
       const outsideMen = !menRef || !menRef.contains(event.target);
       const outsideWomen = !womenRef || !womenRef.contains(event.target);
-      const outsideDesigners = !designersRef || !designersRef.contains(event.target);
+      const outsideDesigners =
+        !designersRef || !designersRef.contains(event.target);
       const outsideNavBar = !navBarRef || !navBarRef.contains(event.target);
 
       if (outsideMen && outsideWomen && outsideDesigners && outsideNavBar) {
@@ -563,11 +575,7 @@ window.fbq("track", "HeaderPageView");
       const outsideWomenDrawer =
         !womenDrawerRef || !womenDrawerRef.contains(event.target);
 
-      if (
-        outsideNavBar &&
-        outsideMenDrawer &&
-        outsideWomenDrawer
-      ) {
+      if (outsideNavBar && outsideMenDrawer && outsideWomenDrawer) {
         setMobileMenuOpen(false);
       }
     };
@@ -641,14 +649,17 @@ window.fbq("track", "HeaderPageView");
       <div className="MegaMenuColumn">
         <ul className="MegaMenuList">
           {designersLoading ? (
-            <li style={{ padding: '10px', textAlign: 'center' }}>
+            <li style={{ padding: "10px", textAlign: "center" }}>
               <Spin size="small" />
             </li>
           ) : designers.length > 0 ? (
             designers.map((designer, index) => {
               // API returns array of strings, not objects
-              const designerName = typeof designer === 'string' ? designer : (designer.brandName || designer.name);
-              
+              const designerName =
+                typeof designer === "string"
+                  ? designer
+                  : designer.brandName || designer.name;
+
               return (
                 <li key={index}>
                   <Link
@@ -665,7 +676,7 @@ window.fbq("track", "HeaderPageView");
               );
             })
           ) : (
-            <li style={{ padding: '10px', textAlign: 'center', color: '#999' }}>
+            <li style={{ padding: "10px", textAlign: "center", color: "#999" }}>
               No designers available
             </li>
           )}
@@ -678,7 +689,7 @@ window.fbq("track", "HeaderPageView");
   const renderDropdownMenuItems = (gender, categories) => {
     const items = [
       {
-        key: 'shop-all',
+        key: "shop-all",
         label: (
           <Link
             to={`/products?gender=${gender}`}
@@ -695,7 +706,7 @@ window.fbq("track", "HeaderPageView");
         ),
       },
       {
-        type: 'divider',
+        type: "divider",
       },
       ...categories.map((cat) => ({
         key: cat._id,
@@ -720,36 +731,43 @@ window.fbq("track", "HeaderPageView");
 
   // Render designers dropdown menu items for Ant Design Dropdown (for iPad)
   const renderDesignersDropdownMenuItems = () => {
-    const items = designersLoading ? [
-      {
-        key: 'loading',
-        label: <Spin size="small" />,
-        disabled: true,
-      }
-    ] : designers.length > 0 ? designers.map((designer, index) => {
-      // API returns array of strings, not objects
-      const designerName = typeof designer === 'string' ? designer : (designer.brandName || designer.name);
-      
-      return {
-        key: index,
-        label: (
-          <Link
-            to={`/products?brand=${encodeURIComponent(designerName)}`}
-            onClick={() => {
-              setShowDesignersMegaMenu(false);
-            }}
-          >
-            {designerName}
-          </Link>
-        ),
-      };
-    }) : [
-      {
-        key: 'no-designers',
-        label: 'No designers available',
-        disabled: true,
-      }
-    ];
+    const items = designersLoading
+      ? [
+          {
+            key: "loading",
+            label: <Spin size="small" />,
+            disabled: true,
+          },
+        ]
+      : designers.length > 0
+      ? designers.map((designer, index) => {
+          // API returns array of strings, not objects
+          const designerName =
+            typeof designer === "string"
+              ? designer
+              : designer.brandName || designer.name;
+
+          return {
+            key: index,
+            label: (
+              <Link
+                to={`/products?brand=${encodeURIComponent(designerName)}`}
+                onClick={() => {
+                  setShowDesignersMegaMenu(false);
+                }}
+              >
+                {designerName}
+              </Link>
+            ),
+          };
+        })
+      : [
+          {
+            key: "no-designers",
+            label: "No designers available",
+            disabled: true,
+          },
+        ];
     return items;
   };
 
@@ -1046,16 +1064,15 @@ window.fbq("track", "HeaderPageView");
                           My Orders
                         </div>
 
-                          <div  className="user-popover-link"
-                              onClick={() => {
-                            handlelogout()
+                        <div
+                          className="user-popover-link"
+                          onClick={() => {
+                            handlelogout();
                             setUserPopoverOpen(false);
                           }}
-                          >
-                            Logout
-                          </div>
-
-
+                        >
+                          Logout
+                        </div>
                       </div>
                     ) : (
                       <div className="user-popover-content">
@@ -1173,7 +1190,11 @@ window.fbq("track", "HeaderPageView");
                               // On mobile/tablet, prevent navigation and toggle dropdown
                               if (isMobile || isTablet) {
                                 e.preventDefault();
-                                setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                                setOpenMobileDropdown(
+                                  openMobileDropdown === category.name
+                                    ? null
+                                    : category.name
+                                );
                               } else {
                                 setMobileMenuOpen(false);
                                 setShowWomenMegaMenu(false);
@@ -1191,10 +1212,14 @@ window.fbq("track", "HeaderPageView");
                               e.preventDefault();
                               // Toggle dropdown on click for Designers
                               if (isMobile || isTablet) {
-                                setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                                setOpenMobileDropdown(
+                                  openMobileDropdown === category.name
+                                    ? null
+                                    : category.name
+                                );
                               }
                             }}
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: "pointer" }}
                           >
                             {category.name}
                           </span>
@@ -1205,7 +1230,11 @@ window.fbq("track", "HeaderPageView");
                             e.preventDefault();
                             e.stopPropagation();
                             if (isMobile || isTablet) {
-                              setOpenMobileDropdown(openMobileDropdown === category.name ? null : category.name);
+                              setOpenMobileDropdown(
+                                openMobileDropdown === category.name
+                                  ? null
+                                  : category.name
+                              );
                             } else {
                               if (category.name === "Women") {
                                 setShowWomenMegaMenu(!showWomenMegaMenu);
@@ -1216,13 +1245,17 @@ window.fbq("track", "HeaderPageView");
                                 setShowWomenMegaMenu(false);
                                 setShowDesignersMegaMenu(false);
                               } else if (category.name === "Designers") {
-                                setShowDesignersMegaMenu(!showDesignersMegaMenu);
+                                setShowDesignersMegaMenu(
+                                  !showDesignersMegaMenu
+                                );
                                 setShowWomenMegaMenu(false);
                                 setShowMenMegaMenu(false);
                               }
                             }
                           }}
-                          style={isMobile || isTablet ? { marginLeft: '8px' } : {}}
+                          style={
+                            isMobile || isTablet ? { marginLeft: "8px" } : {}
+                          }
                         >
                           <FiChevronDown
                             style={{
@@ -1230,9 +1263,18 @@ window.fbq("track", "HeaderPageView");
                               transition: "transform 0.3s ease",
                               transform:
                                 openMobileDropdown === category.name ||
-                                (category.name === "Men" && showMenMegaMenu && !isMobile && !isTablet) ||
-                                (category.name === "Women" && showWomenMegaMenu && !isMobile && !isTablet) ||
-                                (category.name === "Designers" && showDesignersMegaMenu && !isMobile && !isTablet)
+                                (category.name === "Men" &&
+                                  showMenMegaMenu &&
+                                  !isMobile &&
+                                  !isTablet) ||
+                                (category.name === "Women" &&
+                                  showWomenMegaMenu &&
+                                  !isMobile &&
+                                  !isTablet) ||
+                                (category.name === "Designers" &&
+                                  showDesignersMegaMenu &&
+                                  !isMobile &&
+                                  !isTablet)
                                   ? "rotate(180deg)"
                                   : "rotate(0deg)",
                             }}
@@ -1262,21 +1304,24 @@ window.fbq("track", "HeaderPageView");
                     {/* Mobile/Tablet inline dropdowns */}
                     {(isMobile || isTablet) && (
                       <>
-                        {category.name === "Women" && openMobileDropdown === "Women" && (
-                          <div className="mobile-category-dropdown">
-                            {renderMegaMenuContent("Women", womenCategories)}
-                          </div>
-                        )}
-                        {category.name === "Men" && openMobileDropdown === "Men" && (
-                          <div className="mobile-category-dropdown">
-                            {renderMegaMenuContent("Men", menCategories)}
-                          </div>
-                        )}
-                        {category.name === "Designers" && openMobileDropdown === "Designers" && (
-                          <div className="mobile-category-dropdown">
-                            {renderDesignersMegaMenuContent()}
-                          </div>
-                        )}
+                        {category.name === "Women" &&
+                          openMobileDropdown === "Women" && (
+                            <div className="mobile-category-dropdown">
+                              {renderMegaMenuContent("Women", womenCategories)}
+                            </div>
+                          )}
+                        {category.name === "Men" &&
+                          openMobileDropdown === "Men" && (
+                            <div className="mobile-category-dropdown">
+                              {renderMegaMenuContent("Men", menCategories)}
+                            </div>
+                          )}
+                        {category.name === "Designers" &&
+                          openMobileDropdown === "Designers" && (
+                            <div className="mobile-category-dropdown">
+                              {renderDesignersMegaMenuContent()}
+                            </div>
+                          )}
                       </>
                     )}
 
@@ -1325,27 +1370,28 @@ window.fbq("track", "HeaderPageView");
                             {renderMegaMenuContent("Men", menCategories)}
                           </div>
                         )}
-                        {category.name === "Designers" && showDesignersMegaMenu && (
-                          <div
-                            ref={designersMegaMenuRef}
-                            className="MegaMenuContainer fade-in designers-mega-menu"
-                            onMouseEnter={() => {
-                              if (hideTimeoutRef.current) {
-                                clearTimeout(hideTimeoutRef.current);
-                                hideTimeoutRef.current = null;
-                              }
-                              setShowDesignersMegaMenu(true);
-                            }}
-                            onMouseLeave={() => {
-                              hideTimeoutRef.current = setTimeout(() => {
-                                setShowDesignersMegaMenu(false);
-                              }, 300);
-                            }}
-                          >
-                            <div className="MegaMenuArrow designers-arrow"></div>
-                            {renderDesignersMegaMenuContent()}
-                          </div>
-                        )}
+                        {category.name === "Designers" &&
+                          showDesignersMegaMenu && (
+                            <div
+                              ref={designersMegaMenuRef}
+                              className="MegaMenuContainer fade-in designers-mega-menu"
+                              onMouseEnter={() => {
+                                if (hideTimeoutRef.current) {
+                                  clearTimeout(hideTimeoutRef.current);
+                                  hideTimeoutRef.current = null;
+                                }
+                                setShowDesignersMegaMenu(true);
+                              }}
+                              onMouseLeave={() => {
+                                hideTimeoutRef.current = setTimeout(() => {
+                                  setShowDesignersMegaMenu(false);
+                                }, 300);
+                              }}
+                            >
+                              <div className="MegaMenuArrow designers-arrow"></div>
+                              {renderDesignersMegaMenuContent()}
+                            </div>
+                          )}
                       </>
                     )}
                   </div>

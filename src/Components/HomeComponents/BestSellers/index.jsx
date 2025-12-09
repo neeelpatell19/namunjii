@@ -7,9 +7,8 @@ import NewArrivalCard from "../NewArrivals/NewArrivalCard";
 
 export default function BestSellers({ HomeData }) {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "BestSellersPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "BestSellersPageView");
+  }, []);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size

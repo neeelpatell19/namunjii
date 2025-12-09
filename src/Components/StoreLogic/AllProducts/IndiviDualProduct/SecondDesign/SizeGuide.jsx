@@ -3,9 +3,8 @@ import "./SizeGuide.css";
 
 const SizeGuide = ({ gender }) => {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "SizeGuidePageView");
-}, [])
+    if (window.fbq) window.fbq("track", "SizeGuidePageView");
+  }, []);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -240,142 +239,153 @@ window.fbq("track", "SizeGuidePageView");
     <div className="size-guide-container">
       {/* Women's Size Chart */}
       {showWomenChart && (
-      <div className="size-chart-section">
-        <h3 className="size-chart-title">WOMEN'S SIZE CHART</h3>
-        <div className="size-chart-table-wrapper">
-          {/* Desktop Table */}
-          <table className={`size-chart-table ${isMobile ? "mobile-hide" : ""}`}>
-            <thead>
-              <tr>
-                <th>Size Label</th>
-                <th>Bust (in)</th>
-                <th>Bust (cm)</th>
-                <th>Waist (in)</th>
-                <th>Waist (cm)</th>
-                <th>Hip (in)</th>
-                <th>Hip (cm)</th>
-                <th>Shoulder (in)</th>
-                <th>Shoulder (cm)</th>
-                <th>Top Length (in)</th>
-                <th>Top Length (cm)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {womenSizes.map((item, index) => (
-                <tr key={index}>
-                  <td className="size-label">{item.size}</td>
-                  <td>{item.bustIn}</td>
-                  <td>{item.bustCm}</td>
-                  <td>{item.waistIn}</td>
-                  <td>{item.waistCm}</td>
-                  <td>{item.hipIn}</td>
-                  <td>{item.hipCm}</td>
-                  <td>{item.shoulderIn}</td>
-                  <td>{item.shoulderCm}</td>
-                  <td>{item.topLengthIn}</td>
-                  <td>{item.topLengthCm}</td>
+        <div className="size-chart-section">
+          <h3 className="size-chart-title">WOMEN'S SIZE CHART</h3>
+          <div className="size-chart-table-wrapper">
+            {/* Desktop Table */}
+            <table
+              className={`size-chart-table ${isMobile ? "mobile-hide" : ""}`}
+            >
+              <thead>
+                <tr>
+                  <th>Size Label</th>
+                  <th>Bust (in)</th>
+                  <th>Bust (cm)</th>
+                  <th>Waist (in)</th>
+                  <th>Waist (cm)</th>
+                  <th>Hip (in)</th>
+                  <th>Hip (cm)</th>
+                  <th>Shoulder (in)</th>
+                  <th>Shoulder (cm)</th>
+                  <th>Top Length (in)</th>
+                  <th>Top Length (cm)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Mobile Transposed Table */}
-          <table className={`size-chart-table size-chart-table-mobile ${!isMobile ? "mobile-hide" : ""}`}>
-            <thead>
-              <tr>
-                <th>Measurement</th>
-                {womenSizes.map((item) => (
-                  <th key={item.size} className="size-label">
-                    {item.size}
-                  </th>
+              </thead>
+              <tbody>
+                {womenSizes.map((item, index) => (
+                  <tr key={index}>
+                    <td className="size-label">{item.size}</td>
+                    <td>{item.bustIn}</td>
+                    <td>{item.bustCm}</td>
+                    <td>{item.waistIn}</td>
+                    <td>{item.waistCm}</td>
+                    <td>{item.hipIn}</td>
+                    <td>{item.hipCm}</td>
+                    <td>{item.shoulderIn}</td>
+                    <td>{item.shoulderCm}</td>
+                    <td>{item.topLengthIn}</td>
+                    <td>{item.topLengthCm}</td>
+                  </tr>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {womenMeasurements.map((measurement, index) => (
-                <tr key={index}>
-                  <td className="measurement-label">{measurement.label}</td>
+              </tbody>
+            </table>
+
+            {/* Mobile Transposed Table */}
+            <table
+              className={`size-chart-table size-chart-table-mobile ${
+                !isMobile ? "mobile-hide" : ""
+              }`}
+            >
+              <thead>
+                <tr>
+                  <th>Measurement</th>
                   {womenSizes.map((item) => (
-                    <td key={item.size}>{item[measurement.key]}</td>
+                    <th key={item.size} className="size-label">
+                      {item.size}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {womenMeasurements.map((measurement, index) => (
+                  <tr key={index}>
+                    <td className="measurement-label">{measurement.label}</td>
+                    {womenSizes.map((item) => (
+                      <td key={item.size}>{item[measurement.key]}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
       )}
 
       {/* Men's Size Chart */}
       {showMenChart && (
-      <div className="size-chart-section">
-        <h3 className="size-chart-title">MEN'S SIZE CHART</h3>
-        <div className="size-chart-table-wrapper">
-          {/* Desktop Table */}
-          <table className={`size-chart-table ${isMobile ? "mobile-hide" : ""}`}>
-            <thead>
-              <tr>
-                <th>Size Label</th>
-                <th>Chest (in)</th>
-                <th>Chest (cm)</th>
-                <th>Waist (in)</th>
-                <th>Waist (cm)</th>
-                <th>Hip (in)</th>
-                <th>Hip (cm)</th>
-                <th>Shoulder (in)</th>
-                <th>Shoulder (cm)</th>
-                <th>Trouser/Inseam (in)</th>
-                <th>Trouser/Inseam (cm)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {menSizes.map((item, index) => (
-                <tr key={index}>
-                  <td className="size-label">{item.size}</td>
-                  <td>{item.chestIn}</td>
-                  <td>{item.chestCm}</td>
-                  <td>{item.waistIn}</td>
-                  <td>{item.waistCm}</td>
-                  <td>{item.hipIn}</td>
-                  <td>{item.hipCm}</td>
-                  <td>{item.shoulderIn}</td>
-                  <td>{item.shoulderCm}</td>
-                  <td>{item.trouserIn}</td>
-                  <td>{item.trouserCm}</td>
+        <div className="size-chart-section">
+          <h3 className="size-chart-title">MEN'S SIZE CHART</h3>
+          <div className="size-chart-table-wrapper">
+            {/* Desktop Table */}
+            <table
+              className={`size-chart-table ${isMobile ? "mobile-hide" : ""}`}
+            >
+              <thead>
+                <tr>
+                  <th>Size Label</th>
+                  <th>Chest (in)</th>
+                  <th>Chest (cm)</th>
+                  <th>Waist (in)</th>
+                  <th>Waist (cm)</th>
+                  <th>Hip (in)</th>
+                  <th>Hip (cm)</th>
+                  <th>Shoulder (in)</th>
+                  <th>Shoulder (cm)</th>
+                  <th>Trouser/Inseam (in)</th>
+                  <th>Trouser/Inseam (cm)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Mobile Transposed Table */}
-          <table className={`size-chart-table size-chart-table-mobile ${!isMobile ? "mobile-hide" : ""}`}>
-            <thead>
-              <tr>
-                <th>Measurement</th>
-                {menSizes.map((item) => (
-                  <th key={item.size} className="size-label">
-                    {item.size}
-                  </th>
+              </thead>
+              <tbody>
+                {menSizes.map((item, index) => (
+                  <tr key={index}>
+                    <td className="size-label">{item.size}</td>
+                    <td>{item.chestIn}</td>
+                    <td>{item.chestCm}</td>
+                    <td>{item.waistIn}</td>
+                    <td>{item.waistCm}</td>
+                    <td>{item.hipIn}</td>
+                    <td>{item.hipCm}</td>
+                    <td>{item.shoulderIn}</td>
+                    <td>{item.shoulderCm}</td>
+                    <td>{item.trouserIn}</td>
+                    <td>{item.trouserCm}</td>
+                  </tr>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {menMeasurements.map((measurement, index) => (
-                <tr key={index}>
-                  <td className="measurement-label">{measurement.label}</td>
+              </tbody>
+            </table>
+
+            {/* Mobile Transposed Table */}
+            <table
+              className={`size-chart-table size-chart-table-mobile ${
+                !isMobile ? "mobile-hide" : ""
+              }`}
+            >
+              <thead>
+                <tr>
+                  <th>Measurement</th>
                   {menSizes.map((item) => (
-                    <td key={item.size}>{item[measurement.key]}</td>
+                    <th key={item.size} className="size-label">
+                      {item.size}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {menMeasurements.map((measurement, index) => (
+                  <tr key={index}>
+                    <td className="measurement-label">{measurement.label}</td>
+                    {menSizes.map((item) => (
+                      <td key={item.size}>{item[measurement.key]}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
       )}
     </div>
   );
 };
 
 export default SizeGuide;
-

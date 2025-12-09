@@ -2,10 +2,9 @@ import React, { useEffect } from "react";
 import "./Policies.css";
 
 const TermsOfUse = () => {
-useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "TermsOfUsePageView");
-}, [])
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "TermsOfUsePageView");
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);

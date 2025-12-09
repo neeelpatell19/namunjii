@@ -1,13 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./FeaturedDeals.css";
 import { Link } from "react-router-dom";
 
 export default function FeaturedDeals({ HomeData }) {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "FeaturedDealsPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "FeaturedDealsPageView");
+  }, []);
   const featuredDeals = useMemo(() => {
     console.log("HomeData in FeaturedDeals:", HomeData);
 

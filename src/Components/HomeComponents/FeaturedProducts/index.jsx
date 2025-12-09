@@ -6,9 +6,8 @@ import { Link } from "react-router-dom";
 
 export default function FeaturedProducts({ HomeData }) {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "FeaturedProductsPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "FeaturedProductsPageView");
+  }, []);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size
@@ -101,24 +100,24 @@ window.fbq("track", "FeaturedProductsPageView");
           ))}
         </Row>
       ) : (
-      <div className="featured-products-grid">
-        {featuredProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            showQuickView={true}
-            showAddToCart={true}
-            onQuickView={(product) => {
-              console.log("Quick view:", product);
-              // Add your quick view logic here
-            }}
-            onAddToCart={(product) => {
-              console.log("Add to cart:", product);
-              // Add your add to cart logic here
-            }}
-          />
-        ))}
-      </div>
+        <div className="featured-products-grid">
+          {featuredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              showQuickView={true}
+              showAddToCart={true}
+              onQuickView={(product) => {
+                console.log("Quick view:", product);
+                // Add your quick view logic here
+              }}
+              onAddToCart={(product) => {
+                console.log("Add to cart:", product);
+                // Add your add to cart logic here
+              }}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

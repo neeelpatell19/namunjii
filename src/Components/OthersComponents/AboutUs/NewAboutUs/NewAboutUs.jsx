@@ -4,9 +4,8 @@ import "./NewAboutUs.css";
 
 const NewAboutUs = () => {
   useEffect(() => {
-    if(window.fbq)
-  window.fbq("track", "NewAboutUsPageView");
-  }, [])
+    if (window.fbq) window.fbq("track", "NewAboutUsPageView");
+  }, []);
   const [isMobile, setIsMobile] = useState(false);
   const [showHoverImage, setShowHoverImage] = useState(false);
 

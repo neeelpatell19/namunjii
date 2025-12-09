@@ -47,9 +47,8 @@ const imageVariants = {
 
 const AboutUs = () => {
   useEffect(() => {
-    if(window.fbq)
-  window.fbq("track", "AboutUsPageView");
-  }, [])
+    if (window.fbq) window.fbq("track", "AboutUsPageView");
+  }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -136,7 +135,11 @@ const AboutUs = () => {
               variants={itemVariants}
             >
               <h2 style={{ textAlign: "start", textTransform: "uppercase" }}>
-               <img className="AboutusLogo" src="/LogoImages/WithNamebrandLogo.svg" alt="" />
+                <img
+                  className="AboutusLogo"
+                  src="/LogoImages/WithNamebrandLogo.svg"
+                  alt=""
+                />
               </h2>
               <p style={{ textAlign: "start" }}>
                 <b>
@@ -162,7 +165,9 @@ const AboutUs = () => {
                       </p>
                       <br />
                       <p>
-                        <b className="fontstyle">That's where the idea of Namunjii was born.</b>
+                        <b className="fontstyle">
+                          That's where the idea of Namunjii was born.
+                        </b>
                       </p>
                     </div>
                   </motion.div>
@@ -226,7 +231,7 @@ const AboutUs = () => {
         {/* Available Cities Section - Moved from home page */}
         <AvailableCities />
 
-        <Partnerus/>
+        <Partnerus />
       </div>
 
       {/* Instagram Grid Section */}

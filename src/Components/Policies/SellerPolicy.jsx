@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import "./Policies.css";
 
 const SellerPolicy = () => {
-
   useEffect(() => {
-    if(window.fbq)
-  window.fbq("track", "SellerPolicyPageView");
-  }, [])
+    if (window.fbq) window.fbq("track", "SellerPolicyPageView");
+  }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
