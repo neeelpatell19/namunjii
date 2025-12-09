@@ -396,6 +396,9 @@ export default function ProductCard({
       const response = await cartApi.addToCart(cartPayload);
 
       if (response?.success === true) {
+        useEffect(() => {
+          if (window.fbq) window.fbq("track", "AddtoCartPageView");
+        }, []);
         setIsAddingToCart(false);
         setShowSizeModal(false);
         setSelectedSize("");
@@ -444,6 +447,9 @@ export default function ProductCard({
         }
       } else {
         // Add to wishlist if not in wishlist
+        useEffect(() => {
+          if (window.fbq) window.fbq("track", "AddToWishlistPageView");
+        }, []);
         const response = await wishlistApi.addToWishlist({
           deviceId,
           productId: product._id,

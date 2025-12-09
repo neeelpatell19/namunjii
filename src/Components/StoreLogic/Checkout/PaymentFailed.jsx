@@ -12,6 +12,9 @@ import checkoutApi from "../../../apis/checkout";
 const { Title, Text } = Typography;
 
 const PaymentFailed = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "PaymentFailedPageView");
+  }, []);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [orderData, setOrderData] = useState(null);

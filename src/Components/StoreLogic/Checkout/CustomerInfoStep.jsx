@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Card, Typography } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import checkoutApi from "../../../apis/checkout";
@@ -6,6 +6,9 @@ import checkoutApi from "../../../apis/checkout";
 const { Title, Text } = Typography;
 
 const CustomerInfoStep = ({ orderData, onComplete, onError }) => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "CustomerInfoPageView");
+  }, []);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -103,7 +106,7 @@ const CustomerInfoStep = ({ orderData, onComplete, onError }) => {
           ]}
         >
           <Input
-            prefix={<PhoneOutlined  className="Flipped"  />}
+            prefix={<PhoneOutlined className="Flipped" />}
             placeholder="Enter your 10-digit mobile number"
             size="large"
             maxLength={10}

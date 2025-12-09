@@ -268,6 +268,9 @@ const Header = () => {
   }, [deviceId]);
 
   const handleSearchClick = () => {
+    useEffect(() => {
+      if (window.fbq) window.fbq("track", "handleSearchPageView");
+    }, []);
     if (isMobile) {
       setShowSearchDrawer(true);
     } else {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Typography, Button, Row, Col, Tag, Space } from "antd";
 import {
   CheckCircleOutlined,
@@ -18,6 +18,9 @@ const OrderConfirmationStep = ({
   onPaymentFailure,
   onError,
 }) => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "OrderConfirmationPageView");
+  }, []);
   const [loading, setLoading] = useState(false);
   const { refreshCart } = useCartWishlist();
 
@@ -125,14 +128,24 @@ const OrderConfirmationStep = ({
                           <div className="item-details">
                             <h4>{item.productName}</h4>
                             <div className="item-specs">
-                              <span className="item-size">Size: {item.size || "One Size"}</span>
-                              <span className="item-quantity">Qty: {item.quantity}</span>
-                              {item.color && item.color !== "N/A" && item.color !== "Default" && (
-                                <span className="item-color">Color: {item.color}</span>
-                              )}
+                              <span className="item-size">
+                                Size: {item.size || "One Size"}
+                              </span>
+                              <span className="item-quantity">
+                                Qty: {item.quantity}
+                              </span>
+                              {item.color &&
+                                item.color !== "N/A" &&
+                                item.color !== "Default" && (
+                                  <span className="item-color">
+                                    Color: {item.color}
+                                  </span>
+                                )}
                             </div>
                             <div className="item-pricing">
-                              <Text style={{ color: '#1E1E1E' }}>₹{item.price?.toLocaleString()}</Text>
+                              <Text style={{ color: "#1E1E1E" }}>
+                                ₹{item.price?.toLocaleString()}
+                              </Text>
                               {item.discount > 0 && (
                                 <Space>
                                   <Text delete type="secondary">

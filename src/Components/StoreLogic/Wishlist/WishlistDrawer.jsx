@@ -8,6 +8,9 @@ import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./WishlistDrawer.css";
 
 const WishlistDrawer = ({ isOpen, onClose }) => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "WishlistPageView");
+  }, []);
   const { deviceId } = useDevice();
   const { refreshWishlist, refreshCart } = useCartWishlist();
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -127,12 +130,12 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
           ) : wishlistItems.length === 0 ? (
             <div className="wishlist-empty">
               <div className="wishlist-empty-icon">
-                <video 
-                  style={{width: '50vw', height:'30vh'}}  
-                  src="/Videos/namunjii_wishlist_page.mp4" 
-                  autoPlay 
-                  loop 
-                  muted 
+                <video
+                  style={{ width: "50vw", height: "30vh" }}
+                  src="/Videos/namunjii_wishlist_page.mp4"
+                  autoPlay
+                  loop
+                  muted
                   playsInline
                   disablePictureInPicture
                   disableRemotePlayback
@@ -141,7 +144,9 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
                 ></video>
               </div>
               <p className="heading">Your Wishlist is Empty</p>
-              <p className="sub-heading">Save the pieces you love and find them here anytime.</p>
+              <p className="sub-heading">
+                Save the pieces you love and find them here anytime.
+              </p>
               <button className="wishlist-continue-shopping" onClick={onClose}>
                 Continue Shopping
               </button>
@@ -156,8 +161,12 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
                         src={(() => {
                           const coverImage = item.productId?.coverImage;
                           if (!coverImage) return "";
-                          if (typeof coverImage === 'string') return coverImage;
-                          if (Array.isArray(coverImage) && coverImage.length > 0) return coverImage[0];
+                          if (typeof coverImage === "string") return coverImage;
+                          if (
+                            Array.isArray(coverImage) &&
+                            coverImage.length > 0
+                          )
+                            return coverImage[0];
                           return "";
                         })()}
                         alt={item.productId.productName}

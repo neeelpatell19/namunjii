@@ -11,6 +11,9 @@ import checkoutApi from "../../../apis/checkout";
 const { Title, Text } = Typography;
 
 const PaymentSuccess = () => {
+  useEffect(() => {
+    if (window.fbq) window.fbq("track", "PaymentSuccessPageView");
+  }, []);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [orderData, setOrderData] = useState(null);
@@ -90,13 +93,37 @@ const PaymentSuccess = () => {
                     <Text>Subtotal (incl. GST):</Text>
                     <Text>₹{orderData.subtotal?.toLocaleString()}</Text>
                   </div>
-                  <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                  <div
+                    className="summary-item"
+                    style={{
+                      fontSize: "12px",
+                      color: "#666",
+                      paddingLeft: "12px",
+                    }}
+                  >
                     <Text type="secondary">Base Price:</Text>
-                    <Text type="secondary">₹{Math.round((orderData.subtotal * 100) / 118).toLocaleString()}</Text>
+                    <Text type="secondary">
+                      ₹
+                      {Math.round(
+                        (orderData.subtotal * 100) / 118
+                      ).toLocaleString()}
+                    </Text>
                   </div>
-                  <div className="summary-item" style={{ fontSize: "12px", color: "#666", paddingLeft: "12px" }}>
+                  <div
+                    className="summary-item"
+                    style={{
+                      fontSize: "12px",
+                      color: "#666",
+                      paddingLeft: "12px",
+                    }}
+                  >
                     <Text type="secondary">GST (18% included):</Text>
-                    <Text type="secondary">₹{Math.round((orderData.subtotal * 18) / 118).toLocaleString()}</Text>
+                    <Text type="secondary">
+                      ₹
+                      {Math.round(
+                        (orderData.subtotal * 18) / 118
+                      ).toLocaleString()}
+                    </Text>
                   </div>
                 </>
               )}
