@@ -396,9 +396,7 @@ export default function ProductCard({
       const response = await cartApi.addToCart(cartPayload);
 
       if (response?.success === true) {
-        useEffect(() => {
           if (window.fbq) window.fbq("track", "AddtoCartPageView");
-        }, []);
         setIsAddingToCart(false);
         setShowSizeModal(false);
         setSelectedSize("");
