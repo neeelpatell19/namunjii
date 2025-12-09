@@ -2022,13 +2022,14 @@ const SingleProductPageDesign = () => {
                   aria-label="Previous image"
                 >
                   <LeftOutlined />
+
                 </button>
                 <button
                   className="preview-nav preview-next"
                   onClick={handlePreviewNext}
                   aria-label="Next image"
                 >
-                  <RightOutlined />
+                <RightOutlined />
                 </button>
               </>
             )}
