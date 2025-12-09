@@ -342,95 +342,205 @@ export default function ProductCard({
     message.warning("No sizes available for this product");
   };
 
-  const addToCartWithSize = async (size) => {
-    setIsAddingToCart(true);
+  // const addToCartWithSize = async (size) => {
+  //   setIsAddingToCart(true);
 
-    if (!deviceId) {
-      setIsAddingToCart(false);
-      message.error("Device ID not found. Please refresh the page.");
-      return;
-    }
+  //   if (!deviceId) {
+  //     setIsAddingToCart(false);
+  //     message.error("Device ID not found. Please refresh the page.");
+  //     return;
+  //   }
 
-    if (!size) {
-      setIsAddingToCart(false);
-      message.warning("Please select a size");
-      return;
-    }
+  //   if (!size) {
+  //     setIsAddingToCart(false);
+  //     message.warning("Please select a size");
+  //     return;
+  //   }
 
-    try {
-      // Use full product data if available (from QuickView), otherwise use regular product
-      const productToUse = fullProductData || product;
+  //   try {
+  //     // Use full product data if available (from QuickView), otherwise use regular product
+  //     const productToUse = fullProductData || product;
 
-      // Find the product variant with the selected size
-      let productIdToAdd = productToUse._id;
-      let colorToAdd = productToUse.color || "";
+  //     // Find the product variant with the selected size
+  //     let productIdToAdd = productToUse._id;
+  //     let colorToAdd = productToUse.color || "";
 
-      console.log("Adding to cart with product:", {
-        productToUse,
-        size,
-        hasProducts: !!productToUse?.products,
-        productsLength: productToUse?.products?.length,
-      });
+  //     console.log("Adding to cart with product:", {
+  //       productToUse,
+  //       size,
+  //       hasProducts: !!productToUse?.products,
+  //       productsLength: productToUse?.products?.length,
+  //     });
 
-      if (
-        productToUse?.products &&
-        Array.isArray(productToUse.products) &&
-        size
-      ) {
-        const variant = productToUse.products.find((p) => p.size === size);
-        console.log("Found variant:", variant);
-        if (variant) {
-          productIdToAdd = variant._id;
-          colorToAdd = variant.color || colorToAdd;
-        }
+  //     if (
+  //       productToUse?.products &&
+  //       Array.isArray(productToUse.products) &&
+  //       size
+  //     ) {
+  //       const variant = productToUse.products.find((p) => p.size === size);
+  //       console.log("Found variant:", variant);
+  //       if (variant) {
+  //         productIdToAdd = variant._id;
+  //         colorToAdd = variant.color || colorToAdd;
+  //       }
+  //     }
+
+  //     const cartPayload = {
+  //       deviceId,
+  //       productId: productIdToAdd,
+  //       quantity: 1,
+  //       size: size,
+  //       color: colorToAdd,
+  //     };
+
+  //     const response = await cartApi.addToCart(cartPayload);
+
+  //     if (response?.success === true) {
+  //         if (window.fbq) window.fbq("track", "AddtoCartPageView");
+  //       setIsAddingToCart(false);
+  //       setShowSizeModal(false);
+  //       setSelectedSize("");
+
+  //       message.success(response.message || "Item added to cart");
+  //       triggerCartDrawer();
+  //       refreshCart();
+
+  //       if (onAddToCart) {
+  //         onAddToCart(product);
+  //       }
+  //     } else {
+  //       setIsAddingToCart(false);
+  //       const errorMsg =
+  //         response?.message || response?.error || "Failed to add item to cart";
+  //       notification.error({
+  //         message: errorMsg,
+  //         placement: "topRight",
+  //         duration: 5,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setIsAddingToCart(false);
+  //     const errorMsg =
+  //       error.response?.data?.message ||
+  //       error.message ||
+  //       "Failed to add item to cart. Please try again.";
+  //     notification.error({
+  //       message: errorMsg,
+  //       placement: "topRight",
+  //       duration: 5,
+  //     });
+  //   }
+  // };
+const addToCartWithSize = async (size) => {
+  setIsAddingToCart(true);
+
+  if (!deviceId) {
+    setIsAddingToCart(false);
+    message.error("Device ID not found. Please refresh the page.");
+    return;
+  }
+
+  if (!size) {
+    setIsAddingToCart(false);
+    message.warning("Please select a size");
+    return;
+  }
+
+  try {
+    // Use full product data if available (from QuickView), otherwise use regular product
+    const productToUse = fullProductData || product;
+
+    // Find the product variant with the selected size
+    let productIdToAdd = productToUse._id;
+    let colorToAdd = productToUse.color || "";
+
+    console.log("Adding to cart with product:", {
+      productToUse,
+      size,
+      hasProducts: !!productToUse?.products,
+      productsLength: productToUse?.products?.length,
+    });
+
+    if (
+      productToUse?.products &&
+      Array.isArray(productToUse.products) &&
+      size
+    ) {
+      const variant = productToUse.products.find((p) => p.size === size);
+      console.log("Found variant:", variant);
+      if (variant) {
+        productIdToAdd = variant._id;
+        colorToAdd = variant.color || colorToAdd;
       }
+    }
 
-      const cartPayload = {
-        deviceId,
-        productId: productIdToAdd,
-        quantity: 1,
-        size: size,
-        color: colorToAdd,
-      };
+    const cartPayload = {
+      deviceId,
+      productId: productIdToAdd,
+      quantity: 1,
+      size: size,
+      color: colorToAdd,
+    };
 
-      const response = await cartApi.addToCart(cartPayload);
+    const response = await cartApi.addToCart(cartPayload);
 
-      if (response?.success === true) {
-          if (window.fbq) window.fbq("track", "AddtoCartPageView");
-        setIsAddingToCart(false);
-        setShowSizeModal(false);
-        setSelectedSize("");
+    if (response?.success === true) {
+      // ✅ Meta Pixel AddToCart event
+      if (window.fbq) {
+        const price =
+          productToUse?.salePrice || productToUse?.price || 0;
 
-        message.success(response.message || "Item added to cart");
-        triggerCartDrawer();
-        refreshCart();
-
-        if (onAddToCart) {
-          onAddToCart(product);
-        }
-      } else {
-        setIsAddingToCart(false);
-        const errorMsg =
-          response?.message || response?.error || "Failed to add item to cart";
-        notification.error({
-          message: errorMsg,
-          placement: "topRight",
-          duration: 5,
+        window.fbq("track", "AddToCart", {
+          content_ids: [productIdToAdd],
+          content_type: "product",
+          contents: [
+            {
+              id: productIdToAdd,
+              quantity: 1,
+              item_price: price,
+              size,
+              color: colorToAdd,
+            },
+          ],
+          value: price,
+          currency: "INR",
         });
       }
-    } catch (error) {
+
+      setIsAddingToCart(false);
+      setShowSizeModal(false);
+      setSelectedSize("");
+
+      message.success(response.message || "Item added to cart");
+      triggerCartDrawer();
+      refreshCart();
+
+      if (onAddToCart) {
+        onAddToCart(product);
+      }
+    } else {
       setIsAddingToCart(false);
       const errorMsg =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to add item to cart. Please try again.";
+        response?.message || response?.error || "Failed to add item to cart";
       notification.error({
         message: errorMsg,
         placement: "topRight",
         duration: 5,
       });
     }
-  };
+  } catch (error) {
+    setIsAddingToCart(false);
+    const errorMsg =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to add item to cart. Please try again.";
+    notification.error({
+      message: errorMsg,
+      placement: "topRight",
+      duration: 5,
+    });
+  }
+};
 
   const handleAddToWishlist = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
