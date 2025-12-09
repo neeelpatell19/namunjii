@@ -186,10 +186,33 @@
   /* font-size: 4rem; */
   /* margin-bottom: 1rem; */
   opacity: 1;
-   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
   pointer-events: none;
   will-change: filter;
+}
+
+.wishlist-empty-icon video {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  pointer-events: none;
+  display: block;
+}
+
+.wishlist-empty-icon video::-webkit-media-controls {
+  display: none !important;
+}
+
+.wishlist-empty-icon video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+.wishlist-empty-icon video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+.wishlist-empty-icon video::-webkit-media-controls-play-button {
+  display: none !important;
 }
 
 .wishlist-empty .heading {
