@@ -64,6 +64,20 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
       });
 
       if (response.success) {
+
+               console.log("Triggering FB Pixel AddToCart event for product:")
+
+      // ✅ Meta Pixel AddToCart event
+      if (window.fbq) {
+        // const price =
+        //   productToUse?.salePrice || productToUse?.price || 0;
+
+        window.fbq("track", "AddToCart", {
+        deviceId,
+        productId: product._id,
+        quantity: 1,
+      });
+      } 
         // Remove item from wishlist
         await handleRemoveItem(product._id);
         // Refresh cart in context to update all ProductCard components

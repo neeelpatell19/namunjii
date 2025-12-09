@@ -484,27 +484,16 @@ const addToCartWithSize = async (size) => {
 
     const response = await cartApi.addToCart(cartPayload);
 
+    console.log("Add to cart response:", response);
+
     if (response?.success === true) {
+              console.log("Triggering FB Pixel AddToCart event for product:")
+
       // ✅ Meta Pixel AddToCart event
       if (window.fbq) {
-        const price =
-          productToUse?.salePrice || productToUse?.price || 0;
+        
 
-        window.fbq("track", "AddToCart", {
-          content_ids: [productIdToAdd],
-          content_type: "product",
-          contents: [
-            {
-              id: productIdToAdd,
-              quantity: 1,
-              item_price: price,
-              size,
-              color: colorToAdd,
-            },
-          ],
-          value: price,
-          currency: "INR",
-        });
+        window.fbq("track", "AddToCart", cartPayload);
       }
 
       setIsAddingToCart(false);
