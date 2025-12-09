@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "../StoreLogic/Context/UserContext";
 import "./HomeComponents.css";
 import Carousel from "./Carousel";
@@ -140,9 +140,8 @@ const ErrorState = ({ onRetry }) => {
 
 export default function HomeComponents() {
   useEffect(() => {
-  if(window.fbq)
-window.fbq("track", "HomeComponentsPageView");
-}, [])
+    if (window.fbq) window.fbq("track", "HomeComponentsPageView");
+  }, []);
   const {
     Home: HomeData,
     HomeLoading,
