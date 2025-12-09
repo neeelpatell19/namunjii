@@ -6,7 +6,10 @@ const createProductApi = () => {
   return {
     // Get product by ID
     getProductById: (productId) =>
-      api.get(`/products/${productId}`).then((res) => res.data),
+      api.get(`/products/${productId}`).then((res) => {
+        console.log('Product API Response:', res.data);
+        return res.data;
+      }),
 
     // Get products by category
     getProductsByCategory: (categoryId, params = {}) =>
