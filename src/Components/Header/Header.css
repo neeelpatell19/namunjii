@@ -704,21 +704,24 @@
 
 /* Custom scrollbar for mega menu - positioned at the extreme right edge */
 .MegaMenuContainer::-webkit-scrollbar {
-  /* width: 10px !important;
-  height: 10px !important; */
-  /* display: block !important; */
-  /* -webkit-appearance: none !important; */
-  display: none;
+  width: 8px !important;
+  height: 10px !important; 
+  display: block !important;
+  -webkit-appearance: none !important;
+  border-radius: 12px !important;
+  /* display: none; */
 }
 
 .MegaMenuContainer::-webkit-scrollbar-track {
   background: #e0e0e0 !important;
-  border-radius: 0px !important;
+  /* border-radius: 0px !important; */
+    border-radius: 20px !important;
 }
 
 .MegaMenuContainer::-webkit-scrollbar-thumb {
-  background: #666 !important;
-  border-radius: 0px !important;
+  background: #8b8b8b !important;
+  /* border-radius: 0px !important; */
+    border-radius: 20px !important;
   border: none !important;
   min-height: 40px !important;
 }
@@ -727,9 +730,55 @@
   background: #333 !important;
 }
 
-.MegaMenuContainer::-webkit-scrollbar-button {
-  display: none !important;
+
+
+/*  */
+
+.MegaMenuContainer::-webkit-scrollbar-button
+{
+  /* border-style: solid;
+  height: 16px; 
+  width: 16px; */
+  height: 12px;
+  width: 8px;
+  background: #f0f0f0;
 }
+
+
+/* Up */
+.MegaMenuContainer::-webkit-scrollbar-button:vertical:decrement
+{
+  /* border-width: 0 7px 14px 7px; */
+  /* border-bottom: 1px solid #ccc; */
+  background: url("/icons/sortUp.png");
+   background-size: 100% 100%; /* Adjust as needed */
+            background-repeat: no-repeat;
+            background-position: center;
+  /* border-color: transparent transparent #404040 transparent; */
+}
+
+::-webkit-scrollbar-button:vertical:decrement:hover
+{
+  border-color: transparent transparent #505050 transparent;
+}
+
+
+/* Down */
+::-webkit-scrollbar-button:vertical:increment
+{
+      background: url("/icons/sortDown.png");
+   background-size: 100% 100%; /* Adjust as needed */
+            background-repeat: no-repeat;
+            background-position: center;
+  /* border-top: 1px solid #ccc; */
+  /* border-color: #404040 transparent transparent transparent; */
+}
+
+::-webkit-scrollbar-button:vertical:increment:hover
+{
+  border-color: #505050 transparent transparent transparent;
+}
+
 
 .MegaMenuColumn {
   display: flex;
@@ -1324,123 +1373,41 @@
   }
 }
 
+/* Tablet responsive - Mega menu active only on larger tablets and desktops */
+/* Ant Design Dropdown Menu for iPad */
+.category-dropdown-menu {
+  min-width: 200px !important;
+  max-width: 300px !important;
+}
 
-/* @media (max-width:1024px) {
-  .CategoryLink{
-    gap:800px
-  }
-  
-} */
+.category-dropdown-menu .ant-dropdown-menu-item {
+  padding: 8px 16px !important;
+  font-family: var(--fira-sans) !important;
+}
 
+.category-dropdown-menu .ant-dropdown-menu-item a {
+  color: var(--brandColor) !important;
+  text-decoration: none !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.category-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.category-dropdown-menu .ant-dropdown-menu-item-divider {
+  margin: 4px 0 !important;
+}
 
 @media (max-width: 1024px) and (min-width: 769px) {
-  /* iPad/Tablet: Show hamburger menu like mobile */
-  
-  .MobileMenuToggle {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    height: 100%;
-    line-height: 1;
-  }
-
-  .CategoryNavBar {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--bg-light-beige);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-    overflow-x: hidden;
-    overflow-y: visible;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .CategoryNavBar.mobile-open {
-    display: block;
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: visible;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .CategoryNavBar .Container {
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: visible;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .CategoryLinks {
-    flex-direction: column;
-    gap: 0;
-    padding: 16px;
-    align-items: flex-start;
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    box-sizing: border-box;
-  }
-
-  .CategoryItem {
-    width: 100%;
-    max-width: 100%;
-    border-bottom: 1px solid var(--neutral-950);
-    position: relative;
-    overflow-x: hidden;
-    box-sizing: border-box;
-  }
-
-  .CategoryItem:last-child {
-    border-bottom: none;
-  }
-
-  .CategoryLink {
-    font-size: 14px;
-    padding: 12px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100% !important;
-    max-width: 100%;
-    overflow-x: hidden;
-    box-sizing: border-box;
-    gap: 680px;
-  }
-
-  .CategoryLink.active::after,
-  .CategoryLink:hover::after {
-    display: none !important;
-  }
-
-  .mobile-category-dropdown {
-    padding: 0px !important;
-    display: block;
-  }
-
-  .MegaMenuContent {
-    padding: 0px 15px !important;
-  }
-
-  /* Hide desktop mega menus on iPad */
+  /* Hide mega menu containers on iPad - use Dropdown instead */
   .MegaMenuContainer {
     display: none !important;
   }
 
   .MegaMenuArrow {
     display: none !important;
-  }
-
-  .mobile-menu-backdrop {
-    display: block;
   }
 }
 
