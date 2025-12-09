@@ -1347,6 +1347,7 @@
 
   .page-title {
     font-size: 28px;
+    margin-bottom: 24px !important;
   }
 
   /* Price Range Slider Small Mobile - ensure last mark is visible */
