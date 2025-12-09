@@ -20,6 +20,10 @@ const countryCodes = [
 ];
 
 const Login = () => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "LoginPageView");
+}, [])
   const navigate = useNavigate();
   const [step, setStep] = useState("phone"); // 'phone' or 'otp'
   const [countryCode, setCountryCode] = useState("+91"); // Default to India

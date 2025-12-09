@@ -3,6 +3,10 @@ import { ShoppingCartOutlined, CloseOutlined, MinusOutlined, PlusOutlined } from
 import "./Cart.css";
 
 const Cart = () => {
+    useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "CartPageView");
+}, [])
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [cartItems, setCartItems] = useState([

@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./SizeGuide.css";
 
 const SizeGuide = ({ gender }) => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "SizeGuidePageView");
+}, [])
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {

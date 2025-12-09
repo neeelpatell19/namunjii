@@ -5,6 +5,10 @@ import "./FeaturedProducts.css";
 import { Link } from "react-router-dom";
 
 export default function FeaturedProducts({ HomeData }) {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "FeaturedProductsPageView");
+}, [])
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size

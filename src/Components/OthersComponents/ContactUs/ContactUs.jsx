@@ -4,6 +4,10 @@ import "./ContactUs.css";
 import { Row, Col } from "antd";
 
 const ContactUs = () => {
+    useEffect(() => {
+      if(window.fbq)
+    window.fbq("track", "ContactUsPageView");
+    }, [])
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",

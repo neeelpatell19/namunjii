@@ -9,6 +9,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 export default function NewArrivals({ HomeData }) {
+  useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "NewArrivalsPageView");
+  }, [])
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size

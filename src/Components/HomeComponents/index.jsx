@@ -139,6 +139,10 @@ const ErrorState = ({ onRetry }) => {
 };
 
 export default function HomeComponents() {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "HomeComponentsPageView");
+}, [])
   const {
     Home: HomeData,
     HomeLoading,

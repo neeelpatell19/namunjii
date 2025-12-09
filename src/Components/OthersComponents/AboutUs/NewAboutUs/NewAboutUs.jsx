@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import "./NewAboutUs.css";
 
 const NewAboutUs = () => {
+  useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "NewAboutUsPageView");
+  }, [])
   const [isMobile, setIsMobile] = useState(false);
   const [showHoverImage, setShowHoverImage] = useState(false);
 

@@ -47,6 +47,10 @@ const imageVariants = {
 
 const AboutUs = () => {
   useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "AboutUsPageView");
+  }, [])
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

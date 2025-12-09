@@ -33,6 +33,10 @@ const allCategories = [
 ];
 
 const VendorVerification = () => {
+  useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "VenderVerificationPageView");
+  }, [])
   const STORAGE_KEY = "vendorVerificationForm";
 
   // Initialize form with data from localStorage if available

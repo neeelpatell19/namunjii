@@ -13,6 +13,10 @@ import { Link, useParams } from "react-router-dom";
 import { DesignerDummyData } from "../../../OthersComponents/Designers/DesignerDummyData";
 import CommonUnderworkingModal from "../../../CommonUserInteractions/CommonUnderworkingModal";
 const IndividualProductPage = () => {
+    useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "IndividualProductPageView");
+}, [])
 
     const Images = [
         {

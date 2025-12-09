@@ -3,6 +3,10 @@ import "./Policies.css";
 
 const ReturnPolicy = () => {
   useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "ReturnPolicyPageView");
+  }, [])
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

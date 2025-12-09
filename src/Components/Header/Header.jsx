@@ -32,6 +32,10 @@ import brandApi from "../../apis/brand";
 import "./Header.css";
 
 const Header = () => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "HeaderPageView");
+}, [])
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();

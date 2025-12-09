@@ -28,6 +28,10 @@ export default function ProductCard({
   onViewProduct,
   className = "",
 }) {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "ProductCardPageView");
+}, [])
   const { message, notification } = App.useApp();
   const navigate = useNavigate();
   const { deviceId } = useDevice();

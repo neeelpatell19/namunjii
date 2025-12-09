@@ -3,6 +3,10 @@ import "./Policies.css";
 
 const PrivacyPolicy = () => {
   useEffect(() => {
+    if(window.fbq)
+  window.fbq("track", "PrivacyPolicyPageView");
+  }, [])
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

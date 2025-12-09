@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "FooterPageView");
+}, [])
   const [email, setEmail] = useState("");
 
   const handleEmailSubmit = (e) => {

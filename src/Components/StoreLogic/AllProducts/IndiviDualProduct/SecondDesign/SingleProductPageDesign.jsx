@@ -38,6 +38,10 @@ import SizeGuide from "./SizeGuide";
 import "./SingleProductPageDesign.css";
 
 const SingleProductPageDesign = () => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "SingleProductPageDesignPageView");
+}, [])
   const { productId } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();

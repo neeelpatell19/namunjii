@@ -8,6 +8,10 @@ import ProductCard from "../../Common/ProductCard/ProductCard";
 import "./CartDrawer.css";
 
 const CartDrawer = ({ isOpen, onClose }) => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "CartDrawerPageView");
+}, [])
   const navigate = useNavigate();
   const { deviceId } = useDevice();
   const { refreshCart } = useCartWishlist();

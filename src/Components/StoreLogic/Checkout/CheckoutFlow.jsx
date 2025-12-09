@@ -13,6 +13,10 @@ import "./CheckoutFlow.css";
 const { Step } = Steps;
 
 const CheckoutFlow = () => {
+  useEffect(() => {
+  if(window.fbq)
+window.fbq("track", "CheckoutFlowPageView");
+}, [])
   const { orderNumber } = useParams();
   const navigate = useNavigate();
   const { deviceId } = useDevice();
