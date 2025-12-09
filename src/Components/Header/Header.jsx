@@ -128,7 +128,7 @@ const Header = () => {
         const response = await brandApi.getBrandsForSelection();
         if (response.success) {
           setDesigners(response.data || []);
-          console.log("Fetched designers:", response.data);
+          // console.log("Fetched designers:", response.data);
         } else {
           setDesigners([]);
         }
