@@ -49,6 +49,7 @@
   transition: color 0.3s ease;
 }
 
+
 .product-breadcrumbs a:hover {
   color: #8b4513;
 }
@@ -2198,6 +2199,12 @@ width: 24px;
   border-color: rgba(255, 255, 255, 0.8);
   transform: translateY(-50%) scale(1.1);
 }
+.preview-prev{
+  transform: scaleX(-1);
+}
+.preview-next{
+  transform: scaleX(-1);
+}
 
 /* Reduce arrow size for non-mobile */
 @media (min-width: 769px) {
@@ -2210,10 +2217,12 @@ width: 24px;
 
 .preview-prev {
   left: 0;
+  transform: scaleX(-1) !important;
 }
 
 .preview-next {
   right: 0;
+  transform: scaleX(-1) !important;
 }
 
 /* Mobile Preview Styles */
