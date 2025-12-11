@@ -279,22 +279,20 @@ const SingleProductPageDesign = () => {
       });
 
       if (response.success) {
+        // ✅ Meta Pixel AddToCart event
+        if (window.fbq) {
+          // const price =
+          //   productToUse?.salePrice || productToUse?.price || 0;
+          console.log("Triggering FB sasas AddToCart event for product:");
 
-               console.log("Triggering FB Pixel AddToCart event for product:")
-
-      // ✅ Meta Pixel AddToCart event
-      if (window.fbq) {
-        // const price =
-        //   productToUse?.salePrice || productToUse?.price || 0;
-
-        window.fbq("track", "AddToCart", {
-        deviceId,
-        productId: product._id,
-        quantity,
-        size: selectedSize,
-        color: selectedColor,
-      });
-      }
+          window.fbq("track", "AddToCart", {
+            deviceId,
+            productId: product._id,
+            quantity,
+            size: selectedSize,
+            color: selectedColor,
+          });
+        }
         message.success(response.message || "Added to cart");
         refreshCart();
       } else {
@@ -327,6 +325,9 @@ const SingleProductPageDesign = () => {
       });
 
       if (response.success) {
+        if (window.fbq)
+        window.fbq("track", "AddToWishlistSingleProductPageView");
+        console.log("metapexel, addtowishlistSingleproductpage");
         triggerWishlistDrawer();
         refreshWishlist();
       }

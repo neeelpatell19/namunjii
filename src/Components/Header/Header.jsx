@@ -127,6 +127,8 @@ const Header = () => {
         setDesignersLoading(true);
         const response = await brandApi.getBrandsForSelection();
         if (response.success) {
+          if (window.fbq) window.fbq("track", "DesignersPageView");
+          console.log("metapixel DesginersPageView");
           setDesigners(response.data || []);
           // console.log("Fetched designers:", response.data);
         } else {
@@ -268,9 +270,8 @@ const Header = () => {
   }, [deviceId]);
 
   const handleSearchClick = () => {
-    useEffect(() => {
-      if (window.fbq) window.fbq("track", "handleSearchPageView");
-    }, []);
+    if (window.fbq) window.fbq("track", "handleSearchPageView");
+
     if (isMobile) {
       setShowSearchDrawer(true);
     } else {
@@ -296,6 +297,8 @@ const Header = () => {
           10
         );
         if (response.success) {
+          if (window.fbq) window.fbq("track", "handleSearchPageView");
+          console.log("metapixel handlesearch");
           setSearchSuggestions(response.data || []);
         } else {
           setSearchSuggestions([]);

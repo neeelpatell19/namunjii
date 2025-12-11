@@ -78,6 +78,8 @@ const CheckoutFlow = () => {
       });
 
       if (response.success) {
+        if (window.fbq) window.fbq("track", "CheckoutPageView");
+        console.log("metapixel CustomerinfoCheckout");
         // Navigate to checkout with order number
         navigate(`/checkout/${response.data.orderNumber}`);
       }

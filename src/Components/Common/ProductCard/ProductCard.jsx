@@ -431,105 +431,103 @@ export default function ProductCard({
   //     });
   //   }
   // };
-const addToCartWithSize = async (size) => {
-  setIsAddingToCart(true);
+  const addToCartWithSize = async (size) => {
+    setIsAddingToCart(true);
 
-  if (!deviceId) {
-    setIsAddingToCart(false);
-    message.error("Device ID not found. Please refresh the page.");
-    return;
-  }
-
-  if (!size) {
-    setIsAddingToCart(false);
-    message.warning("Please select a size");
-    return;
-  }
-
-  try {
-    // Use full product data if available (from QuickView), otherwise use regular product
-    const productToUse = fullProductData || product;
-
-    // Find the product variant with the selected size
-    let productIdToAdd = productToUse._id;
-    let colorToAdd = productToUse.color || "";
-
-    console.log("Adding to cart with product:", {
-      productToUse,
-      size,
-      hasProducts: !!productToUse?.products,
-      productsLength: productToUse?.products?.length,
-    });
-
-    if (
-      productToUse?.products &&
-      Array.isArray(productToUse.products) &&
-      size
-    ) {
-      const variant = productToUse.products.find((p) => p.size === size);
-      console.log("Found variant:", variant);
-      if (variant) {
-        productIdToAdd = variant._id;
-        colorToAdd = variant.color || colorToAdd;
-      }
+    if (!deviceId) {
+      setIsAddingToCart(false);
+      message.error("Device ID not found. Please refresh the page.");
+      return;
     }
 
-    const cartPayload = {
-      deviceId,
-      productId: productIdToAdd,
-      quantity: 1,
-      size: size,
-      color: colorToAdd,
-    };
-
-    const response = await cartApi.addToCart(cartPayload);
-
-    console.log("Add to cart response:", response);
-
-    if (response?.success === true) {
-              console.log("Triggering FB Pixel AddToCart event for product:")
-
-      // ✅ Meta Pixel AddToCart event
-      if (window.fbq) {
-        
-
-        window.fbq("track", "AddToCart", cartPayload);
-      }
-
+    if (!size) {
       setIsAddingToCart(false);
-      setShowSizeModal(false);
-      setSelectedSize("");
+      message.warning("Please select a size");
+      return;
+    }
 
-      message.success(response.message || "Item added to cart");
-      triggerCartDrawer();
-      refreshCart();
+    try {
+      // Use full product data if available (from QuickView), otherwise use regular product
+      const productToUse = fullProductData || product;
 
-      if (onAddToCart) {
-        onAddToCart(product);
+      // Find the product variant with the selected size
+      let productIdToAdd = productToUse._id;
+      let colorToAdd = productToUse.color || "";
+
+      console.log("Adding to cart with product:", {
+        productToUse,
+        size,
+        hasProducts: !!productToUse?.products,
+        productsLength: productToUse?.products?.length,
+      });
+
+      if (
+        productToUse?.products &&
+        Array.isArray(productToUse.products) &&
+        size
+      ) {
+        const variant = productToUse.products.find((p) => p.size === size);
+        console.log("Found variant:", variant);
+        if (variant) {
+          productIdToAdd = variant._id;
+          colorToAdd = variant.color || colorToAdd;
+        }
       }
-    } else {
+
+      const cartPayload = {
+        deviceId,
+        productId: productIdToAdd,
+        quantity: 1,
+        size: size,
+        color: colorToAdd,
+      };
+
+      const response = await cartApi.addToCart(cartPayload);
+
+      console.log("Add to cart response:", response);
+
+      if (response?.success === true) {
+        console.log("Triggering FB Pixel AddToCart event for product:");
+
+        // ✅ Meta Pixel AddToCart event
+        if (window.fbq) {
+          window.fbq("track", "AddToCart", cartPayload);
+        }
+
+        setIsAddingToCart(false);
+        setShowSizeModal(false);
+        setSelectedSize("");
+
+        message.success(response.message || "Item added to cart");
+        triggerCartDrawer();
+        refreshCart();
+
+        if (onAddToCart) {
+          onAddToCart(product);
+        }
+      } else {
+        setIsAddingToCart(false);
+        const errorMsg =
+          response?.message || response?.error || "Failed to add item to cart";
+        notification.error({
+          message: errorMsg,
+          placement: "topRight",
+          duration: 5,
+        });
+      }
+    } catch (error) {
       setIsAddingToCart(false);
       const errorMsg =
-        response?.message || response?.error || "Failed to add item to cart";
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to add item to cart. Please try again.";
       notification.error({
         message: errorMsg,
         placement: "topRight",
         duration: 5,
       });
     }
-  } catch (error) {
-    setIsAddingToCart(false);
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to add item to cart. Please try again.";
-    notification.error({
-      message: errorMsg,
-      placement: "topRight",
-      duration: 5,
-    });
-  }
-};
+  };
 
   const handleAddToWishlist = async (e) => {
     e.stopPropagation(); // Prevent event bubbling
@@ -544,9 +542,7 @@ const addToCartWithSize = async (size) => {
         }
       } else {
         // Add to wishlist if not in wishlist
-        useEffect(() => {
-          if (window.fbq) window.fbq("track", "AddToWishlistPageView");
-        }, []);
+
         const response = await wishlistApi.addToWishlist({
           deviceId,
           productId: product._id,
@@ -554,6 +550,8 @@ const addToCartWithSize = async (size) => {
 
         if (response.success) {
           // Trigger wishlist drawer to open
+          if (window.fbq) window.fbq("track", "AddTowishlistPageView");
+          console.log("metapixel Addtowishlistfromproductpage");
           triggerWishlistDrawer();
           refreshWishlist();
         }
