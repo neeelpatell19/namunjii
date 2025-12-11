@@ -20,20 +20,19 @@ export default function NewArrivalCard({ product, isMobile = false }) {
       });
 
       if (response.success) {
+        // ✅ Meta Pixel AddToCart event
+        if (window.fbq) {
+          const price = productToUse?.salePrice || productToUse?.price || 0;
+          console.log(
+            "Triggering FB Pixel NewArrival AddToCart event for product:"
+          );
 
-               console.log("Triggering FB Pixel AddToCart event for product:")
-
-      // ✅ Meta Pixel AddToCart event
-      if (window.fbq) {
-        const price =
-          productToUse?.salePrice || productToUse?.price || 0;
-
-        window.fbq("track", "AddToCart", {
-        deviceId,
-        productId: product._id,
-        quantity: 1,
-      });
-      }
+          window.fbq("track", "AddToCart", {
+            deviceId,
+            productId: product._id,
+            quantity: 1,
+          });
+        }
         // Trigger cart drawer to open
         triggerCartDrawer();
         refreshCart();
@@ -47,7 +46,7 @@ export default function NewArrivalCard({ product, isMobile = false }) {
   // Helper function to normalize images (handle both string and array)
   const normalizeImages = (images) => {
     if (!images) return [];
-    if (typeof images === 'string') return [images];
+    if (typeof images === "string") return [images];
     if (Array.isArray(images)) return images;
     return [];
   };
@@ -56,20 +55,21 @@ export default function NewArrivalCard({ product, isMobile = false }) {
   const firstCoverImage = coverImages[0] || "";
 
   return (
-    <div className={`new-collections-card ${isMobile ? 'new-collections-card-mobile' : ''}`}>
+    <div
+      className={`new-collections-card ${
+        isMobile ? "new-collections-card-mobile" : ""
+      }`}
+    >
       <p className="new-collections-brand">{product.productName}</p>
       <div className="new-collections-image-container">
-        <img 
-          src={firstCoverImage} 
-          alt={product.shopName} 
+        <img
+          src={firstCoverImage}
+          alt={product.shopName}
           className="new-collections-image"
           loading="lazy"
         />
       </div>
-      <div
-        className="new-collections-footer"
-        onClick={handleAddToCart}
-      >
+      <div className="new-collections-footer" onClick={handleAddToCart}>
         <button
           className="new-collections-shop new-arrivals-buy-link"
           style={{
