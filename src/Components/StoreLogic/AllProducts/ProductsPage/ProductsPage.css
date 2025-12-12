@@ -337,7 +337,11 @@
 .page-title-section {
   margin-bottom: 30px;
 }
-
+.designer-page-description{
+  font-size: 14px;
+  margin-top: 12px;
+  font-family: var(--fira-sans);
+}
 /* Reduce spacing on mobile and tablet */
 @media (max-width: 1024px) {
   .page-title-section {
@@ -1236,8 +1240,11 @@
   }
 
   .page-title-section {
-    margin-top: 20px;
-    margin-bottom: 15px;
+    margin-top: 42px;
+    margin-bottom: 17px;
+  }
+  .designer-page-description{
+    margin-top: -16px;
   }
 
   /* Show tablet controls, hide desktop/mobile */
@@ -1347,7 +1354,7 @@
 
   .page-title {
     font-size: 28px;
-    margin-bottom: 24px !important;
+    /* margin-bottom: 24px !important; */
   }
 
   /* Price Range Slider Small Mobile - ensure last mark is visible */
@@ -1397,6 +1404,9 @@
     height: 32px;
     padding: 0 12px;
     font-size: 12px;
+  }
+  .designer-page-description{
+    font-size: 11px !important;
   }
 }
 
