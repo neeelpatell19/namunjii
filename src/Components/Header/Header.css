@@ -1423,12 +1423,12 @@
 
 @media (max-width:431px) {
   .CategoryLink{
-    gap: 299px !important;
+    gap: 282px !important;
   }
 
   @media(max-width:413px) {
     .CategoryLink{
-      gap: 276px !important;
+      gap: 282px !important;
     }
     
   }
@@ -1439,7 +1439,7 @@
 
 @media (max-width:396px) {
   .CategoryLink{
-    gap: 270px !important;
+    gap: 258px !important;
   }
   
 }
@@ -1452,7 +1452,7 @@
 }
 @media (max-width: 376px) {
   .CategoryLink{
-    gap: 243px !important;
+    gap: 229px !important;
   }
   
 }
