@@ -245,9 +245,11 @@ const ProductsPage = () => {
   // Refs to store current values to avoid dependency issues
   const filtersRef = useRef(filters);
   const priceRangeRef = useRef(priceRange);
+  const paginationRef = useRef(pagination);
   const fetchProductsRef = useRef();
   const priceSliderTimerRef = useRef(null);
   const lastFilterTypeRef = useRef(null);
+  const isLoadingMoreRef = useRef(false);
 
   // Update refs when state changes
   useEffect(() => {
@@ -257,6 +259,10 @@ const ProductsPage = () => {
   useEffect(() => {
     priceRangeRef.current = priceRange;
   }, [priceRange, priceInput]);
+
+  useEffect(() => {
+    paginationRef.current = pagination;
+  }, [pagination]);
 
   // Keep local search input in sync with filters.search (e.g., URL changes)
   useEffect(() => {
@@ -349,19 +355,24 @@ const ProductsPage = () => {
   // Load more products for infinite scroll
   // This respects all active filters including multi-select filters
   const loadMoreProducts = useCallback(async () => {
+    // Use refs to get the latest values to avoid stale closures
+    const currentPagination = paginationRef.current;
+    
     // Don't load if already loading, no more pages, or already loading more
     if (
       loading ||
       loadingMore ||
-      !pagination.hasNextPage ||
-      pagination.page >= pagination.totalPages
+      isLoadingMoreRef.current ||
+      !currentPagination.hasNextPage ||
+      currentPagination.page >= currentPagination.totalPages
     ) {
       return;
     }
 
     try {
+      isLoadingMoreRef.current = true;
       setLoadingMore(true);
-      const nextPage = pagination.page + 1;
+      const nextPage = currentPagination.page + 1;
       const currentFilters = filtersRef.current;
       const currentPriceRange = priceRangeRef.current;
 
@@ -389,9 +400,14 @@ const ProductsPage = () => {
       const response = await productApi.getProducts(queryParams);
 
       if (response.success) {
-        // Append new products to existing ones
-        setProducts((prevProducts) => [...prevProducts, ...response.data]);
+        // Update pagination
         setPagination(response.pagination);
+        
+        // Append all products from API response
+        if (response.data && Array.isArray(response.data)) {
+          setProducts((prevProducts) => [...prevProducts, ...response.data]);
+        }
+        
         // Update filters to reflect the new page
         setFilters((prevFilters) => ({ ...prevFilters, page: nextPage }));
       }
@@ -399,8 +415,9 @@ const ProductsPage = () => {
       console.error("Error loading more products:", err);
     } finally {
       setLoadingMore(false);
+      isLoadingMoreRef.current = false;
     }
-  }, [loading, loadingMore, pagination]);
+  }, [loading, loadingMore]);
 
   // Store fetchProducts in ref
   useEffect(() => {
@@ -733,6 +750,9 @@ const ProductsPage = () => {
       // Scroll to top when filter changes
       window.scrollTo({ top: 0, behavior: "smooth" });
 
+      // Reset loading more ref to prevent race conditions
+      isLoadingMoreRef.current = false;
+
       // Normalize null/undefined to empty string for string filter fields
       const normalizedValue =
         value === null || value === undefined ? "" : value;
@@ -761,6 +781,9 @@ const ProductsPage = () => {
     (key, value, checked) => {
       // Scroll to top when filter changes
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Reset loading more ref to prevent race conditions
+      isLoadingMoreRef.current = false;
 
       let newValues;
       const currentValues = Array.isArray(filters[key]) ? filters[key] : [];
@@ -793,6 +816,9 @@ const ProductsPage = () => {
     (value) => {
       // Scroll to top when filter changes
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Reset loading more ref to prevent race conditions
+      isLoadingMoreRef.current = false;
 
       // Convert empty strings to 0 for filter logic, but keep for display
       const minValue = value[0] === "" || value[0] === 0 ? 0 : value[0];
@@ -1039,6 +1065,9 @@ const ProductsPage = () => {
   const clearFilters = () => {
     // Scroll to top when clearing filters
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Reset loading more ref to prevent race conditions
+    isLoadingMoreRef.current = false;
 
     // Preserve these filters from current state
     const preservedGender = filters.gender || "";
@@ -1447,6 +1476,9 @@ const ProductsPage = () => {
                 priceSliderTimerRef.current = setTimeout(() => {
                   // Scroll to top when price slider changes
                   window.scrollTo({ top: 0, behavior: "smooth" });
+
+                  // Reset loading more ref to prevent race conditions
+                  isLoadingMoreRef.current = false;
 
                   const newFilters = {
                     ...filtersRef.current,
@@ -2002,6 +2034,9 @@ const ProductsPage = () => {
                           // Scroll to top when sort changes
                           window.scrollTo({ top: 0, behavior: "smooth" });
 
+                          // Reset loading more ref to prevent race conditions
+                          isLoadingMoreRef.current = false;
+
                           const [sortBy, sortOrder] = key.split("-");
                           const newFilters = {
                             ...filters,
@@ -2067,6 +2102,9 @@ const ProductsPage = () => {
                       onChange={(value) => {
                         // Scroll to top when sort changes
                         window.scrollTo({ top: 0, behavior: "smooth" });
+
+                        // Reset loading more ref to prevent race conditions
+                        isLoadingMoreRef.current = false;
 
                         const [sortBy, sortOrder] = value.split("-");
                         const newFilters = {
