@@ -638,8 +638,8 @@
   margin: 0;
   padding: 12px 0 0 0 !important;
   animation: fadeInMegaMenu 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e8e8e8;
-  border-radius: 6px;
+  /* border: 1px solid #e8e8e8; */
+  /* border-radius: 6px; */
   height: auto;
   max-height: 400px;
    overflow-y: auto;
@@ -708,20 +708,20 @@
   height: 10px !important; 
   display: block !important;
   -webkit-appearance: none !important;
-  border-radius: 12px !important;
+  /* border-radius: 12px !important; */
   /* display: none; */
 }
 
 .MegaMenuContainer::-webkit-scrollbar-track {
   background: #e0e0e0 !important;
   /* border-radius: 0px !important; */
-    border-radius: 20px !important;
+    /* border-radius: 20px !important; */
 }
 
 .MegaMenuContainer::-webkit-scrollbar-thumb {
-  background: #8b8b8b !important;
+  background: #8b8b8b93 !important;
   /* border-radius: 0px !important; */
-    border-radius: 20px !important;
+    /* border-radius: 20px !important; */
   border: none !important;
   min-height: 40px !important;
 }
@@ -833,7 +833,7 @@
   display: block;
   color: #666;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   transition: all 0.2s ease;
   font-family: var(--fira-sans);
@@ -841,7 +841,7 @@
   width: 100%;
   max-width: 100%;
   line-height: 1.4;
-  padding: 8px 12px;
+  padding: 6px 12px;
   white-space: nowrap;
   border-radius: 4px;
   box-sizing: border-box;
