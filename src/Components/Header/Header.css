@@ -1490,4 +1490,120 @@
   }
 
 }
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* iPad/Tablet: Show hamburger menu like mobile */
+  .PaddingTop20{
+    padding: 0px;
+  }
+  .MobileMenuToggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    height: 100%;
+    line-height: 1;
+  }
 
+  .CategoryNavBar {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-light-beige);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .CategoryNavBar.mobile-open {
+    display: block;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .CategoryNavBar .Container {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .CategoryLinks {
+    flex-direction: column;
+    gap: 0;
+    padding: 16px;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .CategoryItem {
+    width: 100%;
+    max-width: 100%;
+    border-bottom: 1px solid var(--neutral-950);
+    position: relative;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .CategoryItem:last-child {
+    border-bottom: none;
+  }
+
+  .CategoryLink {
+    font-size: 14px;
+    padding: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100% !important;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    gap: 680px;
+  }
+.category-dropdown-menu .ant-dropdown-menu-item {
+  padding: 8px 16px !important;
+  font-family: var(--fira-sans) !important;
+}
+
+  .CategoryLink.active::after,
+  .CategoryLink:hover::after {
+    display: none !important;
+  }
+.category-dropdown-menu .ant-dropdown-menu-item a {
+  color: var(--brandColor) !important;
+  text-decoration: none !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+  .mobile-category-dropdown {
+    padding: 0px !important;
+    display: block;
+  }
+.category-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: #f5f5f5 !important;
+}
+.MainNavBar{
+  padding: 12px 6px;
+}
+
+  .MegaMenuContent {
+    padding: 0px 15px !important;
+  }
+.category-dropdown-menu .ant-dropdown-menu-item-divider {
+  margin: 4px 0 !important;
+}}
