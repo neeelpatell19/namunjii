@@ -485,7 +485,7 @@ const ProductsPage = () => {
 
         if (brandsResponse.success) {
             if (window.fbq) window.fbq("track", "DesginerPageView");
-           console.log("metapixel Desginer")
+          //  console.log("metapixel Desginer")
           setBrands(brandsResponse.data || []);
         } else {
           console.error("Failed to fetch brands:", brandsResponse.message);
@@ -494,7 +494,7 @@ const ProductsPage = () => {
 
         if (sizesResponse.success) {
             if (window.fbq) window.fbq("track", "SizePageView");
-           console.log("metapixel Size")
+          //  console.log("metapixel Size")
           setSizes(sizesResponse.data || []);
         } else {
           console.error("Failed to fetch sizes:", sizesResponse.message);
@@ -503,7 +503,7 @@ const ProductsPage = () => {
 
         if (colorsResponse.success) {
             if (window.fbq) window.fbq("track", "ColorsPageView");
-           console.log("metapixel Colors")
+          //  console.log("metapixel Colors")
           setColors(colorsResponse.data || []);
         } else {
           console.error("Failed to fetch colors:", colorsResponse.message);
@@ -837,7 +837,7 @@ const ProductsPage = () => {
         );
         if (response.success) {
             if (window.fbq) window.fbq("track", "handleSearchPageView");
-           console.log("metapixel handlesearch redirected to product page")
+          //  console.log("metapixel handlesearch redirected to product page")
           setSearchSuggestions(response.data || []);
         } else {
           setSearchSuggestions([]);

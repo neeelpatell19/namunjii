@@ -65,7 +65,7 @@ const WishlistDrawer = ({ isOpen, onClose }) => {
 
       if (response.success) {
 
-               console.log("Triggering FB Pixel AddToCart event for product:")
+              //  console.log("Triggering FB Pixel AddToCart event for product:")
 
       // ✅ Meta Pixel AddToCart event
       if (window.fbq) {

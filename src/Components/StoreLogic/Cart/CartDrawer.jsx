@@ -29,7 +29,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
       if (response.success) {
           if (window.fbq) window.fbq("track", "InitializeCheckoutFromCartPageView");
-           console.log("metapixel InitializeCheckoutFromCart")
+          //  console.log("metapixel InitializeCheckoutFromCart")
         setCartItems(response.data?.items || []);
       }
     } catch (err) {

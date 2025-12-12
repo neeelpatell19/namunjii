@@ -235,12 +235,12 @@ export default function ProductCard({
 
     const sizesSet = new Set();
 
-    console.log("Getting sizes from full product:", {
-      id: fullProductData?._id,
-      hasProducts: !!fullProductData?.products,
-      productsLength: fullProductData?.products?.length,
-      products: fullProductData?.products,
-    });
+    // console.log("Getting sizes from full product:", {
+    //   id: fullProductData?._id,
+    //   hasProducts: !!fullProductData?.products,
+    //   productsLength: fullProductData?.products?.length,
+    //   products: fullProductData?.products,
+    // });
 
     // Check if product has a products array (multiple variants)
     if (
@@ -487,7 +487,7 @@ export default function ProductCard({
       console.log("Add to cart response:", response);
 
       if (response?.success === true) {
-        console.log("Triggering FB Pixel AddToCart event for product:");
+        // console.log("Triggering FB Pixel AddToCart event for product:");
 
         // ✅ Meta Pixel AddToCart event
         if (window.fbq) {
@@ -551,7 +551,7 @@ export default function ProductCard({
         if (response.success) {
           // Trigger wishlist drawer to open
           if (window.fbq) window.fbq("track", "AddTowishlistPageView");
-          console.log("metapixel Addtowishlistfromproductpage");
+          // console.log("metapixel Addtowishlistfromproductpage");
           triggerWishlistDrawer();
           refreshWishlist();
         }

@@ -23,9 +23,9 @@ export default function NewArrivalCard({ product, isMobile = false }) {
         // ✅ Meta Pixel AddToCart event
         if (window.fbq) {
           const price = productToUse?.salePrice || productToUse?.price || 0;
-          console.log(
-            "Triggering FB Pixel NewArrival AddToCart event for product:"
-          );
+          // console.log(
+          //   "Triggering FB Pixel NewArrival AddToCart event for product:"
+          // );
 
           window.fbq("track", "AddToCart", {
             deviceId,

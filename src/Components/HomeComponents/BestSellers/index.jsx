@@ -83,11 +83,11 @@ export default function BestSellers({ HomeData }) {
                 showQuickView={true}
                 showAddToCart={true}
                 onQuickView={(product) => {
-                  console.log("Quick view:", product);
+                  // console.log("Quick view:", product);
                   // Add your quick view logic here
                 }}
                 onAddToCart={(product) => {
-                  console.log("Add to cart:", product);
+                  // console.log("Add to cart:", product);
                   // Add your add to cart logic here
                 }}
               />
@@ -103,11 +103,11 @@ export default function BestSellers({ HomeData }) {
               showQuickView={true}
               showAddToCart={true}
               onQuickView={(product) => {
-                console.log("Quick view:", product);
+                // console.log("Quick view:", product);
                 // Add your quick view logic here
               }}
               onAddToCart={(product) => {
-                console.log("Add to cart:", product);
+                // console.log("Add to cart:", product);
                 // Add your add to cart logic here
               }}
             />

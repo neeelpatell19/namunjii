@@ -301,7 +301,7 @@ const SingleProductPageDesign = () => {
         if (window.fbq) {
           // const price =
           //   productToUse?.salePrice || productToUse?.price || 0;
-          console.log("Triggering FB sasas AddToCart event for product:");
+          // console.log("Triggering FB sasas AddToCart event for product:");
 
           window.fbq("track", "AddToCart", {
             deviceId,
@@ -345,7 +345,7 @@ const SingleProductPageDesign = () => {
       if (response.success) {
         if (window.fbq)
         window.fbq("track", "AddToWishlistSingleProductPageView");
-        console.log("metapexel, addtowishlistSingleproductpage");
+        // console.log("metapexel, addtowishlistSingleproductpage");
         triggerWishlistDrawer();
         refreshWishlist();
       }
