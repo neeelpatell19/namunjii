@@ -232,7 +232,7 @@ const ProductsPage = () => {
         orderType: false,
       };
       return {
-        ...allClosed,
+        ...prev,
         [section]: !prev[section],
       };
     });
@@ -1244,6 +1244,10 @@ const ProductsPage = () => {
       {/* Gender */}
 
       {/* Gender Filter Section */}
+      {(filters.isNamunjiiExclusive || 
+  (Array.isArray(filters.brand) && filters.brand.length > 0)) &&
+  !filters.productType && 
+  (
       <div className="filter-section">
         <div
           className="filter-section-header"
@@ -1283,6 +1287,7 @@ const ProductsPage = () => {
           </div>
         )}
       </div>
+  )}
 
       {/* Size */}
       <div className="filter-section">
