@@ -53,6 +53,7 @@ const SingleProductPageDesign = () => {
     refreshCart,
     refreshWishlist,
   } = useCartWishlist();
+  
   const { state } = useAppContext();
 
   const [product, setProduct] = useState(null);
@@ -78,6 +79,7 @@ const SingleProductPageDesign = () => {
   const [mainImagePosition, setMainImagePosition] = useState({ x: 0, y: 0 });
   const [isMainImageDragging, setIsMainImageDragging] = useState(false);
   const [mainImageDragStart, setMainImageDragStart] = useState({ x: 0, y: 0 });
+  const [showReadMOre, setShowReadMOre] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const previewRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
@@ -100,6 +102,7 @@ const SingleProductPageDesign = () => {
   const thumbnailMouseStartX = useRef(0);
   const thumbnailScrollLeft = useRef(0);
   const thumbnailWasDragged = useRef(false);
+  const fullDescriptionRef = useRef(null);
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
 
@@ -117,6 +120,21 @@ const SingleProductPageDesign = () => {
     };
     return colorMap[colorName?.toLowerCase()] || "#D4AF37";
   };
+    useEffect(() => {
+    if (!product?.productDescription) return;
+
+    if (fullDescriptionRef.current) {
+      const element = fullDescriptionRef.current;
+      const lineHeight = parseInt(window.getComputedStyle(element).lineHeight);
+      const totalLines = Math.round(element.scrollHeight / lineHeight);
+
+      if (totalLines > 3) {
+        setShowReadMOre(true);
+      } else {
+        setShowReadMOre(false);
+      }
+    }
+  }, [product?.productDescription]) 
 
   // Extract unique colors and sizes from products array
   const getAvailableOptions = useMemo(() => {
@@ -1696,12 +1714,15 @@ const SingleProductPageDesign = () => {
           </div>
 
           {/* Full Description */}
-          {product.productDescription && (
+          {product?.productDescription && (
             <div className="short-description">
-              <p className={!isDescriptionExpanded ? "line-clamp-3" : ""}>
+              <p 
+                ref={fullDescriptionRef}
+                className={!isDescriptionExpanded ? "line-clamp-3" : ""}
+              >
                 {product.productDescription}
               </p>
-              {product.productDescription.length > 150 && (
+              {showReadMOre && (
                 <button
                   className="read-more-btn"
                   onClick={() =>
