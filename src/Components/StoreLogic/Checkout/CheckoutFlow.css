@@ -97,6 +97,9 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   /* overflow: hidden; */
 }
+.checkout-steps .ant-steps-item-finish .ant-steps-item-icon{
+   transform: scaleX(-1);
+}
 
 .checkout-card {
   border: none;

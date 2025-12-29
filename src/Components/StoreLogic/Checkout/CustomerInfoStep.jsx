@@ -106,7 +106,7 @@ const CustomerInfoStep = ({ orderData, onComplete, onError }) => {
           ]}
         >
           <Input
-            prefix={<PhoneOutlined className="Flipped" />}
+            prefix={<PhoneOutlined className="" />}
             placeholder="Enter your 10-digit mobile number"
             size="large"
             maxLength={10}
