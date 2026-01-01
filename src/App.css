@@ -518,9 +518,10 @@ b {
 
 html,
 body {
-  overflow-x: hidden;
   max-width: 100%;
 }
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+
 }
