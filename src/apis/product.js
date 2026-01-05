@@ -128,7 +128,7 @@ const createProductApi = () => {
 };
 
 const productApi = createProductApi();
-
+//fixed
 // Additional API methods for products listing
 export const getProducts = async (params = {}, signal = null) => {
   // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
