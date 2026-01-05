@@ -5,44 +5,58 @@ const createProductApi = () => {
   const api = createBaseApi(URLS.base);
   return {
     // Get product by ID
-    getProductById: (productId) =>
-      api.get(`/products/${productId}`).then((res) => {
+    getProductById: (productId, signal = null) => {
+      const config = signal ? { signal } : {};
+      return api.get(`/products/${productId}`, config).then((res) => {
         console.log('Product API Response:', res.data);
         return res.data;
-      }),
+      });
+    },
 
     // Get products by category
-    getProductsByCategory: (categoryId, params = {}) =>
-      api
-        .get(`/products/category/${categoryId}`, { params })
-        .then((res) => res.data),
+    getProductsByCategory: (categoryId, params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get(`/products/category/${categoryId}`, config).then((res) => res.data);
+    },
 
     // Get products by subcategory
-    getProductsBySubcategory: (subcategoryId, params = {}) =>
-      api
-        .get(`/products/subcategory/${subcategoryId}`, { params })
-        .then((res) => res.data),
+    getProductsBySubcategory: (subcategoryId, params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get(`/products/subcategory/${subcategoryId}`, config).then((res) => res.data);
+    },
 
     // Search products
-    searchProducts: (query, params = {}) =>
-      api
-        .get("/products/search", { params: { q: query, ...params } })
-        .then((res) => res.data),
+    searchProducts: (query, params = {}, signal = null) => {
+      const config = { params: { q: query, ...params } };
+      if (signal) config.signal = signal;
+      return api.get("/products/search", config).then((res) => res.data);
+    },
 
     // Get featured products
-    getFeaturedProducts: (params = {}) =>
-      api.get("/products/featured", { params }).then((res) => res.data),
+    getFeaturedProducts: (params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/featured", config).then((res) => res.data);
+    },
 
     // Get new arrivals
-    getNewArrivals: (params = {}) =>
-      api.get("/products/new-arrivals", { params }).then((res) => res.data),
+    getNewArrivals: (params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/new-arrivals", config).then((res) => res.data);
+    },
 
     // Get best sellers
-    getBestSellers: (params = {}) =>
-      api.get("/products/best-sellers", { params }).then((res) => res.data),
+    getBestSellers: (params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/best-sellers", config).then((res) => res.data);
+    },
 
     // Get all products with filters (public endpoint)
-    getProducts: (params = {}) => {
+    getProducts: (params = {}, signal = null) => {
       // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
       const searchParams = new URLSearchParams();
 
@@ -60,35 +74,63 @@ const createProductApi = () => {
       const url = queryString
         ? `/products/public?${queryString}`
         : "/products/public";
-      return api.get(url).then((res) => res.data);
+      
+      // Only include signal in config if it's not null
+      const config = signal ? { signal } : {};
+      
+      return api.get(url, config)
+        .then((res) => res.data)
+        .catch((error) => {
+          // Check if request was cancelled
+          if (signal && signal.aborted) {
+            throw error; // Re-throw cancelled errors
+          }
+          
+          // Handle CORS and network errors
+          if (!error.response) {
+            // This is a network error or CORS error
+            if (error.code === 'ERR_CANCELED' || error.name === 'AbortError' || error.name === 'CanceledError') {
+              throw error; // Re-throw cancellation errors
+            }
+            // For other network errors, throw with a more descriptive message
+            const errorMessage = error.message || 'Network error occurred';
+            throw new Error(`Failed to fetch products: ${errorMessage}. Please check your connection and try again.`);
+          }
+          
+          // Re-throw other errors
+          throw error;
+        });
     },
 
     // Get all unique sizes from products
-    getSizes: (type = null) => {
+    getSizes: (type = null, signal = null) => {
       const params = type ? { type } : {};
-      return api.get("/products/sizes", { params }).then((res) => res.data);
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/sizes", config).then((res) => res.data);
     },
 
     // Get all unique colors from products
-    getColors: (type = null) => {
+    getColors: (type = null, signal = null) => {
       const params = type ? { type } : {};
-      return api.get("/products/colors", { params }).then((res) => res.data);
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/colors", config).then((res) => res.data);
     },
 
     // Get search suggestions (autocomplete)
-    getSearchSuggestions: (query, limit = 10) =>
-      api
-        .get("/products/search-suggestions", {
-          params: { q: query, limit },
-        })
-        .then((res) => res.data),
+    getSearchSuggestions: (query, limit = 10, signal = null) => {
+      const config = { params: { q: query, limit } };
+      if (signal) config.signal = signal;
+      return api.get("/products/search-suggestions", config).then((res) => res.data);
+    },
   };
 };
 
 const productApi = createProductApi();
 
 // Additional API methods for products listing
-export const getProducts = async (params = {}) => {
+export const getProducts = async (params = {}, signal = null) => {
   // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
   const searchParams = new URLSearchParams();
 
@@ -109,7 +151,32 @@ export const getProducts = async (params = {}) => {
 
   // Create a new API instance for this call
   const api = createBaseApi(URLS.base);
-  return api.get(url).then((res) => res.data);
+  
+  // Only include signal in config if it's not null
+  const config = signal ? { signal } : {};
+  
+  return api.get(url, config)
+    .then((res) => res.data)
+    .catch((error) => {
+      // Check if request was cancelled
+      if (signal && signal.aborted) {
+        throw error; // Re-throw cancelled errors
+      }
+      
+      // Handle CORS and network errors
+      if (!error.response) {
+        // This is a network error or CORS error
+        if (error.code === 'ERR_CANCELED' || error.name === 'AbortError' || error.name === 'CanceledError') {
+          throw error; // Re-throw cancellation errors
+        }
+        // For other network errors, throw with a more descriptive message
+        const errorMessage = error.message || 'Network error occurred';
+        throw new Error(`Failed to fetch products: ${errorMessage}. Please check your connection and try again.`);
+      }
+      
+      // Re-throw other errors
+      throw error;
+    });
 };
 
 export default productApi;

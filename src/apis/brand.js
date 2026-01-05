@@ -5,9 +5,11 @@ const createBrandApi = () => {
   const api = createBaseApi(`${URLS.base}/products`);
   return {
     // Get brands for selection
-    getBrandsForSelection: (type = null) => {
+    getBrandsForSelection: (type = null, signal = null) => {
       const params = type ? { type } : {};
-      return api.get("/brands", { params }).then((res) => res.data);
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/brands", config).then((res) => res.data);
     },
   };
 };
