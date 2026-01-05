@@ -12,6 +12,16 @@ const createOrderApi = () => {
         .catch((error) => {
           throw error.response?.data || error;
         }),
+    // Track order
+    trackOrder: (orderId) =>
+      api
+        .get("/track-order", {
+          params: { orderId },
+        })
+        .then((res) => res.data)
+        .catch((error) => {
+          throw error.response?.data || error;
+        }),
   };
 };
 
