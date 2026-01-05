@@ -27,19 +27,31 @@ const createBaseApi = (url, headers = {}, config = {}) => {
   api.interceptors.response.use(
     (response) => response,
     (error) => {
-      // Handle cancelled requests (AbortError)
-      if (axios.isCancel(error) || error.name === 'AbortError' || error.name === 'CanceledError') {
+      // Handle cancelled requests (AbortError) - silently reject without logging
+      if (axios.isCancel(error) || 
+          error.name === 'AbortError' || 
+          error.name === 'CanceledError' ||
+          error.code === 'ERR_CANCELED' ||
+          error.isCancelled === true) {
         // Return a rejected promise that can be caught but won't log errors
         return Promise.reject(error);
       }
 
-      // Handle CORS errors
+      // Handle CORS and network errors - only log if not cancelled
       if (!error.response) {
-        // Network error or CORS error
-        if (error.message && error.message.includes('CORS')) {
-          console.warn('CORS error detected. This may be due to server configuration.');
-        } else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-          console.warn('Network error. Request may have been cancelled or server is unreachable.');
+        // Check if this might be a cancelled request (no response usually means cancelled or network issue)
+        // Only log if we're sure it's not a cancellation
+        const isLikelyCancelled = error.config?.signal?.aborted || 
+                                 error.message?.includes('cancelled') ||
+                                 error.message?.includes('aborted');
+        
+        if (!isLikelyCancelled) {
+          // Network error or CORS error (but not cancelled)
+          if (error.message && error.message.includes('CORS')) {
+            console.warn('CORS error detected. This may be due to server configuration.');
+          } else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+            console.warn('Network error. Request may have been cancelled or server is unreachable.');
+          }
         }
       }
 

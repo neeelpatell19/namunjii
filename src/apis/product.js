@@ -1,8 +1,13 @@
 import createBaseApi from "./base";
 import { URLS } from "../config/urls";
+import axios from "axios";
 
 const createProductApi = () => {
   const api = createBaseApi(URLS.base);
+  
+  // Request cache to prevent duplicate simultaneous requests
+  const pendingRequests = new Map();
+  
   return {
     // Get product by ID
     getProductById: (productId, signal = null) => {
@@ -75,24 +80,61 @@ const createProductApi = () => {
         ? `/products/public?${queryString}`
         : "/products/public";
       
-      // Only include signal in config if it's not null
-      const config = signal ? { signal } : {};
+      // Create a unique key for request deduplication
+      const requestKey = url;
       
-      return api.get(url, config)
-        .then((res) => res.data)
+      // Cancel any existing pending request for this URL
+      // This prevents multiple simultaneous requests for the same URL
+      if (pendingRequests.has(requestKey)) {
+        const existingRequest = pendingRequests.get(requestKey);
+        // Cancel the previous request if it's still active
+        if (existingRequest.abortController && !existingRequest.abortController.signal.aborted) {
+          existingRequest.abortController.abort();
+        }
+        pendingRequests.delete(requestKey);
+      }
+      
+      // Use the provided signal, or create a new AbortController for deduplication
+      const abortController = signal ? null : new AbortController();
+      const requestSignal = signal || abortController.signal;
+      
+      // Only include signal in config if it's not null
+      const config = { signal: requestSignal };
+      
+      // Create the request promise
+      const requestPromise = api.get(url, config)
+        .then((res) => {
+          // Clean up from pending requests on success
+          if (pendingRequests.get(requestKey)?.promise === requestPromise) {
+            pendingRequests.delete(requestKey);
+          }
+          return res.data;
+        })
         .catch((error) => {
-          // Check if request was cancelled
-          if (signal && signal.aborted) {
-            throw error; // Re-throw cancelled errors
+          // Clean up from pending requests on error
+          if (pendingRequests.get(requestKey)?.promise === requestPromise) {
+            pendingRequests.delete(requestKey);
           }
           
-          // Handle CORS and network errors
+          // Check if request was cancelled - silently handle cancellation errors
+          // Don't log or throw errors for cancelled requests
+          if (requestSignal.aborted || 
+              error.code === 'ERR_CANCELED' || 
+              error.name === 'AbortError' || 
+              error.name === 'CanceledError' ||
+              axios.isCancel(error)) {
+            // Create a silent cancellation error that components can check for
+            const cancelError = new Error('Request cancelled');
+            cancelError.name = 'AbortError';
+            cancelError.isCancelled = true;
+            cancelError.code = 'ERR_CANCELED';
+            throw cancelError;
+          }
+          
+          // Handle CORS and network errors for non-cancelled requests
           if (!error.response) {
             // This is a network error or CORS error
-            if (error.code === 'ERR_CANCELED' || error.name === 'AbortError' || error.name === 'CanceledError') {
-              throw error; // Re-throw cancellation errors
-            }
-            // For other network errors, throw with a more descriptive message
+            // Only throw if it's not a cancellation
             const errorMessage = error.message || 'Network error occurred';
             throw new Error(`Failed to fetch products: ${errorMessage}. Please check your connection and try again.`);
           }
@@ -100,6 +142,14 @@ const createProductApi = () => {
           // Re-throw other errors
           throw error;
         });
+      
+      // Store the pending request for deduplication
+      pendingRequests.set(requestKey, {
+        promise: requestPromise,
+        abortController: abortController
+      });
+      
+      return requestPromise;
     },
 
     // Get all unique sizes from products
@@ -128,55 +178,8 @@ const createProductApi = () => {
 };
 
 const productApi = createProductApi();
-//fixed
-// Additional API methods for products listing
-export const getProducts = async (params = {}, signal = null) => {
-  // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
-  const searchParams = new URLSearchParams();
 
-  Object.entries(params).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      // For arrays, append each value separately with the same key
-      value.forEach((v) => searchParams.append(key, v));
-    } else if (value !== null && value !== undefined && value !== "") {
-      // For non-array values, append normally
-      searchParams.append(key, value);
-    }
-  });
-
-  const queryString = searchParams.toString();
-  const url = queryString
-    ? `/products/public?${queryString}`
-    : "/products/public";
-
-  // Create a new API instance for this call
-  const api = createBaseApi(URLS.base);
-  
-  // Only include signal in config if it's not null
-  const config = signal ? { signal } : {};
-  
-  return api.get(url, config)
-    .then((res) => res.data)
-    .catch((error) => {
-      // Check if request was cancelled
-      if (signal && signal.aborted) {
-        throw error; // Re-throw cancelled errors
-      }
-      
-      // Handle CORS and network errors
-      if (!error.response) {
-        // This is a network error or CORS error
-        if (error.code === 'ERR_CANCELED' || error.name === 'AbortError' || error.name === 'CanceledError') {
-          throw error; // Re-throw cancellation errors
-        }
-        // For other network errors, throw with a more descriptive message
-        const errorMessage = error.message || 'Network error occurred';
-        throw new Error(`Failed to fetch products: ${errorMessage}. Please check your connection and try again.`);
-      }
-      
-      // Re-throw other errors
-      throw error;
-    });
-};
+// Export getProducts for convenience (uses the same instance)
+export const getProducts = productApi.getProducts.bind(productApi);
 
 export default productApi;
