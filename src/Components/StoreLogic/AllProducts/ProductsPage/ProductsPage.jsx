@@ -524,6 +524,10 @@ const ProductsPage = () => {
 
     // Only fetch if the type/brand combination has changed
     if (cacheKey === lastFilterTypeRef.current) {
+      // Ensure loading states are cleared if we're not fetching
+      setBrandsLoading(false);
+      setSizesLoading(false);
+      setColorsLoading(false);
       return;
     }
 
@@ -557,40 +561,53 @@ const ProductsPage = () => {
             productApi.getColors(sizeColorParams, abortController.signal),
           ]);
 
-        // Check if request was cancelled
+        // Check if request was cancelled - but only return early if we don't have valid responses
+        // (retry logic might have succeeded even after cancellation)
         if (abortController.signal.aborted) {
-          return;
+          // If we got responses despite cancellation (retry succeeded), process them
+          const hasValidResponses = 
+            (brandsResponse && brandsResponse.success !== undefined) ||
+            (sizesResponse && sizesResponse.success !== undefined) ||
+            (colorsResponse && colorsResponse.success !== undefined);
+          
+          if (!hasValidResponses) {
+            return;
+          }
         }
 
-        if (brandsResponse.success) {
+        if (brandsResponse && brandsResponse.success) {
             if (window.fbq) window.fbq("track", "DesginerPageView");
           //  console.log("metapixel Desginer")
           setBrands(brandsResponse.data || []);
-        } else {
+        } else if (brandsResponse) {
           console.error("Failed to fetch brands:", brandsResponse.message);
           setBrands([]);
         }
 
-        if (sizesResponse.success) {
+        if (sizesResponse && sizesResponse.success) {
             if (window.fbq) window.fbq("track", "SizePageView");
           //  console.log("metapixel Size")
           setSizes(sizesResponse.data || []);
-        } else {
+        } else if (sizesResponse) {
           console.error("Failed to fetch sizes:", sizesResponse.message);
           setSizes([]);
         }
 
-        if (colorsResponse.success) {
+        if (colorsResponse && colorsResponse.success) {
             if (window.fbq) window.fbq("track", "ColorsPageView");
           //  console.log("metapixel Colors")
           setColors(colorsResponse.data || []);
-        } else {
+        } else if (colorsResponse) {
           console.error("Failed to fetch colors:", colorsResponse.message);
           setColors([]);
         }
       } catch (err) {
-        // Ignore cancellation errors
-        if (err.name === 'AbortError' || err.name === 'CanceledError' || abortController.signal.aborted) {
+        // Ignore cancellation errors only if we truly don't have responses
+        // (retry might still be in progress or succeeded)
+        if (err.name === 'AbortError' || err.name === 'CanceledError') {
+          // Don't return immediately - retry might succeed
+          // Just log and set empty arrays as fallback
+          console.warn("Request was cancelled, but retry may succeed");
           return;
         }
         console.error("Error fetching filter options:", err);
@@ -598,12 +615,17 @@ const ProductsPage = () => {
         setSizes([]);
         setColors([]);
       } finally {
-        // Only update loading state if request wasn't cancelled
-        if (!abortController.signal.aborted) {
-          setBrandsLoading(false);
-          setSizesLoading(false);
-          setColorsLoading(false);
-        }
+        // Always clear loading state after a short delay to allow retries to complete
+        // Check if this is still the current request before clearing
+        const currentAbortController = filterOptionsAbortControllerRef.current;
+        setTimeout(() => {
+          // Only clear loading if this is still the active request
+          if (currentAbortController === abortController) {
+            setBrandsLoading(false);
+            setSizesLoading(false);
+            setColorsLoading(false);
+          }
+        }, 300);
       }
     };
 
