@@ -251,6 +251,12 @@ const ProductsPage = () => {
   const lastFilterTypeRef = useRef(null);
   const isLoadingMoreRef = useRef(false);
 
+  // AbortController refs for request cancellation
+  const abortControllerRef = useRef(null);
+  const loadMoreAbortControllerRef = useRef(null);
+  const filterOptionsAbortControllerRef = useRef(null);
+  const searchSuggestionsAbortControllerRef = useRef(null);
+
   // Update refs when state changes
   useEffect(() => {
     filtersRef.current = filters;
@@ -303,6 +309,15 @@ const ProductsPage = () => {
   // Fetch products function
   const fetchProducts = useCallback(
     async (customFilters = null, customPriceRange = null) => {
+      // Cancel previous request if it exists
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create new AbortController for this request
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
       try {
         setLoading(true);
         setError(null);
@@ -333,7 +348,12 @@ const ProductsPage = () => {
           }
         });
 
-        const response = await productApi.getProducts(queryParams);
+        const response = await productApi.getProducts(queryParams, abortController.signal);
+
+        // Check if request was cancelled
+        if (abortController.signal.aborted) {
+          return;
+        }
 
         if (response.success) {
           setProducts(response.data);
@@ -343,10 +363,17 @@ const ProductsPage = () => {
           setError(response.message || "Failed to fetch products");
         }
       } catch (err) {
+        // Ignore cancellation errors
+        if (err.name === 'AbortError' || err.name === 'CanceledError' || abortController.signal.aborted) {
+          return;
+        }
         console.error("Error fetching products:", err);
         setError(err.message || "Failed to fetch products");
       } finally {
-        setLoading(false);
+        // Only update loading state if request wasn't cancelled
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+        }
       }
     },
     []
@@ -368,6 +395,15 @@ const ProductsPage = () => {
     ) {
       return;
     }
+
+    // Cancel previous load more request if it exists
+    if (loadMoreAbortControllerRef.current) {
+      loadMoreAbortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    const abortController = new AbortController();
+    loadMoreAbortControllerRef.current = abortController;
 
     try {
       isLoadingMoreRef.current = true;
@@ -397,7 +433,12 @@ const ProductsPage = () => {
         }
       });
 
-      const response = await productApi.getProducts(queryParams);
+      const response = await productApi.getProducts(queryParams, abortController.signal);
+
+      // Check if request was cancelled
+      if (abortController.signal.aborted) {
+        return;
+      }
 
       if (response.success) {
         // Update pagination
@@ -412,10 +453,17 @@ const ProductsPage = () => {
         setFilters((prevFilters) => ({ ...prevFilters, page: nextPage }));
       }
     } catch (err) {
+      // Ignore cancellation errors
+      if (err.name === 'AbortError' || err.name === 'CanceledError' || abortController.signal.aborted) {
+        return;
+      }
       console.error("Error loading more products:", err);
     } finally {
-      setLoadingMore(false);
-      isLoadingMoreRef.current = false;
+      // Only update loading state if request wasn't cancelled
+      if (!abortController.signal.aborted) {
+        setLoadingMore(false);
+        isLoadingMoreRef.current = false;
+      }
     }
   }, [loading, loadingMore]);
 
@@ -476,11 +524,24 @@ const ProductsPage = () => {
 
     // Only fetch if the type/brand combination has changed
     if (cacheKey === lastFilterTypeRef.current) {
+      // Ensure loading states are cleared if we're not fetching
+      setBrandsLoading(false);
+      setSizesLoading(false);
+      setColorsLoading(false);
       return;
     }
 
     // Update the ref to track the current type
     lastFilterTypeRef.current = cacheKey;
+
+    // Cancel previous filter options request if it exists
+    if (filterOptionsAbortControllerRef.current) {
+      filterOptionsAbortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    const abortController = new AbortController();
+    filterOptionsAbortControllerRef.current = abortController;
 
     // Fetch all three in parallel
     const fetchAll = async () => {
@@ -495,50 +556,87 @@ const ProductsPage = () => {
 
         const [brandsResponse, sizesResponse, colorsResponse] =
           await Promise.all([
-            brandApi.getBrandsForSelection(currentType),
-            productApi.getSizes(sizeColorParams),
-            productApi.getColors(sizeColorParams),
+            brandApi.getBrandsForSelection(currentType, abortController.signal),
+            productApi.getSizes(sizeColorParams, abortController.signal),
+            productApi.getColors(sizeColorParams, abortController.signal),
           ]);
 
-        if (brandsResponse.success) {
+        // Check if request was cancelled - but only return early if we don't have valid responses
+        // (retry logic might have succeeded even after cancellation)
+        if (abortController.signal.aborted) {
+          // If we got responses despite cancellation (retry succeeded), process them
+          const hasValidResponses = 
+            (brandsResponse && brandsResponse.success !== undefined) ||
+            (sizesResponse && sizesResponse.success !== undefined) ||
+            (colorsResponse && colorsResponse.success !== undefined);
+          
+          if (!hasValidResponses) {
+            return;
+          }
+        }
+
+        if (brandsResponse && brandsResponse.success) {
             if (window.fbq) window.fbq("track", "DesginerPageView");
           //  console.log("metapixel Desginer")
           setBrands(brandsResponse.data || []);
-        } else {
+        } else if (brandsResponse) {
           console.error("Failed to fetch brands:", brandsResponse.message);
           setBrands([]);
         }
 
-        if (sizesResponse.success) {
+        if (sizesResponse && sizesResponse.success) {
             if (window.fbq) window.fbq("track", "SizePageView");
           //  console.log("metapixel Size")
           setSizes(sizesResponse.data || []);
-        } else {
+        } else if (sizesResponse) {
           console.error("Failed to fetch sizes:", sizesResponse.message);
           setSizes([]);
         }
 
-        if (colorsResponse.success) {
+        if (colorsResponse && colorsResponse.success) {
             if (window.fbq) window.fbq("track", "ColorsPageView");
           //  console.log("metapixel Colors")
           setColors(colorsResponse.data || []);
-        } else {
+        } else if (colorsResponse) {
           console.error("Failed to fetch colors:", colorsResponse.message);
           setColors([]);
         }
       } catch (err) {
+        // Ignore cancellation errors only if we truly don't have responses
+        // (retry might still be in progress or succeeded)
+        if (err.name === 'AbortError' || err.name === 'CanceledError') {
+          // Don't return immediately - retry might succeed
+          // Just log and set empty arrays as fallback
+          console.warn("Request was cancelled, but retry may succeed");
+          return;
+        }
         console.error("Error fetching filter options:", err);
         setBrands([]);
         setSizes([]);
         setColors([]);
       } finally {
-        setBrandsLoading(false);
-        setSizesLoading(false);
-        setColorsLoading(false);
+        // Always clear loading state after a short delay to allow retries to complete
+        // Check if this is still the current request before clearing
+        const currentAbortController = filterOptionsAbortControllerRef.current;
+        setTimeout(() => {
+          // Only clear loading if this is still the active request
+          if (currentAbortController === abortController) {
+            setBrandsLoading(false);
+            setSizesLoading(false);
+            setColorsLoading(false);
+          }
+        }, 300);
       }
     };
 
     fetchAll();
+
+    // Cleanup function to cancel request on unmount or when dependencies change
+    return () => {
+      if (filterOptionsAbortControllerRef.current) {
+        filterOptionsAbortControllerRef.current.abort();
+      }
+    };
   }, [
     filters.gender,
     filters.productType,
@@ -546,6 +644,25 @@ const ProductsPage = () => {
     filters.brand,
     getFilterType,
   ]);
+
+  // Cleanup: Cancel all pending requests on component unmount
+  useEffect(() => {
+    return () => {
+      // Cancel all pending requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      if (loadMoreAbortControllerRef.current) {
+        loadMoreAbortControllerRef.current.abort();
+      }
+      if (filterOptionsAbortControllerRef.current) {
+        filterOptionsAbortControllerRef.current.abort();
+      }
+      if (searchSuggestionsAbortControllerRef.current) {
+        searchSuggestionsAbortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   // Fetch subcategories when category or gender changes
   useEffect(() => {
@@ -853,14 +970,30 @@ const ProductsPage = () => {
       return;
     }
 
+    // Cancel previous search suggestions request if it exists
+    if (searchSuggestionsAbortControllerRef.current) {
+      searchSuggestionsAbortControllerRef.current.abort();
+    }
+
     // Debounce the API call
     const timeoutId = setTimeout(async () => {
+      // Create new AbortController for this request
+      const abortController = new AbortController();
+      searchSuggestionsAbortControllerRef.current = abortController;
+
       setSuggestionsLoading(true);
       try {
         const response = await productApi.getSearchSuggestions(
           searchInput.trim(),
-          10
+          10,
+          abortController.signal
         );
+
+        // Check if request was cancelled
+        if (abortController.signal.aborted) {
+          return;
+        }
+
         if (response.success) {
             if (window.fbq) window.fbq("track", "handleSearchPageView");
           //  console.log("metapixel handlesearch redirected to product page")
@@ -869,14 +1002,27 @@ const ProductsPage = () => {
           setSearchSuggestions([]);
         }
       } catch (err) {
+        // Ignore cancellation errors
+        if (err.name === 'AbortError' || err.name === 'CanceledError' || abortController.signal.aborted) {
+          return;
+        }
         console.error("Error fetching search suggestions:", err);
         setSearchSuggestions([]);
       } finally {
-        setSuggestionsLoading(false);
+        // Only update loading state if request wasn't cancelled
+        if (!abortController.signal.aborted) {
+          setSuggestionsLoading(false);
+        }
       }
     }, 300);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      // Cancel request on cleanup
+      if (searchSuggestionsAbortControllerRef.current) {
+        searchSuggestionsAbortControllerRef.current.abort();
+      }
+    };
   }, [searchInput]);
 
   // Handle click outside to close suggestions

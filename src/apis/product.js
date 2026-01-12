@@ -1,48 +1,172 @@
 import createBaseApi from "./base";
 import { URLS } from "../config/urls";
+import axios from "axios";
 
 const createProductApi = () => {
   const api = createBaseApi(URLS.base);
+
+  // Request cache to prevent duplicate simultaneous requests
+  const pendingRequests = new Map();
+
+  // Track previous filter parameters to detect filter changes
+  let previousFilters = null;
+
+  // Helper function to extract filter parameters (excluding pagination and sorting)
+  const getFilterParams = (params) => {
+    const filterKeys = [
+      "brand",
+      "category",
+      "subcategory",
+      "gender",
+      "productType",
+      "search",
+      "size",
+      "color",
+      "isNewArrival",
+      "isBestSeller",
+      "isFeatured",
+      "isNamunjiiExclusive",
+      "orderType",
+      "minPrice",
+      "maxPrice",
+    ];
+
+    const filterParams = {};
+    filterKeys.forEach((key) => {
+      const value = params[key];
+      // Only include if value exists and is not empty
+      if (value !== null && value !== undefined && value !== "") {
+        if (Array.isArray(value)) {
+          // For arrays, only include if not empty
+          if (value.length > 0) {
+            filterParams[key] = [...value].sort().join(",");
+          }
+        } else {
+          filterParams[key] = value;
+        }
+      }
+    });
+
+    return JSON.stringify(filterParams);
+  };
+
+  // Helper function to check if filters have changed
+  const haveFiltersChanged = (currentParams) => {
+    const currentFilters = getFilterParams(currentParams);
+
+    if (previousFilters === null) {
+      previousFilters = currentFilters;
+      return false; // First request, no change
+    }
+
+    const changed = previousFilters !== currentFilters;
+    if (changed) {
+      previousFilters = currentFilters;
+    }
+
+    return changed;
+  };
+
+  // Helper function to retry requests with exponential backoff
+  const retryRequest = async (requestFn, maxRetries = 3, initialDelay = 300) => {
+    let lastError;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const result = await requestFn();
+        return result;
+      } catch (error) {
+        lastError = error;
+
+        // Don't retry if request was intentionally cancelled
+        if (
+          error.code === "ERR_CANCELED" ||
+          error.name === "AbortError" ||
+          error.name === "CanceledError" ||
+          axios.isCancel(error) ||
+          error.isCancelled === true
+        ) {
+          throw error;
+        }
+
+        // Don't retry on last attempt
+        if (attempt === maxRetries) {
+          throw error;
+        }
+
+        // Wait before retrying (exponential backoff)
+        const delay = initialDelay * Math.pow(2, attempt);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    throw lastError;
+  };
+
   return {
     // Get product by ID
-    getProductById: (productId) =>
-      api.get(`/products/${productId}`).then((res) => {
-        console.log('Product API Response:', res.data);
+    getProductById: (productId, signal = null) => {
+      const config = signal ? { signal } : {};
+      return api.get(`/products/${productId}`, config).then((res) => {
+        console.log("Product API Response:", res.data);
         return res.data;
-      }),
+      });
+    },
 
     // Get products by category
-    getProductsByCategory: (categoryId, params = {}) =>
-      api
-        .get(`/products/category/${categoryId}`, { params })
-        .then((res) => res.data),
+    getProductsByCategory: (categoryId, params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api
+        .get(`/products/category/${categoryId}`, config)
+        .then((res) => res.data);
+    },
 
     // Get products by subcategory
-    getProductsBySubcategory: (subcategoryId, params = {}) =>
-      api
-        .get(`/products/subcategory/${subcategoryId}`, { params })
-        .then((res) => res.data),
+    getProductsBySubcategory: (subcategoryId, params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api
+        .get(`/products/subcategory/${subcategoryId}`, config)
+        .then((res) => res.data);
+    },
 
     // Search products
-    searchProducts: (query, params = {}) =>
-      api
-        .get("/products/search", { params: { q: query, ...params } })
-        .then((res) => res.data),
+    searchProducts: (query, params = {}, signal = null) => {
+      const config = { params: { q: query, ...params } };
+      if (signal) config.signal = signal;
+      return api.get("/products/search", config).then((res) => res.data);
+    },
 
     // Get featured products
-    getFeaturedProducts: (params = {}) =>
-      api.get("/products/featured", { params }).then((res) => res.data),
+    getFeaturedProducts: (params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/featured", config).then((res) => res.data);
+    },
 
     // Get new arrivals
-    getNewArrivals: (params = {}) =>
-      api.get("/products/new-arrivals", { params }).then((res) => res.data),
+    getNewArrivals: (params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/new-arrivals", config).then((res) => res.data);
+    },
 
     // Get best sellers
-    getBestSellers: (params = {}) =>
-      api.get("/products/best-sellers", { params }).then((res) => res.data),
+    getBestSellers: (params = {}, signal = null) => {
+      const config = { params };
+      if (signal) config.signal = signal;
+      return api.get("/products/best-sellers", config).then((res) => res.data);
+    },
 
     // Get all products with filters (public endpoint)
-    getProducts: (params = {}) => {
+    getProducts: (params = {}, signal = null) => {
+      // Check if filters have changed - if so, reset page to 1
+      const filtersChanged = haveFiltersChanged(params);
+      if (filtersChanged && params.page && params.page > 1) {
+        params = { ...params, page: 1 };
+      }
+
       // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
       const searchParams = new URLSearchParams();
 
@@ -60,56 +184,191 @@ const createProductApi = () => {
       const url = queryString
         ? `/products/public?${queryString}`
         : "/products/public";
-      return api.get(url).then((res) => res.data);
+
+      // Create a unique key for request deduplication
+      const requestKey = url;
+
+      // Cancel any existing pending request for this URL
+      // This prevents multiple simultaneous requests for the same URL
+      if (pendingRequests.has(requestKey)) {
+        const existingRequest = pendingRequests.get(requestKey);
+        // Cancel the previous request if it's still active
+        if (
+          existingRequest.abortController &&
+          !existingRequest.abortController.signal.aborted
+        ) {
+          existingRequest.abortController.abort();
+        }
+        pendingRequests.delete(requestKey);
+      }
+
+      // Use the provided signal, or create a new AbortController for deduplication
+      const abortController = signal ? null : new AbortController();
+      const requestSignal = signal || abortController.signal;
+
+      // Only include signal in config if it's not null
+      const config = { signal: requestSignal };
+
+      // Create the request promise
+      const requestPromise = api
+        .get(url, config)
+        .then((res) => {
+          // Clean up from pending requests on success
+          if (pendingRequests.get(requestKey)?.promise === requestPromise) {
+            pendingRequests.delete(requestKey);
+          }
+          return res.data;
+        })
+        .catch((error) => {
+          // Clean up from pending requests on error
+          if (pendingRequests.get(requestKey)?.promise === requestPromise) {
+            pendingRequests.delete(requestKey);
+          }
+
+          // Check if request was cancelled - silently handle cancellation errors
+          // Don't log or throw errors for cancelled requests
+          if (
+            requestSignal.aborted ||
+            error.code === "ERR_CANCELED" ||
+            error.name === "AbortError" ||
+            error.name === "CanceledError" ||
+            axios.isCancel(error)
+          ) {
+            // Create a silent cancellation error that components can check for
+            const cancelError = new Error("Request cancelled");
+            cancelError.name = "AbortError";
+            cancelError.isCancelled = true;
+            cancelError.code = "ERR_CANCELED";
+            throw cancelError;
+          }
+
+          // Handle CORS and network errors for non-cancelled requests
+          if (!error.response) {
+            // This is a network error or CORS error
+            // Only throw if it's not a cancellation
+            const errorMessage = error.message || "Network error occurred";
+            throw new Error(
+              `Failed to fetch products: ${errorMessage}. Please check your connection and try again.`
+            );
+          }
+
+          // Re-throw other errors
+          throw error;
+        });
+
+      // Store the pending request for deduplication
+      pendingRequests.set(requestKey, {
+        promise: requestPromise,
+        abortController: abortController,
+      });
+
+      return requestPromise;
     },
 
     // Get all unique sizes from products
-    getSizes: (type = null) => {
+    getSizes: (type = null, signal = null) => {
       const params = type ? { type } : {};
-      return api.get("/products/sizes", { params }).then((res) => res.data);
+      
+      // Create request function that can retry without signal if canceled
+      const makeRequest = (useSignal = true) => {
+        const config = { params };
+        if (useSignal && signal && !signal.aborted) config.signal = signal;
+        return api.get("/products/sizes", config).then((res) => res.data);
+      };
+      
+      // Try initial request
+      return makeRequest(true)
+        .catch((error) => {
+          // Check if request was canceled
+          const isCanceled = 
+            error.code === "ERR_CANCELED" ||
+            error.name === "AbortError" ||
+            error.name === "CanceledError" ||
+            axios.isCancel(error) ||
+            error.isCancelled === true ||
+            (signal && signal.aborted);
+          
+          // If canceled, retry without signal (critical request)
+          if (isCanceled) {
+            // Wait a bit then retry without signal, with additional retries
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                retryRequest(() => makeRequest(false), 2, 200)
+                  .then(resolve)
+                  .catch((retryError) => {
+                    console.error("Error fetching sizes after retries:", retryError);
+                    reject(retryError);
+                  });
+              }, 200);
+            });
+          }
+          // For other errors, use retry logic
+          return retryRequest(() => makeRequest(true)).catch((retryError) => {
+            console.error("Error fetching sizes after retries:", retryError);
+            throw retryError;
+          });
+        });
     },
 
     // Get all unique colors from products
-    getColors: (type = null) => {
+    getColors: (type = null, signal = null) => {
       const params = type ? { type } : {};
-      return api.get("/products/colors", { params }).then((res) => res.data);
+      
+      // Create request function that can retry without signal if canceled
+      const makeRequest = (useSignal = true) => {
+        const config = { params };
+        if (useSignal && signal && !signal.aborted) config.signal = signal;
+        return api.get("/products/colors", config).then((res) => res.data);
+      };
+      
+      // Try initial request
+      return makeRequest(true)
+        .catch((error) => {
+          // Check if request was canceled
+          const isCanceled = 
+            error.code === "ERR_CANCELED" ||
+            error.name === "AbortError" ||
+            error.name === "CanceledError" ||
+            axios.isCancel(error) ||
+            error.isCancelled === true ||
+            (signal && signal.aborted);
+          
+          // If canceled, retry without signal (critical request)
+          if (isCanceled) {
+            // Wait a bit then retry without signal, with additional retries
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                retryRequest(() => makeRequest(false), 2, 200)
+                  .then(resolve)
+                  .catch((retryError) => {
+                    console.error("Error fetching colors after retries:", retryError);
+                    reject(retryError);
+                  });
+              }, 200);
+            });
+          }
+          // For other errors, use retry logic
+          return retryRequest(() => makeRequest(true)).catch((retryError) => {
+            console.error("Error fetching colors after retries:", retryError);
+            throw retryError;
+          });
+        });
     },
 
     // Get search suggestions (autocomplete)
-    getSearchSuggestions: (query, limit = 10) =>
-      api
-        .get("/products/search-suggestions", {
-          params: { q: query, limit },
-        })
-        .then((res) => res.data),
+    getSearchSuggestions: (query, limit = 10, signal = null) => {
+      const config = { params: { q: query, limit } };
+      if (signal) config.signal = signal;
+      return api
+        .get("/products/search-suggestions", config)
+        .then((res) => res.data);
+    },
   };
 };
 
 const productApi = createProductApi();
 
-// Additional API methods for products listing
-export const getProducts = async (params = {}) => {
-  // Build query string manually to support arrays (e.g., ?size=XS&size=S&size=L)
-  const searchParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      // For arrays, append each value separately with the same key
-      value.forEach((v) => searchParams.append(key, v));
-    } else if (value !== null && value !== undefined && value !== "") {
-      // For non-array values, append normally
-      searchParams.append(key, value);
-    }
-  });
-
-  const queryString = searchParams.toString();
-  const url = queryString
-    ? `/products/public?${queryString}`
-    : "/products/public";
-
-  // Create a new API instance for this call
-  const api = createBaseApi(URLS.base);
-  return api.get(url).then((res) => res.data);
-};
+// Export getProducts for convenience (uses the same instance)
+export const getProducts = productApi.getProducts.bind(productApi);
 
 export default productApi;

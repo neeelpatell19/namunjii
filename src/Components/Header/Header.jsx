@@ -120,12 +120,30 @@ const Header = () => {
   const [showDesignersMegaMenu, setShowDesignersMegaMenu] = useState(false);
   const designersMegaMenuRef = useRef(null);
 
+  // AbortController ref for designer fetch
+  const designersAbortControllerRef = useRef(null);
+
   // Fetch designers (brands)
   useEffect(() => {
+    // Cancel previous request if it exists
+    if (designersAbortControllerRef.current) {
+      designersAbortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    const abortController = new AbortController();
+    designersAbortControllerRef.current = abortController;
+
     const fetchDesigners = async () => {
       try {
         setDesignersLoading(true);
-        const response = await brandApi.getBrandsForSelection();
+        const response = await brandApi.getBrandsForSelection(null, abortController.signal);
+        
+        // Check if request was cancelled
+        if (abortController.signal.aborted) {
+          return;
+        }
+
         if (response.success) {
           if (window.fbq) window.fbq("track", "DesignersPageView");
           // console.log("metapixel DesginersPageView");
@@ -135,14 +153,28 @@ const Header = () => {
           setDesigners([]);
         }
       } catch (err) {
+        // Ignore cancellation errors
+        if (err.name === 'AbortError' || err.name === 'CanceledError' || abortController.signal.aborted) {
+          return;
+        }
         console.error("Error fetching designers:", err);
         setDesigners([]);
       } finally {
-        setDesignersLoading(false);
+        // Only update loading state if request wasn't cancelled
+        if (!abortController.signal.aborted) {
+          setDesignersLoading(false);
+        }
       }
     };
 
     fetchDesigners();
+
+    // Cleanup function to cancel request on unmount
+    return () => {
+      if (designersAbortControllerRef.current) {
+        designersAbortControllerRef.current.abort();
+      }
+    };
   }, []);
 
   // Search state
