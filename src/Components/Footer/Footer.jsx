@@ -161,8 +161,9 @@ const Footer = () => {
       <div className="FooterCopyright">
         <div className="Container FooterCopyrightContent">
           <p>
-            Copyright @ 2025 <span>Namunjii</span>
+            Copyright @ {new Date().getFullYear()} <span>Namunjii</span> 
           </p>
+          <p>powered by <a href="https://prepseed.com">Prepseed</a></p>
         </div>
       </div>
     </div>

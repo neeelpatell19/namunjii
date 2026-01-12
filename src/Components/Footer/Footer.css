@@ -176,7 +176,19 @@
 .FooterCopyright {
   border-top: 1px solid var(--neutral-300);
   padding: 20px 0;
-  text-align: center;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.FooterCopyrightContent{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.FooterCopyrightContent p a{
+  color: white;
 }
 
 .FooterCopyright p {
@@ -203,6 +215,9 @@
   .FooterColumn {
     gap: 5px;
     margin-bottom: 20px;
+  }
+  .FooterCopyrightContent{
+    flex-direction: column;
   }
 
   /* Center the first column (Logo, Tagline, Contact Details) on mobile */
@@ -322,7 +337,6 @@
 }
 @media (max-width: 825px) {
   .padding-left{
-    padding-left: 80px !important;
+    /* padding-left: 80px !important; */
   }
   }
-}
