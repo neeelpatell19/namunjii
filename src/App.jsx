@@ -35,6 +35,7 @@ import { HomeDataProvider } from "./Components/StoreLogic/Context/HomeDataContex
 import { Provider } from "react-redux";
 import store from "./store";
 import { useEffect } from "react";
+import AuthBrandPolicy from "./Components/OthersComponents/BrandPolicy/AuthBrandPolicy";
 // Wrapper component for page transitions
 const PageTransition = ({ children }) => {
   return <div style={{ marginTop: -10 }}>{children}</div>;
@@ -243,6 +244,12 @@ const AnimatedRoutes = () => {
             </PageTransition>
           }
         />
+        <Route path="/authorization-brand-ownership-policy"
+        element={
+          <PageTransition>
+            <AuthBrandPolicy />
+          </PageTransition>
+        } />
       </Routes>
     </AnimatePresence>
   );
