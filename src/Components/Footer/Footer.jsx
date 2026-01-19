@@ -163,7 +163,7 @@ const Footer = () => {
           <p>
             Copyright @ {new Date().getFullYear()} <span>Namunjii</span> 
           </p>
-          <p>powered by <a href="https://prepseed.com">Prepseed</a></p>
+          <p className="powered-by-text">Powered by <a href="https://prepseed.com">Prepseed</a></p>
         </div>
       </div>
     </div>
