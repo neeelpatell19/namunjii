@@ -5,6 +5,7 @@ import {
   EnvironmentOutlined,
   PhoneOutlined,
   UserOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import checkoutApi from "../../../apis/checkout";
 
@@ -102,7 +103,7 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
     } catch (error) {
       console.error("Error adding shipping address:", error);
       onError(
-        error.response?.data?.message || "Failed to add shipping address"
+        error.response?.data?.message || "Failed to add shipping address",
       );
     } finally {
       setLoading(false);
@@ -188,6 +189,22 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
             </Form.Item>
           </Col>
         </Row>
+
+            <Form.Item
+              name="email"
+              label="Email Address"
+              rules={[
+                { required: true, message: "Please enter your email" },
+                { type: "email", message: "Please enter a valid email" },
+              ]}
+            >
+              <Input
+                prefix={<MailOutlined />}
+                placeholder="Enter your email address"
+                size="large"
+                type="email"
+              />
+            </Form.Item>
 
         <Form.Item
           name="addressLine1"

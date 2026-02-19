@@ -226,17 +226,17 @@ const CheckoutFlow = () => {
 
   return (
     <div className="checkout-flow-container">
-      <div className="checkout-header">
+      {/* <div className="checkout-header">
         <h1>Checkout</h1>
-      </div>
+      </div> */}
 
       <div className="checkout-content">
         <div className="checkout-steps">
-          <Steps current={currentStep} direction="horizontal">
+          {/* <Steps current={currentStep} direction="horizontal">
             <Step title="Customer Info" />
             <Step title="Shipping Address" />
             <Step title="Order Confirmation" />
-          </Steps>
+          </Steps> */}
         </div>
 
         <div className="checkout-main">
