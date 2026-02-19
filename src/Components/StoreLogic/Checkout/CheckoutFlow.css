@@ -208,8 +208,8 @@
 }
 
 .product-image {
-  width: 100%;
-  height: 100%;
+  width: 85%;
+  height: 85%;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -248,7 +248,7 @@
 .item-pricing {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0px;
 }
 
 .item-total {

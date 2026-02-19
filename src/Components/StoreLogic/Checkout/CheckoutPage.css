@@ -1,0 +1,78 @@
+.checkout-page {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.shipping-info-card,
+.order-summary-card {
+  border-radius: 8px;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+}
+
+.order-summary {
+  /* margin-top: 20px; */
+}
+
+.payment-actions {
+  /* margin-top: 20px; */
+  text-align: right;
+}
+
+.proceed-payment-btn {
+  width: 100%;
+  background-color: black;
+  border-color: black;
+}
+
+.proceed-payment-btn:hover {
+   background-color: rgba(0, 0, 0, 0.859) !important;
+    color: white;
+}
+
+.checkout-page{
+    padding: 0px;
+}
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.summary-item.total {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.detail-item {
+  margin-bottom: 4px;
+}
+
+.img-card .ant-card-body {
+    padding: 15px;
+}
+
+.order-summary-card .ant-card-body {
+    padding: 10px;
+}
+
+
+.red-icons {
+    font-size: 13px;
+    color: #828282;
+}
+
+@media (max-width: 768px) {
+    .red-icons {
+        font-size: 12px;
+    }
+    .ant-input-affix-wrapper-lg {
+        padding: 6px 10px;
+    }
+    .ant-form-item .ant-form-item-label{
+        padding: 0 0 4px;
+    }
+    .ant-card .ant-card-head {
+        margin-bottom: -20px;
+    }
+}
