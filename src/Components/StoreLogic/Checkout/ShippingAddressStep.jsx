@@ -6,11 +6,15 @@ import {
   PhoneOutlined,
   UserOutlined,
   MailOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 import checkoutApi from "../../../apis/checkout";
 
+
 const { Title, Text } = Typography;
 const { Option } = Select;
+
+
 
 const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
   useEffect(() => {
@@ -18,6 +22,7 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
   }, []);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [pincodeLoading, setPincodeLoading] = useState(false)
 
   useEffect(() => {
     const name = orderData?.user?.name || orderData?.customerInfo?.name;
@@ -37,6 +42,35 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
     orderData?.customerInfo?.mobileNumber,
     form,
   ]);
+
+const handlePincodeChange = async (e) => {
+  const pincode = e.target.value;
+  
+  // Check if pincode is valid (6 digits)
+  if (pincode.length === 6 && /^[0-9]{6}$/.test(pincode)) {
+    setPincodeLoading(true);
+    try {
+      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await response.json();
+      
+      if (data && data[0] && data[0].Status === "Success" && data[0].PostOffice) {
+        const postOffice = data[0].PostOffice[0];
+        const city = postOffice.District;
+        const state = postOffice.State;
+        
+        // Auto-fill city and state
+        form.setFieldsValue({
+          city: city,
+          state: state,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching pincode details:", error);
+    } finally {
+      setPincodeLoading(false);
+    }
+  }
+};
 
   const indianStates = [
     "Andhra Pradesh",
@@ -81,9 +115,22 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
+
+      const customerInfoResponse = await checkoutApi.addCustomerInfo({
+        orderId: orderData.orderId,
+        name: values.fullName,
+        email: values.email,
+        mobileNumber: values.mobileNumber,
+      })
+
+      if (!customerInfoResponse.success) {
+        throw new error("Failed to save customer information")
+      }
+
       const response = await checkoutApi.addShippingAddress({
         orderId: orderData.orderId,
         fullName: values.fullName,
+        email: values.email,
         mobileNumber: values.mobileNumber,
         addressLine1: values.addressLine1,
         addressLine2: values.addressLine2,
@@ -96,14 +143,20 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
 
       if (response.success) {
         onComplete({
+          user: customerInfoResponse.data.user || {
+            name: values.fullName,
+            email: values.email,
+            mobileNumber : values.mobileNumber
+          },
+          customerInfo: customerInfoResponse.data.customerInfo,
           shippingAddress: response.data.shippingAddress,
           status: response.data.status,
         });
       }
     } catch (error) {
-      console.error("Error adding shipping address:", error);
+      console.error("Error in checkout process:", error);
       onError(
-        error.response?.data?.message || "Failed to add shipping address",
+        error.response?.data?.message || error.message || "Failed to add shipping address",
       );
     } finally {
       setLoading(false);
@@ -113,7 +166,7 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
   return (
     <div className="shipping-address-step">
       <div className="step-header">
-        <Title level={3}>Shipping Address</Title>
+        <Title level={3}>Checkout</Title>
         <Text type="secondary">
           Please provide your shipping address for delivery
         </Text>
@@ -141,6 +194,11 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
             orderData?.user?.mobileNumber ||
             orderData?.customerInfo?.mobileNumber ||
             "",
+            email: 
+            orderData?.shippingAddress?.email ||
+            orderData?.user?.email ||
+            orderData?.customerInfo?.email ||
+            '',
           addressLine1: orderData?.shippingAddress?.addressLine1 || "",
           addressLine2: orderData?.shippingAddress?.addressLine2 || "",
           city: orderData?.shippingAddress?.city || "",
@@ -230,7 +288,25 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
 
         <Row gutter={16}>
           <Col xs={24} sm={8}>
-            <Form.Item
+             <Form.Item
+              name="pincode"
+              label="Pincode"
+              rules={[
+                { required: true, message: "Please enter your pincode" },
+                { pattern: /^[0-9]{6}$/, message: "Pincode must be 6 digits" },
+              ]}
+            >
+              <Input
+                placeholder="Enter 6-digit pincode"
+                size="large"
+                maxLength={6}
+                onChange={handlePincodeChange}
+                suffix={pincodeLoading && <LoadingOutlined spin />}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={8}>
+          <Form.Item
               name="city"
               label="City"
               rules={[
@@ -246,7 +322,7 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
             </Form.Item>
           </Col>
           <Col xs={24} sm={8}>
-            <Form.Item
+          <Form.Item
               name="state"
               label="State"
               rules={[{ required: true, message: "Please select your state" }]}
@@ -266,22 +342,6 @@ const ShippingAddressStep = ({ orderData, onComplete, onError }) => {
                   </Option>
                 ))}
               </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={8}>
-            <Form.Item
-              name="pincode"
-              label="Pincode"
-              rules={[
-                { required: true, message: "Please enter your pincode" },
-                { pattern: /^[0-9]{6}$/, message: "Pincode must be 6 digits" },
-              ]}
-            >
-              <Input
-                placeholder="Enter 6-digit pincode"
-                size="large"
-                maxLength={6}
-              />
             </Form.Item>
           </Col>
         </Row>

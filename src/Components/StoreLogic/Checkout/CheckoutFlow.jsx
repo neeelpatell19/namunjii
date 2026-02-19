@@ -38,11 +38,9 @@ const CheckoutFlow = () => {
         setOrderData(response.data);
 
         // Determine current step based on progress
-        if (response.data.progress.step3Complete) {
-          setCurrentStep(2);
-        } else if (response.data.progress.step2Complete) {
+      if (response.data.progress.step2Complete) {
           setCurrentStep(1);
-        } else if (response.data.progress.step1Complete) {
+        } else  {
           setCurrentStep(0);
         }
       }
@@ -241,15 +239,15 @@ const CheckoutFlow = () => {
 
         <div className="checkout-main">
           <Card className="checkout-card">
-            {currentStep === 0 && (
+            {/* {currentStep === 0 && (
               <CustomerInfoStep
                 orderData={orderData}
                 onComplete={handleStepComplete}
                 onError={setError}
               />
-            )}
+            )} */}
 
-            {currentStep === 1 && (
+            {currentStep === 0 && (
               <ShippingAddressStep
                 orderData={orderData}
                 onComplete={handleStepComplete}
@@ -257,7 +255,7 @@ const CheckoutFlow = () => {
               />
             )}
 
-            {currentStep === 2 && (
+            {currentStep === 1 && (
               <OrderConfirmationStep
                 orderData={orderData}
                 onComplete={handleStepComplete}
