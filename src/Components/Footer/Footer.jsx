@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
@@ -8,6 +8,12 @@ const Footer = () => {
     if (window.fbq) window.fbq("track", "FooterPageView");
   }, []);
   const [email, setEmail] = useState("");
+
+  const location = useLocation()
+
+  if (location.pathname.startsWith("/checkout")) {
+    return null
+  }
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
