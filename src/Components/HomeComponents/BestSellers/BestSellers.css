@@ -180,13 +180,13 @@
   .view-all-btn {
     display: flex;
     gap: 3px;
-    font-size: 12px;
+    font-size: 14px;
     padding: 2px 16px !important;
     align-items: center;
   }
 
   .view-all-btn .arrow-icon {
-    font-size: 22.5px !important; /* 1.25x of previous size (18px * 1.25) */
+    font-size: 16px !important; /* 1.25x of previous size (18px * 1.25) */
   }
 }
 
@@ -201,12 +201,12 @@
   }
 
   .view-all-btn {
-    font-size: 11px;
+    font-size: 14px;
     padding: 2px 12px !important;
   }
 
   .view-all-btn .arrow-icon {
-    font-size: 20.625px !important; /* 1.25x of previous size (16.5px * 1.25) */
+    font-size: 16px !important; /* 1.25x of previous size (16.5px * 1.25) */
   }
 }
 

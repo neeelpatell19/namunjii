@@ -4,7 +4,6 @@ import {
   HeartOutlined,
   HeartFilled,
   EyeOutlined,
-  ThunderboltFilled,
   ClockCircleFilled,
   LeftOutlined,
   RightOutlined,
@@ -24,6 +23,7 @@ export default function ProductCard({
   showAddToCart = true,
   onQuickView,
   onAddToCart,
+  showHeartIcon = true,
   // showViewProduct = true,
   onViewProduct,
   className = "",
@@ -719,7 +719,7 @@ export default function ProductCard({
           {/* Order Type Tag - Ready to Ship - Only show if stock > 0 */}
           {hasStock && (
             <div className="product-card-order-tag product-card-order-tag-ready">
-              <img width={10} height={10} className=".product-card-order-tag-icon" src="/icons/Thunder.svg" alt="thunder-svg" />
+              <img width={10} height={10} className="" src="/icons/Thunder.svg" alt="thunder-svg" />
               <span className="product-card-order-tag-text">Ready to Ship</span>
             </div>
           )}
@@ -732,7 +732,7 @@ export default function ProductCard({
 
           {/* Wishlist and Quick View buttons on image */}
           <div className="product-card-image-actions">
-            <button
+            {showHeartIcon && !isMobile && (<button
               className="product-card-wishlist-btn product-card-wishlist-btn-image"
               onClick={(e) => handleAddToWishlist(e)}
             >
@@ -745,7 +745,7 @@ export default function ProductCard({
                   style={{ outline: "none", border: "none", color: "#333" }}
                 />
               )}
-            </button>
+            </button>)}
             {showQuickView && !isMobile && (
               <button
                 className="product-card-quick-view-btn-image"
@@ -760,10 +760,23 @@ export default function ProductCard({
         <div className="product-card-content" onClick={handleViewProduct}>
           <div className="product-card-info">
             {product.vendorId?.name && (
-              <h3 className="product-card-brandname">
-                {product.vendorId.name}
-              </h3>
-            )}
+    <div className="product-brand-row">
+      <h3 className="product-card-brandname">
+        {product.vendorId.name}
+      </h3>
+
+      {showHeartIcon && isMobile && (<button
+        className="product-card-wishlist-btn product-card-wishlist-btn-mobile"
+        onClick={(e) => handleAddToWishlist(e)}
+      >
+        {isInWishlist ? (
+          <HeartFilled style={{ color: "#000" }} />
+        ) : (
+          <HeartOutlined style={{ color: "#333" }} />
+        )}
+      </button>)}
+    </div>
+  )}
             <div className="product-card-header">
               <Tooltip
                 title={product.productName}

@@ -498,7 +498,7 @@
   }
 
   .view-all-btn .arrow-icon {
-    font-size: 22.5px !important; /* 1.25x of previous size (18px * 1.25) */
+    font-size: 16px !important; /* 1.25x of previous size (18px * 1.25) */
   }
 
   .new-arrivals-slider-wrapper {
@@ -537,7 +537,7 @@
   }
 
   .view-all-btn .arrow-icon {
-    font-size: 20.625px !important; /* 1.25x of previous size (16.5px * 1.25) */
+    font-size: 16px !important; /* 1.25x of previous size (16.5px * 1.25) */
   }
 
   .new-arrivals-swiper .swiper-button-next,

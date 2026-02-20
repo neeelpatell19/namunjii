@@ -79,6 +79,19 @@
   right: 12px;
 }
 
+.product-brand-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-card-wishlist-btn-mobile {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 18px;
+}
+
 @keyframes fadeInArrow {
   from {
     opacity: 0;
@@ -242,6 +255,8 @@
   align-items: center;
   line-height: 1;
   flex-shrink: 0;
+  width: 10px;
+  height: 10px;
 }
 
 .product-card-order-tag-text {
@@ -274,6 +289,14 @@
 
   .product-card-order-tag-text {
     font-size: 10px !important;
+  }
+
+  .product-card-wishlist-btn-image{
+    display: none;
+  }
+
+  .product-card-wishlist-btn-mobile {
+    display: block;
   }
 }
 
