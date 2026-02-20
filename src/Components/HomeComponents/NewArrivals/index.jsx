@@ -24,6 +24,7 @@ export default function NewArrivals({ HomeData }) {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+
   const newArrivals = useMemo(() => {
     // Handle different data structures
     if (!HomeData) return [];
@@ -48,6 +49,11 @@ export default function NewArrivals({ HomeData }) {
 
     return [];
   }, [HomeData]);
+
+  const mobileProducts = useMemo(() => {
+    if (!newArrivals || newArrivals.length < 8) return []
+    return [newArrivals[8], newArrivals[5]]
+  }, [newArrivals])
 
   // Loading state
   if (!HomeData || (Array.isArray(HomeData) && HomeData.length === 0)) {
@@ -87,11 +93,12 @@ export default function NewArrivals({ HomeData }) {
           spaceBetween={isMobile ? 12 : 24}
           slidesPerView={isMobile ? 2 : 4}
           navigation={!isMobile}
-          autoplay={{
+          autoplay={ 
+            !isMobile ? {
             delay: 3000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
-          }}
+          } : false}
           loop={newArrivals.length > (isMobile ? 2 : 4)}
           grabCursor={false}
           touchEventsTarget="container"
@@ -109,6 +116,7 @@ export default function NewArrivals({ HomeData }) {
             320: {
               slidesPerView: 2,
               spaceBetween: 12,
+              autoplay: false
             },
             768: {
               slidesPerView: 2,
@@ -125,7 +133,7 @@ export default function NewArrivals({ HomeData }) {
           }}
           className="new-arrivals-swiper"
         >
-          {newArrivals.map((product) => (
+          {(isMobile ? mobileProducts : newArrivals).map((product) => (
      <SwiperSlide key={product._id || product.id}>
               <ProductCard
                 product={product}
