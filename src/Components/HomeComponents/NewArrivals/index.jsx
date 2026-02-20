@@ -86,7 +86,7 @@ export default function NewArrivals({ HomeData }) {
           modules={[Navigation, Autoplay]}
           spaceBetween={isMobile ? 12 : 24}
           slidesPerView={isMobile ? 2 : 4}
-          navigation
+          navigation={!isMobile}
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,
@@ -126,7 +126,7 @@ export default function NewArrivals({ HomeData }) {
           className="new-arrivals-swiper"
         >
           {newArrivals.map((product) => (
-            <SwiperSlide key={product._id || product.id}>
+     <SwiperSlide key={product._id || product.id}>
               <ProductCard
                 product={product}
                 showQuickView={true}
