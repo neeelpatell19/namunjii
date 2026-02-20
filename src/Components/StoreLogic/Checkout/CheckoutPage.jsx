@@ -1,10 +1,25 @@
 import React, { useState } from "react";
 import {
-  Row, Col, Card, Button, Typography, Form, Input, Select, Tag, Space, message,
+  Row,
+  Col,
+  Card,
+  Button,
+  Typography,
+  Form,
+  Input,
+  Select,
+  Tag,
+  Space,
+  message,
 } from "antd";
 import {
-  HomeOutlined, EnvironmentOutlined, PhoneOutlined, UserOutlined,
-  MailOutlined, CreditCardOutlined, LoadingOutlined,
+  HomeOutlined,
+  EnvironmentOutlined,
+  PhoneOutlined,
+  UserOutlined,
+  MailOutlined,
+  CreditCardOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import checkoutApi from "../../../apis/checkout";
 import cartApi from "../../../apis/cart";
@@ -15,11 +30,33 @@ const { Text } = Typography;
 const { Option } = Select;
 
 const indianStates = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
-  "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
-  "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
   "West Bengal",
 ];
 
@@ -32,7 +69,8 @@ const CheckoutPage = ({ orderData, onError }) => {
   const calculateItemTotal = (item) => {
     const basePrice = item.price || 0;
     const discount = item.discount || 0;
-    const finalPrice = discount > 0 ? Math.round(basePrice * (1 - discount / 100)) : basePrice;
+    const finalPrice =
+      discount > 0 ? Math.round(basePrice * (1 - discount / 100)) : basePrice;
     return finalPrice * item.quantity;
   };
 
@@ -50,13 +88,17 @@ const CheckoutPage = ({ orderData, onError }) => {
     if (pincode.length === 6) {
       try {
         setPincodeLoading(true);
-        const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+        const response = await fetch(
+          `https://api.postalpincode.in/pincode/${pincode}`,
+        );
         const data = await response.json();
         if (data[0].Status === "Success") {
           const { District, State } = data[0].PostOffice[0];
           form.setFieldsValue({ city: District, state: State });
         } else {
-          message.warning("Invalid pincode, please enter city and state manually");
+          message.warning(
+            "Invalid pincode, please enter city and state manually",
+          );
         }
       } catch (error) {
         console.error("Error fetching pincode data:", error);
@@ -78,7 +120,9 @@ const CheckoutPage = ({ orderData, onError }) => {
         mobileNumber: values.mobileNumber,
       });
       if (!customerInfoRes.success) {
-        throw new Error(customerInfoRes.message || "Failed to save customer info");
+        throw new Error(
+          customerInfoRes.message || "Failed to save customer info",
+        );
       }
 
       // Step 2: Save shipping address
@@ -96,7 +140,9 @@ const CheckoutPage = ({ orderData, onError }) => {
         addressType: "home",
       });
       if (!shippingRes.success) {
-        throw new Error(shippingRes.message || "Failed to save shipping address");
+        throw new Error(
+          shippingRes.message || "Failed to save shipping address",
+        );
       }
 
       // Step 3: Confirm order & generate payment link
@@ -112,7 +158,9 @@ const CheckoutPage = ({ orderData, onError }) => {
         }
         window.location.replace(paymentRes.data.paymentLink);
       } else {
-        throw new Error(paymentRes.message || "Failed to generate payment link");
+        throw new Error(
+          paymentRes.message || "Failed to generate payment link",
+        );
       }
     } catch (error) {
       console.error("Error during checkout:", error);
@@ -136,9 +184,14 @@ const CheckoutPage = ({ orderData, onError }) => {
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={{
-          fullName: orderData?.shippingAddress?.fullName || orderData?.user?.name || "",
-          email: orderData?.shippingAddress?.email || orderData?.user?.email || "",
-          mobileNumber: orderData?.shippingAddress?.mobileNumber || orderData?.user?.mobileNumber || "",
+          fullName:
+            orderData?.shippingAddress?.fullName || orderData?.user?.name || "",
+          email:
+            orderData?.shippingAddress?.email || orderData?.user?.email || "",
+          mobileNumber:
+            orderData?.shippingAddress?.mobileNumber ||
+            orderData?.user?.mobileNumber ||
+            "",
           addressLine1: orderData?.shippingAddress?.addressLine1 || "",
           addressLine2: orderData?.shippingAddress?.addressLine2 || "",
           city: orderData?.shippingAddress?.city || "",
@@ -146,7 +199,7 @@ const CheckoutPage = ({ orderData, onError }) => {
           pincode: orderData?.shippingAddress?.pincode || "",
         }}
       >
-        <Row gutter={[24, 24]}>
+        <Row gutter={[24, 6]}>
           {/* Left: Shipping Form */}
           <Col xs={24} lg={14}>
             <Card title="Shipping Information" className="shipping-info-card">
@@ -155,9 +208,19 @@ const CheckoutPage = ({ orderData, onError }) => {
                   <Form.Item
                     name="fullName"
                     label="Full Name"
-                    rules={[{ required: true, message: "Please enter your full name" }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your full name",
+                      },
+                    ]}
                   >
-                    <Input  prefix={<UserOutlined className="red-icons" />} placeholder="Enter your full name" size="large" style={{ fontSize: "13px"}}  />
+                    <Input
+                      prefix={<UserOutlined className="red-icons" />}
+                      placeholder="Enter your full name"
+                      size="large"
+                      style={{ fontSize: "13px" }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12}>
@@ -165,11 +228,23 @@ const CheckoutPage = ({ orderData, onError }) => {
                     name="mobileNumber"
                     label="Phone Number"
                     rules={[
-                      { required: true, message: "Please enter your phone number" },
-                      { pattern: /^[0-9]{10}$/, message: "Phone number must be 10 digits" },
+                      {
+                        required: true,
+                        message: "Please enter your phone number",
+                      },
+                      {
+                        pattern: /^[0-9]{10}$/,
+                        message: "Phone number must be 10 digits",
+                      },
                     ]}
                   >
-                    <Input prefix={<PhoneOutlined className="red-icons" />} placeholder="Enter 10-digit phone number" size="large" maxLength={10} style={{ fontSize: '13px'}} />
+                    <Input
+                      prefix={<PhoneOutlined className="red-icons" />}
+                      placeholder="Enter 10-digit phone number"
+                      size="large"
+                      maxLength={10}
+                      style={{ fontSize: "13px" }}
+                    />
                   </Form.Item>
                 </Col>
               </Row>
@@ -182,19 +257,36 @@ const CheckoutPage = ({ orderData, onError }) => {
                   { type: "email", message: "Please enter a valid email" },
                 ]}
               >
-                <Input prefix={<MailOutlined className="red-icons" />} placeholder="Enter your email address" size="large" style={{ fontSize: "13px"}} />
+                <Input
+                  prefix={<MailOutlined className="red-icons" />}
+                  placeholder="Enter your email address"
+                  size="large"
+                  style={{ fontSize: "13px" }}
+                />
               </Form.Item>
 
               <Form.Item
                 name="addressLine1"
                 label="Address Line 1"
-                rules={[{ required: true, message: "Please enter your address" }]}
+                rules={[
+                  { required: true, message: "Please enter your address" },
+                ]}
               >
-                <Input prefix={<HomeOutlined className="red-icons" />} placeholder="House no., Street, Area" size="large" style={{ fontSize: "13px"}} />
+                <Input
+                  prefix={<HomeOutlined className="red-icons" />}
+                  placeholder="House no., Street, Area"
+                  size="large"
+                  style={{ fontSize: "13px" }}
+                />
               </Form.Item>
 
-              <Form.Item  name="addressLine2" label="Address Line 2 (Optional)">
-                <Input prefix={<HomeOutlined className="red-icons" />} placeholder="Landmark, Colony (optional)" size="large" style={{ fontSize: "13px"}} />
+              <Form.Item name="addressLine2" label="Address Line 2 (Optional)">
+                <Input
+                  prefix={<HomeOutlined className="red-icons" />}
+                  placeholder="Landmark, Colony (optional)"
+                  size="large"
+                  style={{ fontSize: "13px" }}
+                />
               </Form.Item>
 
               <Row gutter={16}>
@@ -204,7 +296,10 @@ const CheckoutPage = ({ orderData, onError }) => {
                     label="Pincode"
                     rules={[
                       { required: true, message: "Please enter your pincode" },
-                      { pattern: /^[0-9]{6}$/, message: "Pincode must be 6 digits" },
+                      {
+                        pattern: /^[0-9]{6}$/,
+                        message: "Pincode must be 6 digits",
+                      },
                     ]}
                   >
                     <Input
@@ -213,7 +308,7 @@ const CheckoutPage = ({ orderData, onError }) => {
                       maxLength={6}
                       onChange={handlePincodeChange}
                       suffix={pincodeLoading ? <LoadingOutlined spin /> : null}
-                      style={{ fontSize: "13px"}}
+                      style={{ fontSize: "13px" }}
                     />
                   </Form.Item>
                 </Col>
@@ -221,29 +316,42 @@ const CheckoutPage = ({ orderData, onError }) => {
                   <Form.Item
                     name="city"
                     label="City"
-                    rules={[{ required: true, message: "Please enter your city" }]}
-                    style={{ fontSize: "13px"}}
+                    rules={[
+                      { required: true, message: "Please enter your city" },
+                    ]}
+                    style={{ fontSize: "13px" }}
                   >
-                    <Input prefix={<EnvironmentOutlined className="red-icons"  />} placeholder="City" size="large" style={{ fontSize: "13px"}} />
+                    <Input
+                      prefix={<EnvironmentOutlined className="red-icons" />}
+                      placeholder="City"
+                      size="large"
+                      style={{ fontSize: "13px" }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={8}>
                   <Form.Item
                     name="state"
                     label="State"
-                    rules={[{ required: true, message: "Please select your state" }]}
+                    rules={[
+                      { required: true, message: "Please select your state" },
+                    ]}
                   >
                     <Select
-                    style={{ fontSize: "13px"}}
+                      style={{ fontSize: "13px" }}
                       placeholder="Select state"
                       size="large"
                       showSearch
                       filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
                       }
                     >
                       {indianStates.map((state) => (
-                        <Option key={state} value={state}>{state}</Option>
+                        <Option key={state} value={state}>
+                          {state}
+                        </Option>
                       ))}
                     </Select>
                   </Form.Item>
@@ -257,23 +365,38 @@ const CheckoutPage = ({ orderData, onError }) => {
             <div className="order-summary-sticky">
               {/* Order Items */}
               <Card title="Order Items" className="img-card">
-                <div style={{ padding: '0px', borderBottom: 'none'}}>
+                <div style={{ padding: "0px", borderBottom: "none" }}>
                   {orderData?.items?.map((item, index) => {
                     const coverImage = normalizeImage(item.coverImage);
                     return (
-                      <div key={index} style={{padding: '0', borderBottom: 'none'}}>
+                      <div
+                        key={index}
+                        style={{ padding: "0", borderBottom: "none" }}
+                      >
                         <div className="item-image-details-wrapper">
                           <div className="item-image">
-                            <img src={coverImage} alt={item.productName} className="product-image" />
+                            <img
+                              src={coverImage}
+                              alt={item.productName}
+                              className="product-image"
+                            />
                           </div>
                           <div className="item-details">
                             <h4>{item.productName}</h4>
                             <div className="item-specs">
-                              <span className="item-size">Size: {item.size || "One Size"}</span>
-                              <span className="item-quantity">Qty: {item.quantity}</span>
-                              {item.color && item.color !== "N/A" && item.color !== "Default" && (
-                                <span className="item-color">Color: {item.color}</span>
-                              )}
+                              <span className="item-size">
+                                Size: {item.size || "One Size"}
+                              </span>
+                              <span className="item-quantity">
+                                Qty: {item.quantity}
+                              </span>
+                              {item.color &&
+                                item.color !== "N/A" &&
+                                item.color !== "Default" && (
+                                  <span className="item-color">
+                                    Color: {item.color}
+                                  </span>
+                                )}
                             </div>
                             <div className="item-pricing">
                               <Text strong style={{ color: "#1E1E1E" }}>
@@ -281,7 +404,11 @@ const CheckoutPage = ({ orderData, onError }) => {
                               </Text>
                               {item.discount > 0 && (
                                 <Space size={2}>
-                                  <Text delete type="secondary" style={{ fontSize: 12 }}>
+                                  <Text
+                                    delete
+                                    type="secondary"
+                                    style={{ fontSize: 12 }}
+                                  >
                                     ₹{item.price?.toLocaleString()}
                                   </Text>
                                   <Tag color="red">{item.discount}% OFF</Tag>
@@ -298,26 +425,35 @@ const CheckoutPage = ({ orderData, onError }) => {
 
               {/* Price Summary */}
               <Card title="Price Summary" className="order-summary-card">
-                <div className="summary-section" style={{ padding: "5px", marginBottom: '0px'}}>
-                  <div className="summary-item" style={{ padding: "0px"}}>
+                <div
+                  className="summary-section"
+                  style={{ padding: "5px", marginBottom: "0px" }}
+                >
+                  <div className="summary-item" style={{ padding: "0px" }}>
                     <Text>Subtotal (incl. GST):</Text>
                     <Text>₹{orderData?.subtotal?.toLocaleString()}</Text>
                   </div>
-                  <div className="summary-item" style={{ padding: '0px'}}>
+                  <div className="summary-item" style={{ padding: "0px" }}>
                     <Text type="secondary">Base Price:</Text>
-                    <Text type="secondary">₹{gstBreakdown.baseAmount.toLocaleString()}</Text>
+                    <Text type="secondary">
+                      ₹{gstBreakdown.baseAmount.toLocaleString()}
+                    </Text>
                   </div>
-                  <div className="summary-item" style={{ padding: "0px"}}>
+                  <div className="summary-item" style={{ padding: "0px" }}>
                     <Text type="secondary">GST (18% included):</Text>
-                    <Text type="secondary">₹{gstBreakdown.gstAmount.toLocaleString()}</Text>
+                    <Text type="secondary">
+                      ₹{gstBreakdown.gstAmount.toLocaleString()}
+                    </Text>
                   </div>
                   {orderData?.discount > 0 && (
-                    <div className="summary-item" style={{ padding: "0px"}}>
+                    <div className="summary-item" style={{ padding: "0px" }}>
                       <Text>Discount:</Text>
-                      <Text type="success">-₹{orderData?.discount?.toLocaleString()}</Text>
+                      <Text type="success">
+                        -₹{orderData?.discount?.toLocaleString()}
+                      </Text>
                     </div>
                   )}
-                  <div className="summary-item" style={{ padding: "0px"}}>
+                  <div className="summary-item" style={{ padding: "0px" }}>
                     <Text>Shipping:</Text>
                     <Text>
                       {orderData?.shippingCharges === 0 ? (
@@ -327,8 +463,8 @@ const CheckoutPage = ({ orderData, onError }) => {
                       )}
                     </Text>
                   </div>
-                  <div className="summary-item total" >
-                    <Text strong>Total:</Text>
+                  <div className="summary-item total">
+                    <Text strong>Total Amount:</Text>
                     <Text strong>₹{orderData?.total?.toLocaleString()}</Text>
                   </div>
                 </div>
@@ -340,16 +476,31 @@ const CheckoutPage = ({ orderData, onError }) => {
                 htmlType="submit"
                 size="large"
                 loading={loading}
-                icon={<CreditCardOutlined />}
                 block
                 className="proceed-payment-btn"
-                style={{ marginTop: 16 }}
+                style={{ marginTop: 16 , marginBottom: 16 }}
               >
                 {loading ? "Processing..." : "Proceed to Payment"}
               </Button>
             </div>
           </Col>
         </Row>
+
+        <div className="mobile-sticky-checkout">
+          <div className="mobile-total">
+            <span className="mobile-total-label">Total Amount: </span>
+            <span className="mobile-total-value">₹{orderData?.total?.toLocaleString()}</span>
+          </div>
+
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            className="mobile-proceed-btn"
+          >
+            {loading ? "Processing..." : "Proceed to Payment"}
+          </Button>
+        </div>
       </Form>
     </div>
   );
