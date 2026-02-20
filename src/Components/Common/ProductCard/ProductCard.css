@@ -298,6 +298,12 @@
   .product-card-wishlist-btn-mobile {
     display: block;
   }
+  .product-brand-row {
+    margin-bottom: -4px;
+  }
+  .product-card-info {
+    margin-bottom: -10px;
+  }
 }
 
 /* Image Actions Container */
@@ -430,7 +436,7 @@
   font-family: var(--playfair-display);
   font-size: 0.94rem;
   font-weight: 500;
-  color: #242424 !important;
+  color: grey !important;
   margin: 0;
   line-height: 100%;
   letter-spacing: 0%;
@@ -473,12 +479,12 @@
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: -1px;
+  margin-top: -4px;
 }
 
 .product-card-price {
   font-family: var(--fira-sans) !important;
-  font-size: 1.125rem;
+  font-size: 14px;
   font-weight: 400;
   color: #333333 !important;
 }
@@ -1045,7 +1051,7 @@
 
 .product-card-brandname {
   margin-top: 6px;
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
   font-size: 0.8rem;
   color: #775242;
   font-family: var(--fira-sans);
@@ -1075,7 +1081,8 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .product-card-name {
-    font-size: 14px !important;
+    font-size: 11px !important;
+    font-weight: 300;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1145,7 +1152,7 @@
 
 @media (max-width: 768px) and (min-width: 481px) {
   .product-card-price {
-    font-size: 1.3rem;
+    font-size: 14px;
   }
 
   .product-card-discounted-price {
@@ -1229,6 +1236,9 @@
   .final-price {
     font-size: 1.4rem;
   }
+  .product-card-info {
+    margin-bottom: -12px;
+  }
 
   .product-card-modal-description-white {
     font-size: 0.8rem;
@@ -1273,6 +1283,7 @@
     width: 50px;
     height: 50px;
   }
+  
 }
 
 @media (max-width: 380px) {
