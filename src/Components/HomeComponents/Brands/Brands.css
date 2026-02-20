@@ -263,6 +263,33 @@
   transform: translateX(3px);
 }
 
+.brands-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brands-nav-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.custom-nav-btn {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+  color: #775242;
+  border: none;
+  cursor: pointer;
+  border: 1px solid #775242;
+  padding:  10px;
+  border-radius: 50%;
+}
+.custom-nav-btn .right-arrow {
+  rotate: 180deg;
+}
+
 /* Loading State */
 .brands-loading {
   display: flex;

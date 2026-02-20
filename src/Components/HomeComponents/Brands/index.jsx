@@ -6,6 +6,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { div } from "framer-motion/client";
+import { ArrowLeftOutlined, ArrowRightOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 export default function Brands({ HomeData }) {
   useEffect(() => {
@@ -242,6 +244,18 @@ export default function Brands({ HomeData }) {
     <div className="brands-container">
       <div className="brands-header">
         <h2 className="brands-title">DESIGNERS</h2>
+        { isMobile && (
+        <div className="brands-nav-buttons">
+          <button className="custom-nav-btn" onClick={() => swiperRef.current?.slidePrev()}>
+            <img  className="right-arrow" width={13} height={13}
+             src="/icons/Arrow.svg" alt="arrow-icons" />
+          </button>
+          <button className="custom-nav-btn" onClick={() => swiperRef.current?.slideNext()}>
+            <img width={13} height={13}
+             src="/icons/Arrow.svg" alt="arrow-icons" />
+          </button>
+        </div>
+      )}
       </div>
 
       <div className="brands-slider-wrapper">
@@ -249,7 +263,7 @@ export default function Brands({ HomeData }) {
           modules={[Navigation, Autoplay]}
           spaceBetween={isMobile ? 12 : 24}
           slidesPerView={isMobile ? 2 : 4}
-          navigation
+          navigation={!isMobile}
           autoplay={{
             delay: 2000,
             disableOnInteraction: false,
