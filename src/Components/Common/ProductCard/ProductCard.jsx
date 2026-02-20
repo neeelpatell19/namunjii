@@ -719,8 +719,8 @@ export default function ProductCard({
           {/* Order Type Tag - Ready to Ship - Only show if stock > 0 */}
           {hasStock && (
             <div className="product-card-order-tag product-card-order-tag-ready">
-              <ThunderboltFilled className="product-card-order-tag-icon" />
-              <span className="product-card-order-tag-text">Ready to ship</span>
+              <img width={10} height={10} className=".product-card-order-tag-icon" src="/icons/Thunder.svg" alt="thunder-svg" />
+              <span className="product-card-order-tag-text">Ready to Ship</span>
             </div>
           )}
 
