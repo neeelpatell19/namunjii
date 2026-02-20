@@ -255,6 +255,29 @@ const AnimatedRoutes = () => {
   );
 };
 
+const AppLayout = () => {
+  const { pathname } = useLocation()
+  const { lg } = Grid.useBreakpoint()
+
+  const isCheckout = pathname.startsWith("/checkout")
+
+  const paddingTop = isCheckout ? "73px" : ( lg ? "120px" : "60px" )
+
+  return (
+    <div
+      style={{
+        width: "100vw",
+        paddingTop,
+      }}
+    >
+      <Header />
+      <AnimatedRoutes />
+      <Footer />
+      <WhatsAppBtn />
+    </div>
+  );
+}
+
 function App() {
   const { lg } = Grid.useBreakpoint();
 
@@ -304,27 +327,28 @@ function App() {
               <CartWishlistProvider>
                 <AntdApp>
                   <BrowserRouter>
-                    <div
+                    {/* <div
                       style={{
                         width: "100vw",
                         // overflowX: "hidden",
                         paddingTop: lg ? "120px" : "60px",
                       }}
-                    >
-                      <Header />
+                    > */}
+                      {/* <Header /> */}
                       {/* <Maintenance /> */}
-                      <AnimatedRoutes />
+                      {/* <AnimatedRoutes /> */}
 
                       {/* <FeaturesAndQuestion /> */}
                       {/* <CommonUserInteractionsPopup /> */}
-                      <Footer />
+                      {/* <Footer /> */}
                       {/* <Cookies /> */}
-                      <WhatsAppBtn />
+                      {/* <WhatsAppBtn /> */}
 
                       {/* Newsletter Signup Modal - Shows 3 seconds after page load */}
                       {/* <UserDetailsModal /> */}
                       {/* <Cart /> */}
-                    </div>
+                    {/* </div> */}
+                    < AppLayout />
                   </BrowserRouter>
                 </AntdApp>
               </CartWishlistProvider>

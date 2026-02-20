@@ -51,6 +51,8 @@ const Header = () => {
   const userData = useSelector((state) => state.api.userData);
   const { notification } = App.useApp();
 
+  const isCheckoutRoute = location.pathname.startsWith("/checkout")
+
   //logout handler
   const handlelogout = () => {
     try {
@@ -1169,7 +1171,7 @@ const Header = () => {
       )}
 
       {/* Secondary Navigation Bar */}
-      <div
+    {!isCheckoutRoute && ( <div 
         ref={categoryNavBarRef}
         className={`CategoryNavBar ${mobileMenuOpen ? "mobile-open" : ""}`}
       >
@@ -1437,8 +1439,9 @@ const Header = () => {
               </div>
             </Col>
           </Row>
-        </div>
+        </div> 
       </div>
+      )}
 
       {/* Cart and Wishlist Drawers */}
       <CartDrawer isOpen={openCartDrawer} onClose={handleCartClose} />
