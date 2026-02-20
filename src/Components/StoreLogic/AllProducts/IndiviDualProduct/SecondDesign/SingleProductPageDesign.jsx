@@ -106,6 +106,24 @@ const SingleProductPageDesign = () => {
   const isInWishlist = ctxIsInWishlist(product?._id);
   const isInCart = ctxIsInCart(product?._id);
 
+  // Size Guide modal width: fit content when few size columns (e.g. only XS)
+  const sizeGuideModalWidth = useMemo(() => {
+    const chart = product?.sizeChart;
+    if (!chart || typeof chart !== "object") return 920;
+    let maxSizes = 0;
+    for (const [key, value] of Object.entries(chart)) {
+      if (key === "addedOn" || !value || typeof value !== "object") continue;
+      const firstMeas = Object.values(value)[0];
+      if (firstMeas && typeof firstMeas === "object") {
+        const n = Object.keys(firstMeas).length;
+        if (n > maxSizes) maxSizes = n;
+      }
+    }
+    if (maxSizes === 0) return 920;
+    const width = 180 + maxSizes * 52;
+    return Math.min(720, Math.max(280, width));
+  }, [product?.sizeChart]);
+
   // Helper function to get color value
   const getColorValue = (colorName) => {
     const colorMap = {
@@ -2118,12 +2136,12 @@ const SingleProductPageDesign = () => {
         open={isSizeGuideOpen}
         onCancel={() => setIsSizeGuideOpen(false)}
         footer={null}
-        width={isMobile ? "95%" : 1200}
+        width={isMobile ? "95%" : sizeGuideModalWidth}
         className="size-guide-modal"
         centered
         title="Size Guide"
       >
-        <SizeGuide gender={product?.gender} />
+        <SizeGuide gender={product?.gender} sizeChart={product?.sizeChart} />
       </Modal>
     </div>
   );

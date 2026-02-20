@@ -1,7 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./SizeGuide.css";
 
-const SizeGuide = ({ gender }) => {
+const STANDARD_SIZE_ORDER = [
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "2XL",
+  "3XL",
+  "Free Size",
+];
+
+/** Get chart sections from API sizeChart (exclude addedOn and non-objects) */
+function getChartSections(sizeChart) {
+  if (!sizeChart || typeof sizeChart !== "object") return [];
+  return Object.entries(sizeChart).filter(
+    ([key, value]) => key !== "addedOn" && value && typeof value === "object"
+  );
+}
+
+/** Get ordered size labels from a section (first measurement's keys) */
+function getOrderedSizes(sectionData) {
+  const firstMeasurement = Object.values(sectionData)[0];
+  if (!firstMeasurement || typeof firstMeasurement !== "object") return [];
+  const sizes = Object.keys(firstMeasurement);
+  return sizes.sort((a, b) => {
+    const ai = STANDARD_SIZE_ORDER.indexOf(a);
+    const bi = STANDARD_SIZE_ORDER.indexOf(b);
+    if (ai !== -1 && bi !== -1) return ai - bi;
+    if (ai !== -1) return -1;
+    if (bi !== -1) return 1;
+    return String(a).localeCompare(String(b));
+  });
+}
+
+const SizeGuide = ({ gender, sizeChart }) => {
   useEffect(() => {
     if (window.fbq) window.fbq("track", "SizeGuidePageView");
   }, []);
@@ -15,6 +49,13 @@ const SizeGuide = ({ gender }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const chartSections = useMemo(
+    () => getChartSections(sizeChart),
+    [sizeChart]
+  );
+  const useDynamicChart = chartSections.length > 0;
+
   const womenSizes = [
     {
       size: "XS",
@@ -235,8 +276,86 @@ const SizeGuide = ({ gender }) => {
   const showWomenChart = !gender || gender === "Women";
   const showMenChart = !gender || gender === "Men";
 
+  const renderDynamicChartSection = (sectionName, sectionData) => {
+    const measurements = Object.entries(sectionData).filter(
+      ([, value]) => value && typeof value === "object"
+    );
+    const sizes = getOrderedSizes(sectionData);
+    if (measurements.length === 0 || sizes.length === 0) return null;
+
+    return (
+      <div key={sectionName} className="size-chart-section">
+        {sectionName !== "Default" && (
+          <h3 className="size-chart-title">{sectionName}</h3>
+        )}
+        <div className="size-chart-table-wrapper">
+          <table
+            className={`size-chart-table ${isMobile ? "mobile-hide" : ""}`}
+          >
+            <thead>
+              <tr>
+                <th>Measurement</th>
+                {sizes.map((size) => (
+                  <th key={size} className="size-label">
+                    {size}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {measurements.map(([measurementLabel, sizeValues]) => (
+                <tr key={measurementLabel}>
+                  <td className="measurement-label">{measurementLabel}</td>
+                  {sizes.map((size) => (
+                    <td key={size}>
+                      {sizeValues[size] != null ? sizeValues[size] : "—"}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <table
+            className={`size-chart-table size-chart-table-mobile ${
+              !isMobile ? "mobile-hide" : ""
+            }`}
+          >
+            <thead>
+              <tr>
+                <th>Measurement</th>
+                {sizes.map((size) => (
+                  <th key={size} className="size-label">
+                    {size}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {measurements.map(([measurementLabel, sizeValues]) => (
+                <tr key={measurementLabel}>
+                  <td className="measurement-label">{measurementLabel}</td>
+                  {sizes.map((size) => (
+                    <td key={size}>
+                      {sizeValues[size] != null ? sizeValues[size] : "—"}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="size-guide-container">
+    <div className={`size-guide-container ${useDynamicChart ? "size-guide-dynamic" : ""}`}>
+      {useDynamicChart ? (
+        chartSections.map(([sectionName, sectionData]) =>
+          renderDynamicChartSection(sectionName, sectionData)
+        )
+      ) : (
+        <>
       {/* Women's Size Chart */}
       {showWomenChart && (
         <div className="size-chart-section">
@@ -383,6 +502,8 @@ const SizeGuide = ({ gender }) => {
             </table>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );
