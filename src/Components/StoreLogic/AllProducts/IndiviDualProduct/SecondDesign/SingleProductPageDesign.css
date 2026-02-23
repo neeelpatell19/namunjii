@@ -262,6 +262,26 @@ width: 24px;
     align-items: center;
     justify-content: center;
   }
+
+  .mobile-sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 12px 15px;
+    z-index: 9999;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+  }
+  .mobile-sticky-bar .wishlist-btn, 
+  .mobile-sticky-bar .add-to-bag-btn {
+    flex: 1;
+  }
+  .product-details-section {
+    padding-bottom: 80px;
+  }
 }
 
 .no-image-placeholder {
@@ -659,6 +679,9 @@ width: 24px;
 }
 
 /* Action Buttons */
+.action-buttons-spacer {
+  height: 70px;
+}
 .action-buttons {
   display: flex;
   gap: 15px;
@@ -1196,10 +1219,12 @@ width: 24px;
 
   .image-nav-btn.prev-btn {
     left: 10px;
+    display: none !important;
   }
 
   .image-nav-btn.next-btn {
     right: 10px;
+    display: none !important; 
   }
 
   .image-counter {
@@ -1410,7 +1435,9 @@ width: 24px;
     box-sizing: border-box;
     overflow-x: hidden;
   }
-
+  .product-header {
+    margin-bottom: 4px;
+  }
   .thumbnail-wrapper {
     order: 2;
     flex-direction: row;
@@ -1499,6 +1526,10 @@ width: 24px;
     object-fit: contain !important;
   }
   
+  .image-counter {
+    display: none !important;
+  }
+  
   /* Ensure transform doesn't cause overflow */
   .main-image-wrapper img {
     max-width: 100% !important;
@@ -1530,6 +1561,7 @@ width: 24px;
     right: 8px;
     top: 8px;
     max-width: calc(100% - 16px);
+    display: none;
   }
 
   .image-counter {

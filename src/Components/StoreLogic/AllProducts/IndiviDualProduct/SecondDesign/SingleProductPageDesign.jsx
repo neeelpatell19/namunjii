@@ -53,7 +53,7 @@ const SingleProductPageDesign = () => {
     refreshCart,
     refreshWishlist,
   } = useCartWishlist();
-  
+
   const { state } = useAppContext();
 
   const [product, setProduct] = useState(null);
@@ -79,7 +79,7 @@ const SingleProductPageDesign = () => {
   const [mainImagePosition, setMainImagePosition] = useState({ x: 0, y: 0 });
   const [isMainImageDragging, setIsMainImageDragging] = useState(false);
   const [mainImageDragStart, setMainImageDragStart] = useState({ x: 0, y: 0 });
-  const [showReadMOre, setShowReadMOre] = useState(false)
+  const [showReadMOre, setShowReadMOre] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const previewRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
@@ -120,7 +120,7 @@ const SingleProductPageDesign = () => {
     };
     return colorMap[colorName?.toLowerCase()] || "#D4AF37";
   };
-    useEffect(() => {
+  useEffect(() => {
     if (!product?.productDescription) return;
 
     if (fullDescriptionRef.current) {
@@ -134,7 +134,7 @@ const SingleProductPageDesign = () => {
         setShowReadMOre(false);
       }
     }
-  }, [product?.productDescription]) 
+  }, [product?.productDescription]);
 
   // Extract unique colors and sizes from products array
   const getAvailableOptions = useMemo(() => {
@@ -344,7 +344,7 @@ const SingleProductPageDesign = () => {
 
       if (response.success) {
         if (window.fbq)
-        window.fbq("track", "AddToWishlistSingleProductPageView");
+          window.fbq("track", "AddToWishlistSingleProductPageView");
         // console.log("metapexel, addtowishlistSingleproductpage");
         triggerWishlistDrawer();
         refreshWishlist();
@@ -363,7 +363,7 @@ const SingleProductPageDesign = () => {
 
       // Try to find exact match first (both size and color match)
       let variant = product.products.find(
-        (p) => p.size === size && p.color === color
+        (p) => p.size === size && p.color === color,
       );
 
       // If no exact match and we have a size, try to find by size with any color
@@ -378,7 +378,7 @@ const SingleProductPageDesign = () => {
 
       return variant;
     },
-    [product]
+    [product],
   );
 
   // Find exact product variant by size AND color (for stock checking)
@@ -394,7 +394,7 @@ const SingleProductPageDesign = () => {
         null
       );
     },
-    [product]
+    [product],
   );
 
   // Get current product variant and check stock availability
@@ -861,7 +861,7 @@ const SingleProductPageDesign = () => {
   // Navigate images
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) =>
-      prev > 0 ? prev - 1 : displayImages.length - 1
+      prev > 0 ? prev - 1 : displayImages.length - 1,
     );
     setMainImageZoom(1);
     setMainImagePosition({ x: 0, y: 0 });
@@ -869,7 +869,7 @@ const SingleProductPageDesign = () => {
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) =>
-      prev < displayImages.length - 1 ? prev + 1 : 0
+      prev < displayImages.length - 1 ? prev + 1 : 0,
     );
     setMainImageZoom(1);
     setMainImagePosition({ x: 0, y: 0 });
@@ -1259,7 +1259,7 @@ const SingleProductPageDesign = () => {
     if (!isProductImageMouseDown.current) return;
     productImageMouseEndX.current = e.clientX;
     const distance = Math.abs(
-      productImageMouseStartX.current - productImageMouseEndX.current
+      productImageMouseStartX.current - productImageMouseEndX.current,
     );
     if (distance > 10) {
       productImageWasDragged.current = true;
@@ -1716,7 +1716,7 @@ const SingleProductPageDesign = () => {
           {/* Full Description */}
           {product?.productDescription && (
             <div className="short-description">
-              <p 
+              <p
                 ref={fullDescriptionRef}
                 className={!isDescriptionExpanded ? "line-clamp-3" : ""}
               >
@@ -1779,8 +1779,8 @@ const SingleProductPageDesign = () => {
                       typeof colorCode === "string" && colorCode.startsWith("#")
                         ? colorCode
                         : typeof color === "string"
-                        ? getColorValue(color)
-                        : "#D4AF37";
+                          ? getColorValue(color)
+                          : "#D4AF37";
                     const isSelected = selectedColor === color;
 
                     return (
@@ -1848,6 +1848,7 @@ const SingleProductPageDesign = () => {
           </div>
 
           {/* Action Buttons */}
+
           <div className="action-buttons">
             <button className="wishlist-btn" onClick={handleAddToWishlist}>
               {/* {isInWishlist ? (
@@ -1866,6 +1867,8 @@ const SingleProductPageDesign = () => {
               {isInCart ? "Go to Cart" : "Add to Cart"}
             </button>
           </div>
+
+        
 
           {/* Product Features */}
 
@@ -2060,14 +2063,13 @@ const SingleProductPageDesign = () => {
                   aria-label="Previous image"
                 >
                   <LeftOutlined />
-
                 </button>
                 <button
                   className="preview-nav preview-next"
                   onClick={handlePreviewNext}
                   aria-label="Next image"
                 >
-                <RightOutlined />
+                  <RightOutlined />
                 </button>
               </>
             )}

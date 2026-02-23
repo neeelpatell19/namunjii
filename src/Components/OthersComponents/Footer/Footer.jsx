@@ -7,7 +7,7 @@ const Footer = () => {
     }, [])
     return (
         <>
-            <footer className="rf-footer paddingTop50 paddingBottom50">
+            <footer className="rf-footer paddingTop50 paddingBottom50" id='main-footer'>
                 {/* Top banner */}
                 <div className="rf-footer__banner Container">
                     <img
