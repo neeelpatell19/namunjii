@@ -20,10 +20,10 @@ const Partnerus = () => {
 
   return (
     <div className="partnerus-container MainContainer Container">
-      <div className="partnerus-img">
+      <div className="partnerus-img" style={isMobile ? { order: 2} : {}}>
         <img src="./Images/PartnerUsImage.webp" alt="img" />
       </div>
-      <div className="partnerus-content">
+      <div className="partnerus-content" style={isMobile ? { order: 1 } : {}} >
         {isMobile ? (
           <>
             <div className="partnerus-title-mobile">
