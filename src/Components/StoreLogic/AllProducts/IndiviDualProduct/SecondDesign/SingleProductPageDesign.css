@@ -679,6 +679,26 @@ width: 24px;
 }
 
 /* Action Buttons */
+.action-buttons-container {
+  position: relative;
+}
+.action-buttons-placeholder {
+
+}
+.action-buttons.action-buttons-stuck {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  gap: 15px;
+  padding: 12px 20px;
+  margin: 0;
+  background: white;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+}
+
 .action-buttons-spacer {
   height: 70px;
 }
@@ -1141,6 +1161,14 @@ width: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .action-buttons.action-buttons-stuck {
+    padding: 12px 15px;
+    gap: 10px;
+  }
+  .action-buttons.action-buttons-stuck .wishlist-btn,
+  .action-buttons.action-buttons-stuck .add-to-bag-btn {
+    flex: 1;
   }
 
   .designer-name {

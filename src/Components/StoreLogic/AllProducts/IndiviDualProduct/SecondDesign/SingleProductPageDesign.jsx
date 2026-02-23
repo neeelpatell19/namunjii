@@ -81,6 +81,10 @@ const SingleProductPageDesign = () => {
   const [mainImageDragStart, setMainImageDragStart] = useState({ x: 0, y: 0 });
   const [showReadMOre, setShowReadMOre] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isStickyButtons, setIsStickyButtons] = useState(false);
+  const [buttonsHeight, setButtonsHeight] = useState(70);
+  const actionButtonsRef = useRef(null);
+  const actionButtonsContainerRef = useRef(null);
   const previewRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
   const previewImageRef = useRef(null);
@@ -473,6 +477,33 @@ const SingleProductPageDesign = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+ useEffect( () => {
+  if (!isMobile) {
+    setIsStickyButtons(false);
+    return;
+  }
+
+  const container = actionButtonsContainerRef.current;
+  if (!container) return;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      const { top } = entry.boundingClientRect;
+      if (!entry.isIntersecting && top > 0) {
+        // Buttons are BELOW viewport (not yet reached) — show sticky
+        setIsStickyButtons(true);
+      } else {
+        // Buttons are visible OR already scrolled past — hide sticky
+        setIsStickyButtons(false);
+      }
+    },
+    { root: null, threshold: 0 }
+  );
+
+  observer.observe(container);
+  return () => observer.disconnect();
+}, [isMobile, loading]);
 
   // Status derived from provider; no local checking
 
@@ -1849,23 +1880,15 @@ const SingleProductPageDesign = () => {
 
           {/* Action Buttons */}
 
-          <div className="action-buttons">
-            <button className="wishlist-btn" onClick={handleAddToWishlist}>
-              {/* {isInWishlist ? (
-                <HeartFilled style={{ color: "#000" }} />
-              ) : (
-                <HeartOutlined />
-              )} */}
-              Wishlist
-            </button>
-            <button
-              className="add-to-bag-btn"
-              onClick={isInCart ? () => triggerCartDrawer() : handleAddToCart}
-              disabled={false}
+          <div ref={actionButtonsContainerRef} className="action-buttons-container">
+            { isStickyButtons && <div className="action-buttons-placeholder" style={{ height: buttonsHeight}} aria-hidden />}
+            <div 
+              ref={actionButtonsRef}
+              className={`action-buttons ${isStickyButtons ? "action-buttons-stuck" : ""}`}
             >
-              {/* <ShoppingCartOutlined /> */}
-              {isInCart ? "Go to Cart" : "Add to Cart"}
-            </button>
+              <button className="wishlist-btn" onClick={handleAddToWishlist}>Wishlist</button>
+              <button className="add-to-bag-btn" onClick={isInCart ? () => triggerCartDrawer() : handleAddToCart} disabled={false}>{isInCart ? "Go to Cart" : "Add to Cart"}</button>
+            </div>
           </div>
 
         
@@ -1947,7 +1970,7 @@ const SingleProductPageDesign = () => {
                           </div>
                           <span>
                             Exchange is available within 7 days of delivery only
-                            if a wrong or <br /> defective product is received.
+                            if a wrong or  defective product is received.
                           </span>
                         </div>
                         <div className="feature-item">
