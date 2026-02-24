@@ -478,32 +478,38 @@ const SingleProductPageDesign = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
- useEffect( () => {
+ useEffect(() => {
   if (!isMobile) {
     setIsStickyButtons(false);
     return;
   }
 
-  const container = actionButtonsContainerRef.current;
-  if (!container) return;
+  const handleScroll = () => {
+    const container = document.querySelector(".action-buttons-container");
+    if (!container) return;
 
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      const { top } = entry.boundingClientRect;
-      if (!entry.isIntersecting && top > 0) {
-        // Buttons are BELOW viewport (not yet reached) — show sticky
-        setIsStickyButtons(true);
-      } else {
-        // Buttons are visible OR already scrolled past — hide sticky
-        setIsStickyButtons(false);
-      }
-    },
-    { root: null, threshold: 0 }
-  );
+    const rect = container.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
 
-  observer.observe(container);
-  return () => observer.disconnect();
-}, [isMobile, loading]);
+    // sticky class should apply until the container's bottom comes
+    if (rect.bottom > viewportHeight) {
+      setIsStickyButtons(true);
+    } else {
+      setIsStickyButtons(false);
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("resize", handleScroll);
+
+  // Run once initially
+  handleScroll();
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("resize", handleScroll);
+  };
+}, [isMobile]);
 
   // Status derived from provider; no local checking
 
@@ -1880,11 +1886,11 @@ const SingleProductPageDesign = () => {
 
           {/* Action Buttons */}
 
-          <div ref={actionButtonsContainerRef} className="action-buttons-container">
+          <div ref={actionButtonsContainerRef} className="action-buttons-container" >
             { isStickyButtons && <div className="action-buttons-placeholder" style={{ height: buttonsHeight}} aria-hidden />}
             <div 
               ref={actionButtonsRef}
-              className={`action-buttons ${isStickyButtons ? "action-buttons-stuck" : ""}`}
+              className={`action-buttons ${isStickyButtons ? "action-buttons-stuck" : ""}` }
             >
               <button className="wishlist-btn" onClick={handleAddToWishlist}>Wishlist</button>
               <button className="add-to-bag-btn" onClick={isInCart ? () => triggerCartDrawer() : handleAddToCart} disabled={false}>{isInCart ? "Go to Cart" : "Add to Cart"}</button>
