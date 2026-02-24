@@ -1,9 +1,9 @@
 .size-guide-container {
-  padding: 10px 0;
+  padding: 0;
 }
 
 .size-chart-section {
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 }
 
 .size-chart-section:last-child {
@@ -11,9 +11,10 @@
 }
 
 .size-chart-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  margin-top: 0;
   color: #1a1a1a;
   text-align: left;
   font-family: var(--fira-sans, sans-serif);
@@ -31,12 +32,13 @@
 }
 
 .size-chart-table {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   border-collapse: collapse;
   font-family: var(--fira-sans, sans-serif);
-  font-size: 12px;
+  font-size: 13px;
   background: white;
-  min-width: 100%;
+  table-layout: fixed;
 }
 
 .size-chart-table thead {
@@ -44,24 +46,24 @@
 }
 
 .size-chart-table th {
-  padding: 8px 6px;
+  padding: 5px 5px;
   text-align: center;
   font-weight: 500;
   color: #1a1a1a;
   border: 1px solid #e0e0e0;
   white-space: nowrap;
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: 12px;
+  line-height: 1.25;
   font-family: var(--fira-sans, sans-serif) !important;
 }
 
 .size-chart-table td {
-  padding: 8px 6px;
+  padding: 5px 5px;
   text-align: center;
   color: #333;
   border: 1px solid #e0e0e0;
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: 12px;
+  line-height: 1.25;
   font-family: var(--fira-sans, sans-serif) !important;
 }
 
@@ -79,15 +81,33 @@
   font-family: var(--fira-sans, sans-serif) !important;
 }
 
-/* Desktop: Ensure table fits without horizontal scroll */
+/* Dynamic chart only: measurement column narrow, size columns compact */
+.size-guide-dynamic .size-chart-table th:first-child,
+.size-guide-dynamic .size-chart-table td.measurement-label {
+  max-width: 140px;
+  width: 1%;
+  white-space: nowrap;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.size-guide-dynamic .size-chart-table th:not(:first-child),
+.size-guide-dynamic .size-chart-table td:not(.measurement-label) {
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  padding: 5px 4px;
+  box-sizing: border-box;
+}
+
+/* Desktop: compact table */
 @media (min-width: 769px) {
   .size-chart-table-wrapper {
     overflow-x: visible;
   }
   
   .size-chart-table {
-    min-width: 100%;
-    table-layout: auto;
+    width: auto;
   }
 }
 
@@ -107,7 +127,7 @@
   font-weight: 500;
   background-color: #f9f9f9;
   text-align: left;
-  padding-left: 10px;
+  padding-left: 8px;
   font-family: var(--fira-sans, sans-serif) !important;
 }
 
@@ -125,19 +145,29 @@
   font-family: var(--fira-sans, sans-serif) !important;
 }
 
+/* Dynamic chart only - mobile: size columns */
+.size-guide-dynamic .size-chart-table-mobile th:not(:first-child),
+.size-guide-dynamic .size-chart-table-mobile td:not(.measurement-label) {
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+  padding: 5px 3px;
+  box-sizing: border-box;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .size-guide-container {
-    padding: 10px 0;
+    padding: 0;
   }
 
   .size-chart-section {
-    margin-bottom: 25px;
+    margin-bottom: 14px;
   }
 
   .size-chart-title {
     font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
 
   .size-chart-table-mobile {
@@ -145,41 +175,41 @@
   }
 
   .size-chart-table-mobile th {
-    padding: 8px 6px;
-    font-size: 10px;
+    padding: 5px 4px;
+    font-size: 11px;
     text-align: center;
   }
 
   .size-chart-table-mobile td {
-    padding: 8px 6px;
-    font-size: 10px;
+    padding: 5px 4px;
+    font-size: 11px;
     text-align: center;
   }
 
   .size-chart-table-mobile .measurement-label {
-    font-size: 10px;
-    padding: 8px 8px;
+    font-size: 11px;
+    padding: 5px 8px;
   }
 }
 
 @media (max-width: 480px) {
   .size-chart-table-mobile {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .size-chart-table-mobile th {
-    padding: 6px 4px;
-    font-size: 9px;
+    padding: 4px 3px;
+    font-size: 10px;
   }
 
   .size-chart-table-mobile td {
-    padding: 6px 4px;
-    font-size: 9px;
+    padding: 4px 3px;
+    font-size: 10px;
   }
 
   .size-chart-table-mobile .measurement-label {
-    font-size: 9px;
-    padding: 6px 6px;
+    font-size: 10px;
+    padding: 4px 6px;
   }
 }
 
