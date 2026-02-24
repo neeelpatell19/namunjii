@@ -1907,6 +1907,16 @@ const ProductsPage = () => {
                   ? "The Exclusive Collection"
                   : filters.productType === "accessory"
                   ? "Accessories"
+                  : filters.category
+                  ? 
+                  `${
+                    filters.gender === "Men" ? "Men's" : filters.gender === "Women" ? "Women's" : ""
+                  } ${getCategoryName(filters.category) || "Products"}`
+                  : filters.subcategory 
+                  ?
+                  `${
+                    filters.gender === "Men" ? "Men's" : filters.gender === "Women" ? "Women's" : ""
+                  }${getSubcategoryName(filters.subcategory) || "Products"}`
                   : filters.gender === "Men"
                   ? "Menswear"
                   : filters.gender === "Women"

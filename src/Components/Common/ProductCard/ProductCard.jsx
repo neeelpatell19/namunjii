@@ -691,7 +691,7 @@ export default function ProductCard({
           </div>
 
           {/* Left Arrow - Show on mobile and tablet if there are multiple images */}
-          {(isMobile || isTablet) && allImages.length > 1 && (
+          {/* {(isMobile || isTablet) && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-left"
               onClick={(e) => {
@@ -701,10 +701,10 @@ export default function ProductCard({
             >
               <RightOutlined />
             </button>
-          )}
+          )} */}
 
           {/* Right Arrow - Show on mobile and tablet if there are multiple images */}
-          {(isMobile || isTablet) && allImages.length > 1 && (
+          {/* {(isMobile || isTablet) && allImages.length > 1 && (
             <button
               className="product-card-arrow product-card-arrow-right"
               onClick={(e) => {
@@ -714,7 +714,7 @@ export default function ProductCard({
             >
               <LeftOutlined />
             </button>
-          )}
+          )} */}
 
           {/* Order Type Tag - Ready to Ship - Only show if stock > 0 */}
           {hasStock && (
