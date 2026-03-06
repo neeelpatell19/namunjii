@@ -440,6 +440,7 @@ const SingleProductPageDesign = () => {
   const availableStock =
     currentVariant?.availableStock ?? currentVariant?.stock ?? 0;
   const hasStock = availableStock > 0;
+  const isCodAvailable = product?.vendorId?.isCod ?? true
 
   // Handle size selection
   const handleSizeSelect = (size) => {
@@ -1986,15 +1987,22 @@ const SingleProductPageDesign = () => {
                               alt=""
                             />
                           </div>
-                          <span>Pay on delivery might be available.</span>
+                          <span>
+                            {
+                            isCodAvailable ? 
+                            "Cash on Delivery is available for this order."
+                              : "Pay on delivery might be available."
+                          }
+                          </span>
                         </div>
                         <div className="feature-item">
                           <div className="feature-icon">
                             <img src="/icons/Exchange.svg" alt="" />
                           </div>
                           <span>
-                            Exchange is available within 7 days of delivery only
-                            if a wrong or  defective product is received.
+                            {
+                              isCodAvailable ? "Exchange is available within 7 days of delivery only if a wrong, defective product is received or if there is a size issue." : "Exchange is available within 7 days of delivery only if a wrong or defective product is received."
+                            }
                           </span>
                         </div>
                         <div className="feature-item">
