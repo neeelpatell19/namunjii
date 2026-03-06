@@ -29,6 +29,7 @@ const ReturnPolicy = () => {
             <li>You received a defective product.</li>
             <li>The product was damaged on arrival.</li>
             <li>You received the wrong product.</li>
+            <li>The product does not fit due to a size issue.</li>
           </ul>
 
           <h3>How to Request an Exchange</h3>
