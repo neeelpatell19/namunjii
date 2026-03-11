@@ -1895,7 +1895,7 @@ const SingleProductPageDesign = () => {
                   ) : (
                     <>
                       This product is <strong>made to order</strong> and will
-                      take up to <strong>10 business days</strong> to dispatch.
+                      take up to <strong>10-15 business days</strong> to dispatch.
                     </>
                   )}
                 </span>
@@ -2033,7 +2033,7 @@ const SingleProductPageDesign = () => {
                             ) : (
                               <>
                                 Made to order items are dispatched within{" "}
-                                <strong>10 business days</strong>.
+                                <strong>10-15 business days</strong>.
                               </>
                             )}
                           </span>
